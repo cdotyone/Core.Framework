@@ -146,10 +146,10 @@ BEGIN
 			select TOP 1 @VARNAME=[item] from [dbo].[udf_Split](@PAIR,'|')
 
 			DECLARE @OPERATION NVARCHAR(50) 
-			select @OPERATION=[item] from [dbo].[udf_Split](@PAIR,'|') ORDER BY [POS] OFFSET 1 ROWS FETCH NEXT 1 ROWS ONLY
+			select @OPERATION=[item] from [dbo].[udf_Split](@PAIR,'|') WHERE POS=1 ORDER BY [POS]
 
 			DECLARE @VARVALUE NVARCHAR(512) 
-			select @VARVALUE=[item] from [dbo].[udf_Split](@PAIR,'|') ORDER BY [POS] OFFSET 2 ROWS FETCH NEXT 1 ROWS ONLY
+			select @VARVALUE=[item] from [dbo].[udf_Split](@PAIR,'|') WHERE POS=2 ORDER BY [POS]
 	
 			IF NOT EXISTS(SELECT * FROM @COMBINEVARS WHERE varname=@VARNAME)
 				BEGIN
