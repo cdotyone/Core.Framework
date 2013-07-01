@@ -1,0 +1,357 @@
+﻿<#
+
+EdmItemCollection ExistingStore2 = (EdmItemCollection)metadataWorkspace.GetItemCollection(DataSpace.CSpace);
+
+fileManager.StartNewFile(edmxFileName + "Data.cs", folderName:"Data");
+
+WriteHeader("System", "System.Collections.Generic", "System.Data","System.Data.Common","PO.Core.Data", namespaceName +".Entities");
+
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+#>
+using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
+<#
+}
+#>
+
+<#
+BeginNamespace(namespaceName + ".Data", code);
+
+#>
+internal partial class <#=edmxFileName#>Data
+{
+
+<#
+// Emit Entity Types
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+	if(entity.Documentation!=null && !string.IsNullOrEmpty(entity.Documentation.LongDescription) && entity.Documentation.LongDescription.Contains("NONE")) continue;
+
+	var lowerName = entity.Name.Substring(0,1).ToLower() + entity.Name.Substring(1);
+	var keyName = "";
+	var keyType = "";
+    foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+        if (ef.IsKey(edmProperty)) {
+			keyName = edmProperty.Name;
+			keyType = code.Escape(edmProperty.TypeUsage.EdmType);
+			break;
+		}
+	}
+
+	if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GET")) { 
+#>
+	internal static <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(<#=keyType#> <#=code.Escape(keyName.ToLower())#>, string[] fillProperties = null)
+	{
+		var <#=code.Escape(lowerName)#>Returned = new <#=code.Escape(entity)#>Entity();
+
+		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
+		using (var command = database.CreateStoredProcCommand("usp_<#=code.Escape(entity)#>Get"))
+		{
+			<#
+		    foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+			{
+				if (ef.IsKey(edmProperty)) {
+		            #>command.AddInParameter("@<#=code.Escape(keyName.ToLower())#>", <#=code.Escape(keyName.ToLower())#>);
+				<#}
+			}
+			#>
+
+			using (IDataReader dataReader = command.ExecuteReader())
+			{
+				if (Populate<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>Returned, dataReader, fillProperties))
+				{
+					<#=code.Escape(lowerName)#>Returned.<#=code.Escape(keyName)#> = <#=code.Escape(keyName.ToLower())#>;
+				} else return null;
+			}
+		}
+
+		return <#=code.Escape(lowerName)#>Returned;
+	}
+
+<#
+	}
+
+	foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many))
+	{
+		if(entity.Documentation!=null && !string.IsNullOrEmpty(entity.Documentation.LongDescription) && entity.Documentation.LongDescription.Contains("NONE")) continue;
+
+		var toEntity = navProperty.ToEndMember.GetEntityType();
+		NavigationProperty[] foreignKeys = entity.NavigationProperties.ToArray();
+
+		AssociationType association = null;	
+		try {
+		association = metadataWorkspace 
+			.GetItems<AssociationType>(DataSpace.CSpace)
+			.Single(a => a.Name == navProperty.RelationshipType.Name);
+		} catch(Exception ex) {
+		}
+		if(association==null) continue;
+
+		var toColumns = String.Join(",", association.ReferentialConstraints.SelectMany(rc => rc.ToProperties));
+		if(association.ReferentialConstraints.SelectMany(rc => rc.ToProperties).Count()==0) continue;
+		var toTypes = String.Join(",", association.ReferentialConstraints.SelectMany(rc => rc.ToProperties).First().TypeUsage).Replace("SqlServer.","").Replace("nvarchar","string").Replace("varchar","string").Replace("Edm.","");
+		if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GETBY")) { 
+
+#>
+	internal static List<<#=code.Escape(toEntity)#>Entity> Get<#=code.Escape(toEntity)#>By<#=entity.Name#>(<#=toTypes#> <#=Core.GetMethodParameterName(toColumns)#>, string[] fillProperties = null)
+	{
+		var list = new List<<#=code.Escape(toEntity)#>Entity>();
+
+		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
+		using (var command = database.CreateStoredProcCommand("usp_<#=code.Escape(toEntity)#>GetBy<#=entity.Name#>"))
+		{
+			<#
+			foreach (EdmProperty edmProperty in toEntity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == toEntity))
+			{
+				if (ef.IsKey(edmProperty)) {
+		            #>command.AddInParameter("<#=Core.GetParameterName(toColumns)#>", <#=Core.GetMethodParameterName(toColumns)#>);
+				<#}
+			}
+			#>
+
+			using (IDataReader dataReader = command.ExecuteReader())
+			{
+				var item = new <#=code.Escape(toEntity)#>Entity();
+				while(Populate<#=code.Escape(toEntity)#>(item, dataReader, fillProperties))
+				{
+					list.Add(item);
+					item = new <#=code.Escape(toEntity	)#>Entity();
+				} 
+			}
+		}
+
+		return list;
+	}
+
+<#
+		}
+	}
+
+	if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("PAGED")) { 
+#>
+	internal static List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(int skip, ref int count, bool retCount, string filterBy, string orderBy, string[] fillProperties = null)
+	{ 
+		var list = new List<<#=code.Escape(entity)#>Entity>();
+
+		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
+		using (var command = database.CreateStoredProcCommand(string.IsNullOrEmpty(filterBy) ? "usp_<#=entity.Name#>GetPaged" : "usp_<#=entity.Name#>GetFiltered"))
+		{
+            command.AddInParameter("@skip", skip);			
+            command.AddInParameter("@retcount", retCount);
+			if(!string.IsNullOrEmpty(filterBy)) command.AddInParameter("@filterBy", filterBy);
+			command.AddInParameter("@orderBy", orderBy);
+    		command.AddParameter("@count", ParameterDirection.InputOutput, count);
+			
+			using (IDataReader dataReader = command.ExecuteReader())
+			{
+				var item = new <#=code.Escape(entity)#>Entity();
+				while(Populate<#=code.Escape(entity)#>(item, dataReader, fillProperties))
+				{
+					list.Add(item);
+					item = new <#=code.Escape(entity)#>Entity();
+				} 
+			}
+
+			if (retCount) count = int.Parse(command.GetOutParameter("@count").Value.ToString());
+		}
+
+		return list;
+	}
+
+<#
+	}
+
+	if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("ADD")) { 
+#>
+	internal static <#=((keyType=="Int32" || keyType=="int") && keyName=="Id"?"int":"void")#> Add<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>)
+	{ 
+		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
+		using (var command = database.CreateStoredProcCommand("usp_<#=code.Escape(entity)#>Add"))
+		{
+			Build<#=code.Escape(entity)#>CommandParameters( <#=lowerName#>, command, true );
+			command.ExecuteNonQuery();<#
+		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+		{
+			if(ef.IsKey(edmProperty)) { 
+				if(code.Escape(edmProperty.TypeUsage.EdmType).ToLower()=="guid" || code.Escape(edmProperty.TypeUsage.EdmType)=="DateTime" || code.Escape(edmProperty.TypeUsage.EdmType)=="Int32" || code.Escape(edmProperty.TypeUsage.EdmType)=="int" || code.Escape(edmProperty.TypeUsage.EdmType)=="Int64" || code.Escape(edmProperty.TypeUsage.EdmType)=="long" || code.Escape(edmProperty.TypeUsage.EdmType)=="float" || code.Escape(edmProperty.TypeUsage.EdmType)=="double") { #>
+
+			<# if((keyType=="Int32" || keyType=="int") && keyName=="Id") { #> return 				 
+			<#}#><#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = <#=code.Escape(edmProperty.TypeUsage.EdmType)#>.Parse(
+			command.GetOutParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>").Value.ToString());<#
+				} 
+			}
+		}#>
+
+		}
+	}
+
+<#
+	}
+
+	if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("MODIFY")) { 
+#>
+	internal static List<<#=code.Escape(entity)#>Entity> Modify<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>)
+	{ 
+		var list = new List<<#=code.Escape(entity)#>Entity>();
+
+		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
+		using (var command = database.CreateStoredProcCommand("usp_<#=code.Escape(entity)#>Modify"))
+		{
+			Build<#=code.Escape(entity)#>CommandParameters( <#=lowerName#>, command, false );
+			command.ExecuteNonQuery();
+		}
+
+		return list;
+	}
+
+<#
+	}
+
+	if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("REMOVE")) { 
+#>
+	internal static void Remove<#=code.Escape(entity)#>(<#=keyType#> <#=code.Escape(keyName.ToLower())#>)
+	{
+		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
+		using (var command = database.CreateStoredProcCommand("usp_<#=code.Escape(entity)#>Remove"))
+		{
+			<#
+		    foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+			{
+				if (ef.IsKey(edmProperty)) {
+		            #>command.AddInParameter("@<#=code.Escape(keyName.ToLower())#>", <#=code.Escape(keyName.ToLower())#>);
+<#				}
+			}#>
+			command.ExecuteNonQuery();
+		}
+	}
+
+<#}
+#>	private static void Build<#=code.Escape(entity)#>CommandParameters( <#=code.Escape(entity)#>Entity <#=lowerName#>, IDBCommand command, bool addRecord )
+	{ 
+<#
+		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+		{
+			if(ef.IsKey(edmProperty)) { #>
+   		if(addRecord) command.AddParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", ParameterDirection.InputOutput,  <#=lowerName#>.<#=code.Escape(edmProperty.Name)#>);
+		else command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=lowerName#>.<#=code.Escape(edmProperty.Name)#>);
+<#
+			} else {
+				if(edmProperty.Name.ToLower()=="createdby") { #>
+		if(addRecord) command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=lowerName#>.<#=code.Escape(edmProperty.Name)#>);
+<#					continue;
+				}
+				if(edmProperty.Name.ToLower()=="modifiedby") { #>
+		if(!addRecord) command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=lowerName#>.<#=code.Escape(edmProperty.Name)#>);
+<#					continue;
+				}
+				if(edmProperty.Name.ToLower()=="created" || edmProperty.Name.ToLower()=="modified") continue;
+			#>
+		command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=lowerName#>.<#=code.Escape(edmProperty.Name)#>);
+<#
+			}
+		}
+#>
+
+	}
+	
+<#
+		if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GET") || entity.Documentation.LongDescription.Contains("GETBY")) { 
+#>	private static bool Populate<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>, IDataReader dataReader, string[] fillProperties = null)
+	{
+		if (dataReader==null || !dataReader.Read()) return false;
+		<#
+		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+		{
+			var ptype=code.Escape(edmProperty.TypeUsage.EdmType).ToLower().Replace("@","");
+			if(ptype=="int32" || ptype=="int" || ptype=="int64" || ptype=="long" || ptype=="float" || ptype=="double") {#>						
+		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null ? <#=code.Escape(edmProperty.TypeUsage.EdmType)#>.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) : 0;<#
+			} else 
+			if(ptype=="boolean") {#>						
+		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) && Boolean.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString());<#
+			} else
+			if(ptype=="decimal") {#>						
+		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = decimal.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"] != null ? dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString() : "0");<#
+			} else
+			if(ptype=="datetime") {#>
+					
+		if(!(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull)) <#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = DateTime.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString());<#
+			} else {#>
+					
+		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null ? dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString() : string.Empty;<#
+			}
+		}
+#>
+
+		FillCollection("<#=lowerName#>",<#=lowerName#>,dataReader,fillProperties);
+<#
+		if(entity.NavigationProperties.Where(np => np.DeclaringType == entity && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many).Count()>0) {
+#>		
+
+		if(fillProperties!=null && fillProperties.Length>0) {
+			foreach(var propName in fillProperties) {
+
+				switch(propName) {					
+<#
+
+foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many))
+{
+		if (navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+		if(navProperty.Documentation!=null && navProperty.Documentation.LongDescription.ToLower().Contains("hide")) continue;
+
+    {#>
+					case "<#=code.Escape(navProperty)#>":
+						if(<#=lowerName#>.<#=code.Escape(navProperty)#>!=null) <#=lowerName#>.<#=code.Escape(navProperty)#>.Clear();
+						else <#=lowerName#>.<#=code.Escape(navProperty)#> = new List<<#=code.Escape(navProperty.ToEndMember.GetEntityType()).Replace(edmxFileName+".","")#>>();
+						<#=lowerName#>.<#=code.Escape(navProperty)#>.AddRange(Get<#=code.Escape(navProperty.ToEndMember.GetEntityType())#>By<#=navProperty.FromEndMember.Name#>(<#=code.Escape(lowerName)#>.<#=keyName#>, filterFillProperties(fillProperties, "<#=code.Escape(navProperty)#>")));
+						break;
+<#	}
+	}
+#>
+				}
+			}
+		}
+<#	
+	}
+#>
+		
+		return true;
+	}
+
+<#
+}
+}
+
+#>
+	private static string[] filterFillProperties(string[] fillProperties, string filterBy)
+	{
+		var list = new List<string>();
+
+		foreach(string name in fillProperties)
+		{
+			if(!name.Contains(".")) continue;
+			if(name.StartsWith(filterBy+"."))
+			{
+				var trimName = name.Substring(filterBy.Length + 1);
+				if (!list.Contains(trimName)) list.Add(trimName);
+			}
+		}
+
+		return list.ToArray();
+	}
+
+}
+<#
+EndNamespace(namespaceName);
+
+
+if (!typeMapper.VerifyCaseInsensitiveTypeUniqueness(typeMapper.GetAllGlobalItems(itemCollection), inputFile))
+{
+    return "";
+}
+
+#>
+<#+
+
+
+#>

@@ -1,0 +1,20 @@
+﻿<#@ include file="$(SolutionDir){packageDir}\TemplateFilemanager.CS.ttinclude" #>
+<#@ include file="$(SolutionDir){packageDir}\Core.ttinclude"#>
+/*
+<#
+var fileManager = TemplateFileManager.Create(this);
+fileManager.IsAutoIndentEnabled = true;
+fileManager.CanOverwriteExistingFile = true;
+#>
+<#@ include file="$(SolutionDir){packageDir}\DBProcs.ttinclude"#>
+<#@ include file="$(SolutionDir){packageDir}\DBTables.ttinclude"#>
+<#@ include file="$(SolutionDir){packageDir}\DB.ttinclude"#>
+<#@ include file="$(SolutionDir){packageDir}\Data.ttinclude"#>
+<#@ include file="$(SolutionDir){packageDir}\Entities.ttinclude"#>
+<#@ include file="$(SolutionDir){packageDir}\Security.ttinclude"#>
+<#@ include file="$(SolutionDir){packageDir}\WebAPI.ttinclude"#>
+<#@ include file="$(SolutionDir){packageDir}\WCF.ttinclude"#>
+<#
+EmbedEdmx(Host.TemplateFile.ToString(), fileManager);
+fileManager.Process();
+#>

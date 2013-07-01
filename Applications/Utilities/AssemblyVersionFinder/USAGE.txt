@@ -1,0 +1,25 @@
+﻿AssemblyVersionFinder: Searches a project structure or an assembly 
+                       for an AssemblyFileVersion.
+Author: Chris Doty <cdoty@civicinc.com>
+
+AssemblyVersionFinder.exe [option] [path]
+
+Options: 
+	-d - (Default) Forces scan of a project structure.  It will search all .cs 
+	     files for this pattern [assembly: AssemblyFileVersion("1.0.0.0")].
+		 will return 1.0.0.0 in this example.
+	
+	-a - Tells AssemblyVersionFinder.exe we want to look at a specific .exe or 
+	     .dll file
+
+	-s - forces output of a version# with just major and minor.  So instead of 
+	     1.0.0.0 it would return 1.0
+
+	-b - forces output of a version# with just build and revision.  So instead
+	     of 1.0.0.0 it would return 0.0
+
+Path:
+	Can be the path to the directory to scan or the assembly path.
+	By default it will search the current working directory.  If the current 
+	working directory is the bin or under the bin directory the project root 
+	folder will be used

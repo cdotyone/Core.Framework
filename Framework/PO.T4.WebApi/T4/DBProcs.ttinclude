@@ -1,0 +1,624 @@
+﻿<#
+
+string userContent;
+string[] codeSections;
+
+fileManager.StartNewFile(edmxFileName+".Defaults.sql", folderName:"SQL");
+
+#>
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_GetDate]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [dbo].[udf_GetDate]
+GO
+
+CREATE DEFAULT [dbo].[udf_GetDate]
+AS GETUTCDATE()
+GO
+
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_Unknown]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [dbo].[udf_Unknown]
+GO
+
+CREATE DEFAULT [dbo].[udf_Unknown]
+AS 'UNK'
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_Yes]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [dbo].[udf_Yes]
+GO
+
+CREATE DEFAULT [dbo].[udf_Yes]
+AS 1
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_No]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [dbo].[udf_No]
+GO
+
+CREATE DEFAULT [dbo].[udf_No]
+AS 0
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_Zero]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [dbo].[udf_Zero]
+GO
+
+CREATE DEFAULT [dbo].[udf_Zero]
+AS 0
+GO
+-- t4-defaults begin
+<#
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+ 		if(code.Escape(edmProperty.TypeUsage.EdmType).ToLower()=="boolean") {
+
+		var boolyesno = "No";
+		try {
+			if(edmProperty.TypeUsage.Facets["DefaultValue"].Value.ToString().ToLower()=="true" || edmProperty.TypeUsage.Facets["DefaultValue"].Value.ToString().ToLower()=="1") {
+				boolyesno = "Yes";
+		}
+		} catch {
+		}
+#>
+EXECUTE sp_bindefault N'dbo.udf_<#=boolyesno#>', N'[dbo].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
+<#
+			continue;
+		}
+
+		if(edmProperty.Name.ToLower()!="created" 
+		&& edmProperty.Name.ToLower()!="modified"
+		&& edmProperty.Name.ToLower()!="createdby"
+		&& edmProperty.Name.ToLower()!="modifiedby"
+		) continue;
+
+		if(edmProperty.Name.ToLower()=="createdby" || edmProperty.Name.ToLower()=="modifiedby") {
+#>
+EXECUTE sp_bindefault N'dbo.udf_Unknown', N'[dbo].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
+<#
+		} else {
+
+		var notNullable = true;
+		try {
+			if(edmProperty.TypeUsage.Facets["Nullable"].Value.ToString().ToLower()=="true") {
+				notNullable = false;
+		}
+		} catch {
+		}
+
+			if(notNullable){
+#>
+EXECUTE sp_bindefault N'dbo.udf_GetDate', N'[dbo].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
+<#
+			}
+		}
+	}
+}
+#>
+-- t4-defaults end
+GO
+<# fileManager.EndBlock(); #>
+<#
+
+// Emit Entity Types
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+	tableAlias = Core.GetTableAlias(entity.Name);
+		
+	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GET") || entity.Documentation.LongDescription.Contains("ADD"))
+	   && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Get.sql", out userContent))  {	
+#>
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>Get]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_<#=entity.Name#>Get]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>Get]
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		if(!ef.IsKey(edmProperty)) continue;
+	#>
+	<#=i>0 ? ", " + Core.GetParameterName(edmProperty.Name) : "  " + Core.GetParameterName(edmProperty.Name)#> <#=Core.GetParameterType(code,edmProperty) #>
+<#		i++;
+	}
+#>
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	SELECT	
+		-- t4-columns begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {		#>
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
+<#
+		i++;
+	}
+#>		-- t4-columns end
+	FROM [dbo].[<#=entity.Name#>] <#=tableAlias#>
+	WHERE	
+		-- t4-where begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		if(!ef.IsKey(edmProperty)) continue;
+	#>
+	<#=(i>0 ? "AND " + tableAlias+".["+edmProperty.ToString() : "    " + tableAlias+".["+edmProperty.ToString())#>] = <#=Core.GetParameterName(edmProperty.Name)#>
+<#
+		i++;
+	}
+#>
+		-- t4-where end
+END
+GO
+<#
+	}
+	
+	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("COUNT"))
+	&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_" + entity.Name + "GetCount.sql", out userContent))  {	
+#>
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>GetCount]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_<#=entity.Name#>GetCount]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>GetCount]
+     @count int out
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	SELECT @count = COUNT(*)
+	FROM [dbo].[<#=entity.Name#>] <#=tableAlias#>
+	
+END
+GO
+<#
+	}
+
+	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("PAGED"))
+	&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_" + entity.Name + "GetPaged.sql", out userContent))  {	
+#>
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>GetPaged]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_<#=entity.Name#>GetPaged]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>GetPaged]
+     @skip int
+    ,@count int out
+	,@orderBy nvarchar(512)
+	,@retcount bit = 0
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	SELECT	
+		-- t4-columns begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {		#>
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
+<#
+		i++;
+	}
+#>		-- t4-columns end
+	FROM [dbo].[<#=entity.Name#>] <#=tableAlias#>
+	ORDER BY 
+		-- t4-order begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		//if(!ef.IsKey(edmProperty)) continue;
+	#>
+			<#=(i>0 ? ", " :"  ") #>CASE WHEN @orderBy = '<#=edmProperty.ToString().ToUpper()#>_DESC' THEN <#=tableAlias#>.[<#=edmProperty.ToString()#>] ELSE '' END DESC
+			, CASE WHEN @orderBy = '<#=edmProperty.ToString().ToUpper()#>_ASC' THEN <#=tableAlias#>.[<#=edmProperty.ToString()#>] ELSE '' END
+<#
+		i++;
+	}
+#>		-- t4-order end
+	OFFSET @skip ROW
+	FETCH NEXT @count ROW ONLY
+	
+	IF @retcount=1
+	BEGIN
+		EXEC [dbo].[usp_<#=entity.Name#>GetCount] @count=@count out
+	END
+END
+GO
+<#
+	}
+
+		if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("PAGED"))
+	&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_" + entity.Name + "GetFiltered.sql", out userContent))  {	
+#>
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>GetFiltered]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_<#=entity.Name#>GetFiltered]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>GetFiltered]
+     @skip int
+    ,@count int out
+	,@orderBy nvarchar(512)
+	,@filterBy nvarchar(512)
+	,@retcount bit = 0
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DECLARE @select nvarchar(max)
+    SET @select = 'SELECT	
+		-- t4-columns begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {		#>
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
+<#
+		i++;
+	}
+#>		-- t4-columns end
+    FROM [dbo].[<#=entity.Name#>] <#=tableAlias#>'
+
+	EXEC [dbo].[usp_ProcessFilter]
+		     @skip = @skip
+			,@select = @select
+			,@count = @count out
+			,@orderBy = @orderBy
+			,@filterBy = @filterBy
+			,@retcount = @retcount 
+END
+GO
+<#
+	}
+
+	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("ADD"))
+		&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Add.sql", out userContent))  {	
+
+		codeSections=Core.GetCodeSections(@"(-- t4-params begin|-- t4-params end|-- t4-columns begin|-- t4-columns end|-- t4-values begin|-- t4-values end)", userContent);
+
+		userContent = Core.GetUserContent(codeSections,null,"-- t4-params begin");
+		if(!string.IsNullOrEmpty(userContent)) {#><#=userContent#><#}
+		else {
+#>
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>Add]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_<#=entity.Name#>Add]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>Add]<#}#>
+
+-- t4-params begin
+<#
+
+  i=0;
+	hasCreatedBy = false;
+
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		parameterName = Core.GetParameterName(edmProperty.Name);
+		if(parameterName.ToLower()=="@modified" || parameterName.ToLower()=="@created") continue;
+		if(hasCreatedBy && (parameterName.ToLower()=="@modifiedby" || parameterName.ToLower()=="@createdby") ) continue;
+		if(!hasCreatedBy && parameterName.ToLower()=="@modifiedby") parameterName = "@createdBy";
+		if(parameterName.ToLower()=="@createdby") hasCreatedBy = true;
+
+		if(ef.IsKey(edmProperty)) {
+#>
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #> out
+<#
+		} else {
+#>
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
+<#
+		}
+		i++;
+	}
+#>
+-- t4-params end
+<#
+	userContent = Core.GetUserContent(codeSections, "-- t4-params end", "-- t4-columns begin");
+	if(!string.IsNullOrEmpty(userContent)) {#><#=userContent#><#}
+	else {
+#>
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	INSERT INTO [dbo].[<#=entity.Name#>](<# } #>
+
+-- t4-columns begin
+<#	
+	i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		parameterName = Core.GetParameterName(edmProperty.Name);
+		if(parameterName.ToLower()=="@id") continue;
+			#>
+		<#=(i>0 ? ",[" + edmProperty.ToString() : " [" + edmProperty.ToString())#>]
+<#
+		i++;
+	}
+#>
+-- t4-columns end
+<#
+	userContent = Core.GetUserContent(codeSections, "-- t4-columns end", "-- t4-values begin");
+	if(!string.IsNullOrEmpty(userContent)) {#><#=userContent#><#}
+	else {
+#>	) VALUES (
+<# } #>
+
+-- t4-values begin
+<#  i=0;
+	var hasID = false;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		parameterName = Core.GetParameterName(edmProperty.Name);
+		if(parameterName.ToLower()=="@id") { hasID=true; continue;}
+		if(parameterName.ToLower()=="@modifiedby") parameterName = "@createdby";
+		if(parameterName.ToLower()=="@modified") parameterName = "getutcdate()";
+		if(parameterName.ToLower()=="@created") parameterName = "getutcdate()";
+#>
+		<#=(i>0 ? "," + parameterName : " " + parameterName)#>
+<#
+		i++;
+	}
+#>
+-- t4-values end
+<#
+	userContent = Core.GetUserContent(codeSections, "-- t4-values end", null);
+	if(!string.IsNullOrEmpty(userContent)) {#><#=userContent#><#} else {#>
+	)
+
+<#if(hasID) { #>SET @ID = SCOPE_IDENTITY()<#}#>
+
+END
+GO
+<#
+		}
+	}
+
+
+	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("MODIFY"))
+	  && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Modify.sql", out userContent))  {	
+#>
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>Modify]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_<#=entity.Name#>Modify]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>Modify]
+<#  i=0;
+	hasModifiedBy = false;
+
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		parameterName = Core.GetParameterName(edmProperty.Name);
+		if(parameterName.ToLower()=="@modified" || parameterName.ToLower()=="@created") continue;
+		if(hasCreatedBy && (parameterName.ToLower()=="@createdby" || parameterName.ToLower()=="@createdby") ) continue;
+		if(!hasCreatedBy && parameterName.ToLower()=="@createdby") parameterName = "@modifiedBy";
+		if(parameterName.ToLower()=="@modifiedby") hasModifiedBy = true;
+
+		if(ef.IsKey(edmProperty)) {
+#>
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
+<#
+		} else {
+#>
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
+<#
+		}
+		i++;
+	}
+#>
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	UPDATE <#=tableAlias#> SET 
+		-- t4-columns begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		parameterName = Core.GetParameterName(edmProperty.Name);
+		if(parameterName.ToLower()=="@id") continue;
+		if(parameterName.ToLower()=="@createdby" || parameterName.ToLower()=="@created") continue;
+		if(parameterName.ToLower()=="@modified") parameterName = "getutcdate()";
+			#>
+		<#=(i>0 ? ",[" + edmProperty.ToString() : " [" + edmProperty.ToString())#>] = <#=parameterName#>
+<#
+		i++;
+	}
+#>		-- t4-columns end
+	FROM [dbo].[<#=entity.Name#>] <#=tableAlias#>
+	WHERE	
+		-- t4-where begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		if(!ef.IsKey(edmProperty)) continue;
+	#>
+	<#=(i>0 ? "AND " + tableAlias+".["+edmProperty.ToString() : "    " + tableAlias+".["+edmProperty.ToString())#>] = <#=Core.GetParameterName(edmProperty.Name)#>
+<#
+		i++;
+	}
+#>
+		-- t4-where end
+END
+GO
+<#
+	}
+
+
+	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("REMOVE"))
+	  && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Remove.sql", out userContent))  {	
+#>
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>Remove]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_<#=entity.Name#>Remove]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>Remove]
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		if(!ef.IsKey(edmProperty)) continue;
+	#>
+	<#=i>0 ? ", " + Core.GetParameterName(edmProperty.Name) : "  " + Core.GetParameterName(edmProperty.Name)#> <#=Core.GetParameterType(code,edmProperty) #>
+<#	i++;
+	}
+#>
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DELETE FROM [dbo].[<#=entity.Name#>]
+	WHERE	
+		-- t4-where begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		if(!ef.IsKey(edmProperty)) continue;
+	#>
+	<#=(i>0 ? "AND [" + edmProperty.ToString() : "    [" + edmProperty.ToString())#>] = <#=Core.GetParameterName(edmProperty.Name)#>
+<#
+		i++;
+	}
+#>
+		-- t4-where end
+END
+GO
+<#
+	}
+
+    foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
+    {
+        if (navProperty.FromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many) {
+
+		var toEntity = navProperty.ToEndMember.GetEntityType();
+	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GETBY"))
+		&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+ entity.Name + "GetBy" + toEntity.Name + ".sql", out userContent))  {	
+
+	NavigationProperty[] foreignKeys = entity.NavigationProperties.ToArray();
+
+	//System.Diagnostics.Debugger.Break();
+	AssociationType association = null;	
+	try {
+	association = metadataWorkspace 
+		.GetItems<AssociationType>(DataSpace.SSpace)
+		.Single(a => a.Name == navProperty.RelationshipType.Name);
+	} catch {
+	}
+	if(association==null) continue;
+
+	var toColumns = String.Join(",", association.ReferentialConstraints.SelectMany(rc => rc.ToProperties));
+#>
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]
+<#  i=0;
+	foreach (EdmProperty edmProperty in toEntity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == toEntity))
+    {
+		if(!ef.IsKey(edmProperty)) continue;
+	#>
+	<#=i>0 ? ", " + Core.GetParameterName(toColumns) : "  " + Core.GetParameterName(toColumns)#> <#=Core.GetParameterType(code,edmProperty) #>
+<#	}
+#>
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	SELECT	
+		-- t4-columns begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {		#>
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
+<#
+		i++;
+	}
+#>		-- t4-columns end
+	FROM [dbo].[<#=entity.Name#>] <#=tableAlias#>
+	WHERE	
+		-- t4-where begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in toEntity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == toEntity))
+    {
+		if(!ef.IsKey(edmProperty)) continue;
+	#>
+	<#=(i>0 ? "AND " + tableAlias+".["+toColumns : "    " + tableAlias+".["+toColumns)#>] = <#=Core.GetParameterName(toColumns)#>
+<#
+		i++;
+	}
+#>
+		-- t4-where end
+END
+GO
+<#
+			}
+		}
+	}
+	fileManager.EndBlock();
+}
+
+#>
+<#+
+public static string ImportData(string filename) {
+	if(!File.Exists(filename)) return "";
+	var import = new XmlDocument();
+	import.Load(filename);
+	var nodes = import.SelectNodes("//import");
+
+	var sb = new StringBuilder();
+
+	foreach(XmlNode node in nodes) {
+		if(node.Attributes["into"]==null) continue;
+		var tableName = node.Attributes["into"].Value;
+
+		foreach(XmlNode row in node.ChildNodes) {
+			sb.Append("INSERT INTO [DBO].[" + tableName);
+			sb.Append("](");
+			var i=0;
+
+			foreach(XmlNode column in row.ChildNodes) {	
+				sb.Append(i==0 ? "[" + column.Name : ",[" + column.Name );
+				sb.Append("]");
+				i++; 
+			}
+			sb.Append(") VALUES (");
+		
+			i=0;
+			foreach(XmlNode column in row.ChildNodes) {	
+				sb.Append(i==0 ? "'"+column.InnerText.Replace("'","''") : ",'" + column.InnerText.Replace("'","''") ) ;
+				sb.Append("'");
+				i++; 
+			}
+			sb.AppendLine(");");
+		}
+	}
+
+	return sb.ToString()+"\r\nGO";
+}
+#>

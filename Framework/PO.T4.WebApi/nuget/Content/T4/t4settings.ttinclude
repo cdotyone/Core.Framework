@@ -1,0 +1,6 @@
+﻿<#@ template language="C#" debug="true" hostspecific="true"#>
+<# 
+var apiVersion="1.0";
+var apiPackageName=""; 
+#>
+
