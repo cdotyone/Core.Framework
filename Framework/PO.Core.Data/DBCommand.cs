@@ -1,6 +1,6 @@
 #region Copyright / Comments
 
-// <copyright file="DBCommand.cs" company="Polar Opposite">Copyright © Polar Opposite 2013</copyright>
+// <copyright file="DBCommand.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
 // <author>Chris Doty</author>
 // <email>cdoty@polaropposite.com</email>
 // <date>6/4/2013</date>
@@ -17,7 +17,7 @@ using System.Data.Common;
 
 #endregion References
 
-namespace PO.Core.Data
+namespace Civic.Core.Data
 {
     /// <summary>
     /// This class is used to construct DBCommands that will be executed against a sql database.

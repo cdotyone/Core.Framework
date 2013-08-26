@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 
-namespace PO.Core.Configuration
+namespace Civic.Core.Configuration
 {
     /// <summary>
 	/// Represents a collection of <see cref="NamedConfigurationElement"/> objects.

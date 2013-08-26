@@ -1,6 +1,6 @@
 #region Copyright / Comments
 
-// <copyright file="ICache.cs" company="Polar Opposite">Copyright © Polar Opposite 2013</copyright>
+// <copyright file="ICache.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
 // <author>Chris Doty</author>
 // <email>cdoty@polaropposite.com</email>
 // <date>6/4/2013</date>
@@ -15,7 +15,7 @@ using System.Xml;
 
 #endregion References
 
-namespace PO.Core.Data
+namespace Civic.Core.Data
 {
     /// <summary>
     /// Describes a cache provider class that will be used to cache the results of executed sql statements

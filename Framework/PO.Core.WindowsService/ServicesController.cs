@@ -1,6 +1,6 @@
 #region Copyright / Comments
 
-// <copyright file="ServicesController.cs" company="Polar Opposite">Copyright © Polar Opposite 2013</copyright>
+// <copyright file="ServicesController.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
 // <author>Chris Doty</author>
 // <email>cdoty@polaropposite.com</email>
 // <date>6/4/2013</date>
@@ -11,9 +11,9 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using PO.Core.WindowsService.Properties;
+using Civic.Core.WindowsService.Properties;
 
-namespace PO.Core.WindowsService
+namespace Civic.Core.WindowsService
 {
     internal partial class ServicesController : Form
     {

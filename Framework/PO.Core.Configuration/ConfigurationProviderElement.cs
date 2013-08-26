@@ -1,7 +1,7 @@
 ﻿using System.Configuration;
-using PO.Core.Configuration.Providers;
+using Civic.Core.Configuration.Providers;
 
-namespace PO.Core.Configuration
+namespace Civic.Core.Configuration
 {
 	public class ConfigurationProviderElement : NamedConfigurationElement
 	{
@@ -12,7 +12,7 @@ namespace PO.Core.Configuration
 		/// <summary>
 		/// The "assembly" name given of the provider.
 		/// 
-		/// In the form: assembly="PO.Core.Configuration, Version=1.0.0.0, Culture=neutral"
+		/// In the form: assembly="Civic.Core.Configuration, Version=1.0.0.0, Culture=neutral"
 		/// </summary>
 		[ConfigurationProperty(ASSEMBLY, IsRequired = true)]
 		public string AssemblyName
@@ -29,7 +29,7 @@ namespace PO.Core.Configuration
 		/// <summary>
 		/// The "type" name of the provider.
 		/// 
-		/// In the form of type="PO.Core.Configuration.ConfigFileProvider"
+		/// In the form of type="Civic.Core.Configuration.ConfigFileProvider"
 		/// </summary>
 		[ConfigurationProperty(TYPE, IsRequired = true)]
 		public string TypeName

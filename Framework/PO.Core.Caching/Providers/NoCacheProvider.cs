@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PO.Core.Caching.Providers
+namespace Civic.Core.Caching.Providers
 {
 	public class NoCacheProvider : ICacheProvider
     {

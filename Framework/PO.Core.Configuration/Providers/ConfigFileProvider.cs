@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Configuration;
 
-namespace PO.Core.Configuration.Providers
+namespace Civic.Core.Configuration.Providers
 {
     /// <summary>
     /// Basic provider for getting configurations from normal .config files.

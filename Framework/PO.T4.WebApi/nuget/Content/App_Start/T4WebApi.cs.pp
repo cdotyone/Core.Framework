@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using PO.T4.WebApi;
+using Civic.Core.WebApi;
 
 [assembly: WebActivator.PreApplicationStartMethod(typeof($rootnamespace$.App_Start.T4WebApi), "PreStart")]
 namespace $rootnamespace$.App_Start {

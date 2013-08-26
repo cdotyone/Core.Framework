@@ -1,6 +1,6 @@
-using PO.Core.Configuration;
+using Civic.Core.Configuration;
 
-namespace PO.Core.Logging.Configuration {
+namespace Civic.Core.Logging.Configuration {
 
     public class LoggerSection : System.Configuration.ConfigurationSection {
         

@@ -2,10 +2,10 @@
 // File:   RememberPosition.Designer.cs
 // Author: Chris Doty
 // Date:   8/20/2007
-// Copyright (c) 2007 Polar Opposite All rights reserved.
+// Copyright (c) 2007 Civic Engineering & IT All rights reserved.
 // </fileheader>
 
-namespace PO.Core.WindowsService
+namespace Civic.Core.WindowsService
 {
     partial class RememberPosition
     {

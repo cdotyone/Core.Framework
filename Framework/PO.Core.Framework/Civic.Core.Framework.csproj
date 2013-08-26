@@ -7,8 +7,8 @@
     <ProjectGuid>{5F6F5303-3D84-4D29-8FBA-3B1D54EE879D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PO.Core.Framework</RootNamespace>
-    <AssemblyName>PO.Core.Framework</AssemblyName>
+    <RootNamespace>Civic.Core.Framework</RootNamespace>
+    <AssemblyName>Civic.Core.Framework</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
@@ -38,7 +38,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\References\po.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\References\civic.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nuget|AnyCPU'">
     <OutputPath>bin\Nuget\</OutputPath>
@@ -68,25 +68,25 @@
     <Compile Include="ResourceHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\References\po.snk">
-      <Link>po.snk</Link>
+    <None Include="..\..\References\civic.snk">
+      <Link>civic.snk</Link>
     </None>
-    <None Include="Nuget\PO.Core.Framework.nuspec" />
+    <None Include="Nuget\Civic.Core.Framework.nuspec" />
     <None Include="Nuget\pack.bat" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PO.Core.Configuration\PO.Core.Configuration.csproj">
+    <ProjectReference Include="..\PO.Core.Configuration\Civic.Core.Configuration.csproj">
       <Project>{4243bf37-b025-4ad1-874e-8b118869c5cf}</Project>
-      <Name>PO.Core.Configuration</Name>
+      <Name>Civic.Core.Configuration</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PO.Core.Logging\PO.Core.Logging.csproj">
+    <ProjectReference Include="..\PO.Core.Logging\Civic.Core.Logging.csproj">
       <Project>{62b8463d-2c19-47c2-a7c2-2740f78c27d1}</Project>
-      <Name>PO.Core.Logging</Name>
+      <Name>Civic.Core.Logging</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>$(ProjectDir)nuget\pack.bat http://nuget.polaropposite.com/ $(ProjectDir)  $(TargetDir) $(ConfigurationName)</PostBuildEvent>
+    <PostBuildEvent>$(ProjectDir)nuget\pack.bat http://nuget.civicinc.com/ $(ProjectDir)  $(TargetDir) $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

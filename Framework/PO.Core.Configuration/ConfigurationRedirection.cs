@@ -1,7 +1,7 @@
 using System;
 using System.Configuration;
 
-namespace PO.Core.Configuration
+namespace Civic.Core.Configuration
 {
 	public class ConfigurationRedirection : NamedConfigurationElement
 	{
@@ -12,7 +12,7 @@ namespace PO.Core.Configuration
 		/// <summary>
 		/// The "assembly" name given of the provider.
 		/// 
-		/// In the form: assembly="PO.Core.Configuration, Version=1.0.0.0, Culture=neutral"
+		/// In the form: assembly="Civic.Core.Configuration, Version=1.0.0.0, Culture=neutral"
 		/// </summary>
 		[ConfigurationProperty(ASSEMBLY, IsRequired = true)]
 		public string AssemblyName

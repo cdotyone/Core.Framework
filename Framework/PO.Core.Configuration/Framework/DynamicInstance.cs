@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace PO.Core.Configuration
+namespace Civic.Core.Configuration
 {
 	public static class DynamicInstance
 	{

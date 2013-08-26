@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using PO.Core.Configuration;
+using Civic.Core.Configuration;
 
-namespace PO.T4.WebApi.Configuration
+namespace Civic.Core.WebApi.Configuration
 {
     public class T4WebApiSection : Section
     {

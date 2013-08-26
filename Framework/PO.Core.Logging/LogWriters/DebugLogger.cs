@@ -1,6 +1,6 @@
 #region Copyright / Comments
 
-// <copyright file="DebugLogger.cs" company="Polar Opposite">Copyright © Polar Opposite 2013</copyright>
+// <copyright file="DebugLogger.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
 // <author>Chris Doty</author>
 // <email>cdoty@polaropposite.com</email>
 // <date>6/4/2013</date>
@@ -16,7 +16,7 @@ using System.Diagnostics;
 
 #endregion References
 
-namespace PO.Core.Logging.LogWriters
+namespace Civic.Core.Logging.LogWriters
 {
     public class DebugLogger : ILogWriter
     {

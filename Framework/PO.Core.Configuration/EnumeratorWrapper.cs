@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace PO.Core.Configuration
+namespace Civic.Core.Configuration
 {
     /// <devdoc>
     /// Represents a genereic enumerator

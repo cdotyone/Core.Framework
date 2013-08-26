@@ -1,8 +1,8 @@
 ﻿using System.Configuration;
-using PO.Core.Caching.Providers;
-using PO.Core.Configuration;
+using Civic.Core.Caching.Providers;
+using Civic.Core.Configuration;
 
-namespace PO.Core.Caching.Configuration
+namespace Civic.Core.Caching.Configuration
 {
 
 	public class CacheConfigurationSection : ConfigurationSection

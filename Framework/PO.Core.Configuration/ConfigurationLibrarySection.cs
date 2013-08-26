@@ -1,7 +1,7 @@
 ﻿using System.Configuration;
-using PO.Core.Configuration.Providers;
+using Civic.Core.Configuration.Providers;
 
-namespace PO.Core.Configuration
+namespace Civic.Core.Configuration
 {
 	public class ConfigurationLibrarySection : ConfigurationSection
 	{

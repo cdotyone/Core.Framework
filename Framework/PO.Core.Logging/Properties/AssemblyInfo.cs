@@ -1,6 +1,6 @@
 #region Copyright / Comments
 
-// <copyright file="AssemblyInfo.cs" company="Polar Opposite">Copyright © Polar Opposite 2013</copyright>
+// <copyright file="AssemblyInfo.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
 // <author>Chris Doty</author>
 // <email>cdoty@polaropposite.com</email>
 // <date>6/4/2013</date>
@@ -17,10 +17,10 @@ using System.Runtime.InteropServices;
 #endregion References
 
 [assembly: CLSCompliant( true )]
-[assembly: AssemblyTitle("PO.Core.Logging")]
+[assembly: AssemblyTitle("Civic.Core.Logging")]
 [assembly: AssemblyDescription("Generic Logging Library")]
 [assembly: AssemblyConfiguration( "" )]
-[assembly: AssemblyProduct("PO.Core.Logging")]
+[assembly: AssemblyProduct("Civic.Core.Logging")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture( "" )]
 [assembly: ComVisible( false )]
@@ -28,5 +28,5 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: AssemblyCompany("Polar Opposite")]
-[assembly: AssemblyCopyright("Copyright © 2012 Polar Opposite")]
+[assembly: AssemblyCompany("Civic Engineering & IT")]
+[assembly: AssemblyCopyright("Copyright © 2012 Civic Engineering & IT")]

@@ -2,7 +2,7 @@
 using System.Resources;
 using System.Threading;
 
-namespace PO.Core.Configuration
+namespace Civic.Core.Configuration
 {
     internal class StringResources
     {
@@ -12,7 +12,7 @@ namespace PO.Core.Configuration
 
 		StringResources()
 		{
-			_resources = new ResourceManager("PO.Core.Configuration.Properties.Resources", GetType().Assembly);
+			_resources = new ResourceManager("Civic.Core.Configuration.Properties.Resources", GetType().Assembly);
 		}
 
 		private static StringResources GetLoader()

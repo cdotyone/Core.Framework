@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Reflection;
-using PO.Core.Configuration;
+using Civic.Core.Configuration;
 
-namespace PO.Core.Utility
+namespace Civic.Core.Utility
 {
     public static class ReflectionHelper
     {

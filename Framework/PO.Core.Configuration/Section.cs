@@ -8,7 +8,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace PO.Core.Configuration
+namespace Civic.Core.Configuration
 {
     /// <summary>
     /// Represents a configuration section that can be serialized.

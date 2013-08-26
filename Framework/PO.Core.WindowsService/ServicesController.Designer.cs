@@ -1,4 +1,4 @@
-namespace PO.Core.WindowsService
+namespace Civic.Core.WindowsService
 {
     partial class ServicesController
     {
@@ -38,7 +38,7 @@ namespace PO.Core.WindowsService
             this._btnPlayPause = new System.Windows.Forms.ToolStripButton();
             this._btnStop = new System.Windows.Forms.ToolStripButton();
             this._btnRestart = new System.Windows.Forms.ToolStripButton();
-            this._rememberPosition = new PO.Core.WindowsService.RememberPosition(this.components);
+            this._rememberPosition = new Civic.Core.WindowsService.RememberPosition(this.components);
             this._btnSettings = new System.Windows.Forms.ToolStripButton();
             this._toolStrip1.SuspendLayout();
             this.SuspendLayout();

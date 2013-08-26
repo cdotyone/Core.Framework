@@ -4,7 +4,7 @@ EdmItemCollection ExistingStore2 = (EdmItemCollection)metadataWorkspace.GetItemC
 
 fileManager.StartNewFile(edmxFileName + "Data.cs", folderName:"Data");
 
-WriteHeader("System", "System.Collections.Generic", "System.Data","System.Data.Common","PO.Core.Data", namespaceName +".Entities");
+WriteHeader("System", "System.Collections.Generic", "System.Data","System.Data.Common","Civic.Core.Data", namespaceName +".Entities");
 
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {

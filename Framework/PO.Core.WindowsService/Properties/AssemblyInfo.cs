@@ -3,10 +3,10 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: CLSCompliant(true)]
-[assembly: AssemblyTitle("PO.Core.WindowsService")]
+[assembly: AssemblyTitle("Civic.Core.WindowsService")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("PO.Core.WindowsService")]
+[assembly: AssemblyProduct("Civic.Core.WindowsService")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -15,5 +15,5 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: AssemblyCompany("Polar Opposite")]
-[assembly: AssemblyCopyright("Copyright © 2012 Polar Opposite")]
+[assembly: AssemblyCompany("Civic Engineering & IT")]
+[assembly: AssemblyCopyright("Copyright © 2012 Civic Engineering & IT")]

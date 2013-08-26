@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace PO.Core.Configuration.Providers
+namespace Civic.Core.Configuration.Providers
 {
     /// <summary>
     /// Basic provider toload configurations from an embedded source.

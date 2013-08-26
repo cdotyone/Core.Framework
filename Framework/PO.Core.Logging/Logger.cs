@@ -1,6 +1,6 @@
 #region Copyright / Comments
 
-// <copyright file="Logger.cs" company="Polar Opposite">Copyright © Polar Opposite 2013</copyright>
+// <copyright file="Logger.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
 // <author>Chris Doty</author>
 // <email>cdoty@polaropposite.com</email>
 // <date>6/4/2013</date>
@@ -19,11 +19,11 @@ using System.Security;
 using System.Security.Principal;
 using System.Threading;
 using System.Xml;
-using PO.Core.Logging.Configuration;
+using Civic.Core.Logging.Configuration;
 
 #endregion References
 
-namespace PO.Core.Logging
+namespace Civic.Core.Logging
 {
     /// <summary>
     /// Primary logging class.  This does all of the routing to the log writers

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace PO.Core.WindowsService
+namespace Civic.Core.WindowsService
 {
     public interface IServiceSettings
     {

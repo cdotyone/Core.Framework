@@ -8,12 +8,12 @@
     <ProjectGuid>{62B8463D-2C19-47C2-A7C2-2740F78C27D1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PO.Core.Logging</RootNamespace>
-    <AssemblyName>PO.Core.Logging</AssemblyName>
+    <RootNamespace>Civic.Core.Logging</RootNamespace>
+    <AssemblyName>Civic.Core.Logging</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\References\po.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\References\civic.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -105,10 +105,10 @@
     <Compile Include="ThreadContext.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\References\po.snk">
-      <Link>po.snk</Link>
+    <None Include="..\..\References\civic.snk">
+      <Link>civic.snk</Link>
     </None>
-    <None Include="Nuget\PO.Core.Logging.nuspec" />
+    <None Include="Nuget\Civic.Core.Logging.nuspec" />
     <None Include="Nuget\pack.bat" />
   </ItemGroup>
   <ItemGroup>
@@ -129,14 +129,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PO.Core.Configuration\PO.Core.Configuration.csproj">
+    <ProjectReference Include="..\PO.Core.Configuration\Civic.Core.Configuration.csproj">
       <Project>{4243bf37-b025-4ad1-874e-8b118869c5cf}</Project>
-      <Name>PO.Core.Configuration</Name>
+      <Name>Civic.Core.Configuration</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>$(ProjectDir)nuget\pack.bat http://nuget.polaropposite.com/ $(ProjectDir)  $(TargetDir) $(ConfigurationName)</PostBuildEvent>
+    <PostBuildEvent>$(ProjectDir)nuget\pack.bat http://nuget.civicinc.com/ $(ProjectDir)  $(TargetDir) $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

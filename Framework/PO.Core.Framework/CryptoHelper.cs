@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web.UI;
 
-namespace PO.Core.Utility
+namespace Civic.Core.Utility
 {
 	/// <summary>
 	/// Utility for encrypting and decrypting data.

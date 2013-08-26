@@ -5,7 +5,7 @@ using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace PO.T4.WebApi
+namespace Civic.Core.WebApi
 {
     public class ODataV3XmlFormatter : XmlMediaTypeFormatter
     {

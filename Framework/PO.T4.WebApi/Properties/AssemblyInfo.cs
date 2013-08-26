@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("PO.T4.WebApi")]
+[assembly: AssemblyTitle("Civic.Core.WebApi")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Civic")]
-[assembly: AssemblyProduct("PO.T4.WebApi")]
+[assembly: AssemblyProduct("Civic.Core.WebApi")]
 [assembly: AssemblyCopyright("Copyright © Civic 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

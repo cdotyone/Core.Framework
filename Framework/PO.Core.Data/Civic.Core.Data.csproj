@@ -9,14 +9,14 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>
     </ApplicationIcon>
-    <AssemblyName>PO.Core.Data</AssemblyName>
-    <AssemblyOriginatorKeyFile>..\..\References\po.snk</AssemblyOriginatorKeyFile>
+    <AssemblyName>Civic.Core.Data</AssemblyName>
+    <AssemblyOriginatorKeyFile>..\..\References\civic.snk</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>PO.Core.Data</RootNamespace>
+    <RootNamespace>Civic.Core.Data</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -166,26 +166,26 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\References\po.snk">
-      <Link>po.snk</Link>
+    <None Include="..\..\References\civic.snk">
+      <Link>civic.snk</Link>
     </None>
-    <None Include="Nuget\PO.Core.Data.nuspec" />
+    <None Include="Nuget\Civic.Core.Data.nuspec" />
     <None Include="Nuget\pack.bat" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PO.Core.Configuration\PO.Core.Configuration.csproj">
+    <ProjectReference Include="..\PO.Core.Configuration\Civic.Core.Configuration.csproj">
       <Project>{4243bf37-b025-4ad1-874e-8b118869c5cf}</Project>
-      <Name>PO.Core.Configuration</Name>
+      <Name>Civic.Core.Configuration</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PO.Core.Logging\PO.Core.Logging.csproj">
+    <ProjectReference Include="..\PO.Core.Logging\Civic.Core.Logging.csproj">
       <Project>{62b8463d-2c19-47c2-a7c2-2740f78c27d1}</Project>
-      <Name>PO.Core.Logging</Name>
+      <Name>Civic.Core.Logging</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>$(ProjectDir)nuget\pack.bat http://nuget.polaropposite.com/ $(ProjectDir)  $(TargetDir) $(ConfigurationName)</PostBuildEvent>
+    <PostBuildEvent>$(ProjectDir)nuget\pack.bat http://nuget.civicinc.com/ $(ProjectDir)  $(TargetDir) $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -8,8 +8,8 @@
     <ProjectGuid>{B8050087-2B82-4A11-AF63-12222991905F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PO.Core.Caching</RootNamespace>
-    <AssemblyName>PO.Core.Caching</AssemblyName>
+    <RootNamespace>Civic.Core.Caching</RootNamespace>
+    <AssemblyName>Civic.Core.Caching</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
@@ -41,7 +41,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\References\po.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\References\civic.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -101,10 +101,10 @@
     <Compile Include="SR.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\References\po.snk">
-      <Link>po.snk</Link>
+    <None Include="..\..\References\civic.snk">
+      <Link>civic.snk</Link>
     </None>
-    <None Include="Nuget\PO.Core.Caching.nuspec" />
+    <None Include="Nuget\Civic.Core.Caching.nuspec" />
     <None Include="Nuget\pack.bat" />
   </ItemGroup>
   <ItemGroup>
@@ -115,13 +115,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PO.Core.Configuration\PO.Core.Configuration.csproj">
+    <ProjectReference Include="..\PO.Core.Configuration\Civic.Core.Configuration.csproj">
       <Project>{4243bf37-b025-4ad1-874e-8b118869c5cf}</Project>
-      <Name>PO.Core.Configuration</Name>
+      <Name>Civic.Core.Configuration</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>$(ProjectDir)nuget\pack.bat http://nuget.polaropposite.com/ $(ProjectDir)  $(TargetDir) $(ConfigurationName)</PostBuildEvent>
+    <PostBuildEvent>$(ProjectDir)nuget\pack.bat http://nuget.civicinc.com/ $(ProjectDir)  $(TargetDir) $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
 </Project>

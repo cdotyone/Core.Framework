@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading;
-using PO.Core.Caching.Configuration;
-using PO.Core.Caching.Providers;
-using PO.Core.Configuration;
+using Civic.Core.Caching.Configuration;
+using Civic.Core.Caching.Providers;
+using Civic.Core.Configuration;
 
-namespace PO.Core.Caching
+namespace Civic.Core.Caching
 {
 	public static class CacheManager
     {

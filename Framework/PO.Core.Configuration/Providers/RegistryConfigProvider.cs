@@ -4,7 +4,7 @@ using System.Configuration;
 using System.Xml.Linq;
 using Microsoft.Win32;
 
-namespace PO.Core.Configuration.Providers
+namespace Civic.Core.Configuration.Providers
 {
     public class RegistryConfigProvider : IConfigurationProvider
     {

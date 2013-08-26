@@ -1,4 +1,4 @@
-namespace PO.Core.Caching
+namespace Civic.Core.Caching
 {
 	public enum CacheStore
 	{

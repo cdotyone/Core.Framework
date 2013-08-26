@@ -1,6 +1,6 @@
 #region Copyright / Comments
 
-// <copyright file="ServicesLoader.cs" company="Polar Opposite">Copyright © Polar Opposite 2013</copyright>
+// <copyright file="ServicesLoader.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
 // <author>Chris Doty</author>
 // <email>cdoty@polaropposite.com</email>
 // <date>6/4/2013</date>
@@ -16,7 +16,7 @@ using System.ServiceProcess;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace PO.Core.WindowsService
+namespace Civic.Core.WindowsService
 {
     public static class ServicesLoader
     {

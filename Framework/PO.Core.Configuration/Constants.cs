@@ -1,4 +1,4 @@
-﻿namespace PO.Core.Configuration
+﻿namespace Civic.Core.Configuration
 {
     internal class Constants
     {

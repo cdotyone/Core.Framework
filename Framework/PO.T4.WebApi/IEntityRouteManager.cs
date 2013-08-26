@@ -1,4 +1,4 @@
-﻿namespace PO.T4.WebApi
+﻿namespace Civic.Core.WebApi
 {
     public interface IEntityRouteManager
     {

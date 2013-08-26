@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace PO.Core.Configuration
+namespace Civic.Core.Configuration
 {
 	/// <summary>
 	/// Utility for encrypting and decrypting data.

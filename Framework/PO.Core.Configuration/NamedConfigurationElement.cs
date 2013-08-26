@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Xml;
 
-namespace PO.Core.Configuration
+namespace Civic.Core.Configuration
 {
 	/// <summary>
 	/// A named element under configuration section

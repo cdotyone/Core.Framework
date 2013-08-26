@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PO.Core.Logging", "Framework\PO.Core.Logging\PO.Core.Logging.csproj", "{62B8463D-2C19-47C2-A7C2-2740F78C27D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civic.Core.Logging", "Framework\PO.Core.Logging\Civic.Core.Logging.csproj", "{62B8463D-2C19-47C2-A7C2-2740F78C27D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PO.Core.Logging.DB", "Framework\PO.Core.Logging.DB\PO.Core.Logging.DB.csproj", "{15F29F9B-DAE4-4DF1-AC69-0615029CB5D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civic.Core.Logging.DB", "Framework\PO.Core.Logging.DB\Civic.Core.Logging.DB.csproj", "{15F29F9B-DAE4-4DF1-AC69-0615029CB5D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PO.Core.Data", "Framework\PO.Core.Data\PO.Core.Data.csproj", "{3447D6A0-56B4-4E6B-A2DB-F425324F614A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civic.Core.Data", "Framework\PO.Core.Data\Civic.Core.Data.csproj", "{3447D6A0-56B4-4E6B-A2DB-F425324F614A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PO.Core.Caching", "Framework\PO.Core.Caching\PO.Core.Caching.csproj", "{B8050087-2B82-4A11-AF63-12222991905F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civic.Core.Caching", "Framework\PO.Core.Caching\Civic.Core.Caching.csproj", "{B8050087-2B82-4A11-AF63-12222991905F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PO.Core.WindowsService", "Framework\PO.Core.WindowsService\PO.Core.WindowsService.csproj", "{FB551BD0-3553-4205-A483-15C28BA6EDFA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civic.Core.WindowsService", "Framework\PO.Core.WindowsService\Civic.Core.WindowsService.csproj", "{FB551BD0-3553-4205-A483-15C28BA6EDFA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7AA233FB-EE92-49EC-8836-0553F58A2E17}"
 	ProjectSection(SolutionItems) = preProject
@@ -19,11 +19,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7AA233
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PO.Core.Configuration", "Framework\PO.Core.Configuration\PO.Core.Configuration.csproj", "{4243BF37-B025-4AD1-874E-8B118869C5CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civic.Core.Configuration", "Framework\PO.Core.Configuration\Civic.Core.Configuration.csproj", "{4243BF37-B025-4AD1-874E-8B118869C5CF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{2478DF12-48D3-4ECF-AE12-F8DFD19B55D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PO.T4.WebApi", "Framework\PO.T4.WebApi\PO.T4.WebApi.csproj", "{E8F58C4A-41DE-40C7-994B-9E2230C30553}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civic.T4.WebApi", "Framework\PO.T4.WebApi\Civic.T4.WebApi.csproj", "{E8F58C4A-41DE-40C7-994B-9E2230C30553}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{486B2BA0-3CB3-441A-BA4D-1F9249B83A31}"
 EndProject
@@ -35,12 +35,77 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyVersionSetter", "Ap
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{54D7CD44-0610-43DD-9FCE-7480335B3B4F}"
 	ProjectSection(SolutionItems) = preProject
-		References\po.snk = References\po.snk
+		References\civic.snk = References\civic.snk
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PO.Core.Framework", "Framework\PO.Core.Framework\PO.Core.Framework.csproj", "{5F6F5303-3D84-4D29-8FBA-3B1D54EE879D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civic.Core.Framework", "Framework\PO.Core.Framework\Civic.Core.Framework.csproj", "{5F6F5303-3D84-4D29-8FBA-3B1D54EE879D}"
 EndProject
 Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 10
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://civicdb02:8080/tfs/civic
+		SccProjectUniqueName0 = Applications\\Utilities\\AssemblyVersionFinder\\AssemblyVersionFinder.csproj
+		SccProjectTopLevelParentUniqueName0 = Civic.Core.sln
+		SccProjectName0 = Applications/Utilities/AssemblyVersionFinder
+		SccAuxPath0 = http://civicdb02:8080/tfs/civic
+		SccLocalPath0 = Applications\\Utilities\\AssemblyVersionFinder
+		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName1 = Applications\\Utilities\\AssemblyVersionSetter\\AssemblyVersionSetter.csproj
+		SccProjectTopLevelParentUniqueName1 = Civic.Core.sln
+		SccProjectName1 = Applications/Utilities/AssemblyVersionSetter
+		SccAuxPath1 = http://civicdb02:8080/tfs/civic
+		SccLocalPath1 = Applications\\Utilities\\AssemblyVersionSetter
+		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName2 = Framework\\PO.Core.Caching\\Civic.Core.Caching.csproj
+		SccProjectTopLevelParentUniqueName2 = Civic.Core.sln
+		SccProjectName2 = Framework/PO.Core.Caching
+		SccAuxPath2 = http://civicdb02:8080/tfs/civic
+		SccLocalPath2 = Framework\\PO.Core.Caching
+		SccProvider2 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName3 = Framework\\PO.Core.Configuration\\Civic.Core.Configuration.csproj
+		SccProjectTopLevelParentUniqueName3 = Civic.Core.sln
+		SccProjectName3 = Framework/PO.Core.Configuration
+		SccAuxPath3 = http://civicdb02:8080/tfs/civic
+		SccLocalPath3 = Framework\\PO.Core.Configuration
+		SccProvider3 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName4 = Framework\\PO.Core.Data\\Civic.Core.Data.csproj
+		SccProjectTopLevelParentUniqueName4 = Civic.Core.sln
+		SccProjectName4 = Framework/PO.Core.Data
+		SccAuxPath4 = http://civicdb02:8080/tfs/civic
+		SccLocalPath4 = Framework\\PO.Core.Data
+		SccProvider4 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName5 = Framework\\PO.Core.Framework\\Civic.Core.Framework.csproj
+		SccProjectTopLevelParentUniqueName5 = Civic.Core.sln
+		SccProjectName5 = Framework/PO.Core.Framework
+		SccAuxPath5 = http://civicdb02:8080/tfs/civic
+		SccLocalPath5 = Framework\\PO.Core.Framework
+		SccProvider5 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName6 = Framework\\PO.Core.Logging\\Civic.Core.Logging.csproj
+		SccProjectTopLevelParentUniqueName6 = Civic.Core.sln
+		SccProjectName6 = Framework/PO.Core.Logging
+		SccAuxPath6 = http://civicdb02:8080/tfs/civic
+		SccLocalPath6 = Framework\\PO.Core.Logging
+		SccProvider6 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName7 = Framework\\PO.Core.Logging.DB\\Civic.Core.Logging.DB.csproj
+		SccProjectTopLevelParentUniqueName7 = Civic.Core.sln
+		SccProjectName7 = Framework/PO.Core.Logging.DB
+		SccAuxPath7 = http://civicdb02:8080/tfs/civic
+		SccLocalPath7 = Framework\\PO.Core.Logging.DB
+		SccProvider7 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName8 = Framework\\PO.Core.WindowsService\\Civic.Core.WindowsService.csproj
+		SccProjectTopLevelParentUniqueName8 = Civic.Core.sln
+		SccProjectName8 = Framework/PO.Core.WindowsService
+		SccAuxPath8 = http://civicdb02:8080/tfs/civic
+		SccLocalPath8 = Framework\\PO.Core.WindowsService
+		SccProvider8 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName9 = Framework\\PO.T4.WebApi\\Civic.T4.WebApi.csproj
+		SccProjectTopLevelParentUniqueName9 = Civic.Core.sln
+		SccProjectName9 = Framework/PO.T4.WebApi
+		SccAuxPath9 = http://civicdb02:8080/tfs/civic
+		SccLocalPath9 = Framework\\PO.T4.WebApi
+		SccProvider9 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64

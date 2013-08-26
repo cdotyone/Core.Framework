@@ -2,7 +2,7 @@
 using System.Web;
 using System.Web.Caching;
 
-namespace PO.Core.Caching.Providers
+namespace Civic.Core.Caching.Providers
 {
 	public class WebCacheProvider : ICacheProvider
 	{

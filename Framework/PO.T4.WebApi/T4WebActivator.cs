@@ -8,9 +8,9 @@ using System.Web.Http.Dispatcher;
 using System.Web.Mvc;
 using System.Web.WebPages;
 using Deco.Scheduler.Api.Views;
-using PO.T4.WebApi.Configuration;
+using Civic.Core.WebApi.Configuration;
 
-namespace PO.T4.WebApi
+namespace Civic.Core.WebApi
 {
     public static class T4WebActivator
     {

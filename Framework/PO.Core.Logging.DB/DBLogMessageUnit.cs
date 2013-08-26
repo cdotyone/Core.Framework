@@ -1,6 +1,6 @@
 using System;
 
-namespace PO.Core.Logging.DB
+namespace Civic.Core.Logging.DB
 {
     class DBLogMessageUnit
     {

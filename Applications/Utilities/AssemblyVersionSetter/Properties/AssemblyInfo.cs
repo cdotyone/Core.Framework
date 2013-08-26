@@ -4,9 +4,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("AssemblyVersionSetter")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("Civic Engineering & IT")]
 [assembly: AssemblyProduct("AssemblyVersionSetter")]
-[assembly: AssemblyCopyright("Copyright © Polar Opposite 2013")]
+[assembly: AssemblyCopyright("Copyright © Civic Engineering & IT 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

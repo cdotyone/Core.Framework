@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace PO.Core.Utility
+namespace Civic.Core.Utility
 {
 	public static class ResourceHelper
 	{

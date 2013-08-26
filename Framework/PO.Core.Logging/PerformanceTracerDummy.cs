@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PO.Core.Logging
+namespace Civic.Core.Logging
 {
     internal class PerformanceTracerDummy : IDisposable
     {

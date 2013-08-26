@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace PO.Core.Configuration
+namespace Civic.Core.Configuration
 {
 	public class CoreConfigurationProvider : NamedConfigurationElement
 	{

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-namespace PO.T4.WebApi
+namespace Civic.Core.WebApi
 {
     public interface IQueryMetadata
     {
