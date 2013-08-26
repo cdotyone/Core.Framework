@@ -19,10 +19,14 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -79,11 +83,11 @@
     <None Include="Nuget\pack.bat" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PO.Core.Data\Civic.Core.Data.csproj">
+    <ProjectReference Include="..\Civic.Core.Data\Civic.Core.Data.csproj">
       <Project>{3447d6a0-56b4-4e6b-a2db-f425324f614a}</Project>
       <Name>Civic.Core.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PO.Core.Logging\Civic.Core.Logging.csproj">
+    <ProjectReference Include="..\Civic.Core.Logging\Civic.Core.Logging.csproj">
       <Project>{62b8463d-2c19-47c2-a7c2-2740f78c27d1}</Project>
       <Name>Civic.Core.Logging</Name>
     </ProjectReference>
