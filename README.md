@@ -1,2 +1,2 @@
-Civic.T4  -  T4 Full Stack Generation
+Civic.T4  -  Full Stack Generation
 ====
