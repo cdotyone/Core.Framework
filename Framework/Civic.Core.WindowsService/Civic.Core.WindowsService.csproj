@@ -110,6 +110,7 @@
   <ItemGroup>
     <None Include="Nuget\Civic.Core.WindowsService.nuspec" />
     <None Include="Nuget\pack.bat" />
+    <None Include="pack.bat" />
     <None Include="Resources\Pause.png" />
   </ItemGroup>
   <ItemGroup>
@@ -126,7 +127,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>$(ProjectDir)nuget\pack.bat http://nuget.civicinc.com/ $(ProjectDir)  $(TargetDir) $(ConfigurationName)</PostBuildEvent>
+    <PostBuildEvent>$(ProjectDir)nuget\pack.bat $(ProjectDir)  $(TargetDir) $(ConfigurationName) $(SolutionDir)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

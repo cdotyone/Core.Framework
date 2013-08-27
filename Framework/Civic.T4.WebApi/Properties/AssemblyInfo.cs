@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Civic")]
-[assembly: AssemblyProduct("Civic.Core.WebApi")]
+[assembly: AssemblyProduct("Civic.T4.WebApi")]
 [assembly: AssemblyCopyright("Copyright © Civic 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
