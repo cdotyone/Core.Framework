@@ -14,6 +14,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{54D7CD44-0610-43DD-9FCE-7480335B3B4F}"
 	ProjectSection(SolutionItems) = preProject
 		References\civic.snk = References\civic.snk
+		README.md = README.md
 		References\VersionInfo.cs = References\VersionInfo.cs
 	EndProjectSection
 EndProject
