@@ -9,7 +9,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 
-namespace Civic.Core.WebApi
+namespace Civic.T4.WebApi
 {
     // Implement DefaultHttpControllerSelector, so we can override SelectController
     public class VersionControllerSelector : DefaultHttpControllerSelector

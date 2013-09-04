@@ -9,7 +9,7 @@ using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Civic.Core.WebApi
+namespace Civic.T4.WebApi
 {
     public class ODataV3JsonFormatter : JsonMediaTypeFormatter
     {

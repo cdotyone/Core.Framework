@@ -4,7 +4,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 
-namespace Civic.Core.WebApi
+namespace Civic.T4.WebApi
 {
     public class ODataV3QueryFilter : IFilterProvider
     {

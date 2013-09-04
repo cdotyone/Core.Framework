@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Civic.Core.WebApi
+namespace Civic.T4.WebApi
 {
     public class QueryMetadata<T> : IQueryMetadata, IEnumerable<T> where T : class
     {

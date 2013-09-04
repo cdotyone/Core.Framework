@@ -2,7 +2,7 @@
 
 fileManager.StartNewFile(edmxFileName + "Controllers.cs", folderName:"Controllers");
 
-WriteHeader("System.Collections.Generic", "System.Web.Http.Controllers", namespaceName + ".Controllers", "Civic.Core.WebApi");
+WriteHeader("System.Collections.Generic", "System.Web.Http.Controllers", namespaceName + ".Controllers", "Civic.T4.WebApi");
 
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
@@ -58,7 +58,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		continue;
 
     fileManager.StartNewFile(Core.GetPluralName(entity.Name) + "Controller.cs", folderName:"Controllers");
-	WriteHeader("System","System.Collections","System.Collections.Generic","System.Globalization","System.Runtime.Serialization","System.Web.Http", "System.Web.Mvc",namespaceName + ".Services",namespaceName + ".Entities", "Civic.Core.WebApi", entity.Name + "Entity = " + namespaceName +".Entities." + entity.Name );
+	WriteHeader("System","System.Collections","System.Collections.Generic","System.Globalization","System.Runtime.Serialization","System.Web.Http", "System.Web.Mvc",namespaceName + ".Services",namespaceName + ".Entities", "Civic.T4.WebApi", entity.Name + "Entity = " + namespaceName +".Entities." + entity.Name );
     BeginNamespace(namespaceName+".Controllers", code);
 	
 	var lowerName = entity.Name.ToLower();

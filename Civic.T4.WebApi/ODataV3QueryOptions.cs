@@ -1,4 +1,4 @@
-﻿namespace Civic.Core.WebApi
+﻿namespace Civic.T4.WebApi
 {
     public class ODataV3QueryOptions
     {

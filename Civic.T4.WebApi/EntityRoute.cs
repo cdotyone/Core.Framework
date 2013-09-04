@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Civic.Core.WebApi
+namespace Civic.T4.WebApi
 {
 	public class EntityRoute
 	{

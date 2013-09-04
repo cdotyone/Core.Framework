@@ -4,7 +4,7 @@ using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 
-namespace Civic.Core.WebApi
+namespace Civic.T4.WebApi
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
     public class ODataV3Attribute : ActionFilterAttribute
