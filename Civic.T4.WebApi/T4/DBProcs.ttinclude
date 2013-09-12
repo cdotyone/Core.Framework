@@ -6,44 +6,44 @@ fileManager.StartNewFile(edmxFileName+".Defaults.sql", folderName:"SQL");
 
 #>
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_GetDate]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [dbo].[udf_GetDate]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_GetDate]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [<#=apiGeneralSchemaName#>].[udf_GetDate]
 GO
 
-CREATE DEFAULT [dbo].[udf_GetDate]
+CREATE DEFAULT [<#=apiGeneralSchemaName#>].[udf_GetDate]
 AS GETUTCDATE()
 GO
 
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_Unknown]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [dbo].[udf_Unknown]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_Unknown]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [<#=apiGeneralSchemaName#>].[udf_Unknown]
 GO
 
-CREATE DEFAULT [dbo].[udf_Unknown]
+CREATE DEFAULT [<#=apiGeneralSchemaName#>].[udf_Unknown]
 AS 'UNK'
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_Yes]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [dbo].[udf_Yes]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_Yes]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [<#=apiGeneralSchemaName#>].[udf_Yes]
 GO
 
-CREATE DEFAULT [dbo].[udf_Yes]
+CREATE DEFAULT [<#=apiGeneralSchemaName#>].[udf_Yes]
 AS 1
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_No]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [dbo].[udf_No]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_No]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [<#=apiGeneralSchemaName#>].[udf_No]
 GO
 
-CREATE DEFAULT [dbo].[udf_No]
+CREATE DEFAULT [<#=apiGeneralSchemaName#>].[udf_No]
 AS 0
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_Zero]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [dbo].[udf_Zero]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_Zero]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [<#=apiGeneralSchemaName#>].[udf_Zero]
 GO
 
-CREATE DEFAULT [dbo].[udf_Zero]
+CREATE DEFAULT [<#=apiGeneralSchemaName#>].[udf_Zero]
 AS 0
 GO
 -- t4-defaults begin
@@ -62,7 +62,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		} catch {
 		}
 #>
-EXECUTE sp_bindefault N'dbo.udf_<#=boolyesno#>', N'[dbo].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
+EXECUTE sp_bindefault N'dbo.udf_<#=boolyesno#>', N'[<#=apiGeneralSchemaName#>].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
 <#
 			continue;
 		}
@@ -75,7 +75,7 @@ EXECUTE sp_bindefault N'dbo.udf_<#=boolyesno#>', N'[dbo].[<#=entity.Name#>].[<#=
 
 		if(edmProperty.Name.ToLower()=="createdby" || edmProperty.Name.ToLower()=="modifiedby") {
 #>
-EXECUTE sp_bindefault N'dbo.udf_Unknown', N'[dbo].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
+EXECUTE sp_bindefault N'dbo.udf_Unknown', N'[<#=apiGeneralSchemaName#>].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
 <#
 		} else {
 
@@ -89,7 +89,7 @@ EXECUTE sp_bindefault N'dbo.udf_Unknown', N'[dbo].[<#=entity.Name#>].[<#=edmProp
 
 			if(notNullable){
 #>
-EXECUTE sp_bindefault N'dbo.udf_GetDate', N'[dbo].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
+EXECUTE sp_bindefault N'dbo.udf_GetDate', N'[<#=apiGeneralSchemaName#>].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
 <#
 			}
 		}
@@ -109,14 +109,14 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GET") || entity.Documentation.LongDescription.Contains("ADD"))
 	   && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Get.sql", out userContent))  {	
 #>
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>Get]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_<#=entity.Name#>Get]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>Get]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Get]
 GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>Get]
+CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Get]
 <#  i=0;
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {
@@ -140,7 +140,7 @@ BEGIN
 		i++;
 	}
 #>		-- t4-columns end
-	FROM [dbo].[<#=entity.Name#>] <#=tableAlias#>
+	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
 	WHERE	
 		-- t4-where begin
 <#  i=0;
@@ -162,21 +162,21 @@ GO
 	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("COUNT"))
 	&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_" + entity.Name + "GetCount.sql", out userContent))  {	
 #>
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>GetCount]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_<#=entity.Name#>GetCount]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>GetCount]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetCount]
 GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>GetCount]
+CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetCount]
      @count int out
 AS
 BEGIN
 	SET NOCOUNT ON
 
 	SELECT @count = COUNT(*)
-	FROM [dbo].[<#=entity.Name#>] <#=tableAlias#>
+	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
 	
 END
 GO
@@ -187,15 +187,15 @@ GO
 	&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_" + entity.Name + "GetPaged.sql", out userContent))  {	
 #>
 
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>GetPaged]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_<#=entity.Name#>GetPaged]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>GetPaged]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetPaged]
 GO
 
-IF EXISTS(SELECT * from [dbo].[udf_Split](convert(nvarchar(50),SERVERPROPERTY('productversion')),'.') where Pos=1 and Item>10)
+IF EXISTS(SELECT * from [<#=apiSchemaName#>].[udf_Split](convert(nvarchar(50),SERVERPROPERTY('productversion')),'.') where Pos=1 and Item>10)
 BEGIN
 DECLARE @SQL NVARCHAR(4000)
 SET @SQL ='
-CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>GetPaged]
+CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetPaged]
      @skip int
     ,@count int out
 	,@orderBy nvarchar(512)
@@ -214,7 +214,7 @@ BEGIN
 		i++;
 	}
 #>		-- t4-columns end
-	FROM [dbo].[<#=entity.Name#>] <#=tableAlias#>
+	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
 	ORDER BY 
 		-- t4-order begin
 <#  i=0;
@@ -233,7 +233,7 @@ BEGIN
 	
 	IF @retcount=1
 	BEGIN
-		EXEC [dbo].[usp_<#=entity.Name#>GetCount] @count=@count out
+		EXEC [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetCount] @count=@count out
 	END
 END
 '
@@ -241,11 +241,11 @@ EXEC sp_executesql @SQL
 END
 GO
 
-IF EXISTS(SELECT * from [dbo].[udf_Split](convert(nvarchar(50),SERVERPROPERTY('productversion')),'.') where Pos=1 and Item<11)
+IF EXISTS(SELECT * from [<#=apiSchemaName#>].[udf_Split](convert(nvarchar(50),SERVERPROPERTY('productversion')),'.') where Pos=1 and Item<11)
 BEGIN
 DECLARE @SQL NVARCHAR(4000)
 SET @SQL = '
-CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>GetPaged]
+CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetPaged]
      @skip int
     ,@count int out
 	,@orderBy nvarchar(512)
@@ -288,7 +288,7 @@ BEGIN
 		i++;
 	}
 #>		-- t4-columns end
-	FROM [dbo].[<#=entity.Name#>] <#=tableAlias#>
+	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
 	ORDER BY 
 		-- t4-order begin
 <#  i=0;
@@ -310,7 +310,7 @@ BEGIN
 	
 	IF @retcount=1
 	BEGIN
-		EXEC [dbo].[usp_<#=entity.Name#>GetCount] @count=@count out
+		EXEC [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetCount] @count=@count out
 	END
 END
 '
@@ -324,14 +324,14 @@ GO
 		if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("PAGED"))
 	&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_" + entity.Name + "GetFiltered.sql", out userContent))  {	
 #>
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>GetFiltered]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_<#=entity.Name#>GetFiltered]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>GetFiltered]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetFiltered]
 GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>GetFiltered]
+CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetFiltered]
      @skip int
     ,@count int out
 	,@orderBy nvarchar(512)
@@ -352,9 +352,9 @@ BEGIN
 		i++;
 	}
 #>		-- t4-columns end
-    FROM [dbo].[<#=entity.Name#>] <#=tableAlias#>'
+    FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>'
 
-	EXEC [dbo].[usp_ProcessFilter]
+	EXEC [<#=apiSchemaName#>].[usp_ProcessFilter]
 		     @skip = @skip
 			,@select = @select
 			,@count = @count out
@@ -375,14 +375,14 @@ GO
 		if(!string.IsNullOrEmpty(userContent)) {#><#=userContent#><#}
 		else {
 #>
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>Add]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_<#=entity.Name#>Add]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]
 GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>Add]<#}#>
+CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]<#}#>
 
 -- t4-params begin
 <#
@@ -420,7 +420,7 @@ AS
 BEGIN
 	SET NOCOUNT ON
 
-	INSERT INTO [dbo].[<#=entity.Name#>](<# } #>
+	INSERT INTO [<#=apiSchemaName#>].[<#=entity.Name#>](<# } #>
 
 -- t4-columns begin
 <#	
@@ -477,14 +477,14 @@ GO
 	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("MODIFY"))
 	  && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Modify.sql", out userContent))  {	
 #>
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>Modify]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_<#=entity.Name#>Modify]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]
 GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>Modify]
+CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]
 <#  i=0;
 	hasModifiedBy = false;
 
@@ -527,7 +527,7 @@ BEGIN
 		i++;
 	}
 #>		-- t4-columns end
-	FROM [dbo].[<#=entity.Name#>] <#=tableAlias#>
+	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
 	WHERE	
 		-- t4-where begin
 <#  i=0;
@@ -550,14 +550,14 @@ GO
 	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("REMOVE"))
 	  && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Remove.sql", out userContent))  {	
 #>
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>Remove]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_<#=entity.Name#>Remove]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>Remove]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Remove]
 GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>Remove]
+CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Remove]
 <#  i=0;
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {
@@ -571,7 +571,7 @@ AS
 BEGIN
 	SET NOCOUNT ON
 
-	DELETE FROM [dbo].[<#=entity.Name#>]
+	DELETE FROM [<#=apiSchemaName#>].[<#=entity.Name#>]
 	WHERE	
 		-- t4-where begin
 <#  i=0;
@@ -612,14 +612,14 @@ GO
 
 	var toColumns = String.Join(",", association.ReferentialConstraints.SelectMany(rc => rc.ToProperties));
 #>
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]
 GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]
+CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]
 <#  i=0;
 	foreach (EdmProperty edmProperty in toEntity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == toEntity))
     {
@@ -642,7 +642,7 @@ BEGIN
 		i++;
 	}
 #>		-- t4-columns end
-	FROM [dbo].[<#=entity.Name#>] <#=tableAlias#>
+	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
 	WHERE	
 		-- t4-where begin
 <#  i=0;
@@ -667,7 +667,7 @@ GO
 
 #>
 <#+
-public static string ImportData(string filename) {
+public static string ImportData(string filename,string apiGeneralSchemaName) {
 	if(!File.Exists(filename)) return "";
 	var import = new XmlDocument();
 	import.Load(filename);
@@ -678,9 +678,12 @@ public static string ImportData(string filename) {
 	foreach(XmlNode node in nodes) {
 		if(node.Attributes["into"]==null) continue;
 		var tableName = node.Attributes["into"].Value;
+		var schemaName = apiGeneralSchemaName;
+		if(node.Attributes["schema"]!=null)
+			schemaName = node.Attributes["schema"].Value;
 
 		foreach(XmlNode row in node.ChildNodes) {
-			sb.Append("INSERT INTO [DBO].[" + tableName);
+			sb.Append("INSERT INTO ["+schemaName+"].[" + tableName);
 			sb.Append("](");
 			var i=0;
 

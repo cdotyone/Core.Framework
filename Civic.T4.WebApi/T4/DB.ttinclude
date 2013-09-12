@@ -442,5 +442,5 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 }
 
 #>
-<#=ImportData(dataPath+"\\"+edmxFileName + ".SeedData.xml")#>
-<#=ImportData(dataPath+"\\"+edmxFileName + ".MockData.xml")#>
+<#=ImportData(dataPath+"\\"+edmxFileName + ".SeedData.xml",apiSchemaName)#>
+<#=ImportData(dataPath+"\\"+edmxFileName + ".MockData.xml",apiSchemaName)#>
