@@ -191,7 +191,7 @@ IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaN
 DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetPaged]
 GO
 
-IF EXISTS(SELECT * from [<#=apiSchemaName#>].[udf_Split](convert(nvarchar(50),SERVERPROPERTY('productversion')),'.') where Pos=1 and Item>10)
+IF EXISTS(SELECT * from [<#=apiGeneralSchemaName#>].[udf_Split](convert(nvarchar(50),SERVERPROPERTY('productversion')),'.') where Pos=1 and Item>10)
 BEGIN
 DECLARE @SQL NVARCHAR(4000)
 SET @SQL ='
@@ -241,7 +241,7 @@ EXEC sp_executesql @SQL
 END
 GO
 
-IF EXISTS(SELECT * from [<#=apiSchemaName#>].[udf_Split](convert(nvarchar(50),SERVERPROPERTY('productversion')),'.') where Pos=1 and Item<11)
+IF EXISTS(SELECT * from [<#=apiGeneralSchemaName#>].[udf_Split](convert(nvarchar(50),SERVERPROPERTY('productversion')),'.') where Pos=1 and Item<11)
 BEGIN
 DECLARE @SQL NVARCHAR(4000)
 SET @SQL = '

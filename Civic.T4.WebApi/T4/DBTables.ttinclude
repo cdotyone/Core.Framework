@@ -1,6 +1,6 @@
 ﻿<#
 
-System.Diagnostics.Debugger.Launch();
+//System.Diagnostics.Debugger.Launch();
 Version targetVersion = new Version();
 
 EdmItemCollection ExistingStore = (EdmItemCollection)metadataWorkspace.GetItemCollection(DataSpace.CSpace);
