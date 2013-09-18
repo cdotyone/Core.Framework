@@ -134,7 +134,7 @@ BEGIN
 
 	DECLARE @COMBINEVARS TABLE(pos int,varname nvarchar(512),operation nvarchar(512),varvalue nvarchar(512))
 	DECLARE @OPERATIONS TABLE(pos int,operation nvarchar(512))
-
+	
 	WHILE(EXISTS(SELECT * FROM @BLOCKS))
 	BEGIN
 		DECLARE @PAIR NVARCHAR(512)
@@ -142,14 +142,21 @@ BEGIN
 
 		IF CHARINDEX('|',@PAIR)>0 
 		BEGIN
+			DECLARE @TEMP TABLE(
+				POS int
+				,ITEM nvarchar(256)
+			)
+			INSERT INTO @TEMP
+			select POS,[item] from [dbo].[udf_Split](@PAIR,'|')
+			
 			DECLARE @VARNAME NVARCHAR(512)
-			select TOP 1 @VARNAME=[item] from [dbo].[udf_Split](@PAIR,'|')
+			select TOP 1 @VARNAME=[item] from @TEMP WE
 
 			DECLARE @OPERATION NVARCHAR(50) 
-			select @OPERATION=[item] from [dbo].[udf_Split](@PAIR,'|') WHERE POS=1 ORDER BY [POS]
+			select @OPERATION=[item] from @TEMP WHERE POS=2 ORDER BY [POS]
 
 			DECLARE @VARVALUE NVARCHAR(512) 
-			select @VARVALUE=[item] from [dbo].[udf_Split](@PAIR,'|') WHERE POS=2 ORDER BY [POS]
+			select @VARVALUE=[item] from @TEMP WHERE POS=3 ORDER BY [POS]
 	
 			IF NOT EXISTS(SELECT * FROM @COMBINEVARS WHERE varname=@VARNAME)
 				BEGIN
@@ -173,7 +180,7 @@ BEGIN
 
 		DELETE FROM @BLOCKS WHERE @POS=POS
 	END
-
+	
 	-- trim leading and trailing single quotes
 	WHILE EXISTS(SELECT * FROM @COMBINEVARS WHERE PATINDEX('%''',varvalue)>0) OR EXISTS(SELECT * FROM @COMBINEVARS WHERE PATINDEX('''%',varvalue)>0)
 	BEGIN
@@ -183,24 +190,32 @@ BEGIN
 		UPDATE @COMBINEVARS SET varvalue=SUBSTRING(varvalue,2,LEN(varvalue)-1)
 		WHERE PATINDEX('''%',varvalue)>0
 	END
-	
+
 	-- build where clause
 	SET @WHERE = ''
-	WHILE EXISTS(SELECT * FROM @OPERATIONS)
+	IF EXISTS(SELECT * FROM @OPERATIONS)
 	BEGIN
-		SELECT @POS=POS,@OPERATION=operation FROM @OPERATIONS
+		WHILE EXISTS(SELECT * FROM @OPERATIONS)
+		BEGIN
+			SELECT @POS=POS,@OPERATION=operation FROM @OPERATIONS
+			SELECT POS,operation FROM @OPERATIONS
 
-		SELECT @WHERE=@WHERE+[VARNAME]+[OPERATION]+'@_val'+CONVERT(NVARCHAR(50),[POS]) FROM @COMBINEVARS
-		WHERE POS<@POS
+			SELECT @WHERE=@WHERE+[VARNAME]+[OPERATION]+'@_val'+CONVERT(NVARCHAR(50),[POS]) FROM @COMBINEVARS
+			WHERE POS<@POS
 	
-		SET @WHERE = @WHERE + ' ' + @OPERATION + ' '
+			SET @WHERE = @WHERE + ' ' + @OPERATION + ' '
 
-		SELECT @WHERE=@WHERE+[VARNAME]+[OPERATION]+'@_val'+CONVERT(NVARCHAR(50),[POS]) FROM @COMBINEVARS
-		WHERE POS>@POS
+			SELECT @WHERE=@WHERE+[VARNAME]+[OPERATION]+'@_val'+CONVERT(NVARCHAR(50),[POS]) FROM @COMBINEVARS
+			WHERE POS>@POS
 
-		DELETE FROM @OPERATIONS WHERE @POS=POS
+			DELETE FROM @OPERATIONS WHERE @POS=POS
+		END
 	END
-	
+	ELSE 
+	BEGIN
+		SELECT TOP 1 @WHERE=[VARNAME]+[OPERATION]+'@_val'+CONVERT(NVARCHAR(50),[POS]) FROM @COMBINEVARS
+	END
+
 	-- build dynamic order clause
 	IF @orderBy is not null and @orderBy<>''
 	BEGIN
@@ -228,7 +243,7 @@ BEGIN
 		END
 		ELSE 
 		BEGIN 
-			SET @SQL = SUBSTRING(@SQL,8,@POS-7)
+			SET @SQL = SUBSTRING(@SQL,8,@POS-8)
 		END
 		SET @order = ' ORDER BY ' + @SQL
 	END
@@ -290,6 +305,8 @@ BEGIN
 	SELECT @val19 = varvalue FROM @COMBINEVARS WHERE POS = 19
 	SELECT @val20 = varvalue FROM @COMBINEVARS WHERE POS = 20
 
+	print @sql
+
 	exec dbo.sp_executesql   @sql
 							,@PARAMS=@params
 							,@_skip=@skip
@@ -315,7 +332,6 @@ BEGIN
 							,@_val18=@val18
 							,@_val19=@val19
 							,@_val20=@val20
-							,@_where=@WHEREEXT
 
 	IF @retcount=1
 	BEGIN
