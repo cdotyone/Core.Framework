@@ -7,7 +7,6 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using System.Web.Mvc;
 using System.Web.WebPages;
-using Deco.Scheduler.Api.Views;
 using Civic.T4.WebApi.Configuration;
 
 namespace Civic.T4.WebApi
@@ -74,18 +73,18 @@ namespace Civic.T4.WebApi
 
         public static void LoadViews()
         {
-            foreach (var assembly in _assemblies)
-            {
-                var engine = new PrecompiledMvcEngine(assembly)
-                {
-                    UsePhysicalViewsIfNewer = HttpContext.Current.Request.IsLocal
-                };
+			//foreach (var assembly in _assemblies)
+			//{
+			//	var engine = new PrecompiledMvcEngine(assembly)
+			//	{
+			//		UsePhysicalViewsIfNewer = HttpContext.Current.Request.IsLocal
+			//	};
 
-                ViewEngines.Engines.Insert(0, engine);
+			//	ViewEngines.Engines.Insert(0, engine);
 
-                // StartPage lookups are done by WebPages. 
-                VirtualPathFactoryManager.RegisterVirtualPathFactory(engine);
-            }            
+			//	// StartPage lookups are done by WebPages. 
+			//	VirtualPathFactoryManager.RegisterVirtualPathFactory(engine);
+			//}            
         }
     }
 }
