@@ -354,7 +354,7 @@ BEGIN
 #>		-- t4-columns end
     FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>'
 
-	EXEC [<#=apiSchemaName#>].[usp_ProcessFilter]
+	EXEC [<#=apiGeneralSchemaName#>].[usp_ProcessFilter]
 		     @skip = @skip
 			,@select = @select
 			,@count = @count out
