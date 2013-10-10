@@ -112,6 +112,7 @@ CREATE PROCEDURE [dbo].[usp_ProcessFilter]
 	,@retcount bit = 0
 AS
 BEGIN
+	SET NOCOUNT ON
 
 	DECLARE @POS int
 	DECLARE @POS2 int
@@ -124,6 +125,7 @@ BEGIN
 	set @skip = isnull(@skip,0)
 	set @count = isnull(@count,100)
 	set @orderBy = isnull(@orderBy,'')
+	set @filterBy = isnull(@filterBy,'')
 
 	-- parse and determine filter by
 	set @filterBy=replace(replace(replace(replace(replace(replace(upper(@filterBy),' eq ','|=|'),' lt ','|<|'),' gt ','|>|'),' ge ','|>=|'),' le ','|<=|'),' ne ','|<>|')
@@ -198,7 +200,6 @@ BEGIN
 		WHILE EXISTS(SELECT * FROM @OPERATIONS)
 		BEGIN
 			SELECT @POS=POS,@OPERATION=operation FROM @OPERATIONS
-			SELECT POS,operation FROM @OPERATIONS
 
 			SELECT @WHERE=@WHERE+[VARNAME]+[OPERATION]+'@_val'+CONVERT(NVARCHAR(50),[POS]) FROM @COMBINEVARS
 			WHERE POS<@POS
@@ -233,31 +234,23 @@ BEGIN
 	END
 	ELSE
 	BEGIN
-		SET @SQL = LTRIM(RTRIM(@select))
-		SET @POS = PATINDEX('%,%',@SQL)
-		IF @POS<1
-		BEGIN
-			SET @POS = PATINDEX('%[[]%',@SQL)
-			SET @POS2 = PATINDEX('%]%',@SQL)
-			SET @SQL = LTRIM(SUBSTRING(@SQL,@POS+1,@POS2-@POS-1))
-		END
-		ELSE 
-		BEGIN 
-			SET @SQL = SUBSTRING(@SQL,8,@POS-8)
-		END
-		SET @order = ' ORDER BY ' + @SQL
+		SET @SQL = @select 
+		SET @order = 'ORDER BY getdate()'
 	END
 
 	-- build complete dyn sql statement
-	IF @WHEREEXT IS NOT NULL
+	IF @WHERE<>'' 
 	BEGIN
-		SET @WHERE = ' AND (' + @where + ')'
+		IF @WHEREEXT IS NOT NULL
+		BEGIN
+			SET @WHERE = ' AND (' + @where + ')'
+		END
+		ELSE 
+		BEGIN
+			SET @WHERE = ' WHERE ' + @WHERE
+		END
 	END
-	ELSE 
-	BEGIN
-		SET @WHERE = ' WHERE ' + @WHERE
-	END
-	 
+		 
 	SET @SQLCOUNT = @select + @where 
 	SET @SQL = @SQLCOUNT + @order +' OFFSET @_skip ROWS FETCH NEXT @_count ROWS ONLY'
 
@@ -304,8 +297,6 @@ BEGIN
 	SELECT @val18 = varvalue FROM @COMBINEVARS WHERE POS = 18
 	SELECT @val19 = varvalue FROM @COMBINEVARS WHERE POS = 19
 	SELECT @val20 = varvalue FROM @COMBINEVARS WHERE POS = 20
-
-	print @sql
 
 	exec dbo.sp_executesql   @sql
 							,@PARAMS=@params
