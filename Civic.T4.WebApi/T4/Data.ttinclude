@@ -59,7 +59,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 			using (IDataReader dataReader = command.ExecuteReader())
 			{
-				if (Populate<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>Returned, dataReader, fillProperties))
+				if (populate<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>Returned, dataReader, fillProperties))
 				{
 					<#=code.Escape(lowerName)#>Returned.<#=code.Escape(keyName)#> = <#=code.Escape(keyName.ToLower())#>;
 				} else return null;
@@ -113,7 +113,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 			using (IDataReader dataReader = command.ExecuteReader())
 			{
 				var item = new <#=code.Escape(toEntity)#>Entity();
-				while(Populate<#=code.Escape(toEntity)#>(item, dataReader, fillProperties))
+				while(populate<#=code.Escape(toEntity)#>(item, dataReader, fillProperties))
 				{
 					list.Add(item);
 					item = new <#=code.Escape(toEntity	)#>Entity();
@@ -146,7 +146,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 			using (IDataReader dataReader = command.ExecuteReader())
 			{
 				var item = new <#=code.Escape(entity)#>Entity();
-				while(Populate<#=code.Escape(entity)#>(item, dataReader, fillProperties))
+				while(populate<#=code.Escape(entity)#>(item, dataReader, fillProperties))
 				{
 					list.Add(item);
 					item = new <#=code.Escape(entity)#>Entity();
@@ -169,7 +169,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
 		using (var command = database.CreateStoredProcCommand("[<#=apiSchemaName#>].usp_<#=code.Escape(entity)#>Add"))
 		{
-			Build<#=code.Escape(entity)#>CommandParameters( <#=lowerName#>, command, true );
+			build<#=code.Escape(entity)#>CommandParameters( <#=lowerName#>, command, true );
 			command.ExecuteNonQuery();<#
 		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
 		{
@@ -198,7 +198,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
 		using (var command = database.CreateStoredProcCommand("[<#=apiSchemaName#>].usp_<#=code.Escape(entity)#>Modify"))
 		{
-			Build<#=code.Escape(entity)#>CommandParameters( <#=lowerName#>, command, false );
+			build<#=code.Escape(entity)#>CommandParameters( <#=lowerName#>, command, false );
 			command.ExecuteNonQuery();
 		}
 
@@ -227,7 +227,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	}
 
 <#}
-#>	private static void Build<#=code.Escape(entity)#>CommandParameters( <#=code.Escape(entity)#>Entity <#=lowerName#>, IDBCommand command, bool addRecord )
+#>	private static void build<#=code.Escape(entity)#>CommandParameters( <#=code.Escape(entity)#>Entity <#=lowerName#>, IDBCommand command, bool addRecord )
 	{ 
 <#
 		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
@@ -257,7 +257,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	
 <#
 		if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GET") || entity.Documentation.LongDescription.Contains("GETBY")) { 
-#>	private static bool Populate<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>, IDataReader dataReader, string[] fillProperties = null)
+#>	private static bool populate<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>, IDataReader dataReader, string[] fillProperties = null)
 	{
 		if (dataReader==null || !dataReader.Read()) return false;
 		<#
@@ -283,7 +283,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		}
 #>
 
-		FillCollection("<#=lowerName#>",<#=lowerName#>,dataReader,fillProperties);
+		fillCollection("<#=lowerName#>",<#=lowerName#>,dataReader,fillProperties);
 <#
 		if(entity.NavigationProperties.Where(np => np.DeclaringType == entity && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many).Count()>0) {
 #>		
