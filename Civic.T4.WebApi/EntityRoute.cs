@@ -20,5 +20,7 @@ namespace Civic.T4.WebApi
         public Assembly EdmxAssembly { get; set; }
     
         public string EdmxResourceName { get; set; }
+
+		public string[] CustomParameters { get; set; }
     }
 }

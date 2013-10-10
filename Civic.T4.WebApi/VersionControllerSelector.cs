@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -43,24 +44,38 @@ namespace Civic.T4.WebApi
                 if(_apiControllerTypes.ContainsKey(key)) continue;
                 _apiControllerTypes.Add(key, entityRoute.ControllerType);
 
+	            var parameters = new List<string>();
+				if (entityRoute.CustomParameters == null) parameters.Add("{id}");
+				else parameters.AddRange(entityRoute.CustomParameters);
+
+				dynamic defaultsExpando = new ExpandoObject();
+				defaultsExpando.controller = entityRoute.PluralName;
+				defaultsExpando.version = entityRoute.Version;
+				foreach (var para in parameters)
+	            {
+					((IDictionary<string, object>)defaultsExpando)[para.Trim(new[] {'{','}'})] = RouteParameter.Optional;    
+	            }
+
+
                 if (string.IsNullOrEmpty(entityRoute.PackageName))
                 {
                     _configuration.Routes.MapHttpRoute(
                         name: "api_" + entityRoute.Version + "_" + entityRoute.PluralName,
-                        routeTemplate: "api/v" + entityRoute.Version + "/" + entityRoute.PluralName + "/{id}",
-                        defaults: new { id = RouteParameter.Optional, controller = entityRoute.PluralName, version = entityRoute.Version },
-                        constraints: null
+                        routeTemplate: "api/v" + entityRoute.Version + "/" + entityRoute.PluralName + "/" + string.Join("/",parameters),
+						defaults: (object)defaultsExpando,
+						constraints: null
                         );
                 }
                 else
                 {
                     _configuration.Routes.MapHttpRoute(
                         name: "api_" + entityRoute.PackageName + "_" + entityRoute.Version + "_" + entityRoute.PluralName,
-                        routeTemplate: "api/" + entityRoute.PackageName + "/v" + entityRoute.Version + "/" + entityRoute.PluralName + "/{id}",
-                        defaults: new { id = RouteParameter.Optional, controller = entityRoute.PluralName, version = entityRoute.Version },
+						routeTemplate: "api/" + entityRoute.PackageName + "/v" + entityRoute.Version + "/" + entityRoute.PluralName + "/" + string.Join("/", parameters),
+						defaults: (object)defaultsExpando,
                         constraints: null
                         );
                 }
+
 
                 _configuration.Formatters.XmlFormatter.SetSerializer(entityRoute.EntityType, new DataContractSerializer(entityRoute.EntityType, types));
 
