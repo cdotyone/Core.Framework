@@ -21,19 +21,45 @@ namespace Civic.T4.WebApi
             SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
         }
 
-        public override Task WriteToStreamAsync(Type type, object value, Stream writeStream,
+	    public Task BaseWriteToStreamAsync(Type type, object value, Stream writeStream,
+	                                            HttpContent content,
+	                                            System.Net.TransportContext transportContext)
+	    {
+			return base.WriteToStreamAsync(type, value, writeStream, content, transportContext); 
+	    }
+
+
+	    public override Task WriteToStreamAsync(Type type, object value, Stream writeStream,
                                                 HttpContent content,
                                                 System.Net.TransportContext transportContext)
         {
-            var t = Task.Factory.StartNew(() =>
+			var data = value as IQueryMetadata;
+            var url = _request.RequestUri.ToString();
+	        if (url.Contains("?")) url = url.Substring(0, url.IndexOf('?'));
+	        var query = HttpUtility.ParseQueryString(_request.RequestUri.Query);
+			
+			var inlinecount = query.Get("$inlinecount");
+	        var metadata = url.EndsWith("/$metadata");
+			if (metadata)
+			{
+				if (data != null && data.HasMetaDataAction)
+				{
+					return Task.Factory.StartNew(() => data.OnMetaRequest(this, data, writeStream, content, transportContext));
+				}
+				return Task.Factory.StartNew(() =>
+					{
+						var buf1 = Encoding.UTF8.GetBytes("{\"error\":\"no metadata available using json\"}");
+						writeStream.Write(buf1, 0, buf1.Length);
+					});
+			}
+
+			var t = Task.Factory.StartNew(() =>
                 {
                     var buf1 = Encoding.UTF8.GetBytes("{\"value\":");
                     writeStream.Write(buf1, 0, buf1.Length);
                 }).ContinueWith(t2 => { base.WriteToStreamAsync(type, value, writeStream, content, transportContext); })
                   .ContinueWith(t3 => {
                     var buffer = new StringBuilder();
-                    var inlinecount = HttpUtility.ParseQueryString(_request.RequestUri.Query).Get("$inlinecount");
-                    var data = value as IQueryMetadata;
 
                     if (inlinecount == "allpages" && data != null && data.Count.HasValue)
                     {
@@ -42,14 +68,16 @@ namespace Civic.T4.WebApi
                         buffer.Append("\"");
                     }
 
-                    buffer.Append(",\"odata.metadata\":\"");
-                    var url = _request.RequestUri.ToString();
-                    if (url.Contains("?")) url = url.Substring(0, url.IndexOf('?'));
-                    buffer.Append(url);
-                    buffer.Append("/$metadata");
-                    buffer.Append("\"");
-
-                    buffer.Append("}");
+	                if (!metadata)
+	                {
+		                buffer.Append(",\"odata.metadata\":\"");
+		                buffer.Append(url);
+		                if (!url.EndsWith("/")) buffer.Append("/");
+		                buffer.Append("$metadata");
+		                buffer.Append("\"");
+	                }
+					  
+					buffer.Append("}");
                     var outbuf = Encoding.UTF8.GetBytes(buffer.ToString());
                     writeStream.Write(outbuf, 0, outbuf.Length);
                 });

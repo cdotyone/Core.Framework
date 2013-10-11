@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
@@ -16,8 +15,7 @@ namespace Civic.T4.WebApi
     public class VersionControllerSelector : DefaultHttpControllerSelector
     {
         private readonly HttpConfiguration _configuration;
-        private readonly Regex _regex = new Regex(@"(https?://.*/api/)(v[0-9]*\.[0-9]*)(.*)");
-        private readonly Dictionary<string, Type> _apiControllerTypes = new Dictionary<string, Type>();
+	    private readonly Dictionary<string, Type> _apiControllerTypes = new Dictionary<string, Type>();
 
         private Dictionary<string, Type> ApiControllerTypes
         {
@@ -46,7 +44,7 @@ namespace Civic.T4.WebApi
 
 	            var parameters = new List<string>();
 				if (entityRoute.CustomParameters == null) parameters.Add("{id}");
-				else parameters.AddRange(entityRoute.CustomParameters);
+				else parameters.AddRange(entityRoute.CustomParameters.Select(parameter => "{" + parameter + "}"));
 
 				dynamic defaultsExpando = new ExpandoObject();
 				defaultsExpando.controller = entityRoute.PluralName;
@@ -143,17 +141,15 @@ namespace Civic.T4.WebApi
             }
 
             // Fall back to using the default implementation if no version is specified
-            return GetVersionedController(request) ?? base.SelectController(request);
+            return getVersionedController(request) ?? base.SelectController(request);
         }
 
-        private HttpControllerDescriptor GetVersionedController(HttpRequestMessage request)
+        private HttpControllerDescriptor getVersionedController(HttpRequestMessage request)
         {
             var controllerName = GetControllerName(request);
             var data = request.GetRouteData();
-            
-            string version;
-            if (data.Values.ContainsKey("version")) version = data.Values["version"].ToString();
-            else version = GetRequestVersion(request);
+
+	        string version = data.Values.ContainsKey("version") ? data.Values["version"].ToString() : getRequestVersion(request);
 
             // Given null, the default implementation will get called
             if (version == null)
@@ -161,7 +157,7 @@ namespace Civic.T4.WebApi
                 return null;
             }
 
-            var type = GetControllerTypeByVersion(version, controllerName);
+            var type = getControllerTypeByVersion(version, controllerName);
 
             if (type == null)
             {
@@ -171,7 +167,7 @@ namespace Civic.T4.WebApi
             return new HttpControllerDescriptor(_configuration, controllerName, type);
         }
 
-        private static string GetRequestVersion(HttpRequestMessage request)
+        private static string getRequestVersion(HttpRequestMessage request)
         {
             
             //request.RequestUri = new Uri("somthing");
@@ -185,7 +181,7 @@ namespace Civic.T4.WebApi
             return !version.Any() ? null : version.First();
         }
 
-        private Type GetControllerTypeByVersion(string version, string controllerName)
+        private Type getControllerTypeByVersion(string version, string controllerName)
         {
             // Stick to a convention, where a class name begins with the version number, this could be changed
             var versionToFind = string.Format("{0}", version.ToLower());
