@@ -9,11 +9,11 @@ echo %nugetconfig%
 IF %3==Nuget (
 	FOR %%X in ("%1nuget\*.nuspec") DO (
 		ECHO nuget.exe pack %%X -Version %version%
-		nuget.exe pack %%X -Version %version%
+		nuget.exe pack %%X 2Gt35eXSKnbkenkiBiecY21WhRtcO6uv -Version %version%
 	)
 
 	FOR %%X in ("%2*.nupkg") DO (
 		ECHO nuget.exe push %%X -Config %nugetconfig%
-		nuget.exe push %%X -Config %nugetconfig%
+		nuget.exe push %%X 2Gt35eXSKnbkenkiBiecY21WhRtcO6uv -Config %nugetconfig%
 	)
 )
