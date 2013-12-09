@@ -46,7 +46,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		var <#=code.Escape(lowerName)#>Returned = new <#=code.Escape(entity)#>Entity();
 
 		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
-		using (var command = database.CreateStoredProcCommand("[<#=apiSchemaName#>].usp_<#=code.Escape(entity)#>Get"))
+		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Get"))
 		{
 			<#
 		    foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
@@ -99,7 +99,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		var list = new List<<#=code.Escape(toEntity)#>Entity>();
 
 		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
-		using (var command = database.CreateStoredProcCommand("[<#=apiSchemaName#>].usp_<#=code.Escape(toEntity)#>GetBy<#=entity.Name#>"))
+		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(toEntity)#>GetBy<#=entity.Name#>"))
 		{
 			<#
 			foreach (EdmProperty edmProperty in toEntity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == toEntity))
@@ -135,7 +135,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		var list = new List<<#=code.Escape(entity)#>Entity>();
 
 		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
-		using (var command = database.CreateStoredProcCommand(string.IsNullOrEmpty(filterBy) ? "[<#=apiSchemaName#>].usp_<#=entity.Name#>GetPaged" : "[<#=apiSchemaName#>].usp_<#=entity.Name#>GetFiltered"))
+		using (var command = database.CreateStoredProcCommand(string.IsNullOrEmpty(filterBy) ? "<#=apiSchemaName#>","usp_<#=entity.Name#>GetPaged" : "<#=apiSchemaName#>","usp_<#=entity.Name#>GetFiltered"))
 		{
             command.AddInParameter("@skip", skip);			
             command.AddInParameter("@retcount", retCount);
@@ -167,7 +167,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	internal static <#=((keyType=="Int32" || keyType=="int") && keyName=="Id"?"int":"void")#> Add<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>)
 	{ 
 		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
-		using (var command = database.CreateStoredProcCommand("[<#=apiSchemaName#>].usp_<#=code.Escape(entity)#>Add"))
+		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Add"))
 		{
 			build<#=code.Escape(entity)#>CommandParameters( <#=lowerName#>, command, true );
 			command.ExecuteNonQuery();<#
@@ -196,7 +196,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		var list = new List<<#=code.Escape(entity)#>Entity>();
 
 		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
-		using (var command = database.CreateStoredProcCommand("[<#=apiSchemaName#>].usp_<#=code.Escape(entity)#>Modify"))
+		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Modify"))
 		{
 			build<#=code.Escape(entity)#>CommandParameters( <#=lowerName#>, command, false );
 			command.ExecuteNonQuery();
@@ -213,7 +213,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	internal static void Remove<#=code.Escape(entity)#>(<#=keyType#> <#=code.Escape(keyName.ToLower())#>)
 	{
 		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
-		using (var command = database.CreateStoredProcCommand("[<#=apiSchemaName#>].usp_<#=code.Escape(entity)#>Remove"))
+		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Remove"))
 		{
 			<#
 		    foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
