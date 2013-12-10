@@ -135,7 +135,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		var list = new List<<#=code.Escape(entity)#>Entity>();
 
 		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
-		using (var command = database.CreateStoredProcCommand(string.IsNullOrEmpty(filterBy) ? "<#=apiSchemaName#>","usp_<#=entity.Name#>GetPaged" : "<#=apiSchemaName#>","usp_<#=entity.Name#>GetFiltered"))
+		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>",string.IsNullOrEmpty(filterBy) ? "usp_<#=entity.Name#>GetPaged" : "usp_<#=entity.Name#>GetFiltered"))
 		{
             command.AddInParameter("@skip", skip);			
             command.AddInParameter("@retcount", retCount);
