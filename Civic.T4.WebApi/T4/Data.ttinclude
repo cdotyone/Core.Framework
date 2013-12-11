@@ -285,32 +285,42 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 		fillCollection("<#=lowerName#>",<#=lowerName#>,dataReader,fillProperties);
 <#
-		if(entity.NavigationProperties.Where(np => np.DeclaringType == entity && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many).Count()>0) {
+		if(entity.NavigationProperties.Where(np => np.DeclaringType == entity).Count()>0) {
 #>		
 
 		if(fillProperties!=null && fillProperties.Length>0) {
 			foreach(var propName in fillProperties) {
 
-				switch(propName) {					
+				switch (propName.ToLowerInvariant().Split('.')[0]) {					
 <#
 
-foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many))
+foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
 {
-		if (navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many)
 		if(navProperty.Documentation!=null && navProperty.Documentation.LongDescription.ToLower().Contains("hide")) continue;
-
     {#>
-					case "<#=code.Escape(navProperty)#>":
+					case "<#=code.Escape(navProperty).ToLowerInvariant()#>":
+<#		if (navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many) { #>
 						if(<#=lowerName#>.<#=code.Escape(navProperty)#>!=null) <#=lowerName#>.<#=code.Escape(navProperty)#>.Clear();
 						else <#=lowerName#>.<#=code.Escape(navProperty)#> = new List<<#=code.Escape(navProperty.ToEndMember.GetEntityType()).Replace(edmxFileName+".","")#>>();
 						<#=lowerName#>.<#=code.Escape(navProperty)#>.AddRange(Get<#=code.Escape(navProperty.ToEndMember.GetEntityType())#>By<#=navProperty.FromEndMember.Name#>(<#=code.Escape(lowerName)#>.<#=keyName#>, filterFillProperties(fillProperties, "<#=code.Escape(navProperty)#>")));
 						break;
-<#	}
+<#      } else {
+
+			var keyMembers = new List<string>();
+			foreach(var member in ((System.Data.Metadata.Edm.RefType)navProperty.ToEndMember.TypeUsage.EdmType).ElementType.KeyMembers)
+				keyMembers.Add(code.Escape(lowerName) + "." + member.Name);
+			
+ #>
+                        <#=code.Escape(lowerName)#>.<#=code.Escape(navProperty)#> = Get<#=code.Escape(navProperty.ToEndMember.GetEntityType())#>(<#=string.Join(",",keyMembers.ToArray())#>);
+						break;
+<#		}
+	}
 	}
 #>
 				}
 			}
 		}
+
 <#	
 	}
 #>
