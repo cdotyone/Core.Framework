@@ -42,7 +42,10 @@ namespace Civic.T4.WebApi.OData
 
         public void Add(String regex, TokenTypes stringLiteral)
         {
-            _tokenInfos.Add(new TokenInfo(new Regex("^" + regex, RegexOptions.None), stringLiteral));
+            if (stringLiteral == TokenTypes.Criteria)
+                _tokenInfos.Add(new TokenInfo(new Regex("^" + regex, RegexOptions.IgnoreCase), stringLiteral));
+            else
+                _tokenInfos.Add(new TokenInfo(new Regex("^" + regex, RegexOptions.None), stringLiteral));
         }
 
         public void Tokenize(String str)
