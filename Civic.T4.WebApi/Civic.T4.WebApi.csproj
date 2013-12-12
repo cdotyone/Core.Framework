@@ -55,9 +55,18 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Civic.Core.Caching">
+      <HintPath>..\packages\Civic.Core.Caching.1.8.27\lib\net40\Civic.Core.Caching.dll</HintPath>
+    </Reference>
     <Reference Include="Civic.Core.Configuration, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Civic.Core.Configuration.1.8\lib\net40\Civic.Core.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Civic.Core.Data">
+      <HintPath>..\packages\Civic.Core.Data.1.8.27\lib\net40\Civic.Core.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Civic.Core.Logging">
+      <HintPath>..\packages\Civic.Core.Logging.1.8.27\lib\net40\Civic.Core.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -119,6 +128,22 @@
     <Compile Include="ODataV3FormatterExtensions.cs" />
     <Compile Include="ODataV3QueryFilter.cs" />
     <Compile Include="ODataV3XmlFormatter.cs" />
+    <Compile Include="OData\AndCriteriaExpression.cs" />
+    <Compile Include="OData\CriteriaExpression.cs" />
+    <Compile Include="OData3FilterBuilder.cs" />
+    <Compile Include="OData\ExpressionTypes.cs" />
+    <Compile Include="OData\FieldOperator.cs" />
+    <Compile Include="OData\FieldOperatorNode.cs" />
+    <Compile Include="OData\FunctionExpression.cs" />
+    <Compile Include="OData\IExpression.cs" />
+    <Compile Include="OData\OrCriteriaExpression.cs" />
+    <Compile Include="OData\ParametersExpression.cs" />
+    <Compile Include="OData\Parser.cs" />
+    <Compile Include="OData\ParserException.cs" />
+    <Compile Include="OData\Token.cs" />
+    <Compile Include="OData\TokenInfo.cs" />
+    <Compile Include="OData\Tokenizer.cs" />
+    <Compile Include="OData\TokenTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ODataV3Attribute.cs" />
     <Compile Include="QueryMetadata.cs" />
