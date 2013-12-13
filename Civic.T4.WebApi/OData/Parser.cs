@@ -57,14 +57,14 @@ namespace Civic.T4.WebApi.OData
             {
                 // or_op -> OR_OPERATOR or_term or_op
                 OrCriteriaExpression orCriteria;
-                if (expression.Type == ExpressionTypes.OrCriteria)
-                {
-                    orCriteria = (OrCriteriaExpression)expression;
-                }
-                else
-                {
+                //if (expression.Type == ExpressionTypes.OrCriteria)
+                //{
+                //    orCriteria = (OrCriteriaExpression)expression;
+                //}
+                //else
+                //{
                     orCriteria = new OrCriteriaExpression(expression);
-                }
+                //}
                 nextToken();
                 IExpression orTermExpression = orTerm();
                 orCriteria.NestedExpression = orTermExpression;
@@ -92,14 +92,14 @@ namespace Civic.T4.WebApi.OData
             {
                 // and_op -> AND_OPERATOR and_term and_op
                 AndCriteriaExpression andCriteria;
-                if (expression.Type == ExpressionTypes.AndCriteria)
-                {
-                    andCriteria = (AndCriteriaExpression)expression;
-                }
-                else
-                {
+                //if (expression.Type == ExpressionTypes.AndCriteria)
+                //{
+                //    andCriteria = (AndCriteriaExpression)expression;
+                //}
+                //else
+                //{
                     andCriteria = new AndCriteriaExpression(expression);
-                }
+                //}
                 nextToken();
                 IExpression andTermExpression = andTerm();
                 andCriteria.NestedExpression = andTermExpression;

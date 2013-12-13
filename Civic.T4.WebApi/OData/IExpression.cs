@@ -4,7 +4,7 @@
     {
         ExpressionTypes Type { get; }
 
-        IExpression NestedExpression { get; }
+        IExpression NestedExpression { get; set; }
     }
 
 }
