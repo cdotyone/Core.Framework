@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web;
 
 // ReSharper disable ImplicitlyCapturedClosure
 
@@ -31,6 +32,8 @@ namespace Civic.T4.WebApi
 
             if (data != null && data.StatusCode != HttpStatusCode.OK)
             {
+                HttpContext.Current.Response.StatusCode = (int)data.StatusCode;
+
                 var error = data.StatusMessage;
                 if (string.IsNullOrEmpty(error)) error = data.StatusCode.ToString();
 

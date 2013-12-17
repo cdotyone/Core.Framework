@@ -39,6 +39,7 @@ namespace Civic.T4.WebApi
 
             if (data != null && data.StatusCode != HttpStatusCode.OK)
             {
+                HttpContext.Current.Response.StatusCode = (int)data.StatusCode;
                 var error = data.StatusMessage;
                 if (string.IsNullOrEmpty(error)) error = data.StatusCode.ToString();
 
