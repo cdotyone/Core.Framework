@@ -83,6 +83,12 @@ namespace Civic.T4.WebApi
             return result;
         }
 
+        public static QueryMetadata<T> CreateResponseError(HttpStatusCode statusCode)
+        {
+            var result = new QueryMetadata<T> { StatusCode = statusCode, StatusMessage = ErrorMessages.GetMessages(statusCode), Count = 0 };
+            return result;
+        }
+
         #endregion Error Results
 
     }
