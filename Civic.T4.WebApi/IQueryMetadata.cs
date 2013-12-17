@@ -22,5 +22,9 @@ namespace Civic.T4.WebApi
 		bool HasMetaDataAction { get; }
 
 		void OnMetaRequest(ODataV3JsonFormatter formatter, IQueryMetadata data, Stream writeStream, HttpContent content, TransportContext transportContext);
+
+        HttpStatusCode StatusCode { get; }
+
+        string StatusMessage { get; }
     }
 }

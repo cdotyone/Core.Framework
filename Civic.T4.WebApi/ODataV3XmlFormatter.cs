@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+
+// ReSharper disable ImplicitlyCapturedClosure
 
 namespace Civic.T4.WebApi
 {
@@ -21,9 +25,25 @@ namespace Civic.T4.WebApi
         }
 
         public override Task WriteToStreamAsync(Type type, object value, Stream writeStream, HttpContent content,
-                                                System.Net.TransportContext transportContext)
+                                                TransportContext transportContext)
         {
             var data = value as IQueryMetadata;
+
+            if (data != null && data.StatusCode != HttpStatusCode.OK)
+            {
+                var error = data.StatusMessage;
+                if (string.IsNullOrEmpty(error)) error = data.StatusCode.ToString();
+
+                var t3 = Task.Factory.StartNew(() =>
+                {
+                }).ContinueWith(t4 =>
+                {
+                    var tdict = new List<Dictionary<string, string>> { new Dictionary<string, string> { { "error", error } } };
+                    base.WriteToStreamAsync(tdict.GetType(), tdict, writeStream, content, transportContext);
+                });
+
+                return t3;
+            }
 
             var t = Task.Factory.StartNew(() =>
                 {

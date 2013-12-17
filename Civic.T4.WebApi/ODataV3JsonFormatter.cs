@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
@@ -9,6 +11,7 @@ using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
+// ReSharper disable ImplicitlyCapturedClosure
 namespace Civic.T4.WebApi
 {
     public class ODataV3JsonFormatter : JsonMediaTypeFormatter
@@ -23,17 +26,36 @@ namespace Civic.T4.WebApi
 
 	    public Task BaseWriteToStreamAsync(Type type, object value, Stream writeStream,
 	                                            HttpContent content,
-	                                            System.Net.TransportContext transportContext)
+	                                            TransportContext transportContext)
 	    {
 			return base.WriteToStreamAsync(type, value, writeStream, content, transportContext); 
 	    }
 
-
-	    public override Task WriteToStreamAsync(Type type, object value, Stream writeStream,
+        public override Task WriteToStreamAsync(Type type, object value, Stream writeStream,
                                                 HttpContent content,
-                                                System.Net.TransportContext transportContext)
+                                                TransportContext transportContext)
         {
 			var data = value as IQueryMetadata;
+
+            if (data != null && data.StatusCode != HttpStatusCode.OK)
+            {
+                var error = data.StatusMessage;
+                if (string.IsNullOrEmpty(error)) error = data.StatusCode.ToString();
+
+                var tdict = new List<Dictionary<string, string>> {new Dictionary<string, string> {{"error", error}}};
+                var t3 = Task.Factory.StartNew(() =>
+                    {
+                        var buf1 = Encoding.UTF8.GetBytes("{\"value\":");
+                        writeStream.Write(buf1, 0, buf1.Length);
+                    })
+                    .ContinueWith(t4 => { base.WriteToStreamAsync(type, tdict, writeStream, content, transportContext); })
+                    .ContinueWith(t5 => {
+                        var outbuf = Encoding.UTF8.GetBytes("}");
+                        writeStream.Write(outbuf, 0, outbuf.Length);
+                    });
+                return t3;
+            }
+
             var url = _request.RequestUri.ToString();
 	        if (url.Contains("?")) url = url.Substring(0, url.IndexOf('?'));
 	        var query = HttpUtility.ParseQueryString(_request.RequestUri.Query);
@@ -68,14 +90,11 @@ namespace Civic.T4.WebApi
                         buffer.Append("\"");
                     }
 
-	                if (!metadata)
-	                {
-		                buffer.Append(",\"odata.metadata\":\"");
-		                buffer.Append(url);
-		                if (!url.EndsWith("/")) buffer.Append("/");
-		                buffer.Append("$metadata");
-		                buffer.Append("\"");
-	                }
+		            buffer.Append(",\"odata.metadata\":\"");
+		            buffer.Append(url);
+		            if (!url.EndsWith("/")) buffer.Append("/");
+		            buffer.Append("$metadata");
+		            buffer.Append("\"");
 					  
 					buffer.Append("}");
                     var outbuf = Encoding.UTF8.GetBytes(buffer.ToString());

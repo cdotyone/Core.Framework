@@ -9,24 +9,26 @@ namespace Civic.T4.WebApi
 {
     public class QueryMetadata<T> : IQueryMetadata, IEnumerable<T> where T : class
     {
-        internal IEnumerable<T> _result;
+        internal IEnumerable<T> Result;
 
         public QueryMetadata()
         {
-            _result = new List<T>();
+            Result = new List<T>();
+            StatusCode = HttpStatusCode.OK;
         }
 
         public QueryMetadata(IEnumerable<T> result, long? count)
         {
-            _result = result ?? new List<T>();
+            Result = result ?? new List<T>();
 
             Count = count;
             Type = typeof(T);
+            StatusCode = HttpStatusCode.OK;
         }
 
         public IEnumerable Results
         {
-            get { return _result; }
+            get { return Result; }
         }
 
         public long? Count { get; set; }
@@ -50,22 +52,38 @@ namespace Civic.T4.WebApi
 
 	    public IEnumerator<T> GetEnumerator()
         {
-            return _result.GetEnumerator();
+            return Result.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _result.GetEnumerator();
+            return Result.GetEnumerator();
         }
 
         public void Add(T value)
         {
-            var list = _result as List<T>;
+            var list = Result as List<T>;
             if(list==null) list = new List<T>();
-            else list.AddRange(_result);
+            else list.AddRange(Result);
 
             list.Add(value);
-            _result = list;
+            Result = list;
         }
+
+
+        #region Error Results
+
+        public HttpStatusCode StatusCode { get; internal set; }
+
+        public string StatusMessage { get; internal set; }
+
+        public static QueryMetadata<T> CreateResponseError(HttpStatusCode statusCode, string statusMessage)
+        {
+            var result = new QueryMetadata<T> {StatusCode = statusCode, StatusMessage = statusMessage, Count = 0};
+            return result;
+        }
+
+        #endregion Error Results
+
     }
 }
