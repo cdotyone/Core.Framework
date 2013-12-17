@@ -117,6 +117,7 @@
     <Compile Include="..\References\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="ErrorMessages.cs" />
     <Compile Include="Configuration\T4WebApiSection.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="IEntityRouteManager.cs" />
