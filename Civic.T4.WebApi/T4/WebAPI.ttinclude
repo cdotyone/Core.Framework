@@ -1,55 +1,9 @@
 ﻿<#
 
-fileManager.StartNewFile(edmxFileName + "Controllers.cs", folderName:"Controllers");
-
-WriteHeader("System.Collections.Generic", "System.Web.Http.Controllers", namespaceName + ".Controllers", "Civic.T4.WebApi");
-
-foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
-{
-#>
-using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
-<#
+var apiVersionWithSlash = "";
+if(string.IsNullOrEmpty(apiVersionWithSlash)) {
+	apiVersionWithSlash = apiVersion + "/";
 }
-#>
-
-<#
-// Emit Entity Types
-BeginNamespace(namespaceName + ".v" + apiVersion.Replace(".","_"), code);
-
-#>
-public class <#=edmxFileName#>Controllers : IEntityRouteManager
-{
-	public EntityRoute[] GetEntityRoutes() 
-	{
-		var list = new List<EntityRoute>();
-<#
-foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
-{
-	if(entity.Documentation!=null && entity.Documentation.LongDescription.Contains("NONE"))
-		continue;
-
-#>		list.Add(new EntityRoute {	EntityName="<#=entity.Name#>",
-									PluralName="<#=Core.GetPluralName(entity.Name)#>",
-									ControllerType = typeof(<#=Core.GetPluralName(entity.Name)#>Controller),
-									EntityType = typeof(<#=entity.Name#>Entity),
-									Version="<#=apiVersion#>",
-									EdmxAssembly = typeof(<#=entity.Name#>Entity).Assembly,
-									EdmxResourceName = "<#=namespaceName#>.Models.<#=edmxFileName#>.edmx.xml"<#if(!string.IsNullOrEmpty(apiPackageName)) { #>,<# }
-									if(!string.IsNullOrEmpty(apiPackageName)) {
-#>									PackageName = "<#=apiPackageName#>"
-<#									}
-#>
-								});
-
-<#
-}
-#>
-		return list.ToArray();
-	}
-}
-<#
-EndNamespace(namespaceName + ".v" + apiVersion.Replace(".","_"));
-fileManager.EndBlock();
 
 // Emit Entity Types
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
@@ -73,13 +27,15 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		}
 	}
 #>
+[RoutePrefix("api/<#=apiVersionWithSlash#><#=apiVersion#>/<#=Core.GetPluralName(entity.Name)#>")]
 [System.CodeDom.Compiler.GeneratedCode("STE-EF",".NET 3.5")]
 <#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=Core.GetPluralName(entity.Name)#>Controller : ApiController 
 {
 	private static readonly <#=edmxFileName#>Service _service = new <#=edmxFileName#>Service();
 
 	<# if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("PAGED")) { 
-	#>public QueryMetadata<<#=entity.Name#>Entity> Get()
+	#>[Route("")]
+	public QueryMetadata<<#=entity.Name#>Entity> Get()
 	{
 		ODataV3QueryOptions options = this.GetOptions();
 		var resultLimit = options.Top < 100 ? options.Top : 100;
@@ -91,6 +47,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 	if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GET")) { #>
 
+	[Route("{id}")]
 	public QueryMetadata<<#=code.Escape(entity)#>Entity> Get(<#=keyType#> id)
 	{
 		ODataV3QueryOptions options = this.GetOptions();
@@ -102,6 +59,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 	if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("ADD")) { #>
 
+	[Route("")]
 	public <#=keyType#> Post([FromBody]<#=code.Escape(entity)#>Entity value)
 	{
 		_service.Add<#=code.Escape(entity)#>(value);
@@ -111,6 +69,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	
 	if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("MODIFY")) { #>
 
+	[Route("{id}")]
 	public void Put(<#=keyType#> id, [FromBody]<#=code.Escape(entity)#>Entity value)
 	{
 		value.<#=keyName#>=id;
@@ -120,6 +79,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 	if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("REMOVE")) { #>
 
+	[Route("{id}")]
 	public void Delete(<#=keyType#> id)
 	{
 		_service.Remove<#=code.Escape(entity)#>(id);

@@ -193,7 +193,6 @@
     <None Include="nuget\pack.bat" />
     <None Include="pack.bat" />
     <None Include="packages.config" />
-    <Content Include="T4\Security.ttinclude" />
     <None Include="T4\TemplateFilemanager.CS.ttinclude" />
   </ItemGroup>
   <ItemGroup>

@@ -11,7 +11,6 @@ fileManager.CanOverwriteExistingFile = true;
 <#@ include file="$(SolutionDir){packageDir}\DB.ttinclude"#>
 <#@ include file="$(SolutionDir){packageDir}\Data.ttinclude"#>
 <#@ include file="$(SolutionDir){packageDir}\Entities.ttinclude"#>
-<#@ include file="$(SolutionDir){packageDir}\Security.ttinclude"#>
 <#@ include file="$(SolutionDir){packageDir}\WebAPI.ttinclude"#>
 <#@ include file="$(SolutionDir){packageDir}\WCF.ttinclude"#>
 <#
