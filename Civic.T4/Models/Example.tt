@@ -1,0 +1,7 @@
+﻿<#@ template language="C#" debug="true" hostspecific="true"#>
+<#@ include file="..\T4\t4settings.ttinclude"#>
+<#
+apiPackageName="example"; 
+apiVersion = "1.0";
+#>
+<#@ include file="..\T4\t4generate.ttinclude"#>
