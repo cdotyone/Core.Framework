@@ -1,8 +1,8 @@
 ﻿<#
 
-var apiVersionWithSlash = "";
-if(string.IsNullOrEmpty(apiVersionWithSlash)) {
-	apiVersionWithSlash = apiVersion + "/";
+var apiPackageNameSlash = "";
+if(string.IsNullOrEmpty(apiPackageNameSlash)) {
+	apiPackageNameSlash = apiPackageName + "/";
 }
 
 // Emit Entity Types
@@ -27,7 +27,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		}
 	}
 #>
-[RoutePrefix("api/<#=apiVersionWithSlash#><#=apiVersion#>/<#=Core.GetPluralName(entity.Name)#>")]
+[RoutePrefix("api/<#=apiPackageNameSlash#><#=apiVersion#>/<#=Core.GetPluralName(entity.Name)#>")]
 [System.CodeDom.Compiler.GeneratedCode("STE-EF",".NET 3.5")]
 <#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=Core.GetPluralName(entity.Name)#>Controller : ApiController 
 {
