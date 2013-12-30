@@ -738,7 +738,7 @@ public static string ToLowerCamel(string str)
 
 public static string GetParameterName(string name) 
 {
-	return "@" + (name=="Id" ? "Id" : name.Substring(0,1).ToLower() + name.Substring(1));
+	return "@" + (name.ToLower()=="id" ? "id" : name.Substring(0,1).ToLower() + name.Substring(1));
 }
 
 public static string GetParameterType(CodeGenerationTools code, EdmProperty edmProperty) {
@@ -915,6 +915,7 @@ public static string TypeNameToDbType(CodeGenerationTools code, string typeName)
 
 public static string GetMethodParameterName(string name) 
 {
+	if(name.ToLower()=="id") return "id";
 	return name.Substring(0,1).ToLower() + name.Substring(1);
 }
 
