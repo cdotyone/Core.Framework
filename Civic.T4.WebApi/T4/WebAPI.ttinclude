@@ -16,14 +16,15 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
     BeginNamespace(namespaceName+".Controllers", code);
 	
 	var lowerName = entity.Name.ToLower();
-	var keyName = "";
-	var keyType = "";
+	var keys = new Dictionary<string,string>();
+	var keyType="";
+	var keyName="";
     foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {
         if (ef.IsKey(edmProperty)) {
 			keyName = edmProperty.Name;
-			keyType = code.Escape(edmProperty.TypeUsage);
-			break;
+			keys[keyName] = code.Escape(edmProperty.TypeUsage.EdmType);
+			keyType = code.Escape(edmProperty.TypeUsage.EdmType);
 		}
 	}
 #>
@@ -33,8 +34,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 {
 	private static readonly <#=edmxFileName#>Service _service = new <#=edmxFileName#>Service();
 
-	<# if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("PAGED")) { 
-	#>[Route("")]
+	[Route("")]
 	public QueryMetadata<<#=entity.Name#>Entity> Get()
 	{
 		ODataV3QueryOptions options = this.GetOptions();
@@ -43,21 +43,14 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		var result = _service.GetPaged<#=entity.Name#>(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby, options.Expand);
 		return new QueryMetadata<<#=entity.Name#>Entity>(result, resultLimit);
 	}
-	<# } 
 
-	if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GET")) { #>
-
-	[Route("{id}")]
-	public QueryMetadata<<#=code.Escape(entity)#>Entity> Get(<#=keyType#> id)
+	[Route("<# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? "/{" : "{") + Core.GetMethodParameterName(key) + "}" )#><#}#>")]
+	public QueryMetadata<<#=code.Escape(entity)#>Entity> Get(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> )
 	{
 		ODataV3QueryOptions options = this.GetOptions();
-		var result = new List<<#=code.Escape(entity)#>Entity> { _service.Get<#=code.Escape(entity)#>By<#=keyName#>(id, options.Expand) };
+		var result = new List<<#=code.Escape(entity)#>Entity> { _service.Get<#=code.Escape(entity)#>By<#=keyName#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>, options.Expand) };
 		return new QueryMetadata<<#=code.Escape(entity)#>Entity>(result, 1);
 	}
-
-	<# }
-
-	if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("ADD")) { #>
 
 	[Route("")]
 	public <#=keyType#> Post([FromBody]<#=code.Escape(entity)#>Entity value)
@@ -65,26 +58,24 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		_service.Add<#=code.Escape(entity)#>(value);
 		return value.<#=keyName#>;
 	}
-	<# } 
-	
-	if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("MODIFY")) { #>
 
-	[Route("{id}")]
-	public void Put(<#=keyType#> id, [FromBody]<#=code.Escape(entity)#>Entity value)
+	[Route("<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? "/{" : "{") + Core.GetMethodParameterName(key) + "}" )#><#}#>")]
+	public void Put(<# foreach(var key in keys.Keys) { #><#=keys[key]#> <#=Core.GetMethodParameterName(key)#>, <#}#>[FromBody]<#=code.Escape(entity)#>Entity value)
 	{
-		value.<#=keyName#>=id;
-		_service.Modify<#=code.Escape(entity)#>(value);
+		<#
+		foreach(var key in keys.Keys)
+		{
+	        #>value.<#=key#> = <#=Core.GetMethodParameterName(key)#>;
+		<#
+		}
+		#>_service.Modify<#=code.Escape(entity)#>(value);
 	}
-	<# }
 
-	if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("REMOVE")) { #>
-
-	[Route("{id}")]
-	public void Delete(<#=keyType#> id)
+	[Route("<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? "/{" : "{") + Core.GetMethodParameterName(key) + "}" )#><#}#>")]
+	public void Delete(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> )
 	{
-		_service.Remove<#=code.Escape(entity)#>(id);
+		_service.Remove<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#> );
 	}
-<# } #>
 }
 <#
     EndNamespace(namespaceName);
