@@ -4,7 +4,7 @@
     {
         public ODataV3QueryOptions()
         {
-            Top = 100;
+            Top = 0;
             Skip = 0;
             InlineCount = false;
         }
