@@ -7,7 +7,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_EnvironmentAdd]
 -- t4-params begin
-	  @Id [int] out
+	  @id [int] out
 	, @name [nvarchar](max)
 -- t4-params end
 AS

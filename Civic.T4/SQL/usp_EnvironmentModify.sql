@@ -6,7 +6,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_EnvironmentModify]
-	  @Id [int]
+	  @id [int]
 	, @name [nvarchar](max)
 AS
 BEGIN
@@ -19,7 +19,7 @@ BEGIN
 	FROM [dbo].[Environment] e
 	WHERE	
 		-- t4-where begin
-	    e.[Id] = @Id
+	    e.[Id] = @id
 		-- t4-where end
 END
 GO

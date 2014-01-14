@@ -33,37 +33,37 @@ namespace Civic.T4.Controllers
         public QueryMetadata<EnvironmentEntity> Get()
         {
             ODataV3QueryOptions options = this.GetOptions();
-            var resultLimit = options.Top < 100 ? options.Top : 100;
+            var maxrows = Civic.T4.WebApi.Configuration.T4WebApiSection.GetMaxRows("environment");
+            var resultLimit = options.Top < maxrows ? options.Top : maxrows;
             string orderby = options.ProcessOrderByOptions();
             var result = _service.GetPagedEnvironment(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby, options.Expand);
             return new QueryMetadata<EnvironmentEntity>(result, resultLimit);
         }
 
         [Route("{id}")]
-        public QueryMetadata<EnvironmentEntity> Get(int id)
+        public QueryMetadata<EnvironmentEntity> Get(Int32 id)
         {
             ODataV3QueryOptions options = this.GetOptions();
             var result = new List<EnvironmentEntity> { _service.GetEnvironmentById(id, options.Expand) };
             return new QueryMetadata<EnvironmentEntity>(result, 1);
         }
 
-
         [Route("")]
-        public int Post([FromBody]EnvironmentEntity value)
+        public Int32 Post([FromBody]EnvironmentEntity value)
         {
             _service.AddEnvironment(value);
             return value.Id;
         }
 
         [Route("{id}")]
-        public void Put(int id, [FromBody]EnvironmentEntity value)
+        public void Put(Int32 id, [FromBody]EnvironmentEntity value)
         {
             value.Id = id;
             _service.ModifyEnvironment(value);
         }
 
         [Route("{id}")]
-        public void Delete(int id)
+        public void Delete(Int32 id)
         {
             _service.RemoveEnvironment(id);
         }

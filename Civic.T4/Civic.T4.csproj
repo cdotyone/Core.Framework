@@ -156,6 +156,9 @@
     <Compile Include="Data\ExampleData.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
+    <Compile Include="Data\ExampleData.Environment.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Environment.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
@@ -173,10 +176,16 @@
       <DependentUpon>Example.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Example.Environment.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
     <Compile Include="Services\Example.Services.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Services\IExample.Services.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Services\IExampleEnvironment.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -233,7 +242,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>1850</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:30815/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
