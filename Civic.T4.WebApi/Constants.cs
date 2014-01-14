@@ -3,9 +3,7 @@
    	public static class Constants
 	{
 
-		public const string CONFIG_SECTION = "t4WebApi";
-   	    public const string CONFIG_ASSEMBLY = "assembly";
-   	    public const string CONFIG_ASSEMBLIES = "assemblies";
+		public const string CONFIG_SECTION = "civicT4";
         public const string CONFIG_MAXROW = "maxRowOverrides";
 
 	}

@@ -18,19 +18,6 @@ namespace Civic.T4.WebApi.Configuration
         /// </summary>
         public static string SectionName { get { return Constants.CONFIG_SECTION; } }
 
-        /// <summary>
-        /// List of assemblies that the library should look for controllers in
-        /// </summary>
-        public Dictionary<string, INamedElement> Assemblies
-        {
-            get
-            {
-                return Children.ContainsKey(Constants.CONFIG_ASSEMBLIES) ? 
-                    Children[Constants.CONFIG_ASSEMBLIES].Children : 
-                    null;
-            }
-        }
-
         public static int GetMaxRows(string name)
         {
             if (_maxRowOverrides == null)
