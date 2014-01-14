@@ -9,16 +9,36 @@
 
 #pragma warning disable 1591 // this is for supress no xml comments in public members warnings
 
+using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using Civic.T4.Entities;
 
+using EnvironmentEntity = Civic.T4.Entities.Environment;
 
 namespace Civic.T4.Services
 {
+
     [ServiceContract(Namespace = "http://example.civic360.com/")]
-    public interface IExample : IExampleEnvironment
+    public interface IExampleEnvironment
     {
+        [OperationContract]
+        List<EnvironmentEntity> GetPagedEnvironment(int skip, ref int count, bool retCount, string filterBy, string orderBy, string fillProperties);
+
+        [OperationContract]
+        EnvironmentEntity GetEnvironmentById(Int32 id, string fillProperties);
+
+        [OperationContract]
+        int AddEnvironment(EnvironmentEntity environment);
+
+        [OperationContract]
+        void ModifyEnvironment(EnvironmentEntity environment);
+
+        [OperationContract]
+        void RemoveEnvironment(Int32 id);
+
     }
+
 }
+
 

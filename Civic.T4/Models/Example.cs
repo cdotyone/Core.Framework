@@ -13,13 +13,19 @@
 
 //-> ExampleData.cs
 
+//-> ExampleData.Environment.cs
+
 //-> Environment.cs
 Error processing file Example.edmx.xml Error HRESULT E_FAIL has been returned from a call to a COM component.
 //-> Example.edmx.xml
 
+//-> Example.Environment.cs
+
 //-> Example.Services.cs
 
 //-> IExample.Services.cs
+
+//-> IExampleEnvironment.cs
 Error processing file Example.DB.Rebuild.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
 //-> Example.DB.Rebuild.sql
 Error processing file Example.Defaults.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
@@ -49,11 +55,14 @@ Error processing file usp_EnvironmentRemove.sql Error HRESULT E_FAIL has been re
 // Civic.T4\SQL\Example.txt4
 // Generated items
 // Civic.T4\Example.edmx.xml
+// Civic.T4\Services\IExampleEnvironment.cs
 // Civic.T4\Services\IExample.Services.cs
+// Civic.T4\Services\Example.Environment.cs
 // Civic.T4\Services\Example.Services.cs
 // Civic.T4\Controllers\EnvironmentController.cs
 // Civic.T4\Entities\Environment.cs
 // Civic.T4\Data\ExampleData.cs
+// Civic.T4\Data\ExampleData.Environment.cs
 // Civic.T4\SQL\Example.DB.Rebuild.sql
 // Civic.T4\SQL\Example.Tables.sql
 // Civic.T4\SQL\usp_EnvironmentRemove.sql

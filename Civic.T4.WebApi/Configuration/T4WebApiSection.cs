@@ -30,5 +30,34 @@ namespace Civic.T4.WebApi.Configuration
                     null;
             }
         }
+
+        public static int GetMaxRows(string name)
+        {
+            if (_maxRowOverrides == null)
+            {
+                _maxRowOverrides = new Dictionary<string, int>();
+
+                var overrides = Current.MaxRowsOverride;
+                foreach (var element in overrides)
+                {
+                    int max;
+                    int.TryParse(element.Value.ToString(), out max);
+                    _maxRowOverrides[element.Key.ToLower()] = max;
+                }
+            }
+            return _maxRowOverrides.ContainsKey(name) ? _maxRowOverrides[name] : 100;
+        }
+
+        private static Dictionary<string, int> _maxRowOverrides;
+
+        public Dictionary<string, INamedElement> MaxRowsOverride
+        {
+            get
+            {
+                return Children.ContainsKey(Constants.CONFIG_MAXROW)
+                           ? Children[Constants.CONFIG_MAXROW].Children
+                           : null;
+            }
+        }
     }
 }

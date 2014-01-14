@@ -6,7 +6,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_EnvironmentRemove]
-	  @Id [int]
+	  @id [int]
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -14,7 +14,7 @@ BEGIN
 	DELETE FROM [dbo].[Environment]
 	WHERE	
 		-- t4-where begin
-	    [Id] = @Id
+	    [Id] = @id
 		-- t4-where end
 END
 GO
