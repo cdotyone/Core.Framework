@@ -28,7 +28,7 @@ namespace Civic.T4.WebApi.Configuration
                 foreach (var element in overrides)
                 {
                     int max;
-                    int.TryParse(element.Value.ToString(), out max);
+                    int.TryParse(element.Value.Attributes["max"], out max);
                     _maxRowOverrides[element.Key.ToLower()] = max;
                 }
             }
