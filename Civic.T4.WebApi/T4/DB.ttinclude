@@ -137,10 +137,12 @@ BEGIN
 	DECLARE @COMBINEVARS TABLE(pos int,varname nvarchar(512),operation nvarchar(512),varvalue nvarchar(512))
 	DECLARE @OPERATIONS TABLE(pos int,operation nvarchar(512))
 	
+	--SELECT * FROM @BLOCKS
+
 	WHILE(EXISTS(SELECT * FROM @BLOCKS))
 	BEGIN
 		DECLARE @PAIR NVARCHAR(512)
-		SELECT @POS=POS,@PAIR=BLK FROM @BLOCKS
+		SELECT TOP 1 @POS=POS,@PAIR=BLK FROM @BLOCKS
 
 		IF CHARINDEX('|',@PAIR)>0 
 		BEGIN
@@ -150,7 +152,7 @@ BEGIN
 			)
 			INSERT INTO @TEMP
 			select POS,[item] from [dbo].[udf_Split](@PAIR,'|')
-			
+
 			DECLARE @VARNAME NVARCHAR(512)
 			select TOP 1 @VARNAME=[item] from @TEMP WE
 
@@ -180,9 +182,12 @@ BEGIN
 			SELECT @POS,@PAIR
 		END
 
+		DELETE FROM @TEMP
 		DELETE FROM @BLOCKS WHERE @POS=POS
 	END
 	
+	--SELECT * FROM @COMBINEVARS
+
 	-- trim leading and trailing single quotes
 	WHILE EXISTS(SELECT * FROM @COMBINEVARS WHERE PATINDEX('%''',varvalue)>0) OR EXISTS(SELECT * FROM @COMBINEVARS WHERE PATINDEX('''%',varvalue)>0)
 	BEGIN
@@ -235,7 +240,7 @@ BEGIN
 	ELSE
 	BEGIN
 		SET @SQL = @select 
-		SET @order = 'ORDER BY getdate()'
+		SET @order = ' ORDER BY getdate()'
 	END
 
 	-- build complete dyn sql statement
