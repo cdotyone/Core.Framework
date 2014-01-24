@@ -257,5 +257,56 @@ namespace Civic.T4.WebApi.OData
             
             throw new ParserException("String, number or date expected and " + _lookahead.Sequence + " found instead");
         }
+
+        public static Dictionary<string, string> NameValuePairs(string filter, List<string> properties)
+        {
+            var parser = new Parser();
+            var expression = parser.Parse(filter, new List<string>(properties));
+            var nameValue = new Dictionary<string, string>();
+
+            expandExpression(nameValue, expression, properties);
+            
+            return nameValue;
+        }
+
+        private static void expandExpression(Dictionary<string, string> nameValue, IExpression expression, IEnumerable<string> properties)
+        {
+            if (expression.Type == ExpressionTypes.Criteria)
+            {
+                var ce = expression as CriteriaExpression;
+                if (ce == null) throw new Exception("error using parsed query");
+                int pos = 0;
+                foreach (var entityProperty in properties)
+                {
+                    if (entityProperty.ToLower() == ce.Name.ToLower())
+                    {
+                        pos++;
+                        nameValue[entityProperty] = ce.Value;
+                    }
+                }
+            }
+
+            if (expression.Type == ExpressionTypes.AndCriteria)
+            {
+                var andExpression = expression as AndCriteriaExpression;
+
+                if (andExpression != null)
+                {
+                    expandExpression(nameValue, andExpression.LeftExpression, properties);
+                    expandExpression(nameValue, andExpression.NestedExpression, properties);
+                }
+            }
+
+            if (expression.Type == ExpressionTypes.OrCriteria)
+            {
+                var andExpression = expression as OrCriteriaExpression;
+
+                if (andExpression != null)
+                {
+                    expandExpression(nameValue, andExpression.LeftExpression, properties);
+                    expandExpression(nameValue, andExpression.NestedExpression, properties);
+                }
+            }
+        }
     }
 }
