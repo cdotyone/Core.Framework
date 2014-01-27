@@ -253,7 +253,7 @@ command.ExecuteNonQuery();
 		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) && Boolean.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString());<#
 			} else
 			if(ptype=="decimal") {#>						
-		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = decimal.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) && dataReader["SalePrice"] != null ? dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString() : "0");<#
+		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = decimal.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) && dataReader["<#=code.Escape(edmProperty.Name)#>"] != null ? dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString() : "0");<#
 			} else
 			if(ptype=="datetime") {#>					
 		if(!(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull)) <#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = DateTime.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString());<#
