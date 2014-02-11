@@ -196,7 +196,9 @@
     <None Include="nuget\Civic.T4.WebApi.WebHost.nuspec" />
     <None Include="nuget\pack.bat" />
     <None Include="pack.bat" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="T4\TemplateFilemanager.CS.ttinclude" />
   </ItemGroup>
   <ItemGroup>

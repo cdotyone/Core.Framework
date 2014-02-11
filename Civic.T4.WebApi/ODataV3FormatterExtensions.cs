@@ -14,7 +14,6 @@ namespace Civic.T4.WebApi
         }
 
         public static HttpConfiguration _config = null;
-        public static ODataV3QueryFilter _remove = new ODataV3QueryFilter(); 
 
         public static void EnableODataV3Support(this HttpConfiguration configuration)
         {
@@ -31,7 +30,7 @@ namespace Civic.T4.WebApi
             configuration.Formatters.Add(new ODataV3JsonFormatter());
             configuration.Formatters.Add(new ODataV3XmlFormatter());
 
-            configuration.Services.Add(typeof(IFilterProvider), _remove);
+            configuration.Services.Add(typeof(IFilterProvider), new ODataV3QueryFilter());
 
             _config = configuration; 
         }
@@ -57,7 +56,7 @@ namespace Civic.T4.WebApi
                 }
                 orderby = string.Join(",", list.ToArray());
             }
-            _config.Services.Remove(typeof(IFilterProvider), _remove);
+
             return orderby;
         }
     }

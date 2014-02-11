@@ -48,11 +48,10 @@ namespace Civic.T4.WebApi
                     raw.Filter = requestContext["$filter"];
                     raw.Expand = requestContext["$expand"];
                     raw.Format = requestContext["$format"];
+
+                    actionContext.ControllerContext.RouteData.Values.Add("options", raw);
                 }
-
-                actionContext.ControllerContext.RouteData.Values.Add("options", raw);
             }
-
 
             base.OnActionExecuting(actionContext);
         }
