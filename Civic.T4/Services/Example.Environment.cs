@@ -12,6 +12,7 @@
 using System;
 using System.ServiceModel.Activation;
 using System.Collections.Generic;
+using Civic.Core.Audit;
 using Civic.Core.Logging;
 using Civic.T4.Entities;
 
@@ -68,7 +69,11 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    return Data.ExampleData.AddEnvironment(environment, null);
+                    var db = Data.ExampleData.GetConnection();
+                    var logid = AuditManager.LogAdd("dbo", environment.Id.ToString() + "", environment);
+                    var retval = Data.ExampleData.AddEnvironment(environment, db);
+                    AuditManager.MarkSuccessFul(logid);
+                    return retval;
                 }
                 catch (Exception ex)
                 {
@@ -87,7 +92,11 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    Data.ExampleData.ModifyEnvironment(environment, null);
+                    var db = Data.ExampleData.GetConnection();
+                    var before = Data.ExampleData.GetEnvironment(environment.Id, db);
+                    var logid = AuditManager.LogModify("dbo", before.Id.ToString() + "", before, environment);
+                    Data.ExampleData.ModifyEnvironment(environment, db);
+                    AuditManager.MarkSuccessFul(logid);
                 }
                 catch (Exception ex)
                 {
@@ -104,7 +113,11 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    Data.ExampleData.RemoveEnvironment(id, null);
+                    var db = Data.ExampleData.GetConnection();
+                    var before = Data.ExampleData.GetEnvironment(id, db);
+                    var logid = AuditManager.LogRemove("dbo", before.Id.ToString() + "", before);
+                    Data.ExampleData.RemoveEnvironment(id, db);
+                    AuditManager.MarkSuccessFul(logid);
                 }
                 catch (Exception ex)
                 {

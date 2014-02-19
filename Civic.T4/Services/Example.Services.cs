@@ -12,6 +12,7 @@
 using System;
 using System.ServiceModel.Activation;
 using System.Collections.Generic;
+using Civic.Core.Audit;
 using Civic.Core.Logging;
 using Civic.T4.Entities;
 

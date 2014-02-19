@@ -40,6 +40,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Civic.Core.Audit">
+      <HintPath>..\packages\Civic.Core.Audit.1.9.63\lib\net40\Civic.Core.Audit.dll</HintPath>
+    </Reference>
     <Reference Include="Civic.Core.Caching, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Civic.Core.Caching.1.9.59\lib\net40\Civic.Core.Caching.dll</HintPath>
@@ -183,6 +186,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Example.Environment.cs">
+      <SubType>Code</SubType>
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Services\Example.Services.cs">
