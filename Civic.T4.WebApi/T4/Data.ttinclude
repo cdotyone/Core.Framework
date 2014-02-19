@@ -98,7 +98,7 @@ internal partial class <#=edmxFileName#>Data
 		}
 
 #>
-	internal static List<<#=code.Escape(toEntity)#>Entity> Get<#=code.Escape(toEntity)#>By<#=entity.Name#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#>, <#}#>, IDBConnection database, string[] fillProperties = null)
+	internal static List<<#=code.Escape(toEntity)#>Entity> Get<#=code.Escape(toEntity)#>By<#=entity.Name#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#>, <#}#> IDBConnection database, string[] fillProperties = null)
 	{
 		var list = new List<<#=code.Escape(toEntity)#>Entity>();
 
