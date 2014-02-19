@@ -129,10 +129,12 @@ BEGIN
 	DECLARE @COMBINEVARS TABLE(pos int,varname nvarchar(512),operation nvarchar(512),varvalue nvarchar(512))
 	DECLARE @OPERATIONS TABLE(pos int,operation nvarchar(512))
 	
+	--SELECT * FROM @BLOCKS
+
 	WHILE(EXISTS(SELECT * FROM @BLOCKS))
 	BEGIN
 		DECLARE @PAIR NVARCHAR(512)
-		SELECT @POS=POS,@PAIR=BLK FROM @BLOCKS
+		SELECT TOP 1 @POS=POS,@PAIR=BLK FROM @BLOCKS
 
 		IF CHARINDEX('|',@PAIR)>0 
 		BEGIN
@@ -142,7 +144,7 @@ BEGIN
 			)
 			INSERT INTO @TEMP
 			select POS,[item] from [dbo].[udf_Split](@PAIR,'|')
-			
+
 			DECLARE @VARNAME NVARCHAR(512)
 			select TOP 1 @VARNAME=[item] from @TEMP WE
 
@@ -172,9 +174,12 @@ BEGIN
 			SELECT @POS,@PAIR
 		END
 
+		DELETE FROM @TEMP
 		DELETE FROM @BLOCKS WHERE @POS=POS
 	END
 	
+	--SELECT * FROM @COMBINEVARS
+
 	-- trim leading and trailing single quotes
 	WHILE EXISTS(SELECT * FROM @COMBINEVARS WHERE PATINDEX('%''',varvalue)>0) OR EXISTS(SELECT * FROM @COMBINEVARS WHERE PATINDEX('''%',varvalue)>0)
 	BEGIN
@@ -227,7 +232,7 @@ BEGIN
 	ELSE
 	BEGIN
 		SET @SQL = @select 
-		SET @order = 'ORDER BY getdate()'
+		SET @order = ' ORDER BY getdate()'
 	END
 
 	-- build complete dyn sql statement
@@ -357,7 +362,7 @@ GO
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 12/18/2013 16:21:12
+-- Date Created: 02/19/2014 10:04:19
 -- Generated from EDMX file: D:\devel\CIVIC\T4\Civic.T4\Models\Example.edmx
 -- --------------------------------------------------
 
@@ -469,7 +474,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_EnvironmentAdd]
 -- t4-params begin
-	  @Id [int] out
+	  @id [int] out
 	, @name [nvarchar](max)
 -- t4-params end
 AS
@@ -499,7 +504,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_EnvironmentGet]
-	  @Id [int]
+	  @id [int]
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -512,7 +517,7 @@ BEGIN
 	FROM [dbo].[Environment] e
 	WHERE	
 		-- t4-where begin
-	    e.[Id] = @Id
+	    e.[Id] = @id
 		-- t4-where end
 END
 GO
@@ -677,7 +682,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_EnvironmentModify]
-	  @Id [int]
+	  @id [int]
 	, @name [nvarchar](max)
 AS
 BEGIN
@@ -690,7 +695,7 @@ BEGIN
 	FROM [dbo].[Environment] e
 	WHERE	
 		-- t4-where begin
-	    e.[Id] = @Id
+	    e.[Id] = @id
 		-- t4-where end
 END
 GO
@@ -703,7 +708,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_EnvironmentRemove]
-	  @Id [int]
+	  @id [int]
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -711,7 +716,7 @@ BEGIN
 	DELETE FROM [dbo].[Environment]
 	WHERE	
 		-- t4-where begin
-	    [Id] = @Id
+	    [Id] = @id
 		-- t4-where end
 END
 GO
@@ -725,7 +730,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_EnvironmentAdd]
 -- t4-params begin
-	  @Id [int] out
+	  @id [int] out
 	, @name [nvarchar](max)
 -- t4-params end
 AS
@@ -755,7 +760,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_EnvironmentGet]
-	  @Id [int]
+	  @id [int]
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -768,7 +773,7 @@ BEGIN
 	FROM [dbo].[Environment] e
 	WHERE	
 		-- t4-where begin
-	    e.[Id] = @Id
+	    e.[Id] = @id
 		-- t4-where end
 END
 GO
@@ -933,7 +938,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_EnvironmentModify]
-	  @Id [int]
+	  @id [int]
 	, @name [nvarchar](max)
 AS
 BEGIN
@@ -946,7 +951,7 @@ BEGIN
 	FROM [dbo].[Environment] e
 	WHERE	
 		-- t4-where begin
-	    e.[Id] = @Id
+	    e.[Id] = @id
 		-- t4-where end
 END
 GO
@@ -959,7 +964,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_EnvironmentRemove]
-	  @Id [int]
+	  @id [int]
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -967,7 +972,7 @@ BEGIN
 	DELETE FROM [dbo].[Environment]
 	WHERE	
 		-- t4-where begin
-	    [Id] = @Id
+	    [Id] = @id
 		-- t4-where end
 END
 GO

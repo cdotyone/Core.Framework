@@ -38,6 +38,11 @@ namespace Civic.T4.Data
             return list.ToArray();
         }
 
+        public static IDBConnection GetConnection()
+        {
+            return DatabaseFactory.CreateDatabase("Example");
+        }
+
     }
 }
 

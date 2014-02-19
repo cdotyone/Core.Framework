@@ -29,7 +29,7 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    return Data.ExampleData.GetEnvironment(id, string.IsNullOrEmpty(fillProperties) ? null : fillProperties.Split(','));
+                    return Data.ExampleData.GetEnvironment(id, null, string.IsNullOrEmpty(fillProperties) ? null : fillProperties.Split(','));
                 }
                 catch (Exception ex)
                 {
@@ -48,7 +48,7 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    return Data.ExampleData.GetPagedEnvironment(skip, ref count, retCount, filterBy, orderBy, string.IsNullOrEmpty(fillProperties) ? null : fillProperties.Split(','));
+                    return Data.ExampleData.GetPagedEnvironment(skip, ref count, retCount, filterBy, orderBy, null, string.IsNullOrEmpty(fillProperties) ? null : fillProperties.Split(','));
                 }
                 catch (Exception ex)
                 {
@@ -68,7 +68,7 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    return Data.ExampleData.AddEnvironment(environment);
+                    return Data.ExampleData.AddEnvironment(environment, null);
                 }
                 catch (Exception ex)
                 {
@@ -87,7 +87,7 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    Data.ExampleData.ModifyEnvironment(environment);
+                    Data.ExampleData.ModifyEnvironment(environment, null);
                 }
                 catch (Exception ex)
                 {
@@ -104,7 +104,7 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    Data.ExampleData.RemoveEnvironment(id);
+                    Data.ExampleData.RemoveEnvironment(id, null);
                 }
                 catch (Exception ex)
                 {

@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-#pragma warning disable 1591 // this is for supress no xml comments in public members warnings 
+#pragma warning disable 1591 // this is for supress no xml comments in public members warnings
 
 using System;
 using System.Collections.Generic;
@@ -23,18 +23,18 @@ namespace Civic.T4.Data
     internal partial class ExampleData
     {
 
-        internal static EnvironmentEntity GetEnvironment(Int32 id, string[] fillProperties = null)
+        internal static EnvironmentEntity GetEnvironment(Int32 id, IDBConnection database, string[] fillProperties = null)
         {
             var environmentReturned = new EnvironmentEntity();
 
-            var database = DatabaseFactory.CreateDatabase("Example");
+            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
             using (var command = database.CreateStoredProcCommand("dbo", "usp_EnvironmentGet"))
             {
                 command.AddInParameter("@id", id);
 
                 using (IDataReader dataReader = command.ExecuteReader())
                 {
-                    if (populateEnvironment(environmentReturned, dataReader, fillProperties))
+                    if (populateEnvironment(environmentReturned, dataReader, database, fillProperties))
                     {
                         environmentReturned.Id = id;
                     }
@@ -45,18 +45,12 @@ namespace Civic.T4.Data
             return environmentReturned;
         }
 
-        internal static List<EnvironmentEntity> GetPagedEnvironment(int skip, ref int count, bool retCount,
-                                                                    string filterBy, string orderBy,
-                                                                    string[] fillProperties = null)
+        internal static List<EnvironmentEntity> GetPagedEnvironment(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database, string[] fillProperties = null)
         {
             var list = new List<EnvironmentEntity>();
 
-            var database = DatabaseFactory.CreateDatabase("Example");
-            using (
-                var command = database.CreateStoredProcCommand("dbo",
-                                                               string.IsNullOrEmpty(filterBy)
-                                                                   ? "usp_EnvironmentGetPaged"
-                                                                   : "usp_EnvironmentGetFiltered"))
+            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
+            using (var command = database.CreateStoredProcCommand("dbo", string.IsNullOrEmpty(filterBy) ? "usp_EnvironmentGetPaged" : "usp_EnvironmentGetFiltered"))
             {
                 command.AddInParameter("@skip", skip);
                 command.AddInParameter("@retcount", retCount);
@@ -67,7 +61,7 @@ namespace Civic.T4.Data
                 using (IDataReader dataReader = command.ExecuteReader())
                 {
                     var item = new EnvironmentEntity();
-                    while (populateEnvironment(item, dataReader, fillProperties))
+                    while (populateEnvironment(item, dataReader, database, fillProperties))
                     {
                         list.Add(item);
                         item = new EnvironmentEntity();
@@ -80,24 +74,24 @@ namespace Civic.T4.Data
             return list;
         }
 
-        internal static int AddEnvironment(EnvironmentEntity environment)
+        internal static int AddEnvironment(EnvironmentEntity environment, IDBConnection database)
         {
-            var database = DatabaseFactory.CreateDatabase("Example");
+            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
             using (var command = database.CreateStoredProcCommand("dbo", "usp_EnvironmentAdd"))
             {
                 buildEnvironmentCommandParameters(environment, command, true);
                 command.ExecuteNonQuery();
                 return
-                    environment.Id = Int32.Parse(
-                        command.GetOutParameter("@id").Value.ToString());
+               environment.Id = Int32.Parse(
+               command.GetOutParameter("@id").Value.ToString());
             }
         }
 
-        internal static List<EnvironmentEntity> ModifyEnvironment(EnvironmentEntity environment)
+        internal static List<EnvironmentEntity> ModifyEnvironment(EnvironmentEntity environment, IDBConnection database)
         {
             var list = new List<EnvironmentEntity>();
 
-            var database = DatabaseFactory.CreateDatabase("Example");
+            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
             using (var command = database.CreateStoredProcCommand("dbo", "usp_EnvironmentModify"))
             {
                 buildEnvironmentCommandParameters(environment, command, false);
@@ -107,9 +101,9 @@ namespace Civic.T4.Data
             return list;
         }
 
-        internal static void RemoveEnvironment(Int32 id)
+        internal static void RemoveEnvironment(Int32 id, IDBConnection database)
         {
-            var database = DatabaseFactory.CreateDatabase("Example");
+            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
             using (var command = database.CreateStoredProcCommand("dbo", "usp_EnvironmentRemove"))
             {
                 command.AddInParameter("@id", id);
@@ -117,8 +111,7 @@ namespace Civic.T4.Data
             }
         }
 
-        private static void buildEnvironmentCommandParameters(EnvironmentEntity environment, IDBCommand command,
-                                                              bool addRecord)
+        private static void buildEnvironmentCommandParameters(EnvironmentEntity environment, IDBCommand command, bool addRecord)
         {
             if (addRecord) command.AddParameter("@id", ParameterDirection.InputOutput, environment.Id);
             else command.AddInParameter("@id", environment.Id);
@@ -126,15 +119,13 @@ namespace Civic.T4.Data
 
         }
 
-        private static bool populateEnvironment(EnvironmentEntity environment, IDataReader dataReader,
-                                                string[] fillProperties = null)
+        private static bool populateEnvironment(EnvironmentEntity environment, IDataReader dataReader, IDBConnection database, string[] fillProperties = null)
         {
             if (dataReader == null || !dataReader.Read()) return false;
 
-            environment.Id = dataReader["Id"] != null ? Int32.Parse(dataReader["Id"].ToString()) : 0;
-            environment.Name = dataReader["Name"] != null ? dataReader["Name"].ToString() : string.Empty;
-            fillCollection("environment", environment, dataReader, fillProperties);
-
+            environment.Id = dataReader["Id"] != null && !(dataReader["Id"] is DBNull) ? Int32.Parse(dataReader["Id"].ToString()) : 0;
+            environment.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? dataReader["Name"].ToString() : string.Empty;
+            //fillCollection("environment", environment, dataReader, database, fillProperties);
             return true;
         }
     }

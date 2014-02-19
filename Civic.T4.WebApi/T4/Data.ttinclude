@@ -46,11 +46,11 @@ internal partial class <#=edmxFileName#>Data
 	}
 
 #>
-	internal static <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#>, <#}#>string[] fillProperties = null)
+	internal static <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#>, <#}#>IDBConnection database, string[] fillProperties = null)
 	{
 		var <#=code.Escape(lowerName)#>Returned = new <#=code.Escape(entity)#>Entity();
 
-		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
+		if( database==null ) database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
 		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Get"))
 		{
 			<#
@@ -63,7 +63,7 @@ internal partial class <#=edmxFileName#>Data
 
 			using (IDataReader dataReader = command.ExecuteReader())
 			{
-				if (populate<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>Returned, dataReader, fillProperties))
+				if (populate<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>Returned, dataReader, database, fillProperties))
 				{
 					<# foreach(var key in keys.Keys) { #>
 <#=code.Escape(lowerName)#>Returned.<#=code.Escape(key)#> = <#=Core.GetMethodParameterName(key)#>;
@@ -98,11 +98,11 @@ internal partial class <#=edmxFileName#>Data
 		}
 
 #>
-	internal static List<<#=code.Escape(toEntity)#>Entity> Get<#=code.Escape(toEntity)#>By<#=entity.Name#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#>, <#}#> string[] fillProperties = null)
+	internal static List<<#=code.Escape(toEntity)#>Entity> Get<#=code.Escape(toEntity)#>By<#=entity.Name#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#>, <#}#>, IDBConnection database, string[] fillProperties = null)
 	{
 		var list = new List<<#=code.Escape(toEntity)#>Entity>();
 
-		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
+		if( database==null ) database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
 		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(toEntity)#>GetBy<#=entity.Name#>"))
 		{
 			<#
@@ -116,7 +116,7 @@ internal partial class <#=edmxFileName#>Data
 			using (IDataReader dataReader = command.ExecuteReader())
 			{
 				var item = new <#=code.Escape(toEntity)#>Entity();
-				while(populate<#=code.Escape(toEntity)#>(item, dataReader, fillProperties))
+				while(populate<#=code.Escape(toEntity)#>(item, dataReader, database, fillProperties))
 				{
 					list.Add(item);
 					item = new <#=code.Escape(toEntity	)#>Entity();
@@ -130,11 +130,11 @@ internal partial class <#=edmxFileName#>Data
 <#
 	}
 #>
-	internal static List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(int skip, ref int count, bool retCount, string filterBy, string orderBy, string[] fillProperties = null)
+	internal static List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database, string[] fillProperties = null)
 	{ 
 		var list = new List<<#=code.Escape(entity)#>Entity>();
 
-		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
+		if( database==null ) database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
 		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>",string.IsNullOrEmpty(filterBy) ? "usp_<#=entity.Name#>GetPaged" : "usp_<#=entity.Name#>GetFiltered"))
 		{
             command.AddInParameter("@skip", skip);			
@@ -146,7 +146,7 @@ internal partial class <#=edmxFileName#>Data
 			using (IDataReader dataReader = command.ExecuteReader())
 			{
 				var item = new <#=code.Escape(entity)#>Entity();
-				while(populate<#=code.Escape(entity)#>(item, dataReader, fillProperties))
+				while(populate<#=code.Escape(entity)#>(item, dataReader, database, fillProperties))
 				{
 					list.Add(item);
 					item = new <#=code.Escape(entity)#>Entity();
@@ -159,9 +159,9 @@ internal partial class <#=edmxFileName#>Data
 		return list;
 	}
 
-	internal static <#=((keyType=="Int32" || keyType=="int") && keyName.ToLower()=="id"?"int":"void")#> Add<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>)
+	internal static <#=((keyType=="Int32" || keyType=="int") && keyName.ToLower()=="id"?"int":"void")#> Add<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>, IDBConnection database)
 	{ 
-		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
+		if( database==null ) database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
 		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Add"))
 		{
 			build<#=code.Escape(entity)#>CommandParameters( <#=lowerName#>, command, true );
@@ -181,11 +181,11 @@ internal partial class <#=edmxFileName#>Data
 		}
 	}
 
-	internal static List<<#=code.Escape(entity)#>Entity> Modify<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>)
+	internal static List<<#=code.Escape(entity)#>Entity> Modify<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>, IDBConnection database)
 	{ 
 		var list = new List<<#=code.Escape(entity)#>Entity>();
 
-		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
+		if( database==null ) database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
 		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Modify"))
 		{
 			build<#=code.Escape(entity)#>CommandParameters( <#=lowerName#>, command, false );
@@ -195,9 +195,9 @@ internal partial class <#=edmxFileName#>Data
 		return list;
 	}
 
-	internal static void Remove<#=code.Escape(entity)#>(<# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> )
+	internal static void Remove<#=code.Escape(entity)#>(<# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#>, IDBConnection database )
 	{
-		var database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
+		if( database==null ) database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
 		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Remove"))
 		{
 			<#
@@ -239,7 +239,7 @@ command.ExecuteNonQuery();
 
 	}
 	
-	private static bool populate<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>, IDataReader dataReader, string[] fillProperties = null)
+	private static bool populate<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>, IDataReader dataReader, IDBConnection database, string[] fillProperties = null)
 	{
 		if (dataReader==null || !dataReader.Read()) return false;
 		<#
@@ -264,7 +264,7 @@ command.ExecuteNonQuery();
 		}
 #>
 
-		fillCollection("<#=lowerName#>",<#=lowerName#>,dataReader,fillProperties);
+		fillCollection("<#=lowerName#>",<#=lowerName#>,dataReader,database,fillProperties);
 <#
 		if(entity.NavigationProperties.Where(np => np.DeclaringType == entity).Count()>0) {
 #>		
@@ -283,7 +283,7 @@ foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np 
 <#		if (navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many) { #>
 						if(<#=lowerName#>.<#=code.Escape(navProperty)#>!=null) <#=lowerName#>.<#=code.Escape(navProperty)#>.Clear();
 						else <#=lowerName#>.<#=code.Escape(navProperty)#> = new List<<#=code.Escape(navProperty.ToEndMember.GetEntityType()).Replace(edmxFileName+".","")#>Entity>();
-						<#=lowerName#>.<#=code.Escape(navProperty)#>.AddRange(Get<#=code.Escape(navProperty.ToEndMember.GetEntityType())#>By<#=navProperty.FromEndMember.Name#>(<# foreach(var key in keys.Keys) { #><#=lowerName#>.<#=key#>, <#}#>filterFillProperties(fillProperties, "<#=code.Escape(navProperty)#>")));
+						<#=lowerName#>.<#=code.Escape(navProperty)#>.AddRange(Get<#=code.Escape(navProperty.ToEndMember.GetEntityType())#>By<#=navProperty.FromEndMember.Name#>(<# foreach(var key in keys.Keys) { #><#=lowerName#>.<#=key#>, <#}#>database,filterFillProperties(fillProperties, "<#=code.Escape(navProperty)#>")));
 						break;
 <#      } else {
 
@@ -293,7 +293,7 @@ foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np 
 					keyMembers.Add(code.Escape(lowerName) + "." + toprop.ToString());
 			}
  #>
-                        <#=code.Escape(lowerName)#>.<#=code.Escape(navProperty)#> = Get<#=code.Escape(navProperty.ToEndMember.GetEntityType())#>(<#=string.Join(",",keyMembers.ToArray())#>);
+                        <#=code.Escape(lowerName)#>.<#=code.Escape(navProperty)#> = Get<#=code.Escape(navProperty.ToEndMember.GetEntityType())#>(<#=string.Join(",",keyMembers.ToArray())#>, database);
 						break;
 <#		}
 	}
@@ -303,11 +303,11 @@ foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np 
 			}
 		}
 	
-		return true;
-	}
 <#
 }
 #>
+			return true;
+		}
 	}
 <#
 EndNamespace(namespaceName);
@@ -340,6 +340,11 @@ internal partial class <#=edmxFileName#>Data
 
 		return list.ToArray();
 	}
+
+	public static IDBConnection GetConnection()
+    {
+        return DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
+    }
 
 }
 <#

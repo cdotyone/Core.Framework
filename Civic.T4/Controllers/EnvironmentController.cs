@@ -34,7 +34,7 @@ namespace Civic.T4.Controllers
         {
             ODataV3QueryOptions options = this.GetOptions();
             var maxrows = Civic.T4.WebApi.Configuration.T4WebApiSection.GetMaxRows("environment");
-            var resultLimit = options.Top < maxrows ? options.Top : maxrows;
+            var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
             string orderby = options.ProcessOrderByOptions();
             var result = _service.GetPagedEnvironment(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby, options.Expand);
             return new QueryMetadata<EnvironmentEntity>(result, resultLimit);

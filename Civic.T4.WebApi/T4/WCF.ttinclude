@@ -63,7 +63,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Get<#=code.Escape(entity)#>By<#=code.Escape(keyName)#>")) {
 
 			try {		
-				return Data.<#=edmxFileName#>Data.Get<#=code.Escape(entity)#>(<# foreach(var key in keys.Keys) { #><#=Core.GetMethodParameterName(key)#>, <#}#>string.IsNullOrEmpty(fillProperties) ? null : fillProperties.Split(','));
+				return Data.<#=edmxFileName#>Data.Get<#=code.Escape(entity)#>(<# foreach(var key in keys.Keys) { #><#=Core.GetMethodParameterName(key)#>, <#}#>null ,string.IsNullOrEmpty(fillProperties) ? null : fillProperties.Split(','));
 			}
 			catch (Exception ex)
 			{
@@ -80,7 +80,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "GetPaged<#=code.Escape(entity)#>")) {
 
 			try {
-				return Data.<#=edmxFileName#>Data.GetPaged<#=entity.Name#>(skip, ref count, retCount, filterBy, orderBy, string.IsNullOrEmpty(fillProperties) ? null : fillProperties.Split(','));
+				return Data.<#=edmxFileName#>Data.GetPaged<#=entity.Name#>(skip, ref count, retCount, filterBy, orderBy, null, string.IsNullOrEmpty(fillProperties) ? null : fillProperties.Split(','));
 			}
 			catch (Exception ex)
 			{
@@ -119,7 +119,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Get<#=code.Escape(entity)#>By<#=code.Escape(keyName)#>")) {
 
 			try {
-				return Data.<#=edmxFileName#>Data.Get<#=entity.Name#>By<#=toEntity.Name#>(<#=code.Escape(keyName.ToLower())#>, string.IsNullOrEmpty(fillProperties) ? null : fillProperties.Split(','));
+				return Data.<#=edmxFileName#>Data.Get<#=entity.Name#>By<#=toEntity.Name#>(<#=code.Escape(keyName.ToLower())#>, null, string.IsNullOrEmpty(fillProperties) ? null : fillProperties.Split(','));
 			}
 			catch (Exception ex)
 			{
@@ -142,7 +142,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 			try {
 			<#
 			if((keyType=="Int32" || keyType=="int") && keyName=="Id") {#>
-				return Data.<#=edmxFileName#>Data.Add<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>);<#
+				return Data.<#=edmxFileName#>Data.Add<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>, null);<#
 			} else {
 	#> 			Data.<#=edmxFileName#>Data.Add<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>);<#
 			} #>
@@ -169,7 +169,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Modify<#=code.Escape(entity)#>")) {
 
 			try {
-				Data.<#=edmxFileName#>Data.Modify<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>);
+				Data.<#=edmxFileName#>Data.Modify<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>, null);
 			}
 			catch (Exception ex)
 			{
@@ -184,7 +184,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Remove<#=code.Escape(entity)#>")) {
 
 			try {
-				Data.<#=edmxFileName#>Data.Remove<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>);
+				Data.<#=edmxFileName#>Data.Remove<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>, null);
 			}
 			catch (Exception ex)
 			{

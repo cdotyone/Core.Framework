@@ -1,20 +1,18 @@
-﻿-- --------------------------------------------------
+
+-- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 02/19/2014 10:07:02
+-- Date Created: 02/19/2014 10:11:44
 -- Generated from EDMX file: D:\devel\CIVIC\T4\Civic.T4\Models\Example.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
 GO
-USE [Example];
+USE [CM];
 GO
--- --------------------------------------------------
--- Dropping existing FOREIGN KEY constraints
--- --------------------------------------------------
+IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
+GO
 
-USE [Example];
-GO
 -- --------------------------------------------------
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
@@ -24,9 +22,6 @@ GO
 -- Dropping existing tables
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[Environments]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Environments];
-GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -34,8 +29,8 @@ GO
 
 -- Creating table 'Environments'
 CREATE TABLE [dbo].[Environments] (
-    [Id] [int] IDENTITY(1,1) NOT NULL,
-    [Name] [nvarchar](max)  NOT NULL
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Name] nvarchar(max)  NOT NULL
 );
 GO
 
@@ -46,8 +41,7 @@ GO
 -- Creating primary key on [Id] in table 'Environments'
 ALTER TABLE [dbo].[Environments]
 ADD CONSTRAINT [PK_Environments]
-
-    PRIMARY KEY ([Id]ASC);
+    PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
 -- --------------------------------------------------
@@ -57,4 +51,3 @@ GO
 -- --------------------------------------------------
 -- Script has ended
 -- --------------------------------------------------
-
