@@ -118,11 +118,24 @@ BEGIN
 	set @count = isnull(@count,100)
 	set @orderBy = isnull(@orderBy,'')
 	set @filterBy = isnull(@filterBy,'')
-
-	-- parse and determine filter by
-	set @filterBy=replace(replace(replace(replace(replace(replace(upper(@filterBy),' eq ','|=|'),' lt ','|<|'),' gt ','|>|'),' ge ','|>=|'),' le ','|<=|'),' ne ','|<>|')
 	
 	DECLARE @BLOCKS TABLE(pos int,blk nvarchar(512))
+
+	--- escape out space in a string query
+	SET @filterBy=REPLACE(@filterBy,' ','___')
+	insert into @BLOCKS
+	select [POS],[item] from [dbo].[udf_Split](@filterBy,'''')
+
+	UPDATE @BLOCKS SET blk=replace(blk,'___','###')
+	WHERE (POS % 2) = 0
+
+	SET @filterBy = ''
+	SELECT @filterBy=@filterBy+blk FROM @BLOCKS
+	SET @filterBy=REPLACE(LTRIM(@filterBy),'___',' ')
+	DELETE FROM @BLOCKS
+
+	-- parse and determine filter by
+	set @filterBy=replace(replace(replace(replace(replace(replace(replace(upper(@filterBy),' like ','|_like_|'),' eq ','|=|'),' lt ','|<|'),' gt ','|>|'),' ge ','|>=|'),' le ','|<=|'),' ne ','|<>|')
 	insert into @BLOCKS
 	select [POS],[item] from [dbo].[udf_Split](@filterBy,' ')
 
@@ -143,7 +156,7 @@ BEGIN
 				,ITEM nvarchar(256)
 			)
 			INSERT INTO @TEMP
-			select POS,[item] from [dbo].[udf_Split](@PAIR,'|')
+			select POS,[item] from [dbo].[udf_Split](REPLACE(@PAIR,'|_LIKE_|','| LIKE |'),'|')
 
 			DECLARE @VARNAME NVARCHAR(512)
 			select TOP 1 @VARNAME=[item] from @TEMP WE
@@ -178,8 +191,6 @@ BEGIN
 		DELETE FROM @BLOCKS WHERE @POS=POS
 	END
 	
-	--SELECT * FROM @COMBINEVARS
-
 	-- trim leading and trailing single quotes
 	WHILE EXISTS(SELECT * FROM @COMBINEVARS WHERE PATINDEX('%''',varvalue)>0) OR EXISTS(SELECT * FROM @COMBINEVARS WHERE PATINDEX('''%',varvalue)>0)
 	BEGIN
@@ -213,6 +224,9 @@ BEGIN
 	BEGIN
 		SELECT TOP 1 @WHERE=[VARNAME]+[OPERATION]+'@_val'+CONVERT(NVARCHAR(50),[POS]) FROM @COMBINEVARS
 	END
+
+	-- unescape string spaces
+	UPDATE @COMBINEVARS SET varvalue=replace(varvalue,'###',' ')
 
 	-- build dynamic order clause
 	IF @orderBy is not null and @orderBy<>''
@@ -362,7 +376,7 @@ GO
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 02/19/2014 12:28:38
+-- Date Created: 02/19/2014 12:30:43
 -- Generated from EDMX file: D:\devel\CIVIC\T4\Civic.T4\Models\Example.edmx
 -- --------------------------------------------------
 
