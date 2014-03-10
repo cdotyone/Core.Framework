@@ -125,7 +125,7 @@ namespace Civic.T4.Data
 
             environment.Id = dataReader["Id"] != null && !(dataReader["Id"] is DBNull) ? Int32.Parse(dataReader["Id"].ToString()) : 0;
             environment.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? dataReader["Name"].ToString() : string.Empty;
-            fillCollection("environment", environment, dataReader, database, fillProperties);
+            //fillCollection("environment", environment, dataReader, database, fillProperties);
             return true;
         }
     }
