@@ -22,7 +22,8 @@ namespace Civic.T4.WebApi
         {
             SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-            this.UseDataContractJsonSerializer = true;
+            SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+            SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
         }
 
 	    public Task BaseWriteToStreamAsync(Type type, object value, Stream writeStream,
