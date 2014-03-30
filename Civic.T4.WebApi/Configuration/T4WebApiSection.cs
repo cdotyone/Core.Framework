@@ -24,12 +24,16 @@ namespace Civic.T4.WebApi.Configuration
             {
                 _maxRowOverrides = new Dictionary<string, int>();
 
-                var overrides = Current.MaxRowsOverride;
-                foreach (var element in overrides)
+                var config = Current;
+                if (config != null)
                 {
-                    int max;
-                    int.TryParse(element.Value.Attributes["max"], out max);
-                    _maxRowOverrides[element.Key.ToLower()] = max;
+                    var overrides = config.MaxRowsOverride;
+                    foreach (var element in overrides)
+                    {
+                        int max;
+                        int.TryParse(element.Value.Attributes["max"], out max);
+                        _maxRowOverrides[element.Key.ToLower()] = max;
+                    }
                 }
             }
             return _maxRowOverrides.ContainsKey(name) ? _maxRowOverrides[name] : 100;
