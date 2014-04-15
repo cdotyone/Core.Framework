@@ -376,7 +376,7 @@ GO
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 04/15/2014 11:58:14
+-- Date Created: 04/15/2014 11:59:48
 -- Generated from EDMX file: D:\devel\CIVIC\T4\Civic.T4\Models\Example.edmx
 -- --------------------------------------------------
 

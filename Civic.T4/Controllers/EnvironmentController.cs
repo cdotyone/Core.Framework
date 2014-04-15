@@ -20,8 +20,6 @@ using Civic.T4.Services;
 using Civic.T4.Entities;
 using Civic.T4.WebApi;
 using EnvironmentEntity = Civic.T4.Entities.Environment;
-using RoutePrefix = System.Web.Http.RoutePrefixAttribute;
-using Route = System.Web.Http.RouteAttribute;
 
 namespace Civic.T4.Controllers
 {

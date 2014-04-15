@@ -63,7 +63,7 @@ internal partial class <#=edmxFileName#>Data
 
 			using (IDataReader dataReader = command.ExecuteReader())
 			{
-				if (populate<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>Returned, dataReader, database))
+				if (populate<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>Returned, dataReader))
 				{
 					<# foreach(var key in keys.Keys) { #>
 <#=code.Escape(lowerName)#>Returned.<#=code.Escape(key)#> = <#=Core.GetMethodParameterName(key)#>;
@@ -116,7 +116,7 @@ internal partial class <#=edmxFileName#>Data
 			using (IDataReader dataReader = command.ExecuteReader())
 			{
 				var item = new <#=code.Escape(toEntity)#>Entity();
-				while(populate<#=code.Escape(toEntity)#>(item, dataReader, database))
+				while(populate<#=code.Escape(toEntity)#>(item, dataReader))
 				{
 					list.Add(item);
 					item = new <#=code.Escape(toEntity	)#>Entity();
@@ -135,7 +135,7 @@ internal partial class <#=edmxFileName#>Data
 		var list = new List<<#=code.Escape(entity)#>Entity>();
 
 		if( database==null ) database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
-		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>",string.IsNullOrEmpty(filterBy) ? "usp_<#=entity.Name#>GetPaged" : "usp_<#=entity.Name#>GetFiltered"))
+		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=entity.Name#>GetFiltered"))
 		{
             command.AddInParameter("@skip", skip);			
             command.AddInParameter("@retcount", retCount);
@@ -146,7 +146,7 @@ internal partial class <#=edmxFileName#>Data
 			using (IDataReader dataReader = command.ExecuteReader())
 			{
 				var item = new <#=code.Escape(entity)#>Entity();
-				while(populate<#=code.Escape(entity)#>(item, dataReader, database))
+				while(populate<#=code.Escape(entity)#>(item, dataReader))
 				{
 					list.Add(item);
 					item = new <#=code.Escape(entity)#>Entity();
@@ -239,7 +239,7 @@ command.ExecuteNonQuery();
 
 	}
 	
-	private static bool populate<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>, IDataReader dataReader, IDBConnection database)
+	private static bool populate<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>, IDataReader dataReader)
 	{
 		if (dataReader==null || !dataReader.Read()) return false;
 		<#

@@ -35,7 +35,7 @@ namespace Civic.T4.Data
 
                 using (IDataReader dataReader = command.ExecuteReader())
                 {
-                    if (populateEnvironment(environmentReturned, dataReader, database))
+                    if (populateEnvironment(environmentReturned, dataReader))
                     {
                         environmentReturned.Id = id;
                     }
@@ -59,7 +59,7 @@ namespace Civic.T4.Data
                 using (IDataReader dataReader = command.ExecuteReader())
                 {
                     var item = new Entity1Entity();
-                    while (populateEntity1(item, dataReader, database))
+                    while (populateEntity1(item, dataReader))
                     {
                         list.Add(item);
                         item = new Entity1Entity();
@@ -75,7 +75,7 @@ namespace Civic.T4.Data
             var list = new List<EnvironmentEntity>();
 
             if (database == null) database = DatabaseFactory.CreateDatabase("Example");
-            using (var command = database.CreateStoredProcCommand("dbo", string.IsNullOrEmpty(filterBy) ? "usp_EnvironmentGetPaged" : "usp_EnvironmentGetFiltered"))
+            using (var command = database.CreateStoredProcCommand("dbo", "usp_EnvironmentGetFiltered"))
             {
                 command.AddInParameter("@skip", skip);
                 command.AddInParameter("@retcount", retCount);
@@ -86,7 +86,7 @@ namespace Civic.T4.Data
                 using (IDataReader dataReader = command.ExecuteReader())
                 {
                     var item = new EnvironmentEntity();
-                    while (populateEnvironment(item, dataReader, database))
+                    while (populateEnvironment(item, dataReader))
                     {
                         list.Add(item);
                         item = new EnvironmentEntity();
@@ -145,7 +145,7 @@ namespace Civic.T4.Data
 
         }
 
-        private static bool populateEnvironment(EnvironmentEntity environment, IDataReader dataReader, IDBConnection database)
+        private static bool populateEnvironment(EnvironmentEntity environment, IDataReader dataReader)
         {
             if (dataReader == null || !dataReader.Read()) return false;
 

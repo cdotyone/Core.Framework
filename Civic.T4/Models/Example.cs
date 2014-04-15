@@ -48,12 +48,8 @@ Error processing file usp_Entity1Get.sql Error HRESULT E_FAIL has been returned 
 //-> usp_Entity1Get.sql
 Error processing file usp_Entity1GetByEnvironment.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
 //-> usp_Entity1GetByEnvironment.sql
-Error processing file usp_Entity1GetCount.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
-//-> usp_Entity1GetCount.sql
 Error processing file usp_Entity1GetFiltered.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
 //-> usp_Entity1GetFiltered.sql
-Error processing file usp_Entity1GetPaged.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
-//-> usp_Entity1GetPaged.sql
 Error processing file usp_Entity1Modify.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
 //-> usp_Entity1Modify.sql
 Error processing file usp_Entity1Remove.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
@@ -62,12 +58,8 @@ Error processing file usp_EnvironmentAdd.sql Error HRESULT E_FAIL has been retur
 //-> usp_EnvironmentAdd.sql
 Error processing file usp_EnvironmentGet.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
 //-> usp_EnvironmentGet.sql
-Error processing file usp_EnvironmentGetCount.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
-//-> usp_EnvironmentGetCount.sql
 Error processing file usp_EnvironmentGetFiltered.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
 //-> usp_EnvironmentGetFiltered.sql
-Error processing file usp_EnvironmentGetPaged.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
-//-> usp_EnvironmentGetPaged.sql
 Error processing file usp_EnvironmentModify.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
 //-> usp_EnvironmentModify.sql
 Error processing file usp_EnvironmentRemove.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
@@ -100,16 +92,12 @@ Error processing file usp_EnvironmentRemove.sql Error HRESULT E_FAIL has been re
 // Civic.T4\SQL\usp_EnvironmentModify.sql
 // Civic.T4\SQL\usp_EnvironmentAdd.sql
 // Civic.T4\SQL\usp_EnvironmentGetFiltered.sql
-// Civic.T4\SQL\usp_EnvironmentGetPaged.sql
-// Civic.T4\SQL\usp_EnvironmentGetCount.sql
 // Civic.T4\SQL\usp_EnvironmentGet.sql
 // Civic.T4\SQL\usp_Entity1GetByEnvironment.sql
 // Civic.T4\SQL\usp_Entity1Remove.sql
 // Civic.T4\SQL\usp_Entity1Modify.sql
 // Civic.T4\SQL\usp_Entity1Add.sql
 // Civic.T4\SQL\usp_Entity1GetFiltered.sql
-// Civic.T4\SQL\usp_Entity1GetPaged.sql
-// Civic.T4\SQL\usp_Entity1GetCount.sql
 // Civic.T4\SQL\usp_Entity1Get.sql
 // Civic.T4\SQL\Example.Defaults.sql
 */

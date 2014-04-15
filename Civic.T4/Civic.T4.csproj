@@ -154,13 +154,7 @@
     <Content Include="SQL\usp_Entity1GetByEnvironment.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
-    <Content Include="SQL\usp_Entity1GetCount.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
     <Content Include="SQL\usp_Entity1GetFiltered.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\usp_Entity1GetPaged.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
     <Content Include="SQL\usp_Entity1Modify.sql">
@@ -175,13 +169,7 @@
     <Content Include="SQL\usp_EnvironmentGet.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
-    <Content Include="SQL\usp_EnvironmentGetCount.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
     <Content Include="SQL\usp_EnvironmentGetFiltered.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\usp_EnvironmentGetPaged.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
     <Content Include="SQL\usp_EnvironmentModify.sql">

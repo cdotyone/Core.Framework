@@ -34,7 +34,7 @@ namespace Civic.T4.Data
 
                 using (IDataReader dataReader = command.ExecuteReader())
                 {
-                    if (populateEntity1(entity1Returned, dataReader, database))
+                    if (populateEntity1(entity1Returned, dataReader))
                     {
                         entity1Returned.Name = name;
                     }
@@ -50,7 +50,7 @@ namespace Civic.T4.Data
             var list = new List<Entity1Entity>();
 
             if (database == null) database = DatabaseFactory.CreateDatabase("Example");
-            using (var command = database.CreateStoredProcCommand("dbo", string.IsNullOrEmpty(filterBy) ? "usp_Entity1GetPaged" : "usp_Entity1GetFiltered"))
+            using (var command = database.CreateStoredProcCommand("dbo", "usp_Entity1GetFiltered"))
             {
                 command.AddInParameter("@skip", skip);
                 command.AddInParameter("@retcount", retCount);
@@ -61,7 +61,7 @@ namespace Civic.T4.Data
                 using (IDataReader dataReader = command.ExecuteReader())
                 {
                     var item = new Entity1Entity();
-                    while (populateEntity1(item, dataReader, database))
+                    while (populateEntity1(item, dataReader))
                     {
                         list.Add(item);
                         item = new Entity1Entity();
@@ -116,7 +116,7 @@ namespace Civic.T4.Data
 
         }
 
-        private static bool populateEntity1(Entity1Entity entity1, IDataReader dataReader, IDBConnection database)
+        private static bool populateEntity1(Entity1Entity entity1, IDataReader dataReader)
         {
             if (dataReader == null || !dataReader.Read()) return false;
 
