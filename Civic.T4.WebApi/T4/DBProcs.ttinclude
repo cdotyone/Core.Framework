@@ -62,7 +62,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		} catch {
 		}
 #>
-EXECUTE sp_bindefault N'dbo.udf_<#=boolyesno#>', N'[<#=apiGeneralSchemaName#>].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
+EXECUTE sp_bindefault N'<#=apiGeneralSchemaName#>.udf_<#=boolyesno#>', N'[<#=apiGeneralSchemaName#>].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
 <#
 			continue;
 		}
@@ -75,7 +75,7 @@ EXECUTE sp_bindefault N'dbo.udf_<#=boolyesno#>', N'[<#=apiGeneralSchemaName#>].[
 
 		if(edmProperty.Name.ToLower()=="createdby" || edmProperty.Name.ToLower()=="modifiedby") {
 #>
-EXECUTE sp_bindefault N'dbo.udf_Unknown', N'[<#=apiGeneralSchemaName#>].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
+EXECUTE sp_bindefault N'<#=apiGeneralSchemaName#>.udf_Unknown', N'[<#=apiGeneralSchemaName#>].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
 <#
 		} else {
 
@@ -89,7 +89,7 @@ EXECUTE sp_bindefault N'dbo.udf_Unknown', N'[<#=apiGeneralSchemaName#>].[<#=enti
 
 			if(notNullable){
 #>
-EXECUTE sp_bindefault N'dbo.udf_GetDate', N'[<#=apiGeneralSchemaName#>].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
+EXECUTE sp_bindefault N'<#=apiGeneralSchemaName#>.udf_GetDate', N'[<#=apiGeneralSchemaName#>].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
 <#
 			}
 		}

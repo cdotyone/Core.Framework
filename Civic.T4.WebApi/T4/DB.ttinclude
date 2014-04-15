@@ -7,16 +7,16 @@ string sqlPath = Path.GetDirectoryName(dataPath) + "\\SQL\\" ;
 fileManager.StartNewFile(edmxFileName + ".DB.Rebuild.sql", folderName:"SQL");
 #>
 
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_CreateDynamicVals]'))
-DROP FUNCTION [dbo].[udf_CreateDynamicVals]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_CreateDynamicVals]'))
+DROP FUNCTION [<#=apiGeneralSchemaName#>].[udf_CreateDynamicVals]
 GO
 
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_Split]'))
-DROP FUNCTION [dbo].[udf_Split]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_Split]'))
+DROP FUNCTION [<#=apiGeneralSchemaName#>].[udf_Split]
 GO
 
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_ProcessFilter]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_ProcessFilter]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[usp_ProcessFilter]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [<#=apiGeneralSchemaName#>].[usp_ProcessFilter]
 GO
 
 SET ANSI_NULLS ON
@@ -25,7 +25,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE FUNCTION [dbo].[udf_Split] (
+CREATE FUNCTION [<#=apiGeneralSchemaName#>].[udf_Split] (
       @InputString                  VARCHAR(8000),
       @Delimiter                    VARCHAR(50)
 )
@@ -81,7 +81,7 @@ END -- End Function
 GO
 
 
-CREATE FUNCTION [dbo].[udf_CreateDynamicVals] (
+CREATE FUNCTION [<#=apiGeneralSchemaName#>].[udf_CreateDynamicVals] (
       @name VARCHAR(50),
       @count int
 ) RETURNS NVARCHAR(MAX) 
@@ -102,7 +102,7 @@ BEGIN
 END
 
 GO
-CREATE PROCEDURE [dbo].[usp_ProcessFilter]
+CREATE PROCEDURE [<#=apiGeneralSchemaName#>].[usp_ProcessFilter]
      @skip int
     ,@count int out
 	,@select nvarchar(max)
@@ -132,7 +132,7 @@ BEGIN
 	--- escape out space in a string query
 	SET @filterBy=REPLACE(@filterBy,' ','___')
 	insert into @BLOCKS
-	select [POS],[item] from [dbo].[udf_Split](@filterBy,'''')
+	select [POS],[item] from [<#=apiGeneralSchemaName#>].[udf_Split](@filterBy,'''')
 
 	UPDATE @BLOCKS SET blk=replace(blk,'___','###')
 	WHERE (POS % 2) = 0
@@ -145,7 +145,7 @@ BEGIN
 	-- parse and determine filter by
 	set @filterBy=replace(replace(replace(replace(replace(replace(replace(upper(@filterBy),' like ','|_like_|'),' eq ','|=|'),' lt ','|<|'),' gt ','|>|'),' ge ','|>=|'),' le ','|<=|'),' ne ','|<>|')
 	insert into @BLOCKS
-	select [POS],[item] from [dbo].[udf_Split](@filterBy,' ')
+	select [POS],[item] from [<#=apiGeneralSchemaName#>].[udf_Split](@filterBy,' ')
 
 	DECLARE @COMBINEVARS TABLE(pos int,varname nvarchar(512),operation nvarchar(512),varvalue nvarchar(512))
 	DECLARE @OPERATIONS TABLE(pos int,operation nvarchar(512))
@@ -164,7 +164,7 @@ BEGIN
 				,ITEM nvarchar(256)
 			)
 			INSERT INTO @TEMP
-			select POS,[item] from [dbo].[udf_Split](REPLACE(@PAIR,'|_LIKE_|','| LIKE |'),'|')
+			select POS,[item] from [<#=apiGeneralSchemaName#>].[udf_Split](REPLACE(@PAIR,'|_LIKE_|','| LIKE |'),'|')
 
 			DECLARE @VARNAME NVARCHAR(512)
 			select TOP 1 @VARNAME=[item] from @TEMP WE
@@ -242,7 +242,7 @@ BEGIN
 		SET @order=''
 		DECLARE @orderbylist table (orderby nvarchar(512),[desc] bit) 
 		INSERT INTO @orderbylist
-		SELECT [item],0 FROM [dbo].[udf_Split](@orderBy,' ')
+		SELECT [item],0 FROM [<#=apiGeneralSchemaName#>].[udf_Split](@orderBy,' ')
 		UPDATE @orderbylist SET ORDERBY=SUBSTRING(ORDERBY,1,LEN(ORDERBY)-5),[DESC]=1 WHERE PATINDEX('%_DESC',ORDERBY)>0
 		UPDATE @orderbylist SET ORDERBY=SUBSTRING(ORDERBY,1,LEN(ORDERBY)-4) WHERE PATINDEX('%_ASC',ORDERBY)>0
 		SELECT @order = @order + ' AND ' + orderby + CASE WHEN [DESC]=1 THEN ' DESC' ELSE '' END FROM @orderbylist
@@ -274,7 +274,7 @@ BEGIN
 	SET @SQL = @SQLCOUNT + @order +' OFFSET @_skip ROWS FETCH NEXT @_count ROWS ONLY'
 
 	DECLARE @PARAMS NVARCHAR(MAX)
-	SET @PARAMS = N'@_skip int,@_count int,@_orderBy nvarchar(512),'+dbo.udf_CreateDynamicVals('val',20)
+	SET @PARAMS = N'@_skip int,@_count int,@_orderBy nvarchar(512),'+<#=apiGeneralSchemaName#>.udf_CreateDynamicVals('val',20)
 	DECLARE @val1 nvarchar(512)
 			, @val2 nvarchar(512)
 			, @val3 nvarchar(512)
