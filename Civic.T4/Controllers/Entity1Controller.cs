@@ -15,7 +15,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Web.Http;
-using System.Web.Mvc;
 using Civic.T4.Services;
 using Civic.T4.Entities;
 using Civic.T4.WebApi;
@@ -43,7 +42,6 @@ namespace Civic.T4.Controllers
         [Route("{name}")]
         public QueryMetadata<Entity1Entity> Get(String name)
         {
-            ODataV3QueryOptions options = this.GetOptions();
             var result = new List<Entity1Entity> { _service.GetEntity1ByName(name) };
             return new QueryMetadata<Entity1Entity>(result, 1);
         }

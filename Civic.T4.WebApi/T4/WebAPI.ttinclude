@@ -12,7 +12,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		continue;
 
     fileManager.StartNewFile(Core.GetPluralName(entity.Name) + "Controller.cs", folderName:"Controllers");
-	WriteHeader("System","System.Collections","System.Collections.Generic","System.Globalization","System.Runtime.Serialization","System.Web.Http", "System.Web.Mvc",namespaceName + ".Services",namespaceName + ".Entities", "Civic.T4.WebApi", entity.Name + "Entity = " + namespaceName +".Entities." + entity.Name );
+	WriteHeader("System","System.Collections","System.Collections.Generic","System.Globalization","System.Runtime.Serialization","System.Web.Http", namespaceName + ".Services",namespaceName + ".Entities", "Civic.T4.WebApi", entity.Name + "Entity = " + namespaceName +".Entities." + entity.Name );
     BeginNamespace(namespaceName+".Controllers", code);
 	
 	var lowerName = entity.Name.ToLower();
@@ -48,7 +48,6 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	[Route("<# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? "/{" : "{") + Core.GetMethodParameterName(key) + "}" )#><#}#>")]
 	public QueryMetadata<<#=code.Escape(entity)#>Entity> Get(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> )
 	{
-		ODataV3QueryOptions options = this.GetOptions();
 		var result = new List<<#=code.Escape(entity)#>Entity> { _service.Get<#=code.Escape(entity)#>By<#=keyName#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>) };
 		return new QueryMetadata<<#=code.Escape(entity)#>Entity>(result, 1);
 	}
