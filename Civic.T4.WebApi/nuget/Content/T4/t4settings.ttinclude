@@ -3,8 +3,8 @@
 
 var apiVersion="1.0";
 var apiPackageName=""; 
-var apiSchemaName = "dbo";
-var apiGeneralSchemaName = "dbo";
+var apiSchemaName = "civic";
+var apiGeneralSchemaName = "civic";
 
 #>
 
