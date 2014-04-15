@@ -41,7 +41,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		var maxrows = Civic.T4.WebApi.Configuration.T4WebApiSection.GetMaxRows("<#=entity.Name.ToLower()#>");
 		var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
 		string orderby = options.ProcessOrderByOptions();
-		var result = _service.GetPaged<#=entity.Name#>(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby, options.Expand);
+		var result = _service.GetPaged<#=entity.Name#>(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
 		return new QueryMetadata<<#=entity.Name#>Entity>(result, resultLimit);
 	}
 
@@ -49,7 +49,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	public QueryMetadata<<#=code.Escape(entity)#>Entity> Get(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> )
 	{
 		ODataV3QueryOptions options = this.GetOptions();
-		var result = new List<<#=code.Escape(entity)#>Entity> { _service.Get<#=code.Escape(entity)#>By<#=keyName#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>, options.Expand) };
+		var result = new List<<#=code.Escape(entity)#>Entity> { _service.Get<#=code.Escape(entity)#>By<#=keyName#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>) };
 		return new QueryMetadata<<#=code.Escape(entity)#>Entity>(result, 1);
 	}
 

@@ -46,7 +46,7 @@ internal partial class <#=edmxFileName#>Data
 	}
 
 #>
-	internal static <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#>, <#}#>IDBConnection database, string[] fillProperties = null)
+	internal static <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#>, <#}#>IDBConnection database)
 	{
 		var <#=code.Escape(lowerName)#>Returned = new <#=code.Escape(entity)#>Entity();
 
@@ -63,7 +63,7 @@ internal partial class <#=edmxFileName#>Data
 
 			using (IDataReader dataReader = command.ExecuteReader())
 			{
-				if (populate<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>Returned, dataReader, database, fillProperties))
+				if (populate<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>Returned, dataReader, database))
 				{
 					<# foreach(var key in keys.Keys) { #>
 <#=code.Escape(lowerName)#>Returned.<#=code.Escape(key)#> = <#=Core.GetMethodParameterName(key)#>;
@@ -98,7 +98,7 @@ internal partial class <#=edmxFileName#>Data
 		}
 
 #>
-	internal static List<<#=code.Escape(toEntity)#>Entity> Get<#=code.Escape(toEntity)#>By<#=entity.Name#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#>, <#}#> IDBConnection database, string[] fillProperties = null)
+	internal static List<<#=code.Escape(toEntity)#>Entity> Get<#=code.Escape(toEntity)#>By<#=entity.Name#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#>, <#}#> IDBConnection database)
 	{
 		var list = new List<<#=code.Escape(toEntity)#>Entity>();
 
@@ -116,7 +116,7 @@ internal partial class <#=edmxFileName#>Data
 			using (IDataReader dataReader = command.ExecuteReader())
 			{
 				var item = new <#=code.Escape(toEntity)#>Entity();
-				while(populate<#=code.Escape(toEntity)#>(item, dataReader, database, fillProperties))
+				while(populate<#=code.Escape(toEntity)#>(item, dataReader, database))
 				{
 					list.Add(item);
 					item = new <#=code.Escape(toEntity	)#>Entity();
@@ -130,7 +130,7 @@ internal partial class <#=edmxFileName#>Data
 <#
 	}
 #>
-	internal static List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database, string[] fillProperties = null)
+	internal static List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database)
 	{ 
 		var list = new List<<#=code.Escape(entity)#>Entity>();
 
@@ -146,7 +146,7 @@ internal partial class <#=edmxFileName#>Data
 			using (IDataReader dataReader = command.ExecuteReader())
 			{
 				var item = new <#=code.Escape(entity)#>Entity();
-				while(populate<#=code.Escape(entity)#>(item, dataReader, database, fillProperties))
+				while(populate<#=code.Escape(entity)#>(item, dataReader, database))
 				{
 					list.Add(item);
 					item = new <#=code.Escape(entity)#>Entity();
@@ -239,7 +239,7 @@ command.ExecuteNonQuery();
 
 	}
 	
-	private static bool populate<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>, IDataReader dataReader, IDBConnection database, string[] fillProperties = null)
+	private static bool populate<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>, IDataReader dataReader, IDBConnection database)
 	{
 		if (dataReader==null || !dataReader.Read()) return false;
 		<#
@@ -263,49 +263,7 @@ command.ExecuteNonQuery();
 			}
 		}
 #>
-
-		fillCollection("<#=lowerName#>",<#=lowerName#>,dataReader,database,fillProperties);
-<#
-		if(entity.NavigationProperties.Where(np => np.DeclaringType == entity).Count()>0) {
-#>		
-
-		if(fillProperties!=null && fillProperties.Length>0) {
-			foreach(var propName in fillProperties) {
-
-				switch (propName.ToLowerInvariant().Split('.')[0]) {					
-<#
-
-foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
-{
-	if(navProperty.Documentation!=null && navProperty.Documentation.LongDescription.ToLower().Contains("hide")) continue;
-    {#>
-					case "<#=code.Escape(navProperty).ToLowerInvariant()#>":
-<#		if (navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many) { #>
-						if(<#=lowerName#>.<#=code.Escape(navProperty)#>!=null) <#=lowerName#>.<#=code.Escape(navProperty)#>.Clear();
-						else <#=lowerName#>.<#=code.Escape(navProperty)#> = new List<<#=code.Escape(navProperty.ToEndMember.GetEntityType()).Replace(edmxFileName+".","")#>Entity>();
-						<#=lowerName#>.<#=code.Escape(navProperty)#>.AddRange(Get<#=code.Escape(navProperty.ToEndMember.GetEntityType())#>By<#=navProperty.FromEndMember.Name#>(<# foreach(var key in keys.Keys) { #><#=lowerName#>.<#=key#>, <#}#>database,filterFillProperties(fillProperties, "<#=code.Escape(navProperty)#>")));
-						break;
-<#      } else {
-
-			var keyMembers = new List<string>();
-			foreach(var member in ((System.Data.Metadata.Edm.RefType)navProperty.ToEndMember.TypeUsage.EdmType).ElementType.KeyMembers) {
-				foreach(var toprop in ((System.Data.Metadata.Edm.AssociationType)navProperty.FromEndMember.DeclaringType).ReferentialConstraints.First().ToProperties)
-					keyMembers.Add(code.Escape(lowerName) + "." + toprop.ToString());
-			}
- #>
-                        <#=code.Escape(lowerName)#>.<#=code.Escape(navProperty)#> = Get<#=code.Escape(navProperty.ToEndMember.GetEntityType())#>(<#=string.Join(",",keyMembers.ToArray())#>, database);
-						break;
-<#		}
-	}
-}
-#>
-				}
-			}
-		}
-	
-<#
-}
-#>
+		
 			return true;
 		}
 	}
@@ -323,23 +281,6 @@ BeginNamespace(namespaceName + ".Data", code);
 #>
 internal partial class <#=edmxFileName#>Data
 {
-
-	private static string[] filterFillProperties(string[] fillProperties, string filterBy)
-	{
-		var list = new List<string>();
-
-		foreach(string name in fillProperties)
-		{
-			if(!name.Contains(".")) continue;
-			if(name.StartsWith(filterBy+"."))
-			{
-				var trimName = name.Substring(filterBy.Length + 1);
-				if (!list.Contains(trimName)) list.Add(trimName);
-			}
-		}
-
-		return list.ToArray();
-	}
 
 	public static IDBConnection GetConnection()
     {

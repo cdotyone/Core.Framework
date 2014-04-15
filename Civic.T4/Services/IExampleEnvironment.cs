@@ -15,6 +15,7 @@ using System.ServiceModel;
 using Civic.T4.Entities;
 
 using EnvironmentEntity = Civic.T4.Entities.Environment;
+using Entity1Entity = Civic.T4.Entities.Entity1;
 
 namespace Civic.T4.Services
 {
@@ -23,10 +24,10 @@ namespace Civic.T4.Services
     public interface IExampleEnvironment
     {
         [OperationContract]
-        List<EnvironmentEntity> GetPagedEnvironment(int skip, ref int count, bool retCount, string filterBy, string orderBy, string fillProperties);
+        List<EnvironmentEntity> GetPagedEnvironment(int skip, ref int count, bool retCount, string filterBy, string orderBy);
 
         [OperationContract]
-        EnvironmentEntity GetEnvironmentById(Int32 id, string fillProperties);
+        EnvironmentEntity GetEnvironmentById(Int32 id);
 
         [OperationContract]
         int AddEnvironment(EnvironmentEntity environment);

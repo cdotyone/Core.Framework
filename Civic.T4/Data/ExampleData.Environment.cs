@@ -17,13 +17,14 @@ using Civic.Core.Data;
 using Civic.T4.Entities;
 
 using EnvironmentEntity = Civic.T4.Entities.Environment;
+using Entity1Entity = Civic.T4.Entities.Entity1;
 
 namespace Civic.T4.Data
 {
     internal partial class ExampleData
     {
 
-        internal static EnvironmentEntity GetEnvironment(Int32 id, IDBConnection database, string[] fillProperties = null)
+        internal static EnvironmentEntity GetEnvironment(Int32 id, IDBConnection database)
         {
             var environmentReturned = new EnvironmentEntity();
 
@@ -34,7 +35,7 @@ namespace Civic.T4.Data
 
                 using (IDataReader dataReader = command.ExecuteReader())
                 {
-                    if (populateEnvironment(environmentReturned, dataReader, database, fillProperties))
+                    if (populateEnvironment(environmentReturned, dataReader, database))
                     {
                         environmentReturned.Id = id;
                     }
@@ -45,7 +46,31 @@ namespace Civic.T4.Data
             return environmentReturned;
         }
 
-        internal static List<EnvironmentEntity> GetPagedEnvironment(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database, string[] fillProperties = null)
+        internal static List<Entity1Entity> GetEntity1ByEnvironment(Int32 id, Int32 environmentId, IDBConnection database)
+        {
+            var list = new List<Entity1Entity>();
+
+            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
+            using (var command = database.CreateStoredProcCommand("dbo", "usp_Entity1GetByEnvironment"))
+            {
+                command.AddInParameter("@id", id);
+                command.AddInParameter("@environmentId", environmentId);
+
+                using (IDataReader dataReader = command.ExecuteReader())
+                {
+                    var item = new Entity1Entity();
+                    while (populateEntity1(item, dataReader, database))
+                    {
+                        list.Add(item);
+                        item = new Entity1Entity();
+                    }
+                }
+            }
+
+            return list;
+        }
+
+        internal static List<EnvironmentEntity> GetPagedEnvironment(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database)
         {
             var list = new List<EnvironmentEntity>();
 
@@ -61,7 +86,7 @@ namespace Civic.T4.Data
                 using (IDataReader dataReader = command.ExecuteReader())
                 {
                     var item = new EnvironmentEntity();
-                    while (populateEnvironment(item, dataReader, database, fillProperties))
+                    while (populateEnvironment(item, dataReader, database))
                     {
                         list.Add(item);
                         item = new EnvironmentEntity();
@@ -101,12 +126,13 @@ namespace Civic.T4.Data
             return list;
         }
 
-        internal static void RemoveEnvironment(Int32 id, IDBConnection database)
+        internal static void RemoveEnvironment(Int32 id, Int32 environmentId, IDBConnection database)
         {
             if (database == null) database = DatabaseFactory.CreateDatabase("Example");
             using (var command = database.CreateStoredProcCommand("dbo", "usp_EnvironmentRemove"))
             {
                 command.AddInParameter("@id", id);
+                command.AddInParameter("@environmentId", environmentId);
                 command.ExecuteNonQuery();
             }
         }
@@ -119,13 +145,12 @@ namespace Civic.T4.Data
 
         }
 
-        private static bool populateEnvironment(EnvironmentEntity environment, IDataReader dataReader, IDBConnection database, string[] fillProperties = null)
+        private static bool populateEnvironment(EnvironmentEntity environment, IDataReader dataReader, IDBConnection database)
         {
             if (dataReader == null || !dataReader.Read()) return false;
 
             environment.Id = dataReader["Id"] != null && !(dataReader["Id"] is DBNull) ? Int32.Parse(dataReader["Id"].ToString()) : 0;
             environment.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? dataReader["Name"].ToString() : string.Empty;
-            //fillCollection("environment", environment, dataReader, database, fillProperties);
             return true;
         }
     }

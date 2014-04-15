@@ -21,23 +21,6 @@ namespace Civic.T4.Data
     internal partial class ExampleData
     {
 
-        private static string[] filterFillProperties(string[] fillProperties, string filterBy)
-        {
-            var list = new List<string>();
-
-            foreach (string name in fillProperties)
-            {
-                if (!name.Contains(".")) continue;
-                if (name.StartsWith(filterBy + "."))
-                {
-                    var trimName = name.Substring(filterBy.Length + 1);
-                    if (!list.Contains(trimName)) list.Add(trimName);
-                }
-            }
-
-            return list.ToArray();
-        }
-
         public static IDBConnection GetConnection()
         {
             return DatabaseFactory.CreateDatabase("Example");

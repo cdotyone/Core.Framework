@@ -19,55 +19,53 @@ using System.Web.Mvc;
 using Civic.T4.Services;
 using Civic.T4.Entities;
 using Civic.T4.WebApi;
-using EnvironmentEntity = Civic.T4.Entities.Environment;
-using RoutePrefix = System.Web.Http.RoutePrefixAttribute;
-using Route = System.Web.Http.RouteAttribute;
+using Entity1Entity = Civic.T4.Entities.Entity1;
 
 namespace Civic.T4.Controllers
 {
-    [RoutePrefix("api/example/1.0/Environment")]
+    [RoutePrefix("api/example/1.0/Entity1")]
     [System.CodeDom.Compiler.GeneratedCode("STE-EF", ".NET 3.5")]
-    public partial class EnvironmentController : ApiController
+    public partial class Entity1Controller : ApiController
     {
         private static readonly ExampleService _service = new ExampleService();
 
         [Route("")]
-        public QueryMetadata<EnvironmentEntity> Get()
+        public QueryMetadata<Entity1Entity> Get()
         {
             ODataV3QueryOptions options = this.GetOptions();
-            var maxrows = Civic.T4.WebApi.Configuration.T4WebApiSection.GetMaxRows("environment");
+            var maxrows = Civic.T4.WebApi.Configuration.T4WebApiSection.GetMaxRows("entity1");
             var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
             string orderby = options.ProcessOrderByOptions();
-            var result = _service.GetPagedEnvironment(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
-            return new QueryMetadata<EnvironmentEntity>(result, resultLimit);
+            var result = _service.GetPagedEntity1(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
+            return new QueryMetadata<Entity1Entity>(result, resultLimit);
         }
 
-        [Route("{id}")]
-        public QueryMetadata<EnvironmentEntity> Get(Int32 id)
+        [Route("{name}")]
+        public QueryMetadata<Entity1Entity> Get(String name)
         {
             ODataV3QueryOptions options = this.GetOptions();
-            var result = new List<EnvironmentEntity> { _service.GetEnvironmentById(id) };
-            return new QueryMetadata<EnvironmentEntity>(result, 1);
+            var result = new List<Entity1Entity> { _service.GetEntity1ByName(name) };
+            return new QueryMetadata<Entity1Entity>(result, 1);
         }
 
         [Route("")]
-        public Int32 Post([FromBody]EnvironmentEntity value)
+        public String Post([FromBody]Entity1Entity value)
         {
-            _service.AddEnvironment(value);
-            return value.Id;
+            _service.AddEntity1(value);
+            return value.Name;
         }
 
-        [Route("{id}")]
-        public void Put(Int32 id, [FromBody]EnvironmentEntity value)
+        [Route("{name}")]
+        public void Put(String name, [FromBody]Entity1Entity value)
         {
-            value.Id = id;
-            _service.ModifyEnvironment(value);
+            value.Name = name;
+            _service.ModifyEntity1(value);
         }
 
-        [Route("{id}")]
-        public void Delete(Int32 id)
+        [Route("{name}")]
+        public void Delete(String name)
         {
-            _service.RemoveEnvironment(id);
+            _service.RemoveEntity1(name);
         }
     }
 }

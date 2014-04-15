@@ -21,6 +21,11 @@
       <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Example" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
         <EntityContainer Name="ExampleContainer" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Environments" EntityType="Example.Environment" />
+          <EntitySet Name="Entity1" EntityType="Example.Entity1" />
+          <AssociationSet Name="EnvironmentEntity1" Association="Example.EnvironmentEntity1">
+            <End Role="Environment" EntitySet="Environments" />
+            <End Role="Entity1" EntitySet="Entity1" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Environment">
           <Key>
@@ -28,7 +33,28 @@
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="Entity1" Relationship="Example.EnvironmentEntity1" FromRole="Environment" ToRole="Entity1" />
         </EntityType>
+        <EntityType Name="Entity1">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Type="String" Name="Name" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <NavigationProperty Name="Environment" Relationship="Example.EnvironmentEntity1" FromRole="Entity1" ToRole="Environment" />
+          <Property Type="Int32" Name="EnvironmentId" Nullable="false" />
+        </EntityType>
+        <Association Name="EnvironmentEntity1">
+          <End Type="Example.Environment" Role="Environment" Multiplicity="1" />
+          <End Type="Example.Entity1" Role="Entity1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Environment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Entity1">
+              <PropertyRef Name="EnvironmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -64,6 +90,8 @@
     <edmx:Diagrams>
       <Diagram DiagramId="ec719b14c0304641b138eb22b87060c6" Name="Diagram1">
         <EntityTypeShape EntityType="Example.Environment" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Example.Entity1" Width="1.5" PointX="4.125" PointY="1.625" IsExpanded="true" />
+        <AssociationConnector Association="Example.EnvironmentEntity1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

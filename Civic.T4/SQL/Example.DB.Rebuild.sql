@@ -376,7 +376,7 @@ GO
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 02/19/2014 12:30:43
+-- Date Created: 04/15/2014 11:58:14
 -- Generated from EDMX file: D:\devel\CIVIC\T4\Civic.T4\Models\Example.edmx
 -- --------------------------------------------------
 
@@ -388,12 +388,18 @@ GO
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[FK_EnvironmentEntity1]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Entity1] DROP CONSTRAINT [FK_EnvironmentEntity1];
+GO
 USE [Example];
 GO
 -- --------------------------------------------------
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[FK_EnvironmentEntity1]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Entity1] DROP CONSTRAINT [FK_EnvironmentEntity1];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -401,6 +407,9 @@ GO
 
 IF OBJECT_ID(N'[dbo].[Environments]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Environments];
+GO
+IF OBJECT_ID(N'[dbo].[Entity1]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Entity1];
 GO
 
 -- --------------------------------------------------
@@ -411,6 +420,13 @@ GO
 CREATE TABLE [dbo].[Environments] (
     [Id] [int] IDENTITY(1,1) NOT NULL,
     [Name] [nvarchar](max)  NOT NULL
+);
+GO
+
+-- Creating table 'Entity1'
+CREATE TABLE [dbo].[Entity1] (
+    [Name] [nvarchar](max)  NOT NULL,
+    [EnvironmentId] [int]  NOT NULL
 );
 GO
 
@@ -425,9 +441,30 @@ ADD CONSTRAINT [PK_Environments]
     PRIMARY KEY ([Id]ASC);
 GO
 
+-- Creating primary key on [Name] in table 'Entity1'
+ALTER TABLE [dbo].[Entity1]
+ADD CONSTRAINT [PK_Entity1]
+
+    PRIMARY KEY ([Name]ASC);
+GO
+
 -- --------------------------------------------------
 -- Creating all FOREIGN KEY constraints
 -- --------------------------------------------------
+
+-- Creating foreign key on [EnvironmentId] in table 'Entity1'
+ALTER TABLE [dbo].[Entity1]
+ADD CONSTRAINT [FK_EnvironmentEntity1]
+    FOREIGN KEY ([EnvironmentId])
+    REFERENCES [dbo].[Environments]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_EnvironmentEntity1'
+CREATE INDEX [IX_FK_EnvironmentEntity1]
+ON [dbo].[Entity1]
+    ([EnvironmentId]);
+GO
 
 -- --------------------------------------------------
 -- Script has ended
@@ -479,7 +516,267 @@ GO
 -- t4-defaults end
 GO
 
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentAdd]') AND type in (N'P', N'PC'))
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Add]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1Add]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_Entity1Add]
+-- t4-params begin
+	  @name [nvarchar](max) out
+	, @environmentId [int]
+-- t4-params end
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	INSERT INTO [dbo].[Entity1](
+-- t4-columns begin
+		 [Name]
+		,[EnvironmentId]
+-- t4-columns end
+	) VALUES (
+
+-- t4-values begin
+		 @name
+		,@environmentId
+-- t4-values end
+	)
+
+
+END
+GO
+
+	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Get]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1Get]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_Entity1Get]
+	  @name [nvarchar](max)
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	SELECT	
+		-- t4-columns begin
+		 e1.[Name]
+		,e1.[EnvironmentId]
+		-- t4-columns end
+	FROM [dbo].[Entity1] e1
+	WHERE	
+		-- t4-where begin
+	    e1.[Name] = @name
+		-- t4-where end
+END
+GO
+
+	
+	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1GetCount]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1GetCount]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_Entity1GetCount]
+     @count int out
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	SELECT @count = COUNT(*)
+	FROM [dbo].[Entity1] e1
+	
+END
+GO
+
+	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1GetFiltered]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1GetFiltered]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_Entity1GetFiltered]
+     @skip int
+    ,@count int out
+	,@orderBy nvarchar(512)
+	,@filterBy nvarchar(512)
+	,@retcount bit = 0
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DECLARE @select nvarchar(max)
+    SET @select = 'SELECT	
+		-- t4-columns begin
+		 e1.[Name]
+		,e1.[EnvironmentId]
+		-- t4-columns end
+    FROM [dbo].[Entity1] e1'
+
+	EXEC [dbo].[usp_ProcessFilter]
+		     @skip = @skip
+			,@select = @select
+			,@count = @count out
+			,@orderBy = @orderBy
+			,@filterBy = @filterBy
+			,@retcount = @retcount 
+END
+GO
+
+	
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1GetPaged]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1GetPaged]
+GO
+
+IF EXISTS(SELECT * from [dbo].[udf_Split](convert(nvarchar(50),SERVERPROPERTY('productversion')),'.') where Pos=1 and Item>10)
+BEGIN
+DECLARE @SQL NVARCHAR(4000)
+SET @SQL ='
+CREATE PROCEDURE [dbo].[usp_Entity1GetPaged]
+     @skip int
+    ,@count int out
+	,@orderBy nvarchar(512)
+	,@retcount bit = 0
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	SELECT	
+		-- t4-columns begin
+		 e1.[Name]
+		,e1.[EnvironmentId]
+		-- t4-columns end
+	FROM [dbo].[Entity1] e1
+	ORDER BY 
+		-- t4-order begin
+			  CASE WHEN @orderBy = ''NAME_DESC'' THEN e1.[Name] ELSE '''' END DESC
+			, CASE WHEN @orderBy = ''NAME_ASC'' THEN e1.[Name] ELSE '''' END
+			, CASE WHEN @orderBy = ''ENVIRONMENTID_DESC'' THEN e1.[EnvironmentId] ELSE '''' END DESC
+			, CASE WHEN @orderBy = ''ENVIRONMENTID_ASC'' THEN e1.[EnvironmentId] ELSE '''' END
+		-- t4-order end
+	OFFSET @skip ROW
+	FETCH NEXT @count ROW ONLY
+	
+	IF @retcount=1
+	BEGIN
+		EXEC [dbo].[usp_Entity1GetCount] @count=@count out
+	END
+END
+'
+EXEC sp_executesql @SQL
+END
+GO
+
+IF EXISTS(SELECT * from [dbo].[udf_Split](convert(nvarchar(50),SERVERPROPERTY('productversion')),'.') where Pos=1 and Item<11)
+BEGIN
+DECLARE @SQL NVARCHAR(4000)
+SET @SQL = '
+CREATE PROCEDURE [dbo].[usp_Entity1GetPaged]
+     @skip int
+    ,@count int out
+	,@orderBy nvarchar(512)
+	,@retcount bit = 0
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DECLARE @LIST TABLE(
+		POS INT IDENTITY(1,1)
+    ,[Name] [nvarchar](max) 
+    ,[EnvironmentId] [int] 
+	)
+
+	INSERT INTO @LIST(
+		 [Name]
+		,[EnvironmentId]
+	)
+
+	SELECT	
+		-- t4-columns begin
+		 e1.[Name]
+		,e1.[EnvironmentId]
+		-- t4-columns end
+	FROM [dbo].[Entity1] e1
+	ORDER BY 
+		-- t4-order begin
+			  CASE WHEN @orderBy = ''NAME_DESC'' THEN e1.[Name] ELSE '''' END DESC
+			, CASE WHEN @orderBy = ''NAME_ASC'' THEN e1.[Name] ELSE '''' END
+			, CASE WHEN @orderBy = ''ENVIRONMENTID_DESC'' THEN e1.[EnvironmentId] ELSE '''' END DESC
+			, CASE WHEN @orderBy = ''ENVIRONMENTID_ASC'' THEN e1.[EnvironmentId] ELSE '''' END
+		-- t4-order end
+
+	DELETE FROM @LIST
+	WHERE POS<=@skip OR POS>@skip+@count
+	
+	SELECT * FROM @LIST
+	
+	IF @retcount=1
+	BEGIN
+		EXEC [dbo].[usp_Entity1GetCount] @count=@count out
+	END
+END
+'
+EXEC sp_executesql @SQL
+
+END
+GO
+
+	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Modify]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1Modify]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_Entity1Modify]
+	  @name [nvarchar](max)
+	, @environmentId [int]
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	UPDATE e1 SET 
+		-- t4-columns begin
+		 [Name] = @name
+		,[EnvironmentId] = @environmentId
+		-- t4-columns end
+	FROM [dbo].[Entity1] e1
+	WHERE	
+		-- t4-where begin
+	    e1.[Name] = @name
+		-- t4-where end
+END
+GO
+
+	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Remove]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1Remove]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_Entity1Remove]
+	  @name [nvarchar](max)
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DELETE FROM [dbo].[Entity1]
+	WHERE	
+		-- t4-where begin
+	    [Name] = @name
+		-- t4-where end
+END
+GO
+
+	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentAdd]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_EnvironmentAdd]
 GO
 SET ANSI_NULLS ON
@@ -735,7 +1032,266 @@ BEGIN
 END
 GO
 
-	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentAdd]') AND type in (N'P', N'PC'))
+	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Add]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1Add]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_Entity1Add]
+-- t4-params begin
+	  @name [nvarchar](max) out
+	, @environmentId [int]
+-- t4-params end
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	INSERT INTO [dbo].[Entity1](
+-- t4-columns begin
+		 [Name]
+		,[EnvironmentId]
+-- t4-columns end
+	) VALUES (
+
+-- t4-values begin
+		 @name
+		,@environmentId
+-- t4-values end
+	)
+
+
+END
+GO
+
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Get]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1Get]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_Entity1Get]
+	  @name [nvarchar](max)
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	SELECT	
+		-- t4-columns begin
+		 e1.[Name]
+		,e1.[EnvironmentId]
+		-- t4-columns end
+	FROM [dbo].[Entity1] e1
+	WHERE	
+		-- t4-where begin
+	    e1.[Name] = @name
+		-- t4-where end
+END
+GO
+
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1GetCount]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1GetCount]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_Entity1GetCount]
+     @count int out
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	SELECT @count = COUNT(*)
+	FROM [dbo].[Entity1] e1
+	
+END
+GO
+
+
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1GetPaged]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1GetPaged]
+GO
+
+IF EXISTS(SELECT * from [dbo].[udf_Split](convert(nvarchar(50),SERVERPROPERTY('productversion')),'.') where Pos=1 and Item>10)
+BEGIN
+DECLARE @SQL NVARCHAR(4000)
+SET @SQL ='
+CREATE PROCEDURE [dbo].[usp_Entity1GetPaged]
+     @skip int
+    ,@count int out
+	,@orderBy nvarchar(512)
+	,@retcount bit = 0
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	SELECT	
+		-- t4-columns begin
+		 e1.[Name]
+		,e1.[EnvironmentId]
+		-- t4-columns end
+	FROM [dbo].[Entity1] e1
+	ORDER BY 
+		-- t4-order begin
+			  CASE WHEN @orderBy = ''NAME_DESC'' THEN e1.[Name] ELSE '''' END DESC
+			, CASE WHEN @orderBy = ''NAME_ASC'' THEN e1.[Name] ELSE '''' END
+			, CASE WHEN @orderBy = ''ENVIRONMENTID_DESC'' THEN e1.[EnvironmentId] ELSE '''' END DESC
+			, CASE WHEN @orderBy = ''ENVIRONMENTID_ASC'' THEN e1.[EnvironmentId] ELSE '''' END
+		-- t4-order end
+	OFFSET @skip ROW
+	FETCH NEXT @count ROW ONLY
+	
+	IF @retcount=1
+	BEGIN
+		EXEC [dbo].[usp_Entity1GetCount] @count=@count out
+	END
+END
+'
+EXEC sp_executesql @SQL
+END
+GO
+
+IF EXISTS(SELECT * from [dbo].[udf_Split](convert(nvarchar(50),SERVERPROPERTY('productversion')),'.') where Pos=1 and Item<11)
+BEGIN
+DECLARE @SQL NVARCHAR(4000)
+SET @SQL = '
+CREATE PROCEDURE [dbo].[usp_Entity1GetPaged]
+     @skip int
+    ,@count int out
+	,@orderBy nvarchar(512)
+	,@retcount bit = 0
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DECLARE @LIST TABLE(
+		POS INT IDENTITY(1,1)
+    ,[Name] [nvarchar](max) 
+    ,[EnvironmentId] [int] 
+	)
+
+	INSERT INTO @LIST(
+		 [Name]
+		,[EnvironmentId]
+	)
+
+	SELECT	
+		-- t4-columns begin
+		 e1.[Name]
+		,e1.[EnvironmentId]
+		-- t4-columns end
+	FROM [dbo].[Entity1] e1
+	ORDER BY 
+		-- t4-order begin
+			  CASE WHEN @orderBy = ''NAME_DESC'' THEN e1.[Name] ELSE '''' END DESC
+			, CASE WHEN @orderBy = ''NAME_ASC'' THEN e1.[Name] ELSE '''' END
+			, CASE WHEN @orderBy = ''ENVIRONMENTID_DESC'' THEN e1.[EnvironmentId] ELSE '''' END DESC
+			, CASE WHEN @orderBy = ''ENVIRONMENTID_ASC'' THEN e1.[EnvironmentId] ELSE '''' END
+		-- t4-order end
+
+	DELETE FROM @LIST
+	WHERE POS<=@skip OR POS>@skip+@count
+	
+	SELECT * FROM @LIST
+	
+	IF @retcount=1
+	BEGIN
+		EXEC [dbo].[usp_Entity1GetCount] @count=@count out
+	END
+END
+'
+EXEC sp_executesql @SQL
+
+END
+GO
+
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1GetFiltered]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1GetFiltered]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_Entity1GetFiltered]
+     @skip int
+    ,@count int out
+	,@orderBy nvarchar(512)
+	,@filterBy nvarchar(512)
+	,@retcount bit = 0
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DECLARE @select nvarchar(max)
+    SET @select = 'SELECT	
+		-- t4-columns begin
+		 e1.[Name]
+		,e1.[EnvironmentId]
+		-- t4-columns end
+    FROM [dbo].[Entity1] e1'
+
+	EXEC [dbo].[usp_ProcessFilter]
+		     @skip = @skip
+			,@select = @select
+			,@count = @count out
+			,@orderBy = @orderBy
+			,@filterBy = @filterBy
+			,@retcount = @retcount 
+END
+GO
+
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Modify]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1Modify]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_Entity1Modify]
+	  @name [nvarchar](max)
+	, @environmentId [int]
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	UPDATE e1 SET 
+		-- t4-columns begin
+		 [Name] = @name
+		,[EnvironmentId] = @environmentId
+		-- t4-columns end
+	FROM [dbo].[Entity1] e1
+	WHERE	
+		-- t4-where begin
+	    e1.[Name] = @name
+		-- t4-where end
+END
+GO
+
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Remove]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1Remove]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_Entity1Remove]
+	  @name [nvarchar](max)
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DELETE FROM [dbo].[Entity1]
+	WHERE	
+		-- t4-where begin
+	    [Name] = @name
+		-- t4-where end
+END
+GO
+
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentAdd]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_EnvironmentAdd]
 GO
 SET ANSI_NULLS ON

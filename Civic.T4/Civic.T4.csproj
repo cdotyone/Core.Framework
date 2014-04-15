@@ -145,6 +145,30 @@
     <Content Include="SQL\Example.Tables.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
+    <Content Include="SQL\usp_Entity1Add.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\usp_Entity1Get.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\usp_Entity1GetByEnvironment.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\usp_Entity1GetCount.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\usp_Entity1GetFiltered.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\usp_Entity1GetPaged.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\usp_Entity1Modify.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\usp_Entity1Remove.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
     <Content Include="SQL\usp_EnvironmentAdd.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
@@ -169,13 +193,22 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Entity1Controller.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\EnvironmentController.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Data\ExampleData.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
+    <Compile Include="Data\ExampleData.Entity1.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
     <Compile Include="Data\ExampleData.Environment.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Entity1.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Entities\Environment.cs">
@@ -195,6 +228,9 @@
       <DependentUpon>Example.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Example.Entity1.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
     <Compile Include="Services\Example.Environment.cs">
       <SubType>Code</SubType>
       <DependentUpon>Example.txt4</DependentUpon>
@@ -203,6 +239,9 @@
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Services\IExample.Services.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Services\IExampleEntity1.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Services\IExampleEnvironment.cs">

@@ -17,7 +17,6 @@ using Civic.Core.Audit;
 using Civic.Core.Logging;
 using Civic.T4.Entities;
 
-using EnvironmentEntity = Civic.T4.Entities.Environment;
 using Entity1Entity = Civic.T4.Entities.Entity1;
 
 namespace Civic.T4.Services
@@ -25,14 +24,14 @@ namespace Civic.T4.Services
 
     public partial class ExampleService
     {
-        public EnvironmentEntity GetEnvironmentById(Int32 id)
+        public Entity1Entity GetEntity1ByName(String name)
         {
-            using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "GetEnvironmentById"))
+            using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "GetEntity1ByName"))
             {
 
                 try
                 {
-                    return Data.ExampleData.GetEnvironment(id, null);
+                    return Data.ExampleData.GetEntity1(name, null);
                 }
                 catch (Exception ex)
                 {
@@ -44,14 +43,14 @@ namespace Civic.T4.Services
             return null;
         }
 
-        public List<EnvironmentEntity> GetPagedEnvironment(int skip, ref int count, bool retCount, string filterBy, string orderBy)
+        public List<Entity1Entity> GetPagedEntity1(int skip, ref int count, bool retCount, string filterBy, string orderBy)
         {
-            using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "GetPagedEnvironment"))
+            using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "GetPagedEntity1"))
             {
 
                 try
                 {
-                    return Data.ExampleData.GetPagedEnvironment(skip, ref count, retCount, filterBy, orderBy, null);
+                    return Data.ExampleData.GetPagedEntity1(skip, ref count, retCount, filterBy, orderBy, null);
                 }
                 catch (Exception ex)
                 {
@@ -64,40 +63,16 @@ namespace Civic.T4.Services
         }
 
 
-        public int AddEnvironment(EnvironmentEntity environment)
+        public void AddEntity1(Entity1Entity entity1)
         {
-            using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "AddEnvironment"))
+            using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "AddEntity1"))
             {
 
                 try
                 {
                     var db = Data.ExampleData.GetConnection();
-                    var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", environment.Id.ToString() + "", environment);
-                    var retval = Data.ExampleData.AddEnvironment(environment, db);
-                    AuditManager.MarkSuccessFul(logid);
-                    return retval;
-                }
-                catch (Exception ex)
-                {
-                    if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-                }
-
-            }
-
-            return -1;
-        }
-
-        public void ModifyEnvironment(EnvironmentEntity environment)
-        {
-            using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "ModifyEnvironment"))
-            {
-
-                try
-                {
-                    var db = Data.ExampleData.GetConnection();
-                    var before = Data.ExampleData.GetEnvironment(environment.Id, db);
-                    var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", before.Id.ToString() + "", before, environment);
-                    Data.ExampleData.ModifyEnvironment(environment, db);
+                    var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", entity1.Name.ToString() + "", entity1);
+                    Data.ExampleData.AddEntity1(entity1, db);
                     AuditManager.MarkSuccessFul(logid);
                 }
                 catch (Exception ex)
@@ -108,17 +83,38 @@ namespace Civic.T4.Services
             }
         }
 
-        public void RemoveEnvironment(Int32 id)
+        public void ModifyEntity1(Entity1Entity entity1)
         {
-            using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "RemoveEnvironment"))
+            using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "ModifyEntity1"))
             {
 
                 try
                 {
                     var db = Data.ExampleData.GetConnection();
-                    var before = Data.ExampleData.GetEnvironment(id, db);
-                    var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", before.Id.ToString() + "", before);
-                    Data.ExampleData.RemoveEnvironment(id, db);
+                    var before = Data.ExampleData.GetEntity1(entity1.Name, db);
+                    var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", before.Name.ToString() + "", before, entity1);
+                    Data.ExampleData.ModifyEntity1(entity1, db);
+                    AuditManager.MarkSuccessFul(logid);
+                }
+                catch (Exception ex)
+                {
+                    if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+                }
+
+            }
+        }
+
+        public void RemoveEntity1(String name)
+        {
+            using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "RemoveEntity1"))
+            {
+
+                try
+                {
+                    var db = Data.ExampleData.GetConnection();
+                    var before = Data.ExampleData.GetEntity1(name, db);
+                    var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", before.Name.ToString() + "", before);
+                    Data.ExampleData.RemoveEntity1(name, db);
                     AuditManager.MarkSuccessFul(logid);
                 }
                 catch (Exception ex)

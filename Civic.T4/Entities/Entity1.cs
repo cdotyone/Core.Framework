@@ -15,25 +15,20 @@ using System.Runtime.Serialization;
 
 namespace Civic.T4.Entities
 {
-    [DataContract(Name = "environment")]
-    [KnownType(typeof(Entity1))]
-    public partial class Environment
+    [DataContract(Name = "entity1")]
+    [KnownType(typeof(Environment))]
+    public partial class Entity1
     {
-        public Environment()
-        {
-        }
-
-        [DataMember(Name = "id")]
-        public int Id { get; set; }
-
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
+        [DataMember(Name = "environmentId")]
+        public int EnvironmentId { get; set; }
 
-        [DataMember(Name = "entity1")]
-        public virtual List<Entity1> Entity1 { get; set; }
+
+        [DataMember(Name = "environment")]
+        public virtual Environment Environment { get; set; }
 
     }
 }
-
 
