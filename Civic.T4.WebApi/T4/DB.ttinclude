@@ -242,13 +242,15 @@ BEGIN
 		SET @order=''
 		DECLARE @orderbylist table (orderby nvarchar(512),[desc] bit) 
 		INSERT INTO @orderbylist
-		SELECT [item],0 FROM [<#=apiGeneralSchemaName#>].[udf_Split](@orderBy,' ')
+		SELECT [item],0 FROM [civic].[udf_Split](@orderBy,',')
 		UPDATE @orderbylist SET ORDERBY=SUBSTRING(ORDERBY,1,LEN(ORDERBY)-5),[DESC]=1 WHERE PATINDEX('%_DESC',ORDERBY)>0
 		UPDATE @orderbylist SET ORDERBY=SUBSTRING(ORDERBY,1,LEN(ORDERBY)-4) WHERE PATINDEX('%_ASC',ORDERBY)>0
-		SELECT @order = @order + ' AND ' + orderby + CASE WHEN [DESC]=1 THEN ' DESC' ELSE '' END FROM @orderbylist
+		SELECT @order = @order + ',' + orderby + CASE WHEN [DESC]=1 THEN ' DESC' ELSE '' END FROM @orderbylist
+		SET @order=LTRIM(@order)
+
 		IF @order<>''
 		BEGIN
-			SET @order=' ORDER BY '+ LTRIM(RTRIM(SUBSTRING(@order,5,LEN(@order)-3)))
+			SET @order=CHAR(13) + CHAR(10) + '    ORDER BY '+ LTRIM(RTRIM(SUBSTRING(@order,2,LEN(@order))))
 		END
 	END
 	ELSE
