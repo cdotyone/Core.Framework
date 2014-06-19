@@ -57,19 +57,19 @@
   <ItemGroup>
     <Reference Include="Civic.Core.Caching, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Civic.Core.Caching.1.9.108\lib\net40\Civic.Core.Caching.dll</HintPath>
+      <HintPath>..\packages\Civic.Core.Caching.1.9.132\lib\net40\Civic.Core.Caching.dll</HintPath>
     </Reference>
     <Reference Include="Civic.Core.Configuration, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Civic.Core.Configuration.1.9.108\lib\net40\Civic.Core.Configuration.dll</HintPath>
+      <HintPath>..\packages\Civic.Core.Configuration.1.9.132\lib\net40\Civic.Core.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="Civic.Core.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Civic.Core.Data.1.9.108\lib\net40\Civic.Core.Data.dll</HintPath>
+      <HintPath>..\packages\Civic.Core.Data.1.9.132\lib\net40\Civic.Core.Data.dll</HintPath>
     </Reference>
     <Reference Include="Civic.Core.Logging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Civic.Core.Logging.1.9.108\lib\net40\Civic.Core.Logging.dll</HintPath>
+      <HintPath>..\packages\Civic.Core.Logging.1.9.132\lib\net40\Civic.Core.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -77,7 +77,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
