@@ -425,6 +425,15 @@ if(Directory.Exists(sqlPath)) {
 		}
 	}
 
+	foreach(var filename in Directory.GetFiles(sqlPath,"all_*.sql")) {
+		var fi = new FileInfo(filename);
+		if(!File.Exists(dataPath+"\\"+fi.Name)) {
+			file = File.OpenText(filename);
+	#><#=file.ReadToEnd()#>
+	<# file.Close();
+		}
+	}
+
 	if(File.Exists(dataPath+"\\Custom SQL\\procs.post.sql")) {
 		file = File.OpenText(dataPath+"\\Custom SQL\\procs.post.sql" );
 	#><#=file.ReadToEnd()#>

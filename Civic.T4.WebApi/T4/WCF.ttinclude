@@ -29,14 +29,6 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	WriteHeader("System", "System.ServiceModel.Activation", "System.Collections.Generic", "Civic.Core.Framework.Security", "Civic.Core.Audit", "Civic.Core.Logging", namespaceName + ".Entities");
 	#>
 using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
-	<#
-	foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.FromEndMember.GetEntityType() == entity && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many))
-	{
-		var toEntity = navProperty.ToEndMember.GetEntityType();
-	#>using <#=code.Escape(toEntity)#>Entity = <#=namespaceName +".Entities." + toEntity.Name#>;
-	<#
-	}
-#>
 
 <# BeginNamespace(namespaceName+".Services", code);#>
 
@@ -92,49 +84,6 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 		return null;
 	}
 	
-<#
-
-	foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
-    {
-        if (navProperty.FromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many) {
-
-			var toEntity = navProperty.ToEndMember.GetEntityType();
-			NavigationProperty[] foreignKeys = entity.NavigationProperties.ToArray();
-
-			AssociationType association = null;	
-			try {
-			association = metadataWorkspace 
-				.GetItems<AssociationType>(DataSpace.SSpace)
-				.Single(a => a.Name.Replace("FK_","") == navProperty.RelationshipType.Name);
-			} catch {
-			}
-			if(association==null) continue;
-
-			var toColumns = String.Join(",", association.ReferentialConstraints.SelectMany(rc => rc.ToProperties));
-			var toTypes = String.Join(",", association.ReferentialConstraints.SelectMany(rc => rc.ToProperties).First().TypeUsage).Replace("SqlServer.","").Replace("nvarchar","string").Replace("SqlServer.","").Replace("nvarchar","string").Replace("varchar","string").Replace("Edm.","");
-
-#>
-	public List<<#=code.Escape(entity)#>Entity> Get<#=entity.Name#>By<#=toEntity.Name#>(<#=toTypes#> <#=code.Escape(keyName.ToLower())#>) 
-	{
-        using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Get<#=code.Escape(entity)#>By<#=code.Escape(keyName)#>")) {
-
-			try {
-				return Data.<#=edmxFileName#>Data.Get<#=entity.Name#>By<#=toEntity.Name#>(<#=code.Escape(keyName.ToLower())#>, null);
-			}
-			catch (Exception ex)
-			{
-				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-			}
-
-		}
-
-		return null;
-	}
-	
-<#
-		}
-	}#>
-
 	public <#=((keyType=="Int32" || keyType=="int") && keyName=="Id"?"int":"void")#> Add<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>) 
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Add<#=code.Escape(entity)#>")) {
@@ -251,14 +200,6 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	WriteHeader("System", "System.Collections.Generic", "System.ServiceModel", namespaceName + ".Entities"); 
 #>
 using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
-<#
-foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.FromEndMember.GetEntityType() == entity && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many))
-{
-	var toEntity = navProperty.ToEndMember.GetEntityType();
-#>using <#=code.Escape(toEntity)#>Entity = <#=namespaceName +".Entities." + toEntity.Name#>;
-<#
-}
-#>
 
 <# BeginNamespace(namespaceName+".Services", code); #>
 

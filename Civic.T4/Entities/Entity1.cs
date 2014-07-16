@@ -16,7 +16,6 @@ using System.Runtime.Serialization;
 namespace Civic.T4.Entities
 {
     [DataContract(Name = "entity1")]
-    [KnownType(typeof(Environment))]
     public partial class Entity1
     {
         [DataMember(Name = "name")]
@@ -24,10 +23,6 @@ namespace Civic.T4.Entities
 
         [DataMember(Name = "environmentId")]
         public int EnvironmentId { get; set; }
-
-
-        [DataMember(Name = "environment")]
-        public virtual Environment Environment { get; set; }
 
     }
 }

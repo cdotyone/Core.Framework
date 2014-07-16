@@ -17,8 +17,6 @@ using Civic.Core.Data;
 using Civic.T4.Entities;
 
 using EnvironmentEntity = Civic.T4.Entities.Environment;
-using Entity1Entity = Civic.T4.Entities.Entity1;
-
 namespace Civic.T4.Data
 {
     internal partial class ExampleData
@@ -44,30 +42,6 @@ namespace Civic.T4.Data
             }
 
             return environmentReturned;
-        }
-
-        internal static List<Entity1Entity> GetEntity1ByEnvironment(Int32 id, Int32 environmentId, IDBConnection database)
-        {
-            var list = new List<Entity1Entity>();
-
-            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
-            using (var command = database.CreateStoredProcCommand("dbo", "usp_Entity1GetByEnvironment"))
-            {
-                command.AddInParameter("@id", id);
-                command.AddInParameter("@environmentId", environmentId);
-
-                using (IDataReader dataReader = command.ExecuteReader())
-                {
-                    var item = new Entity1Entity();
-                    while (populateEntity1(item, dataReader))
-                    {
-                        list.Add(item);
-                        item = new Entity1Entity();
-                    }
-                }
-            }
-
-            return list;
         }
 
         internal static List<EnvironmentEntity> GetPagedEnvironment(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database)
@@ -126,13 +100,12 @@ namespace Civic.T4.Data
             return list;
         }
 
-        internal static void RemoveEnvironment(Int32 id, Int32 environmentId, IDBConnection database)
+        internal static void RemoveEnvironment(Int32 id, IDBConnection database)
         {
             if (database == null) database = DatabaseFactory.CreateDatabase("Example");
             using (var command = database.CreateStoredProcCommand("dbo", "usp_EnvironmentRemove"))
             {
                 command.AddInParameter("@id", id);
-                command.AddInParameter("@environmentId", environmentId);
                 command.ExecuteNonQuery();
             }
         }

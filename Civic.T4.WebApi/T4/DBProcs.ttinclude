@@ -89,7 +89,7 @@ EXECUTE sp_bindefault N'<#=apiGeneralSchemaName#>.udf_Unknown', N'[<#=apiGeneral
 
 			if(notNullable){
 #>
-EXECUTE sp_bindefault N'<#=apiGeneralSchemaName#>.udf_GetDate', N'[<#=apiGeneralSchemaName#>].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
+EXECUTE sp_bindefault N'<#=apiGeneralSchemaName#>.udf_GetDate', N'[<#=apiSchemaName#>].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
 <#
 			}
 		}
@@ -105,9 +105,13 @@ GO
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
 	tableAlias = Core.GetTableAlias(entity.Name);
-		
+	
+	if(apiBundleSQLFiles) {
+		fileManager.StartNewFile("all_"+entity.Name+".sql", folderName:"SQL");
+	}
+			
 	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GET") || entity.Documentation.LongDescription.Contains("ADD"))
-	   && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Get.sql", out userContent))  {	
+	   && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Get.sql", apiBundleSQLFiles, out userContent))  {	
 #>
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>Get]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Get]
@@ -160,7 +164,7 @@ GO
 	}
 	
 	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("PAGED"))
-	&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_" + entity.Name + "GetFiltered.sql", out userContent))  {	
+	&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_" + entity.Name + "GetFiltered.sql", apiBundleSQLFiles, out userContent))  {	
 #>
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>GetFiltered]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetFiltered]
@@ -205,7 +209,7 @@ GO
 	}
 
 	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("ADD"))
-		&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Add.sql", out userContent))  {	
+		&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Add.sql", apiBundleSQLFiles, out userContent))  {	
 
 		codeSections=Core.GetCodeSections(@"(-- t4-params begin|-- t4-params end|-- t4-columns begin|-- t4-columns end|-- t4-values begin|-- t4-values end)", userContent);
 
@@ -313,7 +317,7 @@ GO
 
 
 	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("MODIFY"))
-	  && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Modify.sql", out userContent))  {	
+	  && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Modify.sql", apiBundleSQLFiles, out userContent))  {	
 #>
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]
@@ -386,7 +390,7 @@ GO
 
 
 	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("REMOVE"))
-	  && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Remove.sql", out userContent))  {	
+	  && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Remove.sql", apiBundleSQLFiles, out userContent))  {	
 #>
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>Remove]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Remove]
@@ -434,7 +438,7 @@ GO
 
 		var toEntity = navProperty.ToEndMember.GetEntityType();
 	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GETBY"))
-		&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+ entity.Name + "GetBy" + toEntity.Name + ".sql", out userContent))  {	
+		&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+ entity.Name + "GetBy" + toEntity.Name + ".sql", apiBundleSQLFiles, out userContent))  {	
 
 	NavigationProperty[] foreignKeys = entity.NavigationProperties.ToArray();
 

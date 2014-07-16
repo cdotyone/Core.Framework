@@ -5,6 +5,6 @@ var apiVersion="1.0";
 var apiPackageName=""; 
 var apiSchemaName = "civic";
 var apiGeneralSchemaName = "civic";
+var apiBundleSQLFiles = true;
 
 #>
-

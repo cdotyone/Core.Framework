@@ -1,42 +1,42 @@
 ﻿
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_GetDate]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [dbo].[udf_GetDate]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_GetDate]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [civic].[udf_GetDate]
 GO
 
-CREATE DEFAULT [dbo].[udf_GetDate]
+CREATE DEFAULT [civic].[udf_GetDate]
 AS GETUTCDATE()
 GO
 
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_Unknown]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [dbo].[udf_Unknown]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_Unknown]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [civic].[udf_Unknown]
 GO
 
-CREATE DEFAULT [dbo].[udf_Unknown]
+CREATE DEFAULT [civic].[udf_Unknown]
 AS 'UNK'
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_Yes]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [dbo].[udf_Yes]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_Yes]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [civic].[udf_Yes]
 GO
 
-CREATE DEFAULT [dbo].[udf_Yes]
+CREATE DEFAULT [civic].[udf_Yes]
 AS 1
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_No]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [dbo].[udf_No]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_No]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [civic].[udf_No]
 GO
 
-CREATE DEFAULT [dbo].[udf_No]
+CREATE DEFAULT [civic].[udf_No]
 AS 0
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_Zero]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [dbo].[udf_Zero]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_Zero]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [civic].[udf_Zero]
 GO
 
-CREATE DEFAULT [dbo].[udf_Zero]
+CREATE DEFAULT [civic].[udf_Zero]
 AS 0
 GO
 -- t4-defaults begin

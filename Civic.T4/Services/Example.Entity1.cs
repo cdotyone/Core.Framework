@@ -62,7 +62,6 @@ namespace Civic.T4.Services
             return null;
         }
 
-
         public void AddEntity1(Entity1Entity entity1)
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "AddEntity1"))

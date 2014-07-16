@@ -18,7 +18,6 @@ using Civic.Core.Logging;
 using Civic.T4.Entities;
 
 using EnvironmentEntity = Civic.T4.Entities.Environment;
-using Entity1Entity = Civic.T4.Entities.Entity1;
 
 namespace Civic.T4.Services
 {
@@ -62,7 +61,6 @@ namespace Civic.T4.Services
 
             return null;
         }
-
 
         public int AddEnvironment(EnvironmentEntity environment)
         {

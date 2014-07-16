@@ -780,12 +780,12 @@ public static string GetParameterType(CodeGenerationTools code, EdmProperty edmP
 	}
 }
 
-public static bool CustomSQLCheck(TemplateFileManager fileManager, string templateName,string fileName,out string userContent) {
+public static bool CustomSQLCheck(TemplateFileManager fileManager, string templateName,string fileName, bool apiBundleSQLFiles,out string userContent) {
 	var userContentFileName = new FileInfo(templateName).DirectoryName+"\\Custom SQL\\" + fileName;
 	userContent = "";	
 	if(File.Exists(userContentFileName)) { var file = File.OpenText(userContentFileName); userContent=file.ReadToEnd(); file.Close(); }
 	if(userContent.StartsWith("NOGEN")) return false;
-	fileManager.StartNewFile(fileName, folderName:"SQL");
+	if(!apiBundleSQLFiles) fileManager.StartNewFile(fileName, folderName:"SQL");
 	return true;
 }
 

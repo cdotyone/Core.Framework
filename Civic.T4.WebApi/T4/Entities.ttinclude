@@ -6,29 +6,16 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	WriteHeader("System","System.Collections.Generic","System.Runtime.Serialization");
 
     BeginNamespace(namespaceName + ".Entities", code);
-    var navigationProperties = typeMapper.GetNavigationProperties(entity);
 
 #>
 [DataContract(Name="<#=Core.ToLowerCamel(entity.Name)#>")]
-<#
-    if (navigationProperties.Any())
-    {
-        foreach (var navigationProperty in navigationProperties)
-        {
-#>
-[KnownType(typeof(<#=navigationProperty.ToEndMember.DeclaringType.Members[ navigationProperty.ToEndMember.DeclaringType.Members[1].ToString()==entity.Name ? 0:1]#>))]
-<#
-        }
-    }
-#>
 <#=codeStringGenerator.EntityClassOpening(entity)#>
 {
 <#
     var propertiesWithDefaultValues = typeMapper.GetPropertiesWithDefaultValues(entity);
-    var collectionNavigationProperties = typeMapper.GetCollectionNavigationProperties(entity);
     var complexProperties = typeMapper.GetComplexProperties(entity);
 
-    if (propertiesWithDefaultValues.Any() || collectionNavigationProperties.Any() || complexProperties.Any())
+    if (propertiesWithDefaultValues.Any() || complexProperties.Any())
     {
 #>
     public <#=code.Escape(entity)#>()
@@ -59,7 +46,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
         foreach (var edmProperty in simpleProperties)
         {
 #>
-	[DataMember(Name="<#=Core.ToLowerCamel(edmProperty.Name)#>")]
+	[DataMember(Name="<#=Core.ToLowerCamel(edmProperty.Name).Replace("iD","id")#>")]
     <#=codeStringGenerator.Property(edmProperty)#>
 
 <#
@@ -75,21 +62,6 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
         {
 #>
     <#=codeStringGenerator.Property(complexProperty)#>
-<#
-        }
-    }
-
-    if (navigationProperties.Any())
-    {
-#>
-
-<#
-        foreach (var navigationProperty in navigationProperties)
-        {
-#>
-	[DataMember(Name="<#=Core.ToLowerCamel(navigationProperty.Name)#>")]
-    <#=codeStringGenerator.NavigationProperty(navigationProperty)#>
-
 <#
         }
     }

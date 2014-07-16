@@ -1,14 +1,14 @@
 ﻿
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_CreateDynamicVals]'))
-DROP FUNCTION [dbo].[udf_CreateDynamicVals]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_CreateDynamicVals]'))
+DROP FUNCTION [civic].[udf_CreateDynamicVals]
 GO
 
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_Split]'))
-DROP FUNCTION [dbo].[udf_Split]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_Split]'))
+DROP FUNCTION [civic].[udf_Split]
 GO
 
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_ProcessFilter]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_ProcessFilter]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[usp_ProcessFilter]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [civic].[usp_ProcessFilter]
 GO
 
 SET ANSI_NULLS ON
@@ -17,7 +17,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE FUNCTION [dbo].[udf_Split] (
+CREATE FUNCTION [civic].[udf_Split] (
       @InputString                  VARCHAR(8000),
       @Delimiter                    VARCHAR(50)
 )
@@ -73,7 +73,7 @@ END -- End Function
 GO
 
 
-CREATE FUNCTION [dbo].[udf_CreateDynamicVals] (
+CREATE FUNCTION [civic].[udf_CreateDynamicVals] (
       @name VARCHAR(50),
       @count int
 ) RETURNS NVARCHAR(MAX) 
@@ -94,7 +94,7 @@ BEGIN
 END
 
 GO
-CREATE PROCEDURE [dbo].[usp_ProcessFilter]
+CREATE PROCEDURE [civic].[usp_ProcessFilter]
      @skip int
     ,@count int out
 	,@select nvarchar(max)
@@ -124,7 +124,7 @@ BEGIN
 	--- escape out space in a string query
 	SET @filterBy=REPLACE(@filterBy,' ','___')
 	insert into @BLOCKS
-	select [POS],[item] from [dbo].[udf_Split](@filterBy,'''')
+	select [POS],[item] from [civic].[udf_Split](@filterBy,'''')
 
 	UPDATE @BLOCKS SET blk=replace(blk,'___','###')
 	WHERE (POS % 2) = 0
@@ -137,7 +137,7 @@ BEGIN
 	-- parse and determine filter by
 	set @filterBy=replace(replace(replace(replace(replace(replace(replace(upper(@filterBy),' like ','|_like_|'),' eq ','|=|'),' lt ','|<|'),' gt ','|>|'),' ge ','|>=|'),' le ','|<=|'),' ne ','|<>|')
 	insert into @BLOCKS
-	select [POS],[item] from [dbo].[udf_Split](@filterBy,' ')
+	select [POS],[item] from [civic].[udf_Split](@filterBy,' ')
 
 	DECLARE @COMBINEVARS TABLE(pos int,varname nvarchar(512),operation nvarchar(512),varvalue nvarchar(512))
 	DECLARE @OPERATIONS TABLE(pos int,operation nvarchar(512))
@@ -156,7 +156,7 @@ BEGIN
 				,ITEM nvarchar(256)
 			)
 			INSERT INTO @TEMP
-			select POS,[item] from [dbo].[udf_Split](REPLACE(@PAIR,'|_LIKE_|','| LIKE |'),'|')
+			select POS,[item] from [civic].[udf_Split](REPLACE(@PAIR,'|_LIKE_|','| LIKE |'),'|')
 
 			DECLARE @VARNAME NVARCHAR(512)
 			select TOP 1 @VARNAME=[item] from @TEMP WE
@@ -234,13 +234,15 @@ BEGIN
 		SET @order=''
 		DECLARE @orderbylist table (orderby nvarchar(512),[desc] bit) 
 		INSERT INTO @orderbylist
-		SELECT [item],0 FROM [dbo].[udf_Split](@orderBy,' ')
+		SELECT [item],0 FROM [civic].[udf_Split](@orderBy,',')
 		UPDATE @orderbylist SET ORDERBY=SUBSTRING(ORDERBY,1,LEN(ORDERBY)-5),[DESC]=1 WHERE PATINDEX('%_DESC',ORDERBY)>0
 		UPDATE @orderbylist SET ORDERBY=SUBSTRING(ORDERBY,1,LEN(ORDERBY)-4) WHERE PATINDEX('%_ASC',ORDERBY)>0
-		SELECT @order = @order + ' AND ' + orderby + CASE WHEN [DESC]=1 THEN ' DESC' ELSE '' END FROM @orderbylist
+		SELECT @order = @order + ',' + orderby + CASE WHEN [DESC]=1 THEN ' DESC' ELSE '' END FROM @orderbylist
+		SET @order=LTRIM(@order)
+
 		IF @order<>''
 		BEGIN
-			SET @order=' ORDER BY '+ LTRIM(RTRIM(SUBSTRING(@order,5,LEN(@order)-3)))
+			SET @order=CHAR(13) + CHAR(10) + '    ORDER BY '+ LTRIM(RTRIM(SUBSTRING(@order,2,LEN(@order))))
 		END
 	END
 	ELSE
@@ -266,7 +268,7 @@ BEGIN
 	SET @SQL = @SQLCOUNT + @order +' OFFSET @_skip ROWS FETCH NEXT @_count ROWS ONLY'
 
 	DECLARE @PARAMS NVARCHAR(MAX)
-	SET @PARAMS = N'@_skip int,@_count int,@_orderBy nvarchar(512),'+dbo.udf_CreateDynamicVals('val',20)
+	SET @PARAMS = N'@_skip int,@_count int,@_orderBy nvarchar(512),'+civic.udf_CreateDynamicVals('val',20)
 	DECLARE @val1 nvarchar(512)
 			, @val2 nvarchar(512)
 			, @val3 nvarchar(512)
@@ -376,7 +378,7 @@ GO
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 04/15/2014 13:51:15
+-- Date Created: 07/16/2014 15:03:07
 -- Generated from EDMX file: D:\devel\CIVIC\T4\Civic.T4\Models\Example.edmx
 -- --------------------------------------------------
 
@@ -472,50 +474,109 @@ GO
 
 
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_GetDate]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [dbo].[udf_GetDate]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_GetDate]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [civic].[udf_GetDate]
 GO
 
-CREATE DEFAULT [dbo].[udf_GetDate]
+CREATE DEFAULT [civic].[udf_GetDate]
 AS GETUTCDATE()
 GO
 
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_Unknown]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [dbo].[udf_Unknown]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_Unknown]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [civic].[udf_Unknown]
 GO
 
-CREATE DEFAULT [dbo].[udf_Unknown]
+CREATE DEFAULT [civic].[udf_Unknown]
 AS 'UNK'
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_Yes]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [dbo].[udf_Yes]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_Yes]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [civic].[udf_Yes]
 GO
 
-CREATE DEFAULT [dbo].[udf_Yes]
+CREATE DEFAULT [civic].[udf_Yes]
 AS 1
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_No]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [dbo].[udf_No]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_No]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [civic].[udf_No]
 GO
 
-CREATE DEFAULT [dbo].[udf_No]
+CREATE DEFAULT [civic].[udf_No]
 AS 0
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[udf_Zero]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [dbo].[udf_Zero]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_Zero]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [civic].[udf_Zero]
 GO
 
-CREATE DEFAULT [dbo].[udf_Zero]
+CREATE DEFAULT [civic].[udf_Zero]
 AS 0
 GO
 -- t4-defaults begin
 -- t4-defaults end
 GO
 
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Get]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1Get]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_Entity1Get]
+	  @name [nvarchar](max)
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	SELECT	
+		-- t4-columns begin
+		 e1.[Name]
+		,e1.[EnvironmentId]
+		-- t4-columns end
+	FROM [dbo].[Entity1] e1
+	WHERE	
+		-- t4-where begin
+	    e1.[Name] = @name
+		-- t4-where end
+END
+GO
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1GetFiltered]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[usp_Entity1GetFiltered]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[usp_Entity1GetFiltered]
+     @skip int
+    ,@count int out
+	,@orderBy nvarchar(512)
+	,@filterBy nvarchar(512)
+	,@retcount bit = 0
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DECLARE @select nvarchar(max)
+    SET @select = 'SELECT	
+		-- t4-columns begin
+		 e1.[Name]
+		,e1.[EnvironmentId]
+		-- t4-columns end
+    FROM [dbo].[Entity1] e1'
+
+	EXEC [civic].[usp_ProcessFilter]
+		     @skip = @skip
+			,@select = @select
+			,@count = @count out
+			,@orderBy = @orderBy
+			,@filterBy = @filterBy
+			,@retcount = @retcount 
+END
+GO
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Add]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_Entity1Add]
 GO
@@ -548,70 +609,7 @@ BEGIN
 
 END
 GO
-
-	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Get]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_Entity1Get]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[usp_Entity1Get]
-	  @name [nvarchar](max)
-AS
-BEGIN
-	SET NOCOUNT ON
-
-	SELECT	
-		-- t4-columns begin
-		 e1.[Name]
-		,e1.[EnvironmentId]
-		-- t4-columns end
-	FROM [dbo].[Entity1] e1
-	WHERE	
-		-- t4-where begin
-	    e1.[Name] = @name
-		-- t4-where end
-END
-GO
-
-	
-	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1GetFiltered]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_Entity1GetFiltered]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[usp_Entity1GetFiltered]
-     @skip int
-    ,@count int out
-	,@orderBy nvarchar(512)
-	,@filterBy nvarchar(512)
-	,@retcount bit = 0
-AS
-BEGIN
-	SET NOCOUNT ON
-
-	DECLARE @select nvarchar(max)
-    SET @select = 'SELECT	
-		-- t4-columns begin
-		 e1.[Name]
-		,e1.[EnvironmentId]
-		-- t4-columns end
-    FROM [dbo].[Entity1] e1'
-
-	EXEC [dbo].[usp_ProcessFilter]
-		     @skip = @skip
-			,@select = @select
-			,@count = @count out
-			,@orderBy = @orderBy
-			,@filterBy = @filterBy
-			,@retcount = @retcount 
-END
-GO
-
-	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Modify]') AND type in (N'P', N'PC'))
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Modify]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_Entity1Modify]
 GO
 SET ANSI_NULLS ON
@@ -637,8 +635,7 @@ BEGIN
 		-- t4-where end
 END
 GO
-
-	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Remove]') AND type in (N'P', N'PC'))
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Remove]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_Entity1Remove]
 GO
 SET ANSI_NULLS ON
@@ -656,37 +653,6 @@ BEGIN
 		-- t4-where begin
 	    [Name] = @name
 		-- t4-where end
-END
-GO
-
-	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentAdd]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_EnvironmentAdd]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[usp_EnvironmentAdd]
--- t4-params begin
-	  @id [int] out
-	, @name [nvarchar](max)
--- t4-params end
-AS
-BEGIN
-	SET NOCOUNT ON
-
-	INSERT INTO [dbo].[Environment](
--- t4-columns begin
-		 [Name]
--- t4-columns end
-	) VALUES (
-
--- t4-values begin
-		 @name
--- t4-values end
-	)
-
-SET @ID = SCOPE_IDENTITY()
 END
 GO
 
@@ -715,8 +681,7 @@ BEGIN
 		-- t4-where end
 END
 GO
-
-	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentGetFiltered]') AND type in (N'P', N'PC'))
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentGetFiltered]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_EnvironmentGetFiltered]
 GO
 SET ANSI_NULLS ON
@@ -741,7 +706,7 @@ BEGIN
 		-- t4-columns end
     FROM [dbo].[Environment] e'
 
-	EXEC [dbo].[usp_ProcessFilter]
+	EXEC [civic].[usp_ProcessFilter]
 		     @skip = @skip
 			,@select = @select
 			,@count = @count out
@@ -750,196 +715,6 @@ BEGIN
 			,@retcount = @retcount 
 END
 GO
-
-	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentModify]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_EnvironmentModify]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[usp_EnvironmentModify]
-	  @id [int]
-	, @name [nvarchar](max)
-AS
-BEGIN
-	SET NOCOUNT ON
-
-	UPDATE e SET 
-		-- t4-columns begin
-		 [Name] = @name
-		-- t4-columns end
-	FROM [dbo].[Environment] e
-	WHERE	
-		-- t4-where begin
-	    e.[Id] = @id
-		-- t4-where end
-END
-GO
-
-	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentRemove]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_EnvironmentRemove]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[usp_EnvironmentRemove]
-	  @id [int]
-AS
-BEGIN
-	SET NOCOUNT ON
-
-	DELETE FROM [dbo].[Environment]
-	WHERE	
-		-- t4-where begin
-	    [Id] = @id
-		-- t4-where end
-END
-GO
-
-	IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Add]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_Entity1Add]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[usp_Entity1Add]
--- t4-params begin
-	  @name [nvarchar](max) out
-	, @environmentId [int]
--- t4-params end
-AS
-BEGIN
-	SET NOCOUNT ON
-
-	INSERT INTO [dbo].[Entity1](
--- t4-columns begin
-		 [Name]
-		,[EnvironmentId]
--- t4-columns end
-	) VALUES (
-
--- t4-values begin
-		 @name
-		,@environmentId
--- t4-values end
-	)
-
-
-END
-GO
-
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Get]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_Entity1Get]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[usp_Entity1Get]
-	  @name [nvarchar](max)
-AS
-BEGIN
-	SET NOCOUNT ON
-
-	SELECT	
-		-- t4-columns begin
-		 e1.[Name]
-		,e1.[EnvironmentId]
-		-- t4-columns end
-	FROM [dbo].[Entity1] e1
-	WHERE	
-		-- t4-where begin
-	    e1.[Name] = @name
-		-- t4-where end
-END
-GO
-
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1GetFiltered]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_Entity1GetFiltered]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[usp_Entity1GetFiltered]
-     @skip int
-    ,@count int out
-	,@orderBy nvarchar(512)
-	,@filterBy nvarchar(512)
-	,@retcount bit = 0
-AS
-BEGIN
-	SET NOCOUNT ON
-
-	DECLARE @select nvarchar(max)
-    SET @select = 'SELECT	
-		-- t4-columns begin
-		 e1.[Name]
-		,e1.[EnvironmentId]
-		-- t4-columns end
-    FROM [dbo].[Entity1] e1'
-
-	EXEC [dbo].[usp_ProcessFilter]
-		     @skip = @skip
-			,@select = @select
-			,@count = @count out
-			,@orderBy = @orderBy
-			,@filterBy = @filterBy
-			,@retcount = @retcount 
-END
-GO
-
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Modify]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_Entity1Modify]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[usp_Entity1Modify]
-	  @name [nvarchar](max)
-	, @environmentId [int]
-AS
-BEGIN
-	SET NOCOUNT ON
-
-	UPDATE e1 SET 
-		-- t4-columns begin
-		 [Name] = @name
-		,[EnvironmentId] = @environmentId
-		-- t4-columns end
-	FROM [dbo].[Entity1] e1
-	WHERE	
-		-- t4-where begin
-	    e1.[Name] = @name
-		-- t4-where end
-END
-GO
-
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1Remove]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_Entity1Remove]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[usp_Entity1Remove]
-	  @name [nvarchar](max)
-AS
-BEGIN
-	SET NOCOUNT ON
-
-	DELETE FROM [dbo].[Entity1]
-	WHERE	
-		-- t4-where begin
-	    [Name] = @name
-		-- t4-where end
-END
-GO
-
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentAdd]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_EnvironmentAdd]
 GO
@@ -970,68 +745,6 @@ BEGIN
 SET @ID = SCOPE_IDENTITY()
 END
 GO
-
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentGet]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_EnvironmentGet]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[usp_EnvironmentGet]
-	  @id [int]
-AS
-BEGIN
-	SET NOCOUNT ON
-
-	SELECT	
-		-- t4-columns begin
-		 e.[Id]
-		,e.[Name]
-		-- t4-columns end
-	FROM [dbo].[Environment] e
-	WHERE	
-		-- t4-where begin
-	    e.[Id] = @id
-		-- t4-where end
-END
-GO
-
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentGetFiltered]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_EnvironmentGetFiltered]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[usp_EnvironmentGetFiltered]
-     @skip int
-    ,@count int out
-	,@orderBy nvarchar(512)
-	,@filterBy nvarchar(512)
-	,@retcount bit = 0
-AS
-BEGIN
-	SET NOCOUNT ON
-
-	DECLARE @select nvarchar(max)
-    SET @select = 'SELECT	
-		-- t4-columns begin
-		 e.[Id]
-		,e.[Name]
-		-- t4-columns end
-    FROM [dbo].[Environment] e'
-
-	EXEC [dbo].[usp_ProcessFilter]
-		     @skip = @skip
-			,@select = @select
-			,@count = @count out
-			,@orderBy = @orderBy
-			,@filterBy = @filterBy
-			,@retcount = @retcount 
-END
-GO
-
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentModify]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_EnvironmentModify]
 GO
@@ -1057,7 +770,6 @@ BEGIN
 		-- t4-where end
 END
 GO
-
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentRemove]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_EnvironmentRemove]
 GO
@@ -1079,7 +791,7 @@ BEGIN
 END
 GO
 
-INSERT INTO [dbo].[Environments]([Name]) VALUES ('Dev');
+	INSERT INTO [dbo].[Environments]([Name]) VALUES ('Dev');
 INSERT INTO [dbo].[Environments]([Name]) VALUES ('QA');
 INSERT INTO [dbo].[Environments]([Name]) VALUES ('Load');
 INSERT INTO [dbo].[Environments]([Name]) VALUES ('Stage');

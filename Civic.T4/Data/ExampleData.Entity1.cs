@@ -17,7 +17,6 @@ using Civic.Core.Data;
 using Civic.T4.Entities;
 
 using Entity1Entity = Civic.T4.Entities.Entity1;
-
 namespace Civic.T4.Data
 {
     internal partial class ExampleData

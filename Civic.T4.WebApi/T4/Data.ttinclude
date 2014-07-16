@@ -13,15 +13,6 @@ WriteHeader("System", "System.Collections.Generic", "System.Data","System.Data.C
 #>
 using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 <#
-foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.FromEndMember.GetEntityType() == entity && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many))
-{
-	var toEntity = navProperty.ToEndMember.GetEntityType();
-#>using <#=code.Escape(toEntity)#>Entity = <#=namespaceName +".Entities." + toEntity.Name#>;
-<#
-}
-#>
-
-<#
 
 BeginNamespace(namespaceName + ".Data", code);
 
@@ -75,61 +66,6 @@ internal partial class <#=edmxFileName#>Data
 		return <#=code.Escape(lowerName)#>Returned;
 	}
 
-<#
-
-	foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.FromEndMember.GetEntityType() == entity && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many))
-	{
-		var toEntity = navProperty.ToEndMember.GetEntityType();
-		NavigationProperty[] foreignKeys = entity.NavigationProperties.ToArray();
-
-		AssociationType association = null;	
-		try {
-		association = metadataWorkspace 
-			.GetItems<AssociationType>(DataSpace.CSpace)
-			.Single(a => a.Name == navProperty.RelationshipType.Name);
-		} catch(Exception ex) {
-		}
-		if(association==null) continue;
-
-		if(association.ReferentialConstraints.SelectMany(rc => rc.ToProperties).Count()==0) continue;
-
-		foreach(var toprop in association.ReferentialConstraints.SelectMany(rc => rc.ToProperties)) {
-			keys[toprop.ToString()] = toprop.TypeUsage.ToString().Replace("SqlServer.","").Replace("nvarchar","string").Replace("varchar","string").Replace("Edm.","");
-		}
-
-#>
-	internal static List<<#=code.Escape(toEntity)#>Entity> Get<#=code.Escape(toEntity)#>By<#=entity.Name#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#>, <#}#> IDBConnection database)
-	{
-		var list = new List<<#=code.Escape(toEntity)#>Entity>();
-
-		if( database==null ) database = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
-		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(toEntity)#>GetBy<#=entity.Name#>"))
-		{
-			<#
-			foreach(var key in keys.Keys)
-			{
-	            #>command.AddInParameter("<#=Core.GetParameterName(key)#>", <#=Core.GetMethodParameterName(key)#>);
-				<#
-			}
-			#>
-
-			using (IDataReader dataReader = command.ExecuteReader())
-			{
-				var item = new <#=code.Escape(toEntity)#>Entity();
-				while(populate<#=code.Escape(toEntity)#>(item, dataReader))
-				{
-					list.Add(item);
-					item = new <#=code.Escape(toEntity	)#>Entity();
-				} 
-			}
-		}
-
-		return list;
-	}
-
-<#
-	}
-#>
 	internal static List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database)
 	{ 
 		var list = new List<<#=code.Escape(entity)#>Entity>();

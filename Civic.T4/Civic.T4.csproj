@@ -136,6 +136,12 @@
     <Content Include="Global.asax" />
     <Content Include="Models\Example.edmx.sql" />
     <Content Include="Models\Example.SeedData.xml" />
+    <Content Include="SQL\all_Entity1.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\all_Environment.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
     <Content Include="SQL\Example.DB.Rebuild.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
@@ -143,39 +149,6 @@
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
     <Content Include="SQL\Example.Tables.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\usp_Entity1Add.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\usp_Entity1Get.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\usp_Entity1GetByEnvironment.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\usp_Entity1GetFiltered.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\usp_Entity1Modify.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\usp_Entity1Remove.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\usp_EnvironmentAdd.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\usp_EnvironmentGet.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\usp_EnvironmentGetFiltered.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\usp_EnvironmentModify.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\usp_EnvironmentRemove.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
     <Content Include="Web.config" />
