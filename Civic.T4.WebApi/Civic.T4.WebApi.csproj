@@ -118,6 +118,9 @@
     <None Include="nuget\Civic.WebApi.Api.Example.nuspec">
       <SubType>Designer</SubType>
     </None>
+    <None Include="nuget\Civic.T4.WebApi.Model.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="nuget\Tools\Uninstall.ps1" />
     <None Include="nuget\Tools\Install.ps1" />
     <Compile Include="..\References\VersionInfo.cs">
@@ -192,9 +195,6 @@
       <LastGenOutput>Example.cs</LastGenOutput>
     </None>
     <None Include="nuget\Civic.T4.WebApi.nuspec" />
-    <None Include="nuget\Civic.T4.WebApi.Api.nuspec">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="nuget\Civic.T4.WebApi.WebHost.nuspec" />
     <None Include="nuget\pack.bat" />
     <None Include="pack.bat" />
