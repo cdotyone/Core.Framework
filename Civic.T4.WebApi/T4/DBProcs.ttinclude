@@ -104,7 +104,7 @@ GO
 // Emit Entity Types
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
-	tableAlias = Core.GetTableAlias(entity.Name);
+	tableAlias = "[" + Core.GetTableAlias(entity.Name) + "]";
 	
 	if(apiBundleSQLFiles) {
 		fileManager.StartNewFile("all_"+entity.Name+".sql", folderName:"SQL");
