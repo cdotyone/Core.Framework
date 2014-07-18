@@ -46,41 +46,89 @@ namespace Civic.T4.WebApi.Configuration
 
         public static int GetMaxRows(string schema, string name)
         {
-            var key = schema + "." + name;
+            if (_maxRowOverrides == null) CacheConfig();
 
-            if (_maxRowOverrides == null) LoadMaxRowOverrides();
-            return _maxRowOverrides != null && _maxRowOverrides.ContainsKey(key) ? _maxRowOverrides[key] : Current.Max;
+            var ekey = schema + "." + name;
+
+            if (_current == null && !_checked) _current = Current;
+
+            var max = _current == null ? 100 : _current.Max;
+            if (_maxRowOverrides != null)
+            {
+                if (_forceUpperOverrides.ContainsKey(ekey)) max = _maxRowOverrides[ekey];
+                else if (_forceUpperOverrides.ContainsKey(schema)) max = _maxRowOverrides[schema];
+            }
+
+            return max;
         }
 
-        public static void LoadMaxRowOverrides()
+        public static void CacheConfig()
         {
             _maxRowOverrides = new Dictionary<string, int>();
+            _forceUpperOverrides = new Dictionary<string, bool>();
 
             var config = Current;
             if (config != null)
             {
                 var overrides = Current.Entities;
-                foreach (var element in overrides)
+                foreach (var schema in overrides)
                 {
-                    if (!element.Value.Attributes.ContainsKey(Constants.CONFIG_SCHEMA))
-                        throw new ConfigurationErrorsException("schema is required for T4 entity configuration");
-                    var ekey = element.Value.Attributes[Constants.CONFIG_SCHEMA] + "." + element.Key.ToLower();
-
-                    if (!element.Value.Attributes.ContainsKey(Constants.CONFIG_MAX)) continue;
-
+                    var skey = schema.Key.ToLower();
                     int max;
-                    int.TryParse(element.Value.Attributes[Constants.CONFIG_MAX], out max);
-                    _maxRowOverrides[ekey] = max;
+                    bool force;
+
+                    if (schema.Value.Attributes.ContainsKey(Constants.CONFIG_MAX))
+                    {
+                        if(int.TryParse(schema.Value.Attributes[Constants.CONFIG_MAX], out max)) 
+                            _maxRowOverrides[skey] = max;
+                    }
+                    if (schema.Value.Attributes.ContainsKey(Constants.CONFIG_FORCEUPPER))
+                    {
+                        if (bool.TryParse(schema.Value.Attributes[Constants.CONFIG_FORCEUPPER], out force))
+                            _forceUpperOverrides[skey] = force;
+                    }
+                    
+
+                    if (schema.Value.Children != null)
+                    {
+                        foreach (var element in schema.Value.Children)
+                        {
+                            var ekey = skey + "." + element.Key.ToLower();
+                            if (element.Value.Attributes.ContainsKey(Constants.CONFIG_MAX))
+                            {
+                                if (int.TryParse(element.Value.Attributes[Constants.CONFIG_MAX], out max))
+                                    _maxRowOverrides[ekey] = max;
+                            }
+                            if (element.Value.Attributes.ContainsKey(Constants.CONFIG_MAX))
+                            {
+                                if (bool.TryParse(element.Value.Attributes[Constants.CONFIG_FORCEUPPER], out force))
+                                    _forceUpperOverrides[ekey] = force;
+                            }
+
+                            if (element.Value.Children != null)
+                            {
+                                foreach (var field in element.Value.Children)
+                                {
+                                    var fkey = ekey + "." + field.Key.ToLower();
+                                    if (field.Value.Attributes.ContainsKey(Constants.CONFIG_FORCEUPPER))
+                                    {
+                                        if (bool.TryParse(field.Value.Attributes[Constants.CONFIG_MAX], out force))
+                                            _forceUpperOverrides[fkey] = force;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
 
         public static string CheckUpperCase(string schema, string name, string field, string instring)
         {
-            if (_forceUpperOverrides == null) LoadForceUpperOverrides();
+            if (_forceUpperOverrides == null) CacheConfig();
 
-            var key = schema + "." + name;
-            var fkey = key + "." + field;
+            var ekey = schema + "." + name;
+            var fkey = ekey + "." + field;
 
             if (_current == null && !_checked) _current = Current;
 
@@ -88,55 +136,11 @@ namespace Civic.T4.WebApi.Configuration
             if (_forceUpperOverrides != null)
             {
                 if (_forceUpperOverrides.ContainsKey(fkey)) force = _forceUpperOverrides[fkey];
-                else if (_forceUpperOverrides.ContainsKey(key)) force = _forceUpperOverrides[key];
+                else if (_forceUpperOverrides.ContainsKey(ekey)) force = _forceUpperOverrides[ekey];
+                else if (_forceUpperOverrides.ContainsKey(schema)) force = _forceUpperOverrides[schema];
             } 
             
             return force ? instring.ToUpperInvariant() : instring;
-        }
-
-        public static void LoadForceUpperOverrides()
-        {
-            _forceUpperOverrides = new Dictionary<string, bool>();
-
-            var config = Current;
-            if (config != null)
-            {
-                var overrides = Current.Entities;
-                foreach (var element in overrides)
-                {
-                    if (!element.Value.Attributes.ContainsKey(Constants.CONFIG_SCHEMA))
-                        throw new ConfigurationErrorsException("schema is required for T4 entity configuration");
-                    var ekey = element.Value.Attributes[Constants.CONFIG_SCHEMA] + "." + element.Key.ToLower();
-                    ekey = ekey.ToLowerInvariant();
-
-                    if (element.Value.Attributes.ContainsKey(Constants.CONFIG_FORCEUPPER))
-                    {
-                        bool force;
-                        if (!bool.TryParse(element.Value.Attributes[Constants.CONFIG_FORCEUPPER], out force)) continue;
-                        _forceUpperOverrides[ekey] = force;
-                    }
-
-                    if (element.Value.Children != null && element.Value.Children.Count > 0)
-                    {
-                        foreach (var fieldConfig in element.Value.Children)
-                        {
-                            if (fieldConfig.Value.Attributes.ContainsKey(Constants.CONFIG_FORCEUPPER))
-                            {
-                                bool force;
-                                if (!bool.TryParse(fieldConfig.Value.Attributes[Constants.CONFIG_FORCEUPPER], out force))
-                                    continue;
-                                ekey += "." + fieldConfig.Key.ToLowerInvariant();
-                                _forceUpperOverrides[ekey] = force;
-                            }
-                        }
-                    }
-
-                    if (!element.Value.Attributes.ContainsKey(Constants.CONFIG_MAX)) continue;
-                    int max;
-                    int.TryParse(element.Value.Attributes[Constants.CONFIG_MAX], out max);
-                    _maxRowOverrides[ekey] = max;
-                }
-            }
         }
     }
 }
