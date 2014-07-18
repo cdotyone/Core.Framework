@@ -124,7 +124,7 @@ namespace Civic.T4.Data
             if (dataReader == null || !dataReader.Read()) return false;
 
             environment.Id = dataReader["Id"] != null && !(dataReader["Id"] is DBNull) ? Int32.Parse(dataReader["Id"].ToString()) : 0;
-            environment.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? dataReader["Name"].ToString() : string.Empty;
+            environment.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? T4WebApiSection.CheckUpperCase("dbo", "environment", "name", dataReader["Name"].ToString()) : string.Empty;
             return true;
         }
     }
