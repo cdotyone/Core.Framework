@@ -199,7 +199,7 @@ command.ExecuteNonQuery();
 		if(!(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull)) <#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = DateTime.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString());<#
 			} else {#>
 					
-		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !string.IsNullOrEmpty(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) ? T4WebApiSection.CheckUpperCase("<#=apiSchemaName.ToLower()#>","<#=code.Escape(entity).ToLower()#>","<#=code.Escape(edmProperty.Name).ToLower()#>",dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) : string.Empty;<#
+		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !string.IsNullOrEmpty(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) ? dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString() : string.Empty;<#
 			}
 		}
 #>
@@ -238,6 +238,4 @@ if (!typeMapper.VerifyCaseInsensitiveTypeUniqueness(typeMapper.GetAllGlobalItems
 
 #>
 <#+
-
-
 #>
