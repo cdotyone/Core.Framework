@@ -378,8 +378,8 @@ GO
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 07/16/2014 15:04:07
--- Generated from EDMX file: D:\devel\CIVIC\T4\Civic.T4\Models\Example.edmx
+-- Date Created: 07/18/2014 11:34:26
+-- Generated from EDMX file: D:\devel\Civic360\civic-t4\Civic.T4\Models\Example.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -533,13 +533,13 @@ BEGIN
 
 	SELECT	
 		-- t4-columns begin
-		 e1.[Name]
-		,e1.[EnvironmentId]
+		 [e1].[Name]
+		,[e1].[EnvironmentId]
 		-- t4-columns end
-	FROM [dbo].[Entity1] e1
+	FROM [dbo].[Entity1] [e1]
 	WHERE	
 		-- t4-where begin
-	    e1.[Name] = @name
+	    [e1].[Name] = @name
 		-- t4-where end
 END
 GO
@@ -563,10 +563,10 @@ BEGIN
 	DECLARE @select nvarchar(max)
     SET @select = 'SELECT	
 		-- t4-columns begin
-		 e1.[Name]
-		,e1.[EnvironmentId]
+		 [e1].[Name]
+		,[e1].[EnvironmentId]
 		-- t4-columns end
-    FROM [dbo].[Entity1] e1'
+    FROM [dbo].[Entity1] [e1]'
 
 	EXEC [civic].[usp_ProcessFilter]
 		     @skip = @skip
@@ -623,15 +623,15 @@ AS
 BEGIN
 	SET NOCOUNT ON
 
-	UPDATE e1 SET 
+	UPDATE [e1] SET 
 		-- t4-columns begin
 		 [Name] = @name
 		,[EnvironmentId] = @environmentId
 		-- t4-columns end
-	FROM [dbo].[Entity1] e1
+	FROM [dbo].[Entity1] [e1]
 	WHERE	
 		-- t4-where begin
-	    e1.[Name] = @name
+	    [e1].[Name] = @name
 		-- t4-where end
 END
 GO
@@ -671,13 +671,13 @@ BEGIN
 
 	SELECT	
 		-- t4-columns begin
-		 e.[Id]
-		,e.[Name]
+		 [e].[Id]
+		,[e].[Name]
 		-- t4-columns end
-	FROM [dbo].[Environment] e
+	FROM [dbo].[Environment] [e]
 	WHERE	
 		-- t4-where begin
-	    e.[Id] = @id
+	    [e].[Id] = @id
 		-- t4-where end
 END
 GO
@@ -701,10 +701,10 @@ BEGIN
 	DECLARE @select nvarchar(max)
     SET @select = 'SELECT	
 		-- t4-columns begin
-		 e.[Id]
-		,e.[Name]
+		 [e].[Id]
+		,[e].[Name]
 		-- t4-columns end
-    FROM [dbo].[Environment] e'
+    FROM [dbo].[Environment] [e]'
 
 	EXEC [civic].[usp_ProcessFilter]
 		     @skip = @skip
@@ -759,14 +759,14 @@ AS
 BEGIN
 	SET NOCOUNT ON
 
-	UPDATE e SET 
+	UPDATE [e] SET 
 		-- t4-columns begin
 		 [Name] = @name
 		-- t4-columns end
-	FROM [dbo].[Environment] e
+	FROM [dbo].[Environment] [e]
 	WHERE	
 		-- t4-where begin
-	    e.[Id] = @id
+	    [e].[Id] = @id
 		-- t4-where end
 END
 GO

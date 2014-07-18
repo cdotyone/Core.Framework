@@ -110,8 +110,8 @@ namespace Civic.T4.Data
 
         private static void buildEntity1CommandParameters(Entity1Entity entity1, IDBCommand command, bool addRecord)
         {
-            if (addRecord) command.AddParameter("@name", ParameterDirection.InputOutput, T4WebApiSection.CheckUpperCase(entity1.Name));
-            else command.AddInParameter("@name", T4WebApiSection.CheckUpperCase(entity1.Name));
+            if (addRecord) command.AddParameter("@name", ParameterDirection.InputOutput, T4WebApiSection.CheckUpperCase("dbo", "entity1", "name", entity1.Name));
+            else command.AddInParameter("@name", T4WebApiSection.CheckUpperCase("dbo", "entity1", "name", entity1.Name));
             command.AddInParameter("@environmentid", entity1.EnvironmentId);
 
         }

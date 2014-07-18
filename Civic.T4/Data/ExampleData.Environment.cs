@@ -115,7 +115,7 @@ namespace Civic.T4.Data
         {
             if (addRecord) command.AddParameter("@id", ParameterDirection.InputOutput, environment.Id);
             else command.AddInParameter("@id", environment.Id);
-            command.AddInParameter("@name", T4WebApiSection.CheckUpperCase(environment.Name));
+            command.AddInParameter("@name", T4WebApiSection.CheckUpperCase("dbo", "environment", "name", environment.Name));
 
         }
 

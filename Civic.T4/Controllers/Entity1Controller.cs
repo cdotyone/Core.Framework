@@ -32,7 +32,7 @@ namespace Civic.T4.Controllers
         public QueryMetadata<Entity1Entity> Get()
         {
             ODataV3QueryOptions options = this.GetOptions();
-            var maxrows = Civic.T4.WebApi.Configuration.T4WebApiSection.GetMaxRows("entity1");
+            var maxrows = Civic.T4.WebApi.Configuration.T4WebApiSection.GetMaxRows("dbo", "entity1");
             var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
             string orderby = options.ProcessOrderByOptions();
             var result = _service.GetPagedEntity1(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);

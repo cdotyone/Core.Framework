@@ -154,7 +154,7 @@ command.ExecuteNonQuery();
 		{
 			var ptype=code.Escape(edmProperty.TypeUsage.EdmType).ToLower().Replace("@","");
 			var pname = lowerName+"."+code.Escape(edmProperty.Name);
-			if(ptype=="string") pname = "T4WebApiSection.CheckUpperCase(" + pname + ")";
+			if(ptype=="string") pname = "T4WebApiSection.CheckUpperCase(\""+apiSchemaName.ToLower()+"\",\""+code.Escape(entity).ToLower()+"\",\""+code.Escape(edmProperty.Name).ToLower()+"\"," + pname + ")";
 
 			if(ef.IsKey(edmProperty)) { #>
    		if(addRecord) command.AddParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", ParameterDirection.InputOutput,  <#=pname#>);
