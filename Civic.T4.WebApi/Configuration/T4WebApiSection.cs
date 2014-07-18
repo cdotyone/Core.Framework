@@ -103,7 +103,7 @@ namespace Civic.T4.WebApi.Configuration
                                     if (int.TryParse(element.Value.Attributes[Constants.CONFIG_MAX], out max))
                                         _maxRowOverrides[ekey] = max;
                                 }
-                                if (element.Value.Attributes.ContainsKey(Constants.CONFIG_MAX))
+                                if (element.Value.Attributes.ContainsKey(Constants.CONFIG_FORCEUPPER))
                                 {
                                     if (bool.TryParse(element.Value.Attributes[Constants.CONFIG_FORCEUPPER], out force))
                                         _forceUpperOverrides[ekey] = force;
@@ -116,7 +116,7 @@ namespace Civic.T4.WebApi.Configuration
                                         var fkey = ekey + "." + field.Key.ToLower();
                                         if (field.Value.Attributes.ContainsKey(Constants.CONFIG_FORCEUPPER))
                                         {
-                                            if (bool.TryParse(field.Value.Attributes[Constants.CONFIG_MAX], out force))
+                                            if (bool.TryParse(field.Value.Attributes[Constants.CONFIG_FORCEUPPER], out force))
                                                 _forceUpperOverrides[fkey] = force;
                                         }
                                     }
