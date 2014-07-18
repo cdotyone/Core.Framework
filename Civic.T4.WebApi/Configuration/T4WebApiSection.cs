@@ -54,6 +54,7 @@ namespace Civic.T4.WebApi.Configuration
             if (_current == null && !_checked) _current = Current;
 
             var max = _current == null ? 100 : _current.Max;
+            if (max <= 0) max = 100;
             if (_maxRowOverrides != null)
             {
                 if (_maxRowOverrides.ContainsKey(ekey)) max = _maxRowOverrides[ekey];
