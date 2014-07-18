@@ -10,6 +10,7 @@ namespace Civic.T4.WebApi.Configuration
         private static bool _checked;
         private static Dictionary<string, int> _maxRowOverrides;
         private static Dictionary<string, bool> _forceUpperOverrides;
+        private static object _lock = new object();
 
         /// <summary>
         /// The current configuration 
@@ -64,56 +65,59 @@ namespace Civic.T4.WebApi.Configuration
 
         public static void CacheConfig()
         {
-            _maxRowOverrides = new Dictionary<string, int>();
-            _forceUpperOverrides = new Dictionary<string, bool>();
-
-            var config = Current;
-            if (config != null)
+            lock (_lock)
             {
-                var overrides = Current.Entities;
-                foreach (var schema in overrides)
+                _maxRowOverrides = new Dictionary<string, int>();
+                _forceUpperOverrides = new Dictionary<string, bool>();
+
+                var config = Current;
+                if (config != null)
                 {
-                    var skey = schema.Key.ToLower();
-                    int max;
-                    bool force;
+                    var overrides = Current.Entities;
+                    foreach (var schema in overrides)
+                    {
+                        var skey = schema.Key.ToLower();
+                        int max;
+                        bool force;
 
-                    if (schema.Value.Attributes.ContainsKey(Constants.CONFIG_MAX))
-                    {
-                        if(int.TryParse(schema.Value.Attributes[Constants.CONFIG_MAX], out max)) 
-                            _maxRowOverrides[skey] = max;
-                    }
-                    if (schema.Value.Attributes.ContainsKey(Constants.CONFIG_FORCEUPPER))
-                    {
-                        if (bool.TryParse(schema.Value.Attributes[Constants.CONFIG_FORCEUPPER], out force))
-                            _forceUpperOverrides[skey] = force;
-                    }
-                    
-
-                    if (schema.Value.Children != null)
-                    {
-                        foreach (var element in schema.Value.Children)
+                        if (schema.Value.Attributes.ContainsKey(Constants.CONFIG_MAX))
                         {
-                            var ekey = skey + "." + element.Key.ToLower();
-                            if (element.Value.Attributes.ContainsKey(Constants.CONFIG_MAX))
-                            {
-                                if (int.TryParse(element.Value.Attributes[Constants.CONFIG_MAX], out max))
-                                    _maxRowOverrides[ekey] = max;
-                            }
-                            if (element.Value.Attributes.ContainsKey(Constants.CONFIG_MAX))
-                            {
-                                if (bool.TryParse(element.Value.Attributes[Constants.CONFIG_FORCEUPPER], out force))
-                                    _forceUpperOverrides[ekey] = force;
-                            }
+                            if (int.TryParse(schema.Value.Attributes[Constants.CONFIG_MAX], out max))
+                                _maxRowOverrides[skey] = max;
+                        }
+                        if (schema.Value.Attributes.ContainsKey(Constants.CONFIG_FORCEUPPER))
+                        {
+                            if (bool.TryParse(schema.Value.Attributes[Constants.CONFIG_FORCEUPPER], out force))
+                                _forceUpperOverrides[skey] = force;
+                        }
 
-                            if (element.Value.Children != null)
+
+                        if (schema.Value.Children != null)
+                        {
+                            foreach (var element in schema.Value.Children)
                             {
-                                foreach (var field in element.Value.Children)
+                                var ekey = skey + "." + element.Key.ToLower();
+                                if (element.Value.Attributes.ContainsKey(Constants.CONFIG_MAX))
                                 {
-                                    var fkey = ekey + "." + field.Key.ToLower();
-                                    if (field.Value.Attributes.ContainsKey(Constants.CONFIG_FORCEUPPER))
+                                    if (int.TryParse(element.Value.Attributes[Constants.CONFIG_MAX], out max))
+                                        _maxRowOverrides[ekey] = max;
+                                }
+                                if (element.Value.Attributes.ContainsKey(Constants.CONFIG_MAX))
+                                {
+                                    if (bool.TryParse(element.Value.Attributes[Constants.CONFIG_FORCEUPPER], out force))
+                                        _forceUpperOverrides[ekey] = force;
+                                }
+
+                                if (element.Value.Children != null)
+                                {
+                                    foreach (var field in element.Value.Children)
                                     {
-                                        if (bool.TryParse(field.Value.Attributes[Constants.CONFIG_MAX], out force))
-                                            _forceUpperOverrides[fkey] = force;
+                                        var fkey = ekey + "." + field.Key.ToLower();
+                                        if (field.Value.Attributes.ContainsKey(Constants.CONFIG_FORCEUPPER))
+                                        {
+                                            if (bool.TryParse(field.Value.Attributes[Constants.CONFIG_MAX], out force))
+                                                _forceUpperOverrides[fkey] = force;
+                                        }
                                     }
                                 }
                             }
