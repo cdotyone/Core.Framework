@@ -8,7 +8,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 fileManager.StartNewFile(edmxFileName + "Data."+entity.Name+".cs", folderName:"Data");
 
-WriteHeader("System", "System.Collections.Generic", "System.Data","System.Data.Common","Civic.Core.Data", namespaceName +".Entities");
+WriteHeader("System", "System.Collections.Generic", "System.Data","System.Data.Common","Civic.Core.Data","Civic.T4.WebApi.Configuration", namespaceName +".Entities");
 
 #>
 using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
@@ -152,22 +152,26 @@ command.ExecuteNonQuery();
 <#
 		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
 		{
+			var ptype=code.Escape(edmProperty.TypeUsage.EdmType).ToLower().Replace("@","");
+			var pname = lowerName+"."+code.Escape(edmProperty.Name);
+			if(ptype=="string") pname = "T4WebApiSection.CheckUpperCase(" + pname + ")";
+
 			if(ef.IsKey(edmProperty)) { #>
-   		if(addRecord) command.AddParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", ParameterDirection.InputOutput,  <#=lowerName#>.<#=code.Escape(edmProperty.Name)#>);
-		else command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=lowerName#>.<#=code.Escape(edmProperty.Name)#>);
+   		if(addRecord) command.AddParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", ParameterDirection.InputOutput,  <#=pname#>);
+		else command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>);
 <#
 			} else {
 				if(edmProperty.Name.ToLower()=="createdby") { #>
-		if(addRecord) command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=lowerName#>.<#=code.Escape(edmProperty.Name)#>);
+		if(addRecord) command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>);
 <#					continue;
 				}
 				if(edmProperty.Name.ToLower()=="modifiedby") { #>
-		if(!addRecord) command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=lowerName#>.<#=code.Escape(edmProperty.Name)#>);
+		if(!addRecord) command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>);
 <#					continue;
 				}
 				if(edmProperty.Name.ToLower()=="created" || edmProperty.Name.ToLower()=="modified") continue;
 			#>
-		command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=lowerName#>.<#=code.Escape(edmProperty.Name)#>);
+		command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>);
 <#
 			}
 		}

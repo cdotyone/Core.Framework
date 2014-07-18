@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using Civic.Core.Data;
+using Civic.T4.WebApi.Configuration;
 using Civic.T4.Entities;
 
 using EnvironmentEntity = Civic.T4.Entities.Environment;
@@ -114,7 +115,7 @@ namespace Civic.T4.Data
         {
             if (addRecord) command.AddParameter("@id", ParameterDirection.InputOutput, environment.Id);
             else command.AddInParameter("@id", environment.Id);
-            command.AddInParameter("@name", environment.Name);
+            command.AddInParameter("@name", T4WebApiSection.CheckUpperCase(environment.Name));
 
         }
 

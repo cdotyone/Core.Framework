@@ -5,12 +5,21 @@ namespace Civic.T4.WebApi.Configuration
 {
     public class T4WebApiSection : Section
     {
+        private static T4WebApiSection _current;
+        private static bool _checked;
+
         /// <summary>
         /// The current configuration 
         /// </summary>
         public static T4WebApiSection Current
         {
-            get { return ConfigurationFactory.ReadConfigSection<T4WebApiSection>(SectionName); }
+            get
+            {
+                if (_current!=null) return _current;
+                _current = ConfigurationFactory.ReadConfigSection<T4WebApiSection>(SectionName);
+                _checked = true;
+                return _current;
+            }
         }
 
         /// <summary>
@@ -41,13 +50,19 @@ namespace Civic.T4.WebApi.Configuration
 
         private static Dictionary<string, int> _maxRowOverrides;
 
+        public bool ForceUpperCase { get; set; }
+
+        public static string CheckUpperCase(string instring)
+        {
+            if (_current == null && !_checked) _current = Current;
+            return _current!=null && _current.ForceUpperCase && instring != null ? instring.ToUpperInvariant() : instring;
+        }
+
         public Dictionary<string, INamedElement> MaxRowsOverride
         {
             get
             {
-                return Children.ContainsKey(Constants.CONFIG_MAXROW)
-                           ? Children[Constants.CONFIG_MAXROW].Children
-                           : null;
+                return Children.ContainsKey(Constants.CONFIG_MAXROW) ? Children[Constants.CONFIG_MAXROW].Children : null;
             }
         }
     }

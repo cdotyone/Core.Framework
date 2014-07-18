@@ -13,13 +13,13 @@ BEGIN
 
 	SELECT	
 		-- t4-columns begin
-		 e1.[Name]
-		,e1.[EnvironmentId]
+		 [e1].[Name]
+		,[e1].[EnvironmentId]
 		-- t4-columns end
-	FROM [dbo].[Entity1] e1
+	FROM [dbo].[Entity1] [e1]
 	WHERE	
 		-- t4-where begin
-	    e1.[Name] = @name
+	    [e1].[Name] = @name
 		-- t4-where end
 END
 GO
@@ -43,10 +43,10 @@ BEGIN
 	DECLARE @select nvarchar(max)
     SET @select = 'SELECT	
 		-- t4-columns begin
-		 e1.[Name]
-		,e1.[EnvironmentId]
+		 [e1].[Name]
+		,[e1].[EnvironmentId]
 		-- t4-columns end
-    FROM [dbo].[Entity1] e1'
+    FROM [dbo].[Entity1] [e1]'
 
 	EXEC [civic].[usp_ProcessFilter]
 		     @skip = @skip
@@ -103,15 +103,15 @@ AS
 BEGIN
 	SET NOCOUNT ON
 
-	UPDATE e1 SET 
+	UPDATE [e1] SET 
 		-- t4-columns begin
 		 [Name] = @name
 		,[EnvironmentId] = @environmentId
 		-- t4-columns end
-	FROM [dbo].[Entity1] e1
+	FROM [dbo].[Entity1] [e1]
 	WHERE	
 		-- t4-where begin
-	    e1.[Name] = @name
+	    [e1].[Name] = @name
 		-- t4-where end
 END
 GO

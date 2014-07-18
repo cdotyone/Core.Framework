@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using Civic.Core.Data;
+using Civic.T4.WebApi.Configuration;
 using Civic.T4.Entities;
 
 using Entity1Entity = Civic.T4.Entities.Entity1;
@@ -109,8 +110,8 @@ namespace Civic.T4.Data
 
         private static void buildEntity1CommandParameters(Entity1Entity entity1, IDBCommand command, bool addRecord)
         {
-            if (addRecord) command.AddParameter("@name", ParameterDirection.InputOutput, entity1.Name);
-            else command.AddInParameter("@name", entity1.Name);
+            if (addRecord) command.AddParameter("@name", ParameterDirection.InputOutput, T4WebApiSection.CheckUpperCase(entity1.Name));
+            else command.AddInParameter("@name", T4WebApiSection.CheckUpperCase(entity1.Name));
             command.AddInParameter("@environmentid", entity1.EnvironmentId);
 
         }
