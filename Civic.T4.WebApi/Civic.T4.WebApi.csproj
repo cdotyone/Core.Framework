@@ -126,7 +126,6 @@
     <Compile Include="..\References\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="Class1.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Configuration\T4WebApiSection.cs" />
     <Compile Include="Constants.cs" />
