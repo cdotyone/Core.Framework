@@ -130,6 +130,7 @@ namespace Civic.T4.WebApi.Configuration
 
         public static string CheckUpperCase(string schema, string name, string field, string instring)
         {
+            if (string.IsNullOrEmpty(instring)) return instring;
             if (_forceUpperOverrides == null) CacheConfig();
 
             var ekey = schema + "." + name;
