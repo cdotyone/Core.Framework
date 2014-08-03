@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics;
 using Civic.Core.Data;
 using Civic.T4.WebApi.Configuration;
 using Civic.T4.Entities;
@@ -25,9 +26,10 @@ namespace Civic.T4.Data
 
         internal static EnvironmentEntity GetEnvironment(Int32 id, IDBConnection database)
         {
+            Debug.Assert(database != null);
+
             var environmentReturned = new EnvironmentEntity();
 
-            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
             using (var command = database.CreateStoredProcCommand("dbo", "usp_EnvironmentGet"))
             {
                 command.AddInParameter("@id", id);
@@ -47,9 +49,10 @@ namespace Civic.T4.Data
 
         internal static List<EnvironmentEntity> GetPagedEnvironment(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database)
         {
+            Debug.Assert(database != null);
+
             var list = new List<EnvironmentEntity>();
 
-            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
             using (var command = database.CreateStoredProcCommand("dbo", "usp_EnvironmentGetFiltered"))
             {
                 command.AddInParameter("@skip", skip);
@@ -76,7 +79,8 @@ namespace Civic.T4.Data
 
         internal static int AddEnvironment(EnvironmentEntity environment, IDBConnection database)
         {
-            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
+            Debug.Assert(database != null);
+
             using (var command = database.CreateStoredProcCommand("dbo", "usp_EnvironmentAdd"))
             {
                 buildEnvironmentCommandParameters(environment, command, true);
@@ -89,9 +93,10 @@ namespace Civic.T4.Data
 
         internal static List<EnvironmentEntity> ModifyEnvironment(EnvironmentEntity environment, IDBConnection database)
         {
+            Debug.Assert(database != null);
+
             var list = new List<EnvironmentEntity>();
 
-            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
             using (var command = database.CreateStoredProcCommand("dbo", "usp_EnvironmentModify"))
             {
                 buildEnvironmentCommandParameters(environment, command, false);
@@ -103,7 +108,8 @@ namespace Civic.T4.Data
 
         internal static void RemoveEnvironment(Int32 id, IDBConnection database)
         {
-            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
+            Debug.Assert(database != null);
+
             using (var command = database.CreateStoredProcCommand("dbo", "usp_EnvironmentRemove"))
             {
                 command.AddInParameter("@id", id);
@@ -113,6 +119,7 @@ namespace Civic.T4.Data
 
         private static void buildEnvironmentCommandParameters(EnvironmentEntity environment, IDBCommand command, bool addRecord)
         {
+            Debug.Assert(command != null);
             if (addRecord) command.AddParameter("@id", ParameterDirection.InputOutput, environment.Id);
             else command.AddInParameter("@id", environment.Id);
             command.AddInParameter("@name", T4WebApiSection.CheckUpperCase("dbo", "environment", "name", environment.Name));

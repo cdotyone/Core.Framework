@@ -31,7 +31,10 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    return Data.ExampleData.GetEnvironment(id, null);
+                    using (var database = Data.ExampleData.GetConnection())
+                    {
+                        return Data.ExampleData.GetEnvironment(id, database);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -50,7 +53,10 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    return Data.ExampleData.GetPagedEnvironment(skip, ref count, retCount, filterBy, orderBy, null);
+                    using (var database = Data.ExampleData.GetConnection())
+                    {
+                        return Data.ExampleData.GetPagedEnvironment(skip, ref count, retCount, filterBy, orderBy, database);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -69,11 +75,13 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    var db = Data.ExampleData.GetConnection();
-                    var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", environment.Id.ToString() + "", environment);
-                    var retval = Data.ExampleData.AddEnvironment(environment, db);
-                    AuditManager.MarkSuccessFul(logid);
-                    return retval;
+                    using (var db = Data.ExampleData.GetConnection())
+                    {
+                        var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", environment.Id.ToString() + "", environment);
+                        var retval = Data.ExampleData.AddEnvironment(environment, db);
+                        AuditManager.MarkSuccessFul(logid);
+                        return retval;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -92,11 +100,13 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    var db = Data.ExampleData.GetConnection();
-                    var before = Data.ExampleData.GetEnvironment(environment.Id, db);
-                    var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", before.Id.ToString() + "", before, environment);
-                    Data.ExampleData.ModifyEnvironment(environment, db);
-                    AuditManager.MarkSuccessFul(logid);
+                    using (var db = Data.ExampleData.GetConnection())
+                    {
+                        var before = Data.ExampleData.GetEnvironment(environment.Id, db);
+                        var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", before.Id.ToString() + "", before, environment);
+                        Data.ExampleData.ModifyEnvironment(environment, db);
+                        AuditManager.MarkSuccessFul(logid);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -113,11 +123,13 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    var db = Data.ExampleData.GetConnection();
-                    var before = Data.ExampleData.GetEnvironment(id, db);
-                    var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", before.Id.ToString() + "", before);
-                    Data.ExampleData.RemoveEnvironment(id, db);
-                    AuditManager.MarkSuccessFul(logid);
+                    using (var db = Data.ExampleData.GetConnection())
+                    {
+                        var before = Data.ExampleData.GetEnvironment(id, db);
+                        var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", before.Id.ToString() + "", before);
+                        Data.ExampleData.RemoveEnvironment(id, db);
+                        AuditManager.MarkSuccessFul(logid);
+                    }
                 }
                 catch (Exception ex)
                 {

@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics;
 using Civic.Core.Data;
 using Civic.T4.WebApi.Configuration;
 using Civic.T4.Entities;
@@ -25,9 +26,10 @@ namespace Civic.T4.Data
 
         internal static Entity1Entity GetEntity1(String name, IDBConnection database)
         {
+            Debug.Assert(database != null);
+
             var entity1Returned = new Entity1Entity();
 
-            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
             using (var command = database.CreateStoredProcCommand("dbo", "usp_Entity1Get"))
             {
                 command.AddInParameter("@name", name);
@@ -47,9 +49,10 @@ namespace Civic.T4.Data
 
         internal static List<Entity1Entity> GetPagedEntity1(int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database)
         {
+            Debug.Assert(database != null);
+
             var list = new List<Entity1Entity>();
 
-            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
             using (var command = database.CreateStoredProcCommand("dbo", "usp_Entity1GetFiltered"))
             {
                 command.AddInParameter("@skip", skip);
@@ -76,7 +79,8 @@ namespace Civic.T4.Data
 
         internal static void AddEntity1(Entity1Entity entity1, IDBConnection database)
         {
-            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
+            Debug.Assert(database != null);
+
             using (var command = database.CreateStoredProcCommand("dbo", "usp_Entity1Add"))
             {
                 buildEntity1CommandParameters(entity1, command, true);
@@ -86,9 +90,10 @@ namespace Civic.T4.Data
 
         internal static List<Entity1Entity> ModifyEntity1(Entity1Entity entity1, IDBConnection database)
         {
+            Debug.Assert(database != null);
+
             var list = new List<Entity1Entity>();
 
-            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
             using (var command = database.CreateStoredProcCommand("dbo", "usp_Entity1Modify"))
             {
                 buildEntity1CommandParameters(entity1, command, false);
@@ -100,7 +105,8 @@ namespace Civic.T4.Data
 
         internal static void RemoveEntity1(String name, IDBConnection database)
         {
-            if (database == null) database = DatabaseFactory.CreateDatabase("Example");
+            Debug.Assert(database != null);
+
             using (var command = database.CreateStoredProcCommand("dbo", "usp_Entity1Remove"))
             {
                 command.AddInParameter("@name", name);
@@ -110,6 +116,7 @@ namespace Civic.T4.Data
 
         private static void buildEntity1CommandParameters(Entity1Entity entity1, IDBCommand command, bool addRecord)
         {
+            Debug.Assert(command != null);
             if (addRecord) command.AddParameter("@name", ParameterDirection.InputOutput, T4WebApiSection.CheckUpperCase("dbo", "entity1", "name", entity1.Name));
             else command.AddInParameter("@name", T4WebApiSection.CheckUpperCase("dbo", "entity1", "name", entity1.Name));
             command.AddInParameter("@environmentid", entity1.EnvironmentId);
