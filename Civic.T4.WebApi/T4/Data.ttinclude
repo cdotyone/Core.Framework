@@ -53,15 +53,16 @@ internal partial class <#=edmxFileName#>Data
 			}
 			#>
 
-			using (IDataReader dataReader = command.ExecuteReader())
-			{
-				if (populate<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>Returned, dataReader))
-				{
+            command.ExecuteReader(dataReader =>
+                {
+                    if (populate<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>Returned, dataReader))
+                    {
 					<# foreach(var key in keys.Keys) { #>
 <#=code.Escape(lowerName)#>Returned.<#=code.Escape(key)#> = <#=Core.GetMethodParameterName(key)#>;
 					<# } #>
-} else return null;
-			}
+                    }
+                    else <#=code.Escape(lowerName)#>Returned = null;
+                });
 		}
 
 		return <#=code.Escape(lowerName)#>Returned;
@@ -81,15 +82,15 @@ internal partial class <#=edmxFileName#>Data
 			command.AddInParameter("@orderBy", orderBy);
     		command.AddParameter("@count", ParameterDirection.InputOutput, count);
 			
-			using (IDataReader dataReader = command.ExecuteReader())
-			{
-				var item = new <#=code.Escape(entity)#>Entity();
-				while(populate<#=code.Escape(entity)#>(item, dataReader))
-				{
-					list.Add(item);
-					item = new <#=code.Escape(entity)#>Entity();
-				} 
-			}
+            command.ExecuteReader(dataReader =>
+                {
+					var item = new <#=code.Escape(entity)#>Entity();
+					while(populate<#=code.Escape(entity)#>(item, dataReader))
+					{
+						list.Add(item);
+						item = new <#=code.Escape(entity)#>Entity();
+					} 
+                });
 
 			if (retCount) count = int.Parse(command.GetOutParameter("@count").Value.ToString());
 		}

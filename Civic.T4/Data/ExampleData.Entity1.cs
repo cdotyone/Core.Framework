@@ -34,14 +34,14 @@ namespace Civic.T4.Data
             {
                 command.AddInParameter("@name", name);
 
-                using (IDataReader dataReader = command.ExecuteReader())
-                {
-                    if (populateEntity1(entity1Returned, dataReader))
+                command.ExecuteReader(dataReader =>
                     {
-                        entity1Returned.Name = name;
-                    }
-                    else return null;
-                }
+                        if (populateEntity1(entity1Returned, dataReader))
+                        {
+                            entity1Returned.Name = name;
+                        }
+                        else entity1Returned = null;
+                    });
             }
 
             return entity1Returned;
@@ -61,15 +61,15 @@ namespace Civic.T4.Data
                 command.AddInParameter("@orderBy", orderBy);
                 command.AddParameter("@count", ParameterDirection.InputOutput, count);
 
-                using (IDataReader dataReader = command.ExecuteReader())
-                {
-                    var item = new Entity1Entity();
-                    while (populateEntity1(item, dataReader))
+                command.ExecuteReader(dataReader =>
                     {
-                        list.Add(item);
-                        item = new Entity1Entity();
-                    }
-                }
+                        var item = new Entity1Entity();
+                        while (populateEntity1(item, dataReader))
+                        {
+                            list.Add(item);
+                            item = new Entity1Entity();
+                        }
+                    });
 
                 if (retCount) count = int.Parse(command.GetOutParameter("@count").Value.ToString());
             }
