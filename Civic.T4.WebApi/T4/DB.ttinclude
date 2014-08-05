@@ -348,7 +348,7 @@ BEGIN
 	IF @retcount=1
 	BEGIN
 		SET @SQL = LTRIM(RTRIM(@sqlcount))
-		SET @POS = PATINDEX('% FROM %',@SQL)
+		SET @SQL = LTRIM(RTRIM(REPLACE(REPLACE(REPLACE(@SQLCOUNT,'	',' '),CHAR(10),' '),CHAR(13),' ')))
 		SET @SQL = 'SELECT COUNT(*) ' + SUBSTRING(@SQL,@POS,LEN(@SQL)-@POS+1)
 	
 		DECLARE @counttable table ([count] int)

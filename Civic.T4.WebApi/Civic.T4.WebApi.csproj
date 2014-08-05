@@ -194,8 +194,12 @@
     <None Include="nuget\Content\T4\t4settings.ttinclude">
       <LastGenOutput>Example.cs</LastGenOutput>
     </None>
-    <None Include="nuget\Civic.T4.WebApi.nuspec" />
-    <None Include="nuget\Civic.T4.WebApi.WebHost.nuspec" />
+    <None Include="nuget\Civic.T4.WebApi.nuspec">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="nuget\Civic.T4.WebApi.WebHost.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="nuget\pack.bat" />
     <None Include="pack.bat" />
     <None Include="packages.config">
