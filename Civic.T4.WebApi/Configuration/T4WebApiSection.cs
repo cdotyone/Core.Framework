@@ -97,7 +97,7 @@ namespace Civic.T4.WebApi.Configuration
                         {
                             foreach (var element in schema.Value.Children)
                             {
-                                var ekey = skey + "." + element.Key.ToLower();
+                                var ekey = element.Key.ToLower();
                                 if (element.Value.Attributes.ContainsKey(Constants.CONFIG_MAX))
                                 {
                                     if (int.TryParse(element.Value.Attributes[Constants.CONFIG_MAX], out max))
