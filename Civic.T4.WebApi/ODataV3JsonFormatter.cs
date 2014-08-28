@@ -98,6 +98,21 @@ namespace Civic.T4.WebApi
 		            if (!url.EndsWith("/")) buffer.Append("/");
 		            buffer.Append("$metadata");
 		            buffer.Append("\"");
+
+                    if (data != null && data.ResultsMetaData != null)
+                    {
+                        foreach (var key in data.ResultsMetaData.Keys)
+                        {
+                            var mvalue = data.ResultsMetaData[key];
+                            if(string.IsNullOrEmpty(mvalue)) continue;
+
+                            buffer.Append(",\"");
+                            buffer.Append(key); 
+                            buffer.Append("\":\"");
+                            buffer.Append(mvalue.Replace("'","\\'")); 
+                            buffer.Append("\"");                            
+                        }
+                    }
 					  
 					buffer.Append("}");
                     var outbuf = Encoding.UTF8.GetBytes(buffer.ToString());

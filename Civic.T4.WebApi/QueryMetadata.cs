@@ -33,6 +33,8 @@ namespace Civic.T4.WebApi
 
         public long? Count { get; set; }
 
+        public Dictionary<string, string> ResultsMetaData { get; set; }
+
         public Type Type { get; set; }
 
 	    public event QueryCallBack MetaDataAction;
