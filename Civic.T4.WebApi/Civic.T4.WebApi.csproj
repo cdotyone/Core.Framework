@@ -130,7 +130,6 @@
     <Compile Include="..\References\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="ApiControllerExtender.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Configuration\T4WebApiSection.cs" />
     <Compile Include="Constants.cs" />
@@ -163,7 +162,6 @@
     <Compile Include="ODataV3Attribute.cs" />
     <Compile Include="QueryMetadata.cs" />
     <Compile Include="QueryMetadataXml.cs" />
-    <Compile Include="Security\Token.cs" />
     <Compile Include="T4WebActivator.cs" />
     <Compile Include="VersionControllerSelector.cs" />
   </ItemGroup>
