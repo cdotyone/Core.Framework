@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Civic.T4.WebApi</RootNamespace>
     <AssemblyName>Civic.T4.WebApi</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
     </SccProjectName>
@@ -21,6 +21,7 @@
     </SccProvider>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +31,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,6 +40,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -53,6 +56,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Civic.Core.Caching, Version=1.12.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
@@ -126,6 +130,7 @@
     <Compile Include="..\References\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="ApiControllerExtender.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Configuration\T4WebApiSection.cs" />
     <Compile Include="Constants.cs" />
@@ -150,7 +155,7 @@
     <Compile Include="OData\ParametersExpression.cs" />
     <Compile Include="OData\Parser.cs" />
     <Compile Include="OData\ParserException.cs" />
-    <Compile Include="OData\Token.cs" />
+    <Compile Include="OData\JsonToken.cs" />
     <Compile Include="OData\TokenInfo.cs" />
     <Compile Include="OData\Tokenizer.cs" />
     <Compile Include="OData\TokenTypes.cs" />
@@ -158,6 +163,7 @@
     <Compile Include="ODataV3Attribute.cs" />
     <Compile Include="QueryMetadata.cs" />
     <Compile Include="QueryMetadataXml.cs" />
+    <Compile Include="Security\Token.cs" />
     <Compile Include="T4WebActivator.cs" />
     <Compile Include="VersionControllerSelector.cs" />
   </ItemGroup>

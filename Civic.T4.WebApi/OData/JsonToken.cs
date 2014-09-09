@@ -2,13 +2,13 @@
 
 namespace Civic.T4.WebApi.OData
 {
-    public class Token
+    public class JsonToken
     {
         public TokenTypes TokenType { get; private set; }
 
         public string Sequence { get; private set; }
 
-        public Token(TokenTypes tokenType, String sequence)
+        public JsonToken(TokenTypes tokenType, String sequence)
         {
                 TokenType = tokenType;
                 Sequence = sequence;

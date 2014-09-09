@@ -6,8 +6,8 @@ namespace Civic.T4.WebApi.OData
 {
     public class Parser
     {
-        Queue<Token> _tokens;
-        Token _lookahead;
+        Queue<JsonToken> _tokens;
+        JsonToken _lookahead;
 
         public IExpression Parse(String expression, List<string> fields, List<string> functions = null)
         {
@@ -19,9 +19,9 @@ namespace Civic.T4.WebApi.OData
             return Parse(tokenizer.Tokens);
         }
 
-        public IExpression Parse(List<Token> tokens)
+        public IExpression Parse(List<JsonToken> tokens)
         {
-            _tokens = new Queue<Token>(tokens);
+            _tokens = new Queue<JsonToken>(tokens);
             _lookahead = _tokens.First();
             return expression();
         }
@@ -31,7 +31,7 @@ namespace Civic.T4.WebApi.OData
             _tokens.Dequeue();
             if (_tokens.Count==0)
             {
-                _lookahead = new Token(TokenTypes.Epsilon, "");
+                _lookahead = new JsonToken(TokenTypes.Epsilon, "");
             }
             else
             {

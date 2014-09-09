@@ -9,7 +9,7 @@ namespace Civic.T4.WebApi.OData
 
         private readonly List<TokenInfo> _tokenInfos;
         private static readonly List<TokenInfo> _tokenLex;
-        private readonly List<Token> _tokens;
+        private readonly List<JsonToken> _tokens;
 
         static Tokenizer()
         {
@@ -28,7 +28,7 @@ namespace Civic.T4.WebApi.OData
         public Tokenizer(IEnumerable<string> fields,IEnumerable<string> functions)
         {
             _tokenInfos = new List<TokenInfo>();
-            _tokens = new List<Token>();
+            _tokens = new List<JsonToken>();
 
             if (fields != null) Add(@"(" + string.Join("|", fields) + @")\s", TokenTypes.Criteria);
             if (functions != null) Add(@"(" + string.Join("|", functions) + @")\s", TokenTypes.Function);
@@ -80,7 +80,7 @@ namespace Civic.T4.WebApi.OData
                         }
 
                         s = info.Regex.Replace(s+" ", "").Trim();
-                        _tokens.Add(new Token(tokenType, tok));
+                        _tokens.Add(new JsonToken(tokenType, tok));
                         break;
                     }
                 }
@@ -92,7 +92,7 @@ namespace Civic.T4.WebApi.OData
             }
         }
 
-        public List<Token> Tokens
+        public List<JsonToken> Tokens
         {
             get { return _tokens; }
         }
