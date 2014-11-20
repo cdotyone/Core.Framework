@@ -42,7 +42,7 @@ namespace Civic.T4.WebApi
             {
                 orderby = rawOptions.OrderBy.ToUpper() + ",";
                 orderby = orderby.Replace(" ,", ",");
-                orderby = orderby.Replace(" ASC,", "_ASC");
+                orderby = orderby.Replace(" ASC,", "_ASC,");
                 orderby = orderby.Replace(" DESC,", "_DESC,");
                 orderby = orderby.Trim(new[] {' ', ','});
 
