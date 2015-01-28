@@ -77,9 +77,9 @@ namespace Civic.T4.Services
                 {
                     using (var db = Data.ExampleData.GetConnection())
                     {
-                        var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", entity1.Name.ToString() + "", entity1);
+                        var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo","dbo", entity1.Name.ToString() + "", entity1);
                         Data.ExampleData.AddEntity1(entity1, db);
-                        AuditManager.MarkSuccessFul(logid);
+                        AuditManager.MarkSuccessFul("dbo", logid);
                     }
                 }
                 catch (Exception ex)
@@ -100,9 +100,9 @@ namespace Civic.T4.Services
                     using (var db = Data.ExampleData.GetConnection())
                     {
                         var before = Data.ExampleData.GetEntity1(entity1.Name, db);
-                        var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", before.Name.ToString() + "", before, entity1);
+                        var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo","dbo", before.Name.ToString() + "", before, entity1);
                         Data.ExampleData.ModifyEntity1(entity1, db);
-                        AuditManager.MarkSuccessFul(logid);
+                        AuditManager.MarkSuccessFul("dbo", logid);
                     }
                 }
                 catch (Exception ex)
@@ -123,9 +123,9 @@ namespace Civic.T4.Services
                     using (var db = Data.ExampleData.GetConnection())
                     {
                         var before = Data.ExampleData.GetEntity1(name, db);
-                        var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", before.Name.ToString() + "", before);
+                        var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo","dbo", before.Name.ToString() + "", before);
                         Data.ExampleData.RemoveEntity1(name, db);
-                        AuditManager.MarkSuccessFul(logid);
+                        AuditManager.MarkSuccessFul("dbo", logid);
                     }
                 }
                 catch (Exception ex)
