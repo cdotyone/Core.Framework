@@ -7,6 +7,11 @@
     <Schema Namespace="Example.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
   <EntityContainer Name="ExampleStoreContainer">
     <EntitySet Name="Environments" EntityType="Example.Store.Environments" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Entity1" EntityType="Example.Store.Entity1" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="EnvironmentEntity1" Association="Example.Store.EnvironmentEntity1">
+      <End Role="Environment" EntitySet="Environments" />
+      <End Role="Entity1" EntitySet="Entity1" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="Environments">
     <Key>
@@ -15,6 +20,26 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
+  <EntityType Name="Entity1">
+    <Key>
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="EnvironmentId" Type="int" Nullable="false" />
+    <Property Name="Dte" Type="datetime" Nullable="false" />
+  </EntityType>
+  <Association Name="EnvironmentEntity1">
+    <End Role="Environment" Type="Example.Store.Environments" Multiplicity="1" />
+    <End Role="Entity1" Type="Example.Store.Entity1" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Environment">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Entity1">
+        <PropertyRef Name="EnvironmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -42,6 +67,7 @@
           <Property Type="String" Name="Name" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <NavigationProperty Name="Environment" Relationship="Example.EnvironmentEntity1" FromRole="Entity1" ToRole="Environment" />
           <Property Type="Int32" Name="EnvironmentId" Nullable="false" />
+          <Property Type="DateTime" Name="Dte" Nullable="false" />
         </EntityType>
         <Association Name="EnvironmentEntity1">
           <End Type="Example.Environment" Role="Environment" Multiplicity="1" />
@@ -66,6 +92,15 @@
         <MappingFragment StoreEntitySet="Environments">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Entity1">
+      <EntityTypeMapping TypeName="IsTypeOf(Example.Entity1)">
+        <MappingFragment StoreEntitySet="Entity1">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="EnvironmentId" ColumnName="EnvironmentId" />
+          <ScalarProperty Name="Dte" ColumnName="Dte" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

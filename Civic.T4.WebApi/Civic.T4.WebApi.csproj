@@ -133,6 +133,7 @@
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Configuration\T4WebApiSection.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="IEntityRouteManager.cs" />
     <Compile Include="IQueryMetadata.cs" />
     <Compile Include="EntityRoute.cs" />

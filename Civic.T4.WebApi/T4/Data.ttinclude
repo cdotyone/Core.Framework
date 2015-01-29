@@ -8,7 +8,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 fileManager.StartNewFile(edmxFileName + "Data."+entity.Name+".cs", folderName:"Data");
 
-WriteHeader("System", "System.Collections.Generic", "System.Data","System.Data.Common","System.Diagnostics","Civic.Core.Data","Civic.T4.WebApi.Configuration", namespaceName +".Entities");
+WriteHeader("System", "System.Collections.Generic", "System.Data","System.Data.Common","System.Diagnostics","Civic.Core.Data","Civic.T4.WebApi","Civic.T4.WebApi.Configuration", namespaceName +".Entities");
 
 #>
 using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
@@ -177,6 +177,11 @@ command.ExecuteNonQuery();
 <#					continue;
 				}
 				if(edmProperty.Name.ToLower()=="created" || edmProperty.Name.ToLower()=="modified") continue;
+				if(ptype=="datetime") {#>
+		command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>.ToDB());
+				<#
+					continue;
+				}
 			#>
 		command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>);
 <#
@@ -203,7 +208,7 @@ command.ExecuteNonQuery();
 		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = decimal.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) && dataReader["<#=code.Escape(edmProperty.Name)#>"] != null ? dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString() : "0");<#
 			} else
 			if(ptype=="datetime") {#>					
-		if(!(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull)) <#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = DateTime.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString());<#
+		if(!(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull)) <#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = DateTime.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()).FromDB();<#
 			} else {#>
 					
 		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !string.IsNullOrEmpty(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) ? dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString() : string.Empty;<#

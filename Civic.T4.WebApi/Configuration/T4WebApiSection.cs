@@ -37,6 +37,9 @@ namespace Civic.T4.WebApi.Configuration
         [ConfigurationProperty(Constants.CONFIG_MAX, DefaultValue = 100)]
         public int Max { get; set; }
 
+        [ConfigurationProperty(Constants.CONFIG_USE_LOCALTIME_PROP, DefaultValue = Constants.CONFIG_USE_LOCALTIME_DEFAULT)]
+        public bool UseLocalTime { get; set; }
+
         public Dictionary<string, INamedElement> Entities
         {
             get

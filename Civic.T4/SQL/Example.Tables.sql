@@ -1,7 +1,7 @@
 ﻿-- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 08/05/2014 00:39:21
+-- Date Created: 01/28/2015 19:49:49
 -- Generated from EDMX file: D:\devel\Civic360\civic-t4\Civic.T4\Models\Example.edmx
 -- --------------------------------------------------
 
@@ -51,7 +51,8 @@ GO
 -- Creating table 'Entity1'
 CREATE TABLE [dbo].[Entity1] (
     [Name] [nvarchar](max)  NOT NULL,
-    [EnvironmentId] [int]  NOT NULL
+    [EnvironmentId] [int]  NOT NULL,
+    [Dte] [datetime]  NOT NULL
 );
 GO
 

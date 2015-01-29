@@ -94,7 +94,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 
 			try {
                 using(var db = Data.<#=edmxFileName#>Data.GetConnection()) {
-	                var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", <# foreach(var key in keys.Keys) { #><#=code.Escape(lowerName)#>.<#=key#>.ToString()+<#}#>"", <#=code.Escape(lowerName)#>);
+	                var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", <# foreach(var key in keys.Keys) { #><#=code.Escape(lowerName)#>.<#=key#>.ToString()+<#}#>"", <#=code.Escape(lowerName)#>);
 			<#
 			if((keyType=="Int32" || keyType=="int") && keyName=="Id") {#>
 					var retval = Data.<#=edmxFileName#>Data.Add<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>, db);<#
@@ -102,7 +102,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 	#> 				Data.<#=edmxFileName#>Data.Add<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>, db);<#
 			} #>
 
-					AuditManager.MarkSuccessFul(logid);
+					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);
 			<#
 			if((keyType=="Int32" || keyType=="int") && keyName=="Id") {#>
 				return retval;
@@ -132,9 +132,9 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 			try {
                 using(var db = Data.<#=edmxFileName#>Data.GetConnection()) {
 					var before = Data.<#=edmxFileName#>Data.Get<#=code.Escape(entity)#>(<# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + lowerName + "."+ key)#><#}#>, db);
-					var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", <# foreach(var key in keys.Keys) { #>before.<#=key#>.ToString()+<#}#>"", before, <#=code.Escape(lowerName)#>);
+					var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", <# foreach(var key in keys.Keys) { #>before.<#=key#>.ToString()+<#}#>"", before, <#=code.Escape(lowerName)#>);
 					Data.<#=edmxFileName#>Data.Modify<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>, db);
-					AuditManager.MarkSuccessFul(logid);
+					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);
 				}
 			}
 			catch (Exception ex)
@@ -152,9 +152,9 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 			try {
 				using(var db = Data.<#=edmxFileName#>Data.GetConnection()) {
 					var before = Data.<#=edmxFileName#>Data.Get<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>, db);
-					var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", <# foreach(var key in keys.Keys) { #>before.<#=key#>.ToString()+<#}#>"", before);
+					var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", <# foreach(var key in keys.Keys) { #>before.<#=key#>.ToString()+<#}#>"", before);
 					Data.<#=edmxFileName#>Data.Remove<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>, db);
-					AuditManager.MarkSuccessFul(logid);
+					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);
 				}
 			}
 			catch (Exception ex)

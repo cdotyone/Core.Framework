@@ -15,6 +15,7 @@ using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using Civic.Core.Data;
+using Civic.T4.WebApi;
 using Civic.T4.WebApi.Configuration;
 using Civic.T4.Entities;
 

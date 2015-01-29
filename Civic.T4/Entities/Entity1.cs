@@ -24,6 +24,9 @@ namespace Civic.T4.Entities
         [DataMember(Name = "environmentId")]
         public int EnvironmentId { get; set; }
 
+        [DataMember(Name = "dte")]
+        public System.DateTime Dte { get; set; }
+
     }
 }
 
