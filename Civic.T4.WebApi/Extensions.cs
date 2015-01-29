@@ -9,7 +9,7 @@ namespace Civic.T4.WebApi
         {
             if (T4WebApiSection.Current.UseLocalTime)
             {
-                return dte.ToUniversalTime();
+                return DateTime.SpecifyKind(dte,DateTimeKind.Local);
             }
             return dte;
         }

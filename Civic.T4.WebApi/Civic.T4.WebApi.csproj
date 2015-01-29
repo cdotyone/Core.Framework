@@ -63,10 +63,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Civic.Core.Caching.1.15.236\lib\net40\Civic.Core.Caching.dll</HintPath>
     </Reference>
-    <Reference Include="Civic.Core.Configuration, Version=1.15.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Civic.Core.Configuration.1.15.236\lib\net40\Civic.Core.Configuration.dll</HintPath>
-    </Reference>
     <Reference Include="Civic.Core.Data, Version=1.15.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Civic.Core.Data.1.15.236\lib\net40\Civic.Core.Data.dll</HintPath>
@@ -214,6 +210,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\civic-core\Framework\Civic.Core.Configuration\Civic.Core.Configuration.csproj">
+      <Project>{4243bf37-b025-4ad1-874e-8b118869c5cf}</Project>
+      <Name>Civic.Core.Configuration</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

@@ -21,6 +21,14 @@ namespace Civic.T4.WebApi.Configuration
             {
                 if (_current!=null) return _current;
                 _current = ConfigurationFactory.ReadConfigSection<T4WebApiSection>(SectionName);
+
+                if (_current.Attributes.ContainsKey(Constants.CONFIG_USE_LOCALTIME_PROP))
+                    _current.UseLocalTime = bool.Parse(_current.Attributes[Constants.CONFIG_USE_LOCALTIME_PROP]);
+                if (_current.Attributes.ContainsKey(Constants.CONFIG_FORCEUPPER))
+                    _current.ForceUpperCase = bool.Parse(_current.Attributes[Constants.CONFIG_FORCEUPPER]);
+                if (_current.Attributes.ContainsKey(Constants.CONFIG_MAX))
+                    _current.Max = int.Parse(_current.Attributes[Constants.CONFIG_MAX]);
+
                 _checked = true;
                 return _current;
             }
