@@ -20,7 +20,7 @@ namespace Civic.T4.WebApi.Configuration
             get
             {
                 if (_current!=null) return _current;
-                _current = ConfigurationFactory.ReadConfigSection<T4WebApiSection>(SectionName);
+                _current = ConfigurationFactory.ReadConfigSection<T4WebApiSection>(SectionName) ?? new T4WebApiSection();
 
                 if (_current.Attributes.ContainsKey(Constants.CONFIG_USE_LOCALTIME_PROP))
                     _current.UseLocalTime = bool.Parse(_current.Attributes[Constants.CONFIG_USE_LOCALTIME_PROP]);
