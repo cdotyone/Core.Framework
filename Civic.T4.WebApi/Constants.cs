@@ -9,7 +9,7 @@
         public const string CONFIG_MAX = "max";
 
    	    public const string CONFIG_USE_LOCALTIME_PROP = "useLocalTime";
-   	    public const bool CONFIG_USE_LOCALTIME_DEFAULT = false;
+   	    public const bool CONFIG_USE_LOCALTIME_DEFAULT = true;
 
 	}
 }
