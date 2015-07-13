@@ -9,8 +9,10 @@ namespace Civic.T4.WebApi
     {
         public static ODataV3QueryOptions GetOptions(this ApiController controller)
         {
-            return controller.ControllerContext.RouteData.Values["options"] as ODataV3QueryOptions ??
-                                           new ODataV3QueryOptions();
+            return controller.ControllerContext.RouteData.Values.ContainsKey("options")
+                       ? controller.ControllerContext.RouteData.Values["options"] as ODataV3QueryOptions ??
+                         new ODataV3QueryOptions()
+                       : new ODataV3QueryOptions();
         }
 
         public static HttpConfiguration _config = null;
