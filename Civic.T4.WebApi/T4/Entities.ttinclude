@@ -13,9 +13,8 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 {
 <#
     var propertiesWithDefaultValues = typeMapper.GetPropertiesWithDefaultValues(entity);
-    var complexProperties = typeMapper.GetComplexProperties(entity);
 
-    if (propertiesWithDefaultValues.Any() || complexProperties.Any())
+    if (propertiesWithDefaultValues.Any())
     {
 #>
     public <#=code.Escape(entity)#>()
@@ -25,13 +24,6 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
         {
 #>
         this.<#=code.Escape(edmProperty)#> = <#=typeMapper.CreateLiteral(edmProperty.DefaultValue)#>;
-<#
-        }
-
-        foreach (var complexProperty in complexProperties)
-        {
-#>
-        this.<#=code.Escape(complexProperty)#> = new <#=typeMapper.GetTypeName(complexProperty.TypeUsage)#>();
 <#
         }
 #>
@@ -47,21 +39,8 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
         {
 #>
 	[DataMember(Name="<#=Core.ToLowerCamel(edmProperty.Name).Replace("iD","id")#>")]
-    <#=codeStringGenerator.Property(edmProperty)#>
+    <#=codeStringGenerator.Property(edmProperty).Replace("System.DateTime", "System.DateTime?")#>
 
-<#
-        }
-    }
-
-    if (complexProperties.Any())
-    {
-#>
-
-<#
-        foreach(var complexProperty in complexProperties)
-        {
-#>
-    <#=codeStringGenerator.Property(complexProperty)#>
 <#
         }
     }
@@ -80,10 +59,9 @@ foreach (var complex in typeMapper.GetItemsToGenerate<ComplexType>(itemCollectio
 <#=Accessibility.ForType(complex)#> partial class <#=code.Escape(complex)#>
 {
 <#
-    var complexProperties = typeMapper.GetComplexProperties(complex);
     var propertiesWithDefaultValues = typeMapper.GetPropertiesWithDefaultValues(complex);
 
-    if (propertiesWithDefaultValues.Any() || complexProperties.Any())
+    if (propertiesWithDefaultValues.Any())
     {
 #>
     public <#=code.Escape(complex)#>()
@@ -93,13 +71,6 @@ foreach (var complex in typeMapper.GetItemsToGenerate<ComplexType>(itemCollectio
         {
 #>
         this.<#=code.Escape(edmProperty)#> = <#=typeMapper.CreateLiteral(edmProperty.DefaultValue)#>;
-<#
-        }
-
-        foreach (var complexProperty in complexProperties)
-        {
-#>
-        this.<#=code.Escape(complexProperty)#> = new <#=typeMapper.GetTypeName(complexProperty.TypeUsage)#>();
 <#
         }
 #>
@@ -114,20 +85,7 @@ foreach (var complex in typeMapper.GetItemsToGenerate<ComplexType>(itemCollectio
         foreach(var edmProperty in simpleProperties)
         {
 #>
-    <#=codeStringGenerator.Property(edmProperty)#>
-<#
-        }
-    }
-
-    if (complexProperties.Any())
-    {
-#>
-
-<#
-        foreach(var edmProperty in complexProperties)
-        {
-#>
-    <#=codeStringGenerator.Property(edmProperty)#>
+    <#=codeStringGenerator.Property(edmProperty).Replace("System.DateTime", "System.DateTime?") #>
 <#
         }
     }
