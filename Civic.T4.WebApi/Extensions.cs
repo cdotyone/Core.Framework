@@ -11,7 +11,7 @@ namespace Civic.T4.WebApi
             {
                 return DateTime.SpecifyKind(dte,DateTimeKind.Local);
             }
-            return dte;
+            return DateTime.SpecifyKind(dte, DateTimeKind.Utc); 
         }
 
         public static DateTime? ToDB(this DateTime? dte)
