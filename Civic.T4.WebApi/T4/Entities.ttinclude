@@ -67,7 +67,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
         return copy;
     }
 
-	public int IdentityID { 
+	public Int64 IdentityID { 
 		get {
 <#
 		bool foundIdentity = false;
