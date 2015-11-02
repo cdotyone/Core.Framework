@@ -40,11 +40,11 @@ namespace Civic.T4.Entities
             return copy;
         }
 
-        public int IdentityID
+        public string IdentityID
         {
             get
             {
-                return -1;
+                return null;
             }
         }
     }

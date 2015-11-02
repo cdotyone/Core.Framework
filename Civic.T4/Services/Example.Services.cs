@@ -64,6 +64,7 @@ namespace Civic.T4.Services
                     return new Civic.T4.Entities.Environment();
             };
 
+            return null;
         }
     }
 

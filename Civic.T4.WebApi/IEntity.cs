@@ -8,6 +8,6 @@ namespace Civic.T4.WebApi
 {
     public interface IEntity
     {
-        Int64 IdentityID { get; }
+        string IdentityID { get; }
     }
 }

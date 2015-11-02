@@ -36,11 +36,11 @@ namespace Civic.T4.Entities
             return copy;
         }
 
-        public int IdentityID
+        public string IdentityID
         {
             get
             {
-                return this.ID;
+                return this.ID.ToString();
             }
         }
     }

@@ -67,7 +67,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
         return copy;
     }
 
-	public Int64 IdentityID { 
+	public string IdentityID { 
 		get {
 <#
 		bool foundIdentity = false;
@@ -81,7 +81,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 			{
 				foundIdentity= true;
 #>
-				return this.<#=code.Escape(edmProperty)#>;
+				return this.<#=code.Escape(edmProperty)#>.ToString();
 <#
 				break;
 			} 
@@ -89,7 +89,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 		if(!foundIdentity) {
 		#>
-					return -1;
+					return null;
 		<#			
 		}
 #>		}

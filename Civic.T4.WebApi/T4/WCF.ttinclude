@@ -57,6 +57,7 @@ public partial class <#=edmxFileName#>Service : I<#=edmxFileName#>, IEntityServi
 		<#}#>
 		};
 
+		return null;
     }
 }
 
