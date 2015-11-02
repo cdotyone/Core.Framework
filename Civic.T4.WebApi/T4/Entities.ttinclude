@@ -3,13 +3,13 @@
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
     fileManager.StartNewFile(entity.Name + ".cs", folderName:"Entities");
-	WriteHeader("System","System.Collections.Generic","System.Runtime.Serialization");
+	WriteHeader("System","System.Collections.Generic","System.Runtime.Serialization","Civic.T4.WebApi");
 
     BeginNamespace(namespaceName + ".Entities", code);
 
 #>
 [DataContract(Name="<#=Core.ToLowerCamel(entity.Name)#>")]
-<#=codeStringGenerator.EntityClassOpening(entity)#>
+<#=codeStringGenerator.EntityClassOpening(entity)#> : IEntity
 {
 <#
     var propertiesWithDefaultValues = typeMapper.GetPropertiesWithDefaultValues(entity);
@@ -44,7 +44,56 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 <#
         }
     }
+
 #>
+
+    public <#=entity.Name#> Copy()
+    {
+        var copy = new <#=entity.Name#>
+            {
+<#
+    simpleProperties = typeMapper.GetSimpleProperties(entity);
+    if (simpleProperties.Any())
+    {
+		var pcounter = 0;
+        foreach (var edmProperty in simpleProperties)
+        {#>
+			<#=(pcounter==0?"":",")+edmProperty.Name#> = <#=edmProperty.Name#><#
+			pcounter++;
+		}
+	}
+#>
+            };
+        return copy;
+    }
+
+	public int IdentityID { 
+		get {
+<#
+		bool foundIdentity = false;
+		foreach (var edmProperty in simpleProperties)
+		{
+			String annotationNamespace = "http://schemas.microsoft.com/ado/2009/02/edm/annotation";
+			MetadataProperty storeGeneratedPatternProperty = null;
+			edmProperty.MetadataProperties.TryGetValue(annotationNamespace + ":StoreGeneratedPattern", false, out storeGeneratedPatternProperty);
+ 
+			if (storeGeneratedPatternProperty != null && storeGeneratedPatternProperty.Value.ToString() == "Identity")
+			{
+				foundIdentity= true;
+#>
+				return this.<#=code.Escape(edmProperty)#>;
+<#
+				break;
+			} 
+		}
+
+		if(!foundIdentity) {
+		#>
+					return -1;
+		<#			
+		}
+#>		}
+	}
 }
 <#
     EndNamespace(namespaceName + ".Entities");

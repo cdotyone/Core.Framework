@@ -378,7 +378,7 @@ GO
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 07/12/2015 19:11:50
+-- Date Created: 11/02/2015 14:40:40
 -- Generated from EDMX file: D:\devel\Civic360\civic-t4\Civic.T4\Models\Example.edmx
 -- --------------------------------------------------
 
@@ -420,7 +420,7 @@ GO
 
 -- Creating table 'Environments'
 CREATE TABLE [dbo].[Environments] (
-    [Id] [int] IDENTITY(1,1) NOT NULL,
+    [ID] [int] IDENTITY(1,1) NOT NULL,
     [Name] [nvarchar](max)  NOT NULL
 );
 GO
@@ -428,7 +428,7 @@ GO
 -- Creating table 'Entity1'
 CREATE TABLE [dbo].[Entity1] (
     [Name] [nvarchar](max)  NOT NULL,
-    [EnvironmentId] [int]  NOT NULL,
+    [EnvironmentID] [int]  NOT NULL,
     [Dte] [datetime]  NOT NULL
 );
 GO
@@ -437,11 +437,11 @@ GO
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
 
--- Creating primary key on [Id] in table 'Environments'
+-- Creating primary key on [ID] in table 'Environments'
 ALTER TABLE [dbo].[Environments]
 ADD CONSTRAINT [PK_Environments]
 
-    PRIMARY KEY ([Id]ASC);
+    PRIMARY KEY ([ID]ASC);
 GO
 
 -- Creating primary key on [Name] in table 'Entity1'
@@ -455,18 +455,18 @@ GO
 -- Creating all FOREIGN KEY constraints
 -- --------------------------------------------------
 
--- Creating foreign key on [EnvironmentId] in table 'Entity1'
+-- Creating foreign key on [EnvironmentID] in table 'Entity1'
 ALTER TABLE [dbo].[Entity1]
 ADD CONSTRAINT [FK_EnvironmentEntity1]
-    FOREIGN KEY ([EnvironmentId])
+    FOREIGN KEY ([EnvironmentID])
     REFERENCES [dbo].[Environments]
-        ([Id])
+        ([ID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_EnvironmentEntity1'
 CREATE INDEX [IX_FK_EnvironmentEntity1]
 ON [dbo].[Entity1]
-    ([EnvironmentId]);
+    ([EnvironmentID]);
 GO
 
 -- --------------------------------------------------
@@ -535,7 +535,7 @@ BEGIN
 	SELECT	
 		-- t4-columns begin
 		 [e1].[Name]
-		,[e1].[EnvironmentId]
+		,[e1].[EnvironmentID]
 		,[e1].[Dte]
 		-- t4-columns end
 	FROM [dbo].[Entity1] [e1]
@@ -566,7 +566,7 @@ BEGIN
     SET @select = 'SELECT	
 		-- t4-columns begin
 		 [e1].[Name]
-		,[e1].[EnvironmentId]
+		,[e1].[EnvironmentID]
 		,[e1].[Dte]
 		-- t4-columns end
     FROM [dbo].[Entity1] [e1]'
@@ -590,7 +590,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_Entity1Add]
 -- t4-params begin
 	  @name [nvarchar](max) out
-	, @environmentId [int]
+	, @environmentID [int]
 	, @dte [datetime]
 -- t4-params end
 AS
@@ -600,14 +600,14 @@ BEGIN
 	INSERT INTO [dbo].[Entity1](
 -- t4-columns begin
 		 [Name]
-		,[EnvironmentId]
+		,[EnvironmentID]
 		,[Dte]
 -- t4-columns end
 	) VALUES (
 
 -- t4-values begin
 		 @name
-		,@environmentId
+		,@environmentID
 		,@dte
 -- t4-values end
 	)
@@ -624,7 +624,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity1Modify]
 	  @name [nvarchar](max)
-	, @environmentId [int]
+	, @environmentID [int]
 	, @dte [datetime]
 AS
 BEGIN
@@ -633,7 +633,7 @@ BEGIN
 	UPDATE [e1] SET 
 		-- t4-columns begin
 		 [Name] = @name
-		,[EnvironmentId] = @environmentId
+		,[EnvironmentID] = @environmentID
 		,[Dte] = @dte
 		-- t4-columns end
 	FROM [dbo].[Entity1] [e1]
@@ -671,7 +671,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity1GetByEnvironment]
-	  @environmentId [int]
+	  @environmentID [int]
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -679,13 +679,13 @@ BEGIN
 	SELECT	
 		-- t4-columns begin
 		 [e1].[Name]
-		,[e1].[EnvironmentId]
+		,[e1].[EnvironmentID]
 		,[e1].[Dte]
 		-- t4-columns end
 	FROM [dbo].[Entity1] [e1]
 	WHERE	
 		-- t4-where begin
-	    [e1].[EnvironmentId] = @environmentId
+	    [e1].[EnvironmentID] = @environmentID
 		-- t4-where end
 END
 GO
@@ -705,13 +705,13 @@ BEGIN
 
 	SELECT	
 		-- t4-columns begin
-		 [e].[Id]
+		 [e].[ID]
 		,[e].[Name]
 		-- t4-columns end
 	FROM [dbo].[Environment] [e]
 	WHERE	
 		-- t4-where begin
-	    [e].[Id] = @id
+	    [e].[ID] = @id
 		-- t4-where end
 END
 GO
@@ -735,7 +735,7 @@ BEGIN
 	DECLARE @select nvarchar(max)
     SET @select = 'SELECT	
 		-- t4-columns begin
-		 [e].[Id]
+		 [e].[ID]
 		,[e].[Name]
 		-- t4-columns end
     FROM [dbo].[Environment] [e]'
@@ -800,7 +800,7 @@ BEGIN
 	FROM [dbo].[Environment] [e]
 	WHERE	
 		-- t4-where begin
-	    [e].[Id] = @id
+	    [e].[ID] = @id
 		-- t4-where end
 END
 GO
@@ -820,7 +820,7 @@ BEGIN
 	DELETE FROM [dbo].[Environment]
 	WHERE	
 		-- t4-where begin
-	    [Id] = @id
+	    [ID] = @id
 		-- t4-where end
 END
 GO

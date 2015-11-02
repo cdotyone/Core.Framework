@@ -12,21 +12,41 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Civic.T4.WebApi;
 
 namespace Civic.T4.Entities
 {
     [DataContract(Name = "entity1")]
-    public partial class Entity1
+    public partial class Entity1 : IEntity
     {
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
-        [DataMember(Name = "environmentId")]
-        public int EnvironmentId { get; set; }
+        [DataMember(Name = "environmentID")]
+        public int EnvironmentID { get; set; }
 
         [DataMember(Name = "dte")]
         public System.DateTime? Dte { get; set; }
 
+
+        public Entity1 Copy()
+        {
+            var copy = new Entity1
+                {
+                    Name = Name,
+                    EnvironmentID = EnvironmentID,
+                    Dte = Dte
+                };
+            return copy;
+        }
+
+        public int IdentityID
+        {
+            get
+            {
+                return -1;
+            }
+        }
     }
 }
 

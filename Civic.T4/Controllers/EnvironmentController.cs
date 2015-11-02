@@ -42,7 +42,7 @@ namespace Civic.T4.Controllers
         [Route("{id}")]
         public QueryMetadata<EnvironmentEntity> Get(Int32 id)
         {
-            var result = new List<EnvironmentEntity> { _service.GetEnvironmentById(id) };
+            var result = new List<EnvironmentEntity> { _service.GetEnvironmentByID(id) };
             return new QueryMetadata<EnvironmentEntity>(result, 1);
         }
 
@@ -50,13 +50,13 @@ namespace Civic.T4.Controllers
         public Int32 Post([FromBody]EnvironmentEntity value)
         {
             _service.AddEnvironment(value);
-            return value.Id;
+            return value.ID;
         }
 
         [Route("{id}")]
         public void Put(Int32 id, [FromBody]EnvironmentEntity value)
         {
-            value.Id = id;
+            value.ID = id;
             _service.ModifyEnvironment(value);
         }
 

@@ -13,13 +13,13 @@ BEGIN
 
 	SELECT	
 		-- t4-columns begin
-		 [e].[Id]
+		 [e].[ID]
 		,[e].[Name]
 		-- t4-columns end
 	FROM [dbo].[Environment] [e]
 	WHERE	
 		-- t4-where begin
-	    [e].[Id] = @id
+	    [e].[ID] = @id
 		-- t4-where end
 END
 GO
@@ -43,7 +43,7 @@ BEGIN
 	DECLARE @select nvarchar(max)
     SET @select = 'SELECT	
 		-- t4-columns begin
-		 [e].[Id]
+		 [e].[ID]
 		,[e].[Name]
 		-- t4-columns end
     FROM [dbo].[Environment] [e]'
@@ -108,7 +108,7 @@ BEGIN
 	FROM [dbo].[Environment] [e]
 	WHERE	
 		-- t4-where begin
-	    [e].[Id] = @id
+	    [e].[ID] = @id
 		-- t4-where end
 END
 GO
@@ -128,7 +128,7 @@ BEGIN
 	DELETE FROM [dbo].[Environment]
 	WHERE	
 		-- t4-where begin
-	    [Id] = @id
+	    [ID] = @id
 		-- t4-where end
 END
 GO

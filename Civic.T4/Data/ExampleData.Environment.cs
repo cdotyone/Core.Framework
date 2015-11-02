@@ -39,7 +39,7 @@ namespace Civic.T4.Data
                     {
                         if (populateEnvironment(environmentReturned, dataReader))
                         {
-                            environmentReturned.Id = id;
+                            environmentReturned.ID = id;
                         }
                         else environmentReturned = null;
                     });
@@ -87,7 +87,7 @@ namespace Civic.T4.Data
                 buildEnvironmentCommandParameters(environment, command, true);
                 command.ExecuteNonQuery();
                 return
-               environment.Id = Int32.Parse(
+               environment.ID = Int32.Parse(
                command.GetOutParameter("@id").Value.ToString());
             }
         }
@@ -121,8 +121,8 @@ namespace Civic.T4.Data
         private static void buildEnvironmentCommandParameters(EnvironmentEntity environment, IDBCommand command, bool addRecord)
         {
             Debug.Assert(command != null);
-            if (addRecord) command.AddParameter("@id", ParameterDirection.InputOutput, environment.Id);
-            else command.AddInParameter("@id", environment.Id);
+            if (addRecord) command.AddParameter("@id", ParameterDirection.InputOutput, environment.ID);
+            else command.AddInParameter("@id", environment.ID);
             command.AddInParameter("@name", T4WebApiSection.CheckUpperCase("dbo", "environment", "name", environment.Name));
 
         }
@@ -131,7 +131,7 @@ namespace Civic.T4.Data
         {
             if (dataReader == null || !dataReader.Read()) return false;
 
-            environment.Id = dataReader["Id"] != null && !(dataReader["Id"] is DBNull) ? Int32.Parse(dataReader["Id"].ToString()) : 0;
+            environment.ID = dataReader["ID"] != null && !(dataReader["ID"] is DBNull) ? Int32.Parse(dataReader["ID"].ToString()) : 0;
             environment.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? dataReader["Name"].ToString() : string.Empty;
             return true;
         }

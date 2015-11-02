@@ -12,18 +12,37 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Civic.T4.WebApi;
 
 namespace Civic.T4.Entities
 {
     [DataContract(Name = "environment")]
-    public partial class Environment
+    public partial class Environment : IEntity
     {
         [DataMember(Name = "id")]
-        public int Id { get; set; }
+        public int ID { get; set; }
 
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
+
+        public Environment Copy()
+        {
+            var copy = new Environment
+                {
+                    ID = ID,
+                    Name = Name
+                };
+            return copy;
+        }
+
+        public int IdentityID
+        {
+            get
+            {
+                return this.ID;
+            }
+        }
     }
 }
 

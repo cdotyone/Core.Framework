@@ -14,7 +14,7 @@ BEGIN
 	SELECT	
 		-- t4-columns begin
 		 [e1].[Name]
-		,[e1].[EnvironmentId]
+		,[e1].[EnvironmentID]
 		,[e1].[Dte]
 		-- t4-columns end
 	FROM [dbo].[Entity1] [e1]
@@ -45,7 +45,7 @@ BEGIN
     SET @select = 'SELECT	
 		-- t4-columns begin
 		 [e1].[Name]
-		,[e1].[EnvironmentId]
+		,[e1].[EnvironmentID]
 		,[e1].[Dte]
 		-- t4-columns end
     FROM [dbo].[Entity1] [e1]'
@@ -69,7 +69,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_Entity1Add]
 -- t4-params begin
 	  @name [nvarchar](max) out
-	, @environmentId [int]
+	, @environmentID [int]
 	, @dte [datetime]
 -- t4-params end
 AS
@@ -79,14 +79,14 @@ BEGIN
 	INSERT INTO [dbo].[Entity1](
 -- t4-columns begin
 		 [Name]
-		,[EnvironmentId]
+		,[EnvironmentID]
 		,[Dte]
 -- t4-columns end
 	) VALUES (
 
 -- t4-values begin
 		 @name
-		,@environmentId
+		,@environmentID
 		,@dte
 -- t4-values end
 	)
@@ -103,7 +103,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity1Modify]
 	  @name [nvarchar](max)
-	, @environmentId [int]
+	, @environmentID [int]
 	, @dte [datetime]
 AS
 BEGIN
@@ -112,7 +112,7 @@ BEGIN
 	UPDATE [e1] SET 
 		-- t4-columns begin
 		 [Name] = @name
-		,[EnvironmentId] = @environmentId
+		,[EnvironmentID] = @environmentID
 		,[Dte] = @dte
 		-- t4-columns end
 	FROM [dbo].[Entity1] [e1]
@@ -150,7 +150,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity1GetByEnvironment]
-	  @environmentId [int]
+	  @environmentID [int]
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -158,13 +158,13 @@ BEGIN
 	SELECT	
 		-- t4-columns begin
 		 [e1].[Name]
-		,[e1].[EnvironmentId]
+		,[e1].[EnvironmentID]
 		,[e1].[Dte]
 		-- t4-columns end
 	FROM [dbo].[Entity1] [e1]
 	WHERE	
 		-- t4-where begin
-	    [e1].[EnvironmentId] = @environmentId
+	    [e1].[EnvironmentID] = @environmentID
 		-- t4-where end
 END
 GO

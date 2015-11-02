@@ -15,9 +15,9 @@
   </EntityContainer>
   <EntityType Name="Environments">
     <Key>
-      <PropertyRef Name="Id" />
+      <PropertyRef Name="ID" />
     </Key>
-    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <EntityType Name="Entity1">
@@ -25,7 +25,7 @@
       <PropertyRef Name="Name" />
     </Key>
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="EnvironmentId" Type="int" Nullable="false" />
+    <Property Name="EnvironmentID" Type="int" Nullable="false" />
     <Property Name="Dte" Type="datetime" Nullable="false" />
   </EntityType>
   <Association Name="EnvironmentEntity1">
@@ -33,10 +33,10 @@
     <End Role="Entity1" Type="Example.Store.Entity1" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Environment">
-        <PropertyRef Name="Id" />
+        <PropertyRef Name="ID" />
       </Principal>
       <Dependent Role="Entity1">
-        <PropertyRef Name="EnvironmentId" />
+        <PropertyRef Name="EnvironmentID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -54,9 +54,9 @@
         </EntityContainer>
         <EntityType Name="Environment">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="ID" />
           </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="Name" Nullable="false" />
           <NavigationProperty Name="Entity1" Relationship="Example.EnvironmentEntity1" FromRole="Environment" ToRole="Entity1" />
         </EntityType>
@@ -66,7 +66,7 @@
           </Key>
           <Property Type="String" Name="Name" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <NavigationProperty Name="Environment" Relationship="Example.EnvironmentEntity1" FromRole="Entity1" ToRole="Environment" />
-          <Property Type="Int32" Name="EnvironmentId" Nullable="false" />
+          <Property Type="Int32" Name="EnvironmentID" Nullable="false" />
           <Property Type="DateTime" Name="Dte" Nullable="false" />
         </EntityType>
         <Association Name="EnvironmentEntity1">
@@ -74,10 +74,10 @@
           <End Type="Example.Entity1" Role="Entity1" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Environment">
-              <PropertyRef Name="Id" />
+              <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="Entity1">
-              <PropertyRef Name="EnvironmentId" />
+              <PropertyRef Name="EnvironmentID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -90,7 +90,7 @@
     <EntitySetMapping Name="Environments">
       <EntityTypeMapping TypeName="IsTypeOf(Example.Environment)">
         <MappingFragment StoreEntitySet="Environments">
-          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -99,7 +99,7 @@
       <EntityTypeMapping TypeName="IsTypeOf(Example.Entity1)">
         <MappingFragment StoreEntitySet="Entity1">
           <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="EnvironmentId" ColumnName="EnvironmentId" />
+          <ScalarProperty Name="EnvironmentID" ColumnName="EnvironmentID" />
           <ScalarProperty Name="Dte" ColumnName="Dte" />
         </MappingFragment>
       </EntityTypeMapping>

@@ -20,12 +20,6 @@ namespace Civic.T4.Data
 {
     internal partial class ExampleData
     {
-
-        public static IDBConnection GetConnection()
-        {
-            return DatabaseFactory.CreateDatabase("Example");
-        }
-
     }
 }
 

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 01/28/2015 19:35:30
+-- Date Created: 11/02/2015 13:43:53
 -- Generated from EDMX file: D:\devel\Civic360\civic-t4\Civic.T4\Models\Example.edmx
 -- --------------------------------------------------
 
@@ -38,7 +38,7 @@ GO
 
 -- Creating table 'Environments'
 CREATE TABLE [dbo].[Environments] (
-    [Id] int IDENTITY(1,1) NOT NULL,
+    [ID] int IDENTITY(1,1) NOT NULL,
     [Name] nvarchar(max)  NOT NULL
 );
 GO
@@ -46,7 +46,7 @@ GO
 -- Creating table 'Entity1'
 CREATE TABLE [dbo].[Entity1] (
     [Name] nvarchar(max)  NOT NULL,
-    [EnvironmentId] int  NOT NULL,
+    [EnvironmentID] int  NOT NULL,
     [Dte] datetime  NOT NULL
 );
 GO
@@ -55,10 +55,10 @@ GO
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
 
--- Creating primary key on [Id] in table 'Environments'
+-- Creating primary key on [ID] in table 'Environments'
 ALTER TABLE [dbo].[Environments]
 ADD CONSTRAINT [PK_Environments]
-    PRIMARY KEY CLUSTERED ([Id] ASC);
+    PRIMARY KEY CLUSTERED ([ID] ASC);
 GO
 
 -- Creating primary key on [Name] in table 'Entity1'
@@ -71,18 +71,18 @@ GO
 -- Creating all FOREIGN KEY constraints
 -- --------------------------------------------------
 
--- Creating foreign key on [EnvironmentId] in table 'Entity1'
+-- Creating foreign key on [EnvironmentID] in table 'Entity1'
 ALTER TABLE [dbo].[Entity1]
 ADD CONSTRAINT [FK_EnvironmentEntity1]
-    FOREIGN KEY ([EnvironmentId])
+    FOREIGN KEY ([EnvironmentID])
     REFERENCES [dbo].[Environments]
-        ([Id])
+        ([ID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_EnvironmentEntity1'
 CREATE INDEX [IX_FK_EnvironmentEntity1]
 ON [dbo].[Entity1]
-    ([EnvironmentId]);
+    ([EnvironmentID]);
 GO
 
 -- --------------------------------------------------

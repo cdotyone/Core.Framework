@@ -13,16 +13,58 @@ using System;
 using System.ServiceModel.Activation;
 using System.Collections.Generic;
 using Civic.Core.Audit;
+using Civic.Core.Data;
 using Civic.Core.Logging;
+using Civic.T4.WebApi;
 using Civic.T4.Entities;
 
 
 namespace Civic.T4.Services
 {
 
+
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
-    public partial class ExampleService : IExample
+    public partial class ExampleService : IExample, IEntityService
     {
+
+        private IDBConnection _connection;
+
+        public IDBConnection Connection
+        {
+            get
+            {
+                if (_connection == null) _connection = DatabaseFactory.CreateDatabase("Example");
+                return _connection;
+            }
+            set
+            {
+                _connection = value;
+            }
+        }
+
+        public string ModuleName { get { return "civic"; } }
+
+        public List<string> EntitiesProvided
+        {
+            get
+            {
+                return new List<string> { "entity1", "environment" };
+            }
+        }
+
+        public IEntity Create(string name)
+        {
+            switch (name)
+            {
+                case "entity1":
+                case "Entity1":
+                    return new Civic.T4.Entities.Entity1();
+                case "environment":
+                case "Environment":
+                    return new Civic.T4.Entities.Environment();
+            };
+
+        }
     }
 
 }

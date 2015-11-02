@@ -233,12 +233,6 @@ BeginNamespace(namespaceName + ".Data", code);
 #>
 internal partial class <#=edmxFileName#>Data
 {
-
-	public static IDBConnection GetConnection()
-    {
-        return DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
-    }
-
 }
 <#
 EndNamespace(namespaceName);

@@ -120,7 +120,7 @@ namespace Civic.T4.Data
             Debug.Assert(command != null);
             if (addRecord) command.AddParameter("@name", ParameterDirection.InputOutput, T4WebApiSection.CheckUpperCase("dbo", "entity1", "name", entity1.Name));
             else command.AddInParameter("@name", T4WebApiSection.CheckUpperCase("dbo", "entity1", "name", entity1.Name));
-            command.AddInParameter("@environmentid", entity1.EnvironmentId);
+            command.AddInParameter("@environmentid", entity1.EnvironmentID);
             command.AddInParameter("@dte", entity1.Dte.ToDB());
 
         }
@@ -130,7 +130,7 @@ namespace Civic.T4.Data
             if (dataReader == null || !dataReader.Read()) return false;
 
             entity1.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? dataReader["Name"].ToString() : string.Empty;
-            entity1.EnvironmentId = dataReader["EnvironmentId"] != null && !(dataReader["EnvironmentId"] is DBNull) ? Int32.Parse(dataReader["EnvironmentId"].ToString()) : 0;
+            entity1.EnvironmentID = dataReader["EnvironmentID"] != null && !(dataReader["EnvironmentID"] is DBNull) ? Int32.Parse(dataReader["EnvironmentID"].ToString()) : 0;
             if (!(dataReader["Dte"] is DBNull)) entity1.Dte = DateTime.Parse(dataReader["Dte"].ToString()).FromDB();
             return true;
         }

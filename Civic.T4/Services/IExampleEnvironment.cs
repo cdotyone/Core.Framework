@@ -26,10 +26,10 @@ namespace Civic.T4.Services
         List<EnvironmentEntity> GetPagedEnvironment(int skip, ref int count, bool retCount, string filterBy, string orderBy);
 
         [OperationContract]
-        EnvironmentEntity GetEnvironmentById(Int32 id);
+        EnvironmentEntity GetEnvironmentByID(Int32 id);
 
         [OperationContract]
-        int AddEnvironment(EnvironmentEntity environment);
+        void AddEnvironment(EnvironmentEntity environment);
 
         [OperationContract]
         void ModifyEnvironment(EnvironmentEntity environment);

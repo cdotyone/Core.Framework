@@ -24,14 +24,14 @@ namespace Civic.T4.Services
 
     public partial class ExampleService
     {
-        public EnvironmentEntity GetEnvironmentById(Int32 id)
+        public EnvironmentEntity GetEnvironmentByID(Int32 id)
         {
-            using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "GetEnvironmentById"))
+            using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "GetEnvironmentByID"))
             {
 
                 try
                 {
-                    using (var database = Data.ExampleData.GetConnection())
+                    using (var database = Connection)
                     {
                         return Data.ExampleData.GetEnvironment(id, database);
                     }
@@ -53,7 +53,7 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    using (var database = Data.ExampleData.GetConnection())
+                    using (var database = Connection)
                     {
                         return Data.ExampleData.GetPagedEnvironment(skip, ref count, retCount, filterBy, orderBy, database);
                     }
@@ -68,19 +68,18 @@ namespace Civic.T4.Services
             return null;
         }
 
-        public int AddEnvironment(EnvironmentEntity environment)
+        public void AddEnvironment(EnvironmentEntity environment)
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "AddEnvironment"))
             {
 
                 try
                 {
-                    using (var db = Data.ExampleData.GetConnection())
+                    using (var db = Connection)
                     {
-                        var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", environment.Id.ToString() + "", environment);
-                        var retval = Data.ExampleData.AddEnvironment(environment, db);
+                        var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", environment.ID.ToString() + "", environment);
+                        Data.ExampleData.AddEnvironment(environment, db);
                         AuditManager.MarkSuccessFul("dbo", logid);
-                        return retval;
                     }
                 }
                 catch (Exception ex)
@@ -89,8 +88,6 @@ namespace Civic.T4.Services
                 }
 
             }
-
-            return -1;
         }
 
         public void ModifyEnvironment(EnvironmentEntity environment)
@@ -100,10 +97,10 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    using (var db = Data.ExampleData.GetConnection())
+                    using (var db = Connection)
                     {
-                        var before = Data.ExampleData.GetEnvironment(environment.Id, db);
-                        var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.Id.ToString() + "", before, environment);
+                        var before = Data.ExampleData.GetEnvironment(environment.ID, db);
+                        var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.ID.ToString() + "", before, environment);
                         Data.ExampleData.ModifyEnvironment(environment, db);
                         AuditManager.MarkSuccessFul("dbo", logid);
                     }
@@ -123,10 +120,10 @@ namespace Civic.T4.Services
 
                 try
                 {
-                    using (var db = Data.ExampleData.GetConnection())
+                    using (var db = Connection)
                     {
                         var before = Data.ExampleData.GetEnvironment(id, db);
-                        var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.Id.ToString() + "", before);
+                        var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.ID.ToString() + "", before);
                         Data.ExampleData.RemoveEnvironment(id, db);
                         AuditManager.MarkSuccessFul("dbo", logid);
                     }
