@@ -10,7 +10,7 @@ namespace Civic.T4.WebApi
 {
     public interface IEntityService
     {
-        IDBConnection Connection { get; }
+        IDBConnection Connection { get; set; }
 
         INamedElement Configuration { get; set; }
 
