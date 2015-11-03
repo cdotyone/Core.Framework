@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Civic.Core.Data;
 using Civic.T4.WebApi;
 
 namespace Civic.T4.Entities
@@ -47,6 +48,22 @@ namespace Civic.T4.Entities
                 return null;
             }
         }
+
+        public void Add(IDBConnection connection)
+        {
+            Data.ExampleData.AddEntity1(this, connection);
+        }
+
+        public void Modify(IDBConnection connection)
+        {
+            Data.ExampleData.ModifyEntity1(this, connection);
+        }
+
+        public void Remove(IDBConnection connection)
+        {
+            Data.ExampleData.RemoveEntity1(Name, connection);
+        }
+
     }
 }
 

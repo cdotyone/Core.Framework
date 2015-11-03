@@ -3,7 +3,7 @@
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
     fileManager.StartNewFile(entity.Name + ".cs", folderName:"Entities");
-	WriteHeader("System","System.Collections.Generic","System.Runtime.Serialization","Civic.T4.WebApi");
+	WriteHeader("System","System.Collections.Generic","System.Runtime.Serialization","Civic.Core.Data","Civic.T4.WebApi");
 
     BeginNamespace(namespaceName + ".Entities", code);
 
@@ -92,8 +92,35 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 					return null;
 		<#			
 		}
+
+
+		var keys = new List<string>();
+		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+		{
+			if (ef.IsKey(edmProperty)) {
+				keys.Add(code.Escape(edmProperty.Name));
+			}
+		}
+
+
 #>		}
 	}
+
+    public void Add(IDBConnection connection)
+    {
+        Data.<#=edmxFileName#>Data.Add<#=entity.Name#>(this, connection);
+    }
+
+    public void Modify(IDBConnection connection)
+    {
+        Data.<#=edmxFileName#>Data.Modify<#=entity.Name#>(this, connection);
+    }
+
+    public void Remove(IDBConnection connection)
+    {
+        Data.<#=edmxFileName#>Data.Remove<#=entity.Name#>(<# foreach(var key in keys) { #> <#=key#>, <#}#> connection);
+    }
+
 }
 <#
     EndNamespace(namespaceName + ".Entities");

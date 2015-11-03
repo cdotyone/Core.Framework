@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Civic.Core.Data;
 using Civic.T4.WebApi;
 
 namespace Civic.T4.Entities
@@ -43,6 +44,22 @@ namespace Civic.T4.Entities
                 return this.ID.ToString();
             }
         }
+
+        public void Add(IDBConnection connection)
+        {
+            Data.ExampleData.AddEnvironment(this, connection);
+        }
+
+        public void Modify(IDBConnection connection)
+        {
+            Data.ExampleData.ModifyEnvironment(this, connection);
+        }
+
+        public void Remove(IDBConnection connection)
+        {
+            Data.ExampleData.RemoveEnvironment(ID, connection);
+        }
+
     }
 }
 
