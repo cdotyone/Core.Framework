@@ -26,7 +26,7 @@ namespace Civic.T4.Services
         List<EnvironmentEntity> GetPagedEnvironment(int skip, ref int count, bool retCount, string filterBy, string orderBy);
 
         [OperationContract]
-        EnvironmentEntity GetEnvironmentByID(Int32 id);
+        EnvironmentEntity GetEnvironment(Int32 id);
 
         [OperationContract]
         void AddEnvironment(EnvironmentEntity environment);

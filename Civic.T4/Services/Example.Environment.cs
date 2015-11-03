@@ -24,7 +24,7 @@ namespace Civic.T4.Services
 
     public partial class ExampleService
     {
-        public EnvironmentEntity GetEnvironmentByID(Int32 id)
+        public EnvironmentEntity GetEnvironment(Int32 id)
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "GetEnvironmentByID"))
             {

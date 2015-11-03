@@ -42,7 +42,7 @@ namespace Civic.T4.Controllers
         [Route("{id}")]
         public QueryMetadata<EnvironmentEntity> Get(Int32 id)
         {
-            var result = new List<EnvironmentEntity> { _service.GetEnvironmentByID(id) };
+            var result = new List<EnvironmentEntity> { _service.GetEnvironment(id) };
             return new QueryMetadata<EnvironmentEntity>(result, 1);
         }
 

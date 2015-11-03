@@ -26,7 +26,7 @@ namespace Civic.T4.Services
         List<Entity1Entity> GetPagedEntity1(int skip, ref int count, bool retCount, string filterBy, string orderBy);
 
         [OperationContract]
-        Entity1Entity GetEntity1ByName(String name);
+        Entity1Entity GetEntity1(String name);
 
         [OperationContract]
         void AddEntity1(Entity1Entity entity1);

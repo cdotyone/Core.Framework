@@ -48,7 +48,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	[Route("<# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? "/{" : "{") + Core.GetMethodParameterName(key) + "}" )#><#}#>")]
 	public QueryMetadata<<#=code.Escape(entity)#>Entity> Get(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> )
 	{
-		var result = new List<<#=code.Escape(entity)#>Entity> { _service.Get<#=code.Escape(entity)#>By<#=keyName#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>) };
+		var result = new List<<#=code.Escape(entity)#>Entity> { _service.Get<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>) };
 		return new QueryMetadata<<#=code.Escape(entity)#>Entity>(result, 1);
 	}
 

@@ -24,7 +24,7 @@ namespace Civic.T4.Services
 
     public partial class ExampleService
     {
-        public Entity1Entity GetEntity1ByName(String name)
+        public Entity1Entity GetEntity1(String name)
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "GetEntity1ByName"))
             {

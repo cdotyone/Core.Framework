@@ -13,6 +13,7 @@ using System;
 using System.ServiceModel.Activation;
 using System.Collections.Generic;
 using Civic.Core.Audit;
+using Civic.Core.Configuration;
 using Civic.Core.Data;
 using Civic.Core.Logging;
 using Civic.T4.WebApi;
@@ -41,6 +42,8 @@ namespace Civic.T4.Services
                 _connection = value;
             }
         }
+
+        public INamedElement Configuration { get; set; }
 
         public string ModuleName { get { return "civic"; } }
 

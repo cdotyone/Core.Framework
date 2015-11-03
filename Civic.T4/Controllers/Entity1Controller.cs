@@ -42,7 +42,7 @@ namespace Civic.T4.Controllers
         [Route("{name}")]
         public QueryMetadata<Entity1Entity> Get(String name)
         {
-            var result = new List<Entity1Entity> { _service.GetEntity1ByName(name) };
+            var result = new List<Entity1Entity> { _service.GetEntity1(name) };
             return new QueryMetadata<Entity1Entity>(result, 1);
         }
 

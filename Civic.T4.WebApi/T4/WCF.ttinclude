@@ -29,7 +29,7 @@ public partial class <#=edmxFileName#>Service : I<#=edmxFileName#>, IEntityServi
 		}
     }
 
-	INamedElement Configuration { get; set; }
+	public INamedElement Configuration { get; set; }
 
     public string ModuleName { get { return "<#=apiGeneralSchemaName#>"; } }
         
@@ -97,7 +97,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 	}
 
 #>
-	public <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>By<#=code.Escape(keyName)#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#><#}#>) 
+	public <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#><#}#>) 
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Get<#=code.Escape(entity)#>By<#=code.Escape(keyName)#>")) {
 
@@ -280,7 +280,7 @@ public interface I<#=edmxFileName+entity.Name#>
 	List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(int skip, ref int count, bool retCount, string filterBy, string orderBy);
 
 	[OperationContract]
-	<#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>By<#=code.Escape(keyName)#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#><#}#>);
+	<#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#><#}#>);
 
 	[OperationContract]
 	<#=((keyType=="Int32" || keyType=="int") && keyName=="Id"?"int":"void")#> Add<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>);
