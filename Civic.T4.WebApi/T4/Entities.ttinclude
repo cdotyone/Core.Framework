@@ -108,17 +108,24 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
     public void Add(IDBConnection connection)
     {
-        Data.<#=edmxFileName#>Data.Add<#=entity.Name#>(this, connection);
+		var service = new Services.<#=edmxFileName#>Service();
+		service.Connection = connection;
+		service.Add<#=entity.Name#>(this);
     }
 
     public void Modify(IDBConnection connection)
     {
-        Data.<#=edmxFileName#>Data.Modify<#=entity.Name#>(this, connection);
+		var service = new Services.<#=edmxFileName#>Service();
+		service.Connection = connection;
+		service.Modify<#=entity.Name#>(this);
     }
 
     public void Remove(IDBConnection connection)
     {
-        Data.<#=edmxFileName#>Data.Remove<#=entity.Name#>(<# foreach(var key in keys) { #> <#=key#>, <#}#> connection);
+		var service = new Services.<#=edmxFileName#>Service();
+		service.Connection = connection;
+		<#var keyCounter = 0;#>
+		service.Remove<#=entity.Name#>(<# foreach(var key in keys) { #> <#=key + (keyCounter>0?",":"")#> <# keyCounter++;}#>);
     }
 
 }

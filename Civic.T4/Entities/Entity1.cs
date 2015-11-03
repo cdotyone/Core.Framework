@@ -51,17 +51,23 @@ namespace Civic.T4.Entities
 
         public void Add(IDBConnection connection)
         {
-            Data.ExampleData.AddEntity1(this, connection);
+            var service = new Services.ExampleService();
+            service.Connection = connection;
+            service.AddEntity1(this);
         }
 
         public void Modify(IDBConnection connection)
         {
-            Data.ExampleData.ModifyEntity1(this, connection);
+            var service = new Services.ExampleService();
+            service.Connection = connection;
+            service.ModifyEntity1(this);
         }
 
         public void Remove(IDBConnection connection)
         {
-            Data.ExampleData.RemoveEntity1(Name, connection);
+            var service = new Services.ExampleService();
+            service.Connection = connection;
+            service.RemoveEntity1(Name);
         }
 
     }
