@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Civic.Core.Configuration;
+using Civic.Core.Data;
 
 namespace Civic.T4.WebApi
 {
     public interface IEntityService
     {
+        IDBConnection Connection { get; }
+
         INamedElement Configuration { get; set; }
 
         string ModuleName { get; }
