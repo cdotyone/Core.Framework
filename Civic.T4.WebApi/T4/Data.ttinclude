@@ -111,8 +111,8 @@ internal partial class <#=edmxFileName#>Data
 			if(ef.IsKey(edmProperty)) { 
 				if(code.Escape(edmProperty.TypeUsage.EdmType).ToLower()=="guid" || code.Escape(edmProperty.TypeUsage.EdmType)=="DateTime" || code.Escape(edmProperty.TypeUsage.EdmType)=="Int32" || code.Escape(edmProperty.TypeUsage.EdmType)=="int" || code.Escape(edmProperty.TypeUsage.EdmType)=="Int64" || code.Escape(edmProperty.TypeUsage.EdmType)=="long" || code.Escape(edmProperty.TypeUsage.EdmType)=="float" || code.Escape(edmProperty.TypeUsage.EdmType)=="double") { #>
 
-			<# if((keyType=="Int32" || keyType=="int") && keyName.ToLower()=="id") { #> return 				 
-			<#}#><#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = <#=code.Escape(edmProperty.TypeUsage.EdmType)#>.Parse(
+			<# if((keyType=="Int32" || keyType=="int") && keyName.ToLower()=="id") { #> 
+			return <#}#><#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = <#=code.Escape(edmProperty.TypeUsage.EdmType)#>.Parse(
 			command.GetOutParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>").Value.ToString());<#
 				} 
 			}

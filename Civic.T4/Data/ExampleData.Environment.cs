@@ -86,9 +86,9 @@ namespace Civic.T4.Data
             {
                 buildEnvironmentCommandParameters(environment, command, true);
                 command.ExecuteNonQuery();
-                return
-               environment.ID = Int32.Parse(
-               command.GetOutParameter("@id").Value.ToString());
+
+                return environment.ID = Int32.Parse(
+                command.GetOutParameter("@id").Value.ToString());
             }
         }
 

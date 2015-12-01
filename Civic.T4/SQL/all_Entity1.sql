@@ -142,29 +142,3 @@ BEGIN
 		-- t4-where end
 END
 GO
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity1GetByEnvironment]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[usp_Entity1GetByEnvironment]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[usp_Entity1GetByEnvironment]
-	  @environmentID [int]
-AS
-BEGIN
-	SET NOCOUNT ON
-
-	SELECT	
-		-- t4-columns begin
-		 [e1].[Name]
-		,[e1].[EnvironmentID]
-		,[e1].[Dte]
-		-- t4-columns end
-	FROM [dbo].[Entity1] [e1]
-	WHERE	
-		-- t4-where begin
-	    [e1].[EnvironmentID] = @environmentID
-		-- t4-where end
-END
-GO

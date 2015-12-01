@@ -434,6 +434,7 @@ GO
 
     foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
     {
+		continue;
         if (navProperty.FromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many) {
 
 		var toEntity = navProperty.ToEndMember.GetEntityType();

@@ -97,7 +97,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 	}
 
 #>
-	public <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#><#}#>) 
+	public <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(<# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#>) 
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Get<#=code.Escape(entity)#>By<#=code.Escape(keyName)#>")) {
 
@@ -178,7 +178,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 
 			try {
                 using(var db = Connection) {
-					var before = Data.<#=edmxFileName#>Data.Get<#=code.Escape(entity)#>(<# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + lowerName + "."+ key)#><#}#>, db);
+					var before = Data.<#=edmxFileName#>Data.Get<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + lowerName + "."+ key)#><#}#>, db);
 					var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", <# foreach(var key in keys.Keys) { #>before.<#=key#>.ToString()+<#}#>"", before, <#=code.Escape(lowerName)#>);
 					Data.<#=edmxFileName#>Data.Modify<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>, db);
 					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);
@@ -280,7 +280,7 @@ public interface I<#=edmxFileName+entity.Name#>
 	List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(int skip, ref int count, bool retCount, string filterBy, string orderBy);
 
 	[OperationContract]
-	<#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(<# foreach(var key in keys.Keys) { #> <#=keys[key]#> <#=Core.GetMethodParameterName(key)#><#}#>);
+	<#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(<# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#>);
 
 	[OperationContract]
 	<#=((keyType=="Int32" || keyType=="int") && keyName=="Id"?"int":"void")#> Add<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>);
@@ -289,7 +289,7 @@ public interface I<#=edmxFileName+entity.Name#>
 	void Modify<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>);
 
 	[OperationContract]
-	void Remove<#=code.Escape(entity)#>(<# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
+	void Remove<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
 
 <#
 	EndNamespace(namespaceName);

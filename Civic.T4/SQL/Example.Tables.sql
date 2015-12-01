@@ -1,7 +1,7 @@
 ﻿-- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 11/03/2015 12:34:03
+-- Date Created: 12/01/2015 11:19:20
 -- Generated from EDMX file: D:\devel\Civic360\civic-t4\Civic.T4\Models\Example.edmx
 -- --------------------------------------------------
 
@@ -36,6 +36,9 @@ GO
 IF OBJECT_ID(N'[dbo].[Entity1]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Entity1];
 GO
+IF OBJECT_ID(N'[dbo].[Entity2]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Entity2];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -56,6 +59,13 @@ CREATE TABLE [dbo].[Entity1] (
 );
 GO
 
+-- Creating table 'Entity2'
+CREATE TABLE [dbo].[Entity2] (
+    [Id] [int] IDENTITY(1,1) NOT NULL,
+    [ff] [nvarchar](max)  NOT NULL
+);
+GO
+
 -- --------------------------------------------------
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
@@ -72,6 +82,13 @@ ALTER TABLE [dbo].[Entity1]
 ADD CONSTRAINT [PK_Entity1]
 
     PRIMARY KEY ([Name]ASC);
+GO
+
+-- Creating primary key on [Id], [ff] in table 'Entity2'
+ALTER TABLE [dbo].[Entity2]
+ADD CONSTRAINT [PK_Entity2]
+
+    PRIMARY KEY ([Id], [ff]ASC);
 GO
 
 -- --------------------------------------------------

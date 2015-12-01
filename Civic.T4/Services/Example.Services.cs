@@ -51,7 +51,7 @@ namespace Civic.T4.Services
         {
             get
             {
-                return new List<string> { "entity1", "environment" };
+                return new List<string> { "entity1", "entity2", "environment" };
             }
         }
 
@@ -62,6 +62,9 @@ namespace Civic.T4.Services
                 case "entity1":
                 case "Entity1":
                     return new Civic.T4.Entities.Entity1();
+                case "entity2":
+                case "Entity2":
+                    return new Civic.T4.Entities.Entity2();
                 case "environment":
                 case "Environment":
                     return new Civic.T4.Entities.Environment();

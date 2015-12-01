@@ -124,8 +124,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
     {
 		var service = new Services.<#=edmxFileName#>Service();
 		service.Connection = connection;
-		<#var keyCounter = 0;#>
-		service.Remove<#=entity.Name#>(<# foreach(var key in keys) { #> <#=key + (keyCounter>0?",":"")#> <# keyCounter++;}#>);
+		service.Remove<#=entity.Name#>(<# var keyCounter = 0; foreach(var key in keys) { keyCounter++; #><#=(keyCounter>1?", ":"")+key#> <# }#>);
     }
 
 }
@@ -168,7 +167,7 @@ foreach (var complex in typeMapper.GetItemsToGenerate<ComplexType>(itemCollectio
         foreach(var edmProperty in simpleProperties)
         {
 #>
-    <#=codeStringGenerator.Property(edmProperty).Replace("System.DateTime", "System.DateTime?") #>
+    <#=codeStringGenerator.Property(edmProperty).Replace("System.DateTime", "System.DateTime?").Replace("Nullable<System.DateTime?>", "System.DateTime?") #>
 <#
         }
     }

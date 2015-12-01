@@ -51,6 +51,7 @@
             <End Role="Environment" EntitySet="Environments" />
             <End Role="Entity1" EntitySet="Entity1" />
           </AssociationSet>
+          <EntitySet Name="Entity2" EntityType="Example.Entity2" />
         </EntityContainer>
         <EntityType Name="Environment">
           <Key>
@@ -81,6 +82,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Entity2">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="ff" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="ff" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -127,6 +136,7 @@
         <EntityTypeShape EntityType="Example.Environment" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="Example.Entity1" Width="1.5" PointX="4.125" PointY="1.625" IsExpanded="true" />
         <AssociationConnector Association="Example.EnvironmentEntity1" />
+        <EntityTypeShape EntityType="Example.Entity2" Width="1.5" PointX="7.5" PointY="2.375" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
