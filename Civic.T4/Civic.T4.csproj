@@ -154,7 +154,9 @@
     <Content Include="SQL\Example.Tables.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Entity1Controller.cs">
