@@ -59,20 +59,20 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Civic.Core.Caching, Version=1.17.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Caching.1.17.274\lib\net40\Civic.Core.Caching.dll</HintPath>
+    <Reference Include="Civic.Core.Caching, Version=1.18.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
+      <HintPath>..\packages\Civic.Core.Caching.1.18.275\lib\net40\Civic.Core.Caching.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Civic.Core.Configuration, Version=1.17.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Configuration.1.17.274\lib\net40\Civic.Core.Configuration.dll</HintPath>
+    <Reference Include="Civic.Core.Configuration, Version=1.18.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
+      <HintPath>..\packages\Civic.Core.Configuration.1.18.275\lib\net40\Civic.Core.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Civic.Core.Data, Version=1.17.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Data.1.17.274\lib\net40\Civic.Core.Data.dll</HintPath>
+    <Reference Include="Civic.Core.Data, Version=1.18.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
+      <HintPath>..\packages\Civic.Core.Data.1.18.275\lib\net40\Civic.Core.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Civic.Core.Logging, Version=1.17.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Logging.1.17.274\lib\net40\Civic.Core.Logging.dll</HintPath>
+    <Reference Include="Civic.Core.Logging, Version=1.18.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
+      <HintPath>..\packages\Civic.Core.Logging.1.18.275\lib\net40\Civic.Core.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
