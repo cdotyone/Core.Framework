@@ -7,7 +7,7 @@ namespace Civic.T4.WebApi
     {
         public static DateTime FromDB(this DateTime dte)
         {
-            if (T4WebApiSection.Current.UseLocalTime && !(dte.Hour==0 && dte.Minute == 0) )
+            if (T4WebApiSection.Current.UseLocalTime)
             {
                 return DateTime.SpecifyKind(dte,DateTimeKind.Local);
             }
