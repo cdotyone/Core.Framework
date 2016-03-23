@@ -32,5 +32,11 @@ namespace Civic.T4.WebApi
             }
             return dte;
         }
+
+        public static DateTime? Date(this DateTime? dte)
+        {
+            if (!dte.HasValue) return null;
+            return dte.Value.Date;
+        }
     }
 }
