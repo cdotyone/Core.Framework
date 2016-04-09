@@ -38,7 +38,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	public QueryMetadata<<#=entity.Name#>Entity> Get()
 	{
 		ODataV3QueryOptions options = this.GetOptions();
-		var maxrows = Civic.T4.WebApi.Configuration.T4WebApiSection.GetMaxRows("<#=apiSchemaName.ToLower()#>","<#=entity.Name.ToLower()#>");
+		var maxrows = Civic.T4.WebApi.Configuration.T4Config.GetMaxRows("<#=apiSchemaName.ToLower()#>","<#=entity.Name.ToLower()#>");
 		var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
 		string orderby = options.ProcessOrderByOptions();
 		var result = _service.GetPaged<#=entity.Name#>(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
