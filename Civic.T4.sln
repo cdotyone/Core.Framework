@@ -1,14 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7AA233FB-EE92-49EC-8836-0553F58A2E17}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\AssemblyVersionFinder.exe = .nuget\AssemblyVersionFinder.exe
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civic.T4.WebApi", "Civic.T4.WebApi\Civic.T4.WebApi.csproj", "{E8F58C4A-41DE-40C7-994B-9E2230C30553}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{54D7CD44-0610-43DD-9FCE-7480335B3B4F}"
