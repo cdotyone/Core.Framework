@@ -4,41 +4,48 @@ using Civic.Core.Configuration;
 
 namespace Civic.T4.WebApi.Configuration
 {
-    public class T4WebApiSection : Section
+    public class T4Config : Section
     {
-        private static T4WebApiSection _current;
         private static bool _checked;
         private static Dictionary<string, int> _maxRowOverrides;
         private static Dictionary<string, bool> _forceUpperOverrides;
         private static object _lock = new object();
 
+        public T4Config(INamedElement element)
+        {
+            if (element == null) element = new NamedConfigurationElement() { Name = SectionName };
+            Children = element.Children;
+            Attributes = element.Attributes;
+            Name = element.Name;
+
+            if (Attributes.ContainsKey(Constants.CONFIG_USE_LOCALTIME_PROP))
+                UseLocalTime = bool.Parse(Attributes[Constants.CONFIG_USE_LOCALTIME_PROP]);
+            if (Attributes.ContainsKey(Constants.CONFIG_FORCEUPPER))
+                ForceUpperCase = bool.Parse(Attributes[Constants.CONFIG_FORCEUPPER]);
+            if (Attributes.ContainsKey(Constants.CONFIG_MAX))
+                Max = int.Parse(Attributes[Constants.CONFIG_MAX]);
+        }
+
         /// <summary>
-        /// The current configuration 
+        /// The current configuration for caching module
         /// </summary>
-        public static T4WebApiSection Current
+        public static T4Config Current
         {
             get
             {
-                if (_current!=null) return _current;
-                _current = ConfigurationFactory.ReadConfigSection<T4WebApiSection>(SectionName) ?? new T4WebApiSection
-                    {
-                        ForceUpperCase = false,
-                        Max = 100,
-                        UseLocalTime = Constants.CONFIG_USE_LOCALTIME_DEFAULT
-                    };
+                if (_current != null) return _current;
+                if (_coreConfig == null) _coreConfig = CivicSection.Current;
 
+                _current = new T4Config(_coreConfig.Children.ContainsKey(SectionName) ? _coreConfig.Children[SectionName] : null);
 
-                if (_current.Attributes.ContainsKey(Constants.CONFIG_USE_LOCALTIME_PROP))
-                    _current.UseLocalTime = bool.Parse(_current.Attributes[Constants.CONFIG_USE_LOCALTIME_PROP]);
-                if (_current.Attributes.ContainsKey(Constants.CONFIG_FORCEUPPER))
-                    _current.ForceUpperCase = bool.Parse(_current.Attributes[Constants.CONFIG_FORCEUPPER]);
-                if (_current.Attributes.ContainsKey(Constants.CONFIG_MAX))
-                    _current.Max = int.Parse(_current.Attributes[Constants.CONFIG_MAX]);
 
                 _checked = true;
+
                 return _current;
             }
         }
+        private static CivicSection _coreConfig;
+        private static T4Config _current;
 
         /// <summary>
         /// Name of the configuration section for the header footer

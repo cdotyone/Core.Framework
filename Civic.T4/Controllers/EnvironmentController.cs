@@ -32,7 +32,7 @@ namespace Civic.T4.Controllers
         public QueryMetadata<EnvironmentEntity> Get()
         {
             ODataV3QueryOptions options = this.GetOptions();
-            var maxrows = Civic.T4.WebApi.Configuration.T4WebApiSection.GetMaxRows("dbo", "environment");
+            var maxrows = Civic.T4.WebApi.Configuration.T4Config.GetMaxRows("dbo", "environment");
             var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
             string orderby = options.ProcessOrderByOptions();
             var result = _service.GetPagedEnvironment(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);

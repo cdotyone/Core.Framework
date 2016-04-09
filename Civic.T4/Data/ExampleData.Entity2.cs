@@ -125,8 +125,8 @@ namespace Civic.T4.Data
             Debug.Assert(command != null);
             if (addRecord) command.AddParameter("@id", ParameterDirection.InputOutput, entity2.Id);
             else command.AddInParameter("@id", entity2.Id);
-            if (addRecord) command.AddParameter("@ff", ParameterDirection.InputOutput, T4WebApiSection.CheckUpperCase("dbo", "entity2", "ff", entity2.ff));
-            else command.AddInParameter("@ff", T4WebApiSection.CheckUpperCase("dbo", "entity2", "ff", entity2.ff));
+            if (addRecord) command.AddParameter("@ff", ParameterDirection.InputOutput, T4Config.CheckUpperCase("dbo", "entity2", "ff", entity2.ff));
+            else command.AddInParameter("@ff", T4Config.CheckUpperCase("dbo", "entity2", "ff", entity2.ff));
 
         }
 

@@ -7,7 +7,7 @@ namespace Civic.T4.WebApi
     {
         public static DateTime FromDB(this DateTime dte)
         {
-            if (T4WebApiSection.Current.UseLocalTime)
+            if (T4Config.Current.UseLocalTime)
             {
                 return DateTime.SpecifyKind(dte,DateTimeKind.Local);
             }
@@ -17,7 +17,7 @@ namespace Civic.T4.WebApi
         public static DateTime? ToDB(this DateTime? dte)
         {
             if (!dte.HasValue) return null;
-            if (T4WebApiSection.Current.UseLocalTime)
+            if (T4Config.Current.UseLocalTime)
             {
                 return dte.Value.ToLocalTime();
             }
@@ -26,7 +26,7 @@ namespace Civic.T4.WebApi
 
         public static DateTime ToDB(this DateTime dte)
         {
-            if (T4WebApiSection.Current.UseLocalTime)
+            if (T4Config.Current.UseLocalTime)
             {
                 return dte.ToLocalTime();
             }

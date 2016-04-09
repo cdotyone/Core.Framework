@@ -133,7 +133,7 @@
     </Compile>
     <Compile Include="AuthorizationHelper.cs" />
     <Compile Include="ErrorMessages.cs" />
-    <Compile Include="Configuration\T4WebApiSection.cs" />
+    <Compile Include="Configuration\T4Config.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IEntityRouteManager.cs" />
