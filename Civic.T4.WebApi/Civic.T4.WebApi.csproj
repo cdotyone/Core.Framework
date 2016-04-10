@@ -61,19 +61,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Civic.Core.Caching, Version=1.19.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Caching.1.19.6\lib\net40\Civic.Core.Caching.dll</HintPath>
+      <HintPath>..\packages\Civic.Core.Caching.1.19.9\lib\net40\Civic.Core.Caching.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Civic.Core.Configuration, Version=1.19.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Configuration.1.19.6\lib\net40\Civic.Core.Configuration.dll</HintPath>
+      <HintPath>..\packages\Civic.Core.Configuration.1.19.9\lib\net40\Civic.Core.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Civic.Core.Data, Version=1.19.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Data.1.19.6\lib\net40\Civic.Core.Data.dll</HintPath>
+      <HintPath>..\packages\Civic.Core.Data.1.19.9\lib\net40\Civic.Core.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Civic.Core.Logging, Version=1.19.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Logging.1.19.6\lib\net40\Civic.Core.Logging.dll</HintPath>
+      <HintPath>..\packages\Civic.Core.Logging.1.19.9\lib\net40\Civic.Core.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
