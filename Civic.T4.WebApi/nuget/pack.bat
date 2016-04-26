@@ -13,7 +13,7 @@ IF %3==Nuget (
 	)
 
 	FOR %%X in ("%2*.nupkg") DO (
-		ECHO nuget.exe push %%X -Config %nugetconfig%
-		nuget.exe push %%X 2Gt35eXSKnbkenkiBiecY21WhRtcO6uv -Config %nugetconfig% 
+		ECHO nuget.exe push %%X -Config %nugetconfig% -Source https://nuget.civic360.com
+		nuget.exe push %%X 2Gt35eXSKnbkenkiBiecY21WhRtcO6uv -Config %nugetconfig% -Source https://nuget.civic360.com
 	)
 )
