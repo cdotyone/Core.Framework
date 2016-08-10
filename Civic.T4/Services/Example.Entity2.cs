@@ -79,7 +79,7 @@ namespace Civic.T4.Services
                     {
                         var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", entity2.Id.ToString() + entity2.ff.ToString() + "", entity2);
                         Data.ExampleData.AddEntity2(entity2, db);
-                        AuditManager.MarkSuccessFul("dbo", logid);
+                        AuditManager.MarkSuccessFul("dbo", new[] { logid });
                     }
                 }
                 catch (Exception ex)
@@ -102,7 +102,7 @@ namespace Civic.T4.Services
                         var before = Data.ExampleData.GetEntity2(entity2.Id, entity2.ff, db);
                         var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.Id.ToString() + before.ff.ToString() + "", before, entity2);
                         Data.ExampleData.ModifyEntity2(entity2, db);
-                        AuditManager.MarkSuccessFul("dbo", logid);
+                        AuditManager.MarkSuccessFul("dbo", new[] { logid });
                     }
                 }
                 catch (Exception ex)
@@ -125,7 +125,7 @@ namespace Civic.T4.Services
                         var before = Data.ExampleData.GetEntity2(id, ff, db);
                         var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.Id.ToString() + before.ff.ToString() + "", before);
                         Data.ExampleData.RemoveEntity2(id, ff, db);
-                        AuditManager.MarkSuccessFul("dbo", logid);
+                        AuditManager.MarkSuccessFul("dbo", new[] { logid });
                     }
                 }
                 catch (Exception ex)
