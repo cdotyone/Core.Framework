@@ -148,7 +148,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid, retval);<#
 			} else {
 	#> 				Data.<#=edmxFileName#>Data.Add<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>, db);
-					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", new [] {logid});<#
+					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);<#
 			} #>
 
 			<#
@@ -182,7 +182,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 					var before = Data.<#=edmxFileName#>Data.Get<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + lowerName + "."+ key)#><#}#>, db);
 					var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", <# foreach(var key in keys.Keys) { #>before.<#=key#>.ToString()+<#}#>"", before, <#=code.Escape(lowerName)#>);
 					Data.<#=edmxFileName#>Data.Modify<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>, db);
-					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", new [] {logid});
+					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid;
 				}
 			}
 			catch (Exception ex)
@@ -202,7 +202,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 					var before = Data.<#=edmxFileName#>Data.Get<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>, db);
 					var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", <# foreach(var key in keys.Keys) { #>before.<#=key#>.ToString()+<#}#>"", before);
 					Data.<#=edmxFileName#>Data.Remove<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>, db);
-					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", new [] {logid});
+					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);
 				}
 			}
 			catch (Exception ex)
