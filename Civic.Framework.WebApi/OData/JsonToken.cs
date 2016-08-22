@@ -1,0 +1,21 @@
+﻿using System;
+
+namespace Civic.Framework.WebApi.OData
+{
+    public class JsonToken
+    {
+        public TokenTypes TokenType { get; private set; }
+
+        public string Sequence { get; private set; }
+
+        public JsonToken(TokenTypes tokenType, String sequence)
+        {
+                TokenType = tokenType;
+                Sequence = sequence;
+        }
+
+        public override String ToString() {
+            return String.Format("[{0}, {1}]", TokenType, Sequence);
+        }
+    }
+}
