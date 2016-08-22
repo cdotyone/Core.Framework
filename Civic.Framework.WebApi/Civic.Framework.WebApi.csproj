@@ -112,7 +112,6 @@
       <Link>civic.snk</Link>
     </None>
     <None Include="app.config" />
-    <None Include="nuget\Content\App_Start\T4WebApi.cs.pp" />
     <Compile Include="..\References\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
@@ -183,6 +182,7 @@
     <Content Include="T4\WebAPI.ttinclude" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="nuget\Content\App_Start\CivicWebApi.cs.pp" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

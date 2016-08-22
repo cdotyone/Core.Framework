@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof($rootnamespace$.App_Start.T4WebApi), "PreStart")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof($rootnamespace$.App_Start.CivicWebApi), "PreStart")]
 namespace $rootnamespace$.App_Start {
 
     public static class CivicWebApi
