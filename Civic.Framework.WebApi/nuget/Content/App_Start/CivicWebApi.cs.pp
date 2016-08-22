@@ -4,16 +4,15 @@ using System.IO;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using Civic.Framework.WebApi;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof($rootnamespace$.App_Start.T4WebApi), "PreStart")]
 namespace $rootnamespace$.App_Start {
 
-    public static class T4WebApi
+    public static class CivicWebApi
     {
         public static void PreStart()
         {
-            T4WebActivator.LoadControllers();
+            Civic.Framework.WebApi.WebActivator.LoadControllers();
         }
     }
 }

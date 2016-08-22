@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E8F58C4A-41DE-40C7-994B-9E2230C30553}</ProjectGuid>
+    <ProjectGuid>{78D4826E-E6FC-4961-900B-9373B3C4B481}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Civic.Framework.WebApi</RootNamespace>
@@ -111,36 +111,21 @@
     <None Include="..\References\civic.snk">
       <Link>civic.snk</Link>
     </None>
-    <None Include="app.config" />
-    <None Include="nuget\Content\App_Start\T4WebApi.cs.pp" />
+    <None Include="nuget\Content\Models\Example.tt">
+      <LastGenOutput>Example1.cs</LastGenOutput>
+    </None>
+    <None Include="nuget\Content\T4\t4generate.ttinclude">
+      <LastGenOutput>Example.cs</LastGenOutput>
+    </None>
+    <None Include="nuget\Tools\Uninstall.ps1" />
+    <None Include="nuget\Tools\Install.ps1" />
     <Compile Include="..\References\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="AuthorizationHelper.cs" />
-    <Compile Include="ErrorMessages.cs" />
-    <Compile Include="Configuration\T4Config.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="IEntityRouteManager.cs" />
-    <Compile Include="IEntity.cs" />
-    <Compile Include="IEntityService.cs" />
-    <Compile Include="IQueryMetadata.cs" />
-    <Compile Include="EntityRoute.cs" />
-    <Compile Include="ODataV3QueryOptions.cs" />
-    <Compile Include="ODataV3EdmxFormatter.cs" />
-    <Compile Include="ODataV3JsonFormatter.cs" />
-    <Compile Include="ODataV3FormatterExtensions.cs" />
-    <Compile Include="ODataV3QueryFilter.cs" />
-    <Compile Include="ODataV3XmlFormatter.cs" />
-    <Compile Include="OData3FilterBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ODataV3Attribute.cs" />
-    <Compile Include="QueryMetadata.cs" />
-    <Compile Include="QueryMetadataXml.cs" />
-    <Compile Include="WebActivator.cs" />
-    <Compile Include="VersionControllerSelector.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="nuget\Content\Models\Example.SeedData.xml" />
     <Content Include="T4\Core.ttinclude" />
   </ItemGroup>
   <ItemGroup>
@@ -168,8 +153,9 @@
     <Content Include="T4\WebAPI.ttinclude" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
+    <None Include="nuget\Content\Models\Example.edmx" />
+    <None Include="nuget\Content\T4\t4settings.ttinclude">
+      <LastGenOutput>Example.cs</LastGenOutput>
     </None>
     <None Include="T4\TemplateFilemanager.CS.ttinclude" />
   </ItemGroup>

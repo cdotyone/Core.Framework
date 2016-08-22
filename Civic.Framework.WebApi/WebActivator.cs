@@ -3,7 +3,7 @@ using System.Web.Http.Dispatcher;
 
 namespace Civic.Framework.WebApi
 {
-    public static class T4WebActivator
+    public static class WebActivator
     {
         public static void LoadControllers()
         {
