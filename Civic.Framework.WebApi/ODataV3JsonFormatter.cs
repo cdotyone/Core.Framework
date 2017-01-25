@@ -86,7 +86,7 @@ namespace Civic.Framework.WebApi
                   .ContinueWith(t3 => {
                     var buffer = new StringBuilder();
 
-                    if (inlinecount == "allpages" && data != null && data.Count.HasValue)
+                    if (data != null && data.Count.HasValue)
                     {
                         buffer.Append(",\"odata.count\":\"");
                         buffer.Append(data.Count.Value);
