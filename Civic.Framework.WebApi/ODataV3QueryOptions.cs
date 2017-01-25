@@ -48,13 +48,13 @@
         public bool InlineCount
         {
             get;
-            internal set;
+            set;
         }
 
         public string Format
         {
             get;
-            internal set;
+            set;
         }
 
         //public string SkipToken
