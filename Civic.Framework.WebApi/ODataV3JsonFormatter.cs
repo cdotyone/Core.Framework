@@ -62,9 +62,14 @@ namespace Civic.Framework.WebApi
             var url = _request.RequestUri.ToString();
 	        if (url.Contains("?")) url = url.Substring(0, url.IndexOf('?'));
 	        var query = HttpUtility.ParseQueryString(_request.RequestUri.Query);
-			
-			var inlinecount = query.Get("$inlinecount");
-	        var metadata = url.EndsWith("/$metadata");
+
+
+            var nocase = query.Get("$nocase");
+            if(nocase=="true" || nocase == "1")
+                SerializerSettings.ContractResolver = new DefaultContractResolver();
+
+            var inlinecount = query.Get("$inlinecount");
+            var metadata = url.EndsWith("/$metadata");
 			if (metadata)
 			{
 				if (data != null && data.HasMetaDataAction)
