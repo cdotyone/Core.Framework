@@ -61,7 +61,7 @@ namespace Civic.Framework.WebApi
             return false;
         }
 
-        public static bool HasPermission(string module, string entityname, string permission, bool exact)
+        public static bool HasPermission(string module, string entityname, string permission, bool exact = false)
         {
             var context = HttpContext.Current;
             var claimsPrincipal = context.User as ClaimsPrincipal;
