@@ -60,5 +60,19 @@ namespace Civic.Framework.WebApi
 
             return false;
         }
+
+        public static bool HasPermission(string module, string entityname, string permission, bool exact)
+        {
+            var context = HttpContext.Current;
+            var claimsPrincipal = context.User as ClaimsPrincipal;
+            if (claimsPrincipal != null)
+            {
+                return
+                    claimsPrincipal.IsInRole(module.ToUpperInvariant() + "." + entityname.ToUpperInvariant() + "_"+ permission.ToUpperInvariant()) ||
+                    (!exact && claimsPrincipal.IsInRole(module.ToUpperInvariant() + "." + entityname.ToUpperInvariant() + "_F"));
+            }
+
+            return false;
+        }
     }
 }
