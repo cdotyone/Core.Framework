@@ -167,7 +167,7 @@ foreach (var complex in typeMapper.GetItemsToGenerate<ComplexType>(itemCollectio
         foreach(var edmProperty in simpleProperties)
         {
 #>
-    <#=codeStringGenerator.Property(edmProperty).Replace("System.DateTime", "System.DateTime?").Replace("Nullable<System.DateTime?>", "System.DateTime?") #>
+    <#=codeStringGenerator.Property(edmProperty).Replace("System.DateTime", "System.DateTime?") #>
 <#
         }
     }

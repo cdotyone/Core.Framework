@@ -293,8 +293,7 @@ public class TypeMapper
             }
 
             return clrType.IsValueType && isNullable == true ?
-                String.Format(CultureInfo.InvariantCulture, "Nullable<{0}>", typeName) :
-                typeName;
+                String.Format(CultureInfo.InvariantCulture, "{0}?", typeName).Replace("??","?") : typeName;
         }
 
         throw new ArgumentException("edmType");
