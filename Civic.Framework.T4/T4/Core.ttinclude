@@ -754,7 +754,9 @@ public static string GetParameterType(CodeGenerationTools code, EdmProperty edmP
 		case "long":
 			return "[bigint]";
 		case "double":
-			return "[float]";
+			return "[decimal](20,4)";
+		case "decimal":
+			return "[decimal](20,4)";
 		case "float":
 			return "[float]";
 		case "datetime":
@@ -853,7 +855,7 @@ public static string WriteIdentity2(CodeGenerationTools code, EdmProperty proper
 public static bool IsIntegerOrDecimalType2(CodeGenerationTools code, EdmProperty property)
 {
     HashSet<string> sqlIntegerOrDecimalTypes = new HashSet<string>() { "int", "bigint", "smallint", "double", "decimal", "float", "real", "tinyint" };
-    return (sqlIntegerOrDecimalTypes.Contains(GetParameterType(code,property).Replace("[","").Replace("]","")));
+    return (sqlIntegerOrDecimalTypes.Contains(GetParameterType(code,property).Replace("[","").Replace("]","").replace("decimal","double"));
     //return false;
 }
 
