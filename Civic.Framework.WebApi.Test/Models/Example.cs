@@ -7,11 +7,11 @@
 
 
 
-//-> Entity1Controller.cs
+//-> ExampleEntity1Controller.cs
 
-//-> Entity2Controller.cs
+//-> ExampleEntity2Controller.cs
 
-//-> EnvironmentController.cs
+//-> ExampleEnvironmentController.cs
 
 //-> ExampleData.cs
 
@@ -73,9 +73,9 @@ Error processing file Example.Tables.sql Error HRESULT E_FAIL has been returned 
 // Civic.Framework.WebApi.Test\Services\Example.Entity2.cs
 // Civic.Framework.WebApi.Test\Services\Example.Entity1.cs
 // Civic.Framework.WebApi.Test\Services\Example.Services.cs
-// Civic.Framework.WebApi.Test\Controllers\EnvironmentController.cs
-// Civic.Framework.WebApi.Test\Controllers\Entity2Controller.cs
-// Civic.Framework.WebApi.Test\Controllers\Entity1Controller.cs
+// Civic.Framework.WebApi.Test\Controllers\ExampleEnvironmentController.cs
+// Civic.Framework.WebApi.Test\Controllers\ExampleEntity2Controller.cs
+// Civic.Framework.WebApi.Test\Controllers\ExampleEntity1Controller.cs
 // Civic.Framework.WebApi.Test\Entities\Environment.cs
 // Civic.Framework.WebApi.Test\Entities\Entity2.cs
 // Civic.Framework.WebApi.Test\Entities\Entity1.cs

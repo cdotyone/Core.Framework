@@ -24,7 +24,7 @@ namespace Civic.Framework.WebApi.Test.Controllers
 {
     [RoutePrefix("api/example/1.0/Entity2")]
     [System.CodeDom.Compiler.GeneratedCode("STE-EF", ".NET 3.5")]
-    public partial class Entity2Controller : ApiController
+    public partial class ExampleEntity2Controller : ApiController
     {
         private static readonly ExampleService _service = new ExampleService();
 
