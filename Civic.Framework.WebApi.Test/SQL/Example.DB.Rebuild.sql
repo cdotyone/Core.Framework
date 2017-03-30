@@ -378,8 +378,8 @@ GO
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 08/10/2016 14:21:45
--- Generated from EDMX file: D:\devel\Civic360\civic-t4\Civic.T4\Models\Example.edmx
+-- Date Created: 03/30/2017 11:11:19
+-- Generated from EDMX file: C:\devel\Civic.Framework\WebApi\Civic.Framework.WebApi.Test\Models\Example.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -432,7 +432,10 @@ GO
 CREATE TABLE [dbo].[Entity1] (
     [Name] [nvarchar](max)  NOT NULL,
     [EnvironmentID] [int]  NOT NULL,
-    [Dte] [datetime]  NOT NULL
+    [Dte] [datetime]  NOT NULL,
+    [Dte2] [datetime]  NULL,
+    [Dble1] [decimal](20,4)  NOT NULL,
+    [Dec1] [decimal](20,4)  NOT NULL
 );
 GO
 
@@ -554,6 +557,9 @@ BEGIN
 		 [e1].[Name]
 		,[e1].[EnvironmentID]
 		,[e1].[Dte]
+		,[e1].[Dte2]
+		,[e1].[Dble1]
+		,[e1].[Dec1]
 		-- t4-columns end
 	FROM [dbo].[Entity1] [e1]
 	WHERE	
@@ -585,6 +591,9 @@ BEGIN
 		 [e1].[Name]
 		,[e1].[EnvironmentID]
 		,[e1].[Dte]
+		,[e1].[Dte2]
+		,[e1].[Dble1]
+		,[e1].[Dec1]
 		-- t4-columns end
     FROM [dbo].[Entity1] [e1]'
 
@@ -609,6 +618,9 @@ CREATE PROCEDURE [dbo].[usp_Entity1Add]
 	  @name [nvarchar](max) out
 	, @environmentID [int]
 	, @dte [datetime]
+	, @dte2 [datetime]
+	, @dble1 [decimal](20,4)
+	, @dec1 [decimal](20,4)
 -- t4-params end
 AS
 BEGIN
@@ -619,6 +631,9 @@ BEGIN
 		 [Name]
 		,[EnvironmentID]
 		,[Dte]
+		,[Dte2]
+		,[Dble1]
+		,[Dec1]
 -- t4-columns end
 	) VALUES (
 
@@ -626,6 +641,9 @@ BEGIN
 		 @name
 		,@environmentID
 		,@dte
+		,@dte2
+		,@dble1
+		,@dec1
 -- t4-values end
 	)
 
@@ -643,6 +661,9 @@ CREATE PROCEDURE [dbo].[usp_Entity1Modify]
 	  @name [nvarchar](max)
 	, @environmentID [int]
 	, @dte [datetime]
+	, @dte2 [datetime]
+	, @dble1 [decimal](20,4)
+	, @dec1 [decimal](20,4)
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -652,6 +673,9 @@ BEGIN
 		 [Name] = @name
 		,[EnvironmentID] = @environmentID
 		,[Dte] = @dte
+		,[Dte2] = @dte2
+		,[Dble1] = @dble1
+		,[Dec1] = @dec1
 		-- t4-columns end
 	FROM [dbo].[Entity1] [e1]
 	WHERE	

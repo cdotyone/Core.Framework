@@ -17,10 +17,10 @@ using System.Diagnostics;
 using Civic.Core.Data;
 using Civic.Framework.WebApi;
 using Civic.Framework.WebApi.Configuration;
-using Civic.T4.Entities;
+using Civic.Framework.WebApi.Test.Entities;
 
-using Entity2Entity = Civic.T4.Entities.Entity2;
-namespace Civic.T4.Data
+using Entity2Entity = Civic.Framework.WebApi.Test.Entities.Entity2;
+namespace Civic.Framework.WebApi.Test.Data
 {
     internal partial class ExampleData
     {

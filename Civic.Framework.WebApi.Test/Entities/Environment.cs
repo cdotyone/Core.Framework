@@ -15,7 +15,7 @@ using System.Runtime.Serialization;
 using Civic.Core.Data;
 using Civic.Framework.WebApi;
 
-namespace Civic.T4.Entities
+namespace Civic.Framework.WebApi.Test.Entities
 {
     [DataContract(Name = "environment")]
     public partial class Environment : IEntity

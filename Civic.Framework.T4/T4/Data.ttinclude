@@ -198,13 +198,13 @@ command.ExecuteNonQuery();
 		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
 		{
 			var ptype=code.Escape(edmProperty.TypeUsage.EdmType).ToLower().Replace("@","");
-			if(ptype=="int32" || ptype=="int" || ptype=="int64" || ptype=="long" || ptype=="float" || ptype=="double") {#>						
+			if(ptype=="int32" || ptype=="int" || ptype=="int64" || ptype=="long" || ptype=="float") {#>						
 		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) ? Int32.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) : 0;<#
 			} else 
 			if(ptype=="boolean") {#>						
 		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) && Boolean.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString());<#
 			} else
-			if(ptype=="decimal") {#>						
+			if(ptype=="decimal" || ptype=="double") {#>						
 		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = double.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) && dataReader["<#=code.Escape(edmProperty.Name)#>"] != null ? dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString() : "0");<#
 			} else
 			if(ptype=="datetime") {#>					

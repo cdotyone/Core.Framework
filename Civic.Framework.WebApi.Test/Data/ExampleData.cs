@@ -14,9 +14,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using Civic.Core.Data;
-using Civic.T4.Entities;
+using Civic.Framework.WebApi.Test.Entities;
 
-namespace Civic.T4.Data
+namespace Civic.Framework.WebApi.Test.Data
 {
     internal partial class ExampleData
     {

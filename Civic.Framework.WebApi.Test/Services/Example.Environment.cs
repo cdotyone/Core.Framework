@@ -15,11 +15,11 @@ using System.Collections.Generic;
 using Civic.Core.Framework.Security;
 using Civic.Core.Audit;
 using Civic.Core.Logging;
-using Civic.T4.Entities;
+using Civic.Framework.WebApi.Test.Entities;
 
-using EnvironmentEntity = Civic.T4.Entities.Environment;
+using EnvironmentEntity = Civic.Framework.WebApi.Test.Entities.Environment;
 
-namespace Civic.T4.Services
+namespace Civic.Framework.WebApi.Test.Services
 {
 
     public partial class ExampleService
@@ -79,7 +79,7 @@ namespace Civic.T4.Services
                     {
                         var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", environment.ID.ToString() + "", environment);
                         Data.ExampleData.AddEnvironment(environment, db);
-                        AuditManager.MarkSuccessFul("dbo", new[] { logid });
+                        AuditManager.MarkSuccessFul("dbo", logid);
                     }
                 }
                 catch (Exception ex)
@@ -102,7 +102,7 @@ namespace Civic.T4.Services
                         var before = Data.ExampleData.GetEnvironment(environment.ID, db);
                         var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.ID.ToString() + "", before, environment);
                         Data.ExampleData.ModifyEnvironment(environment, db);
-                        AuditManager.MarkSuccessFul("dbo", new[] { logid });
+                        AuditManager.MarkSuccessFul("dbo", logid);
                     }
                 }
                 catch (Exception ex)
@@ -125,7 +125,7 @@ namespace Civic.T4.Services
                         var before = Data.ExampleData.GetEnvironment(id, db);
                         var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.ID.ToString() + "", before);
                         Data.ExampleData.RemoveEnvironment(id, db);
-                        AuditManager.MarkSuccessFul("dbo", new[] { logid });
+                        AuditManager.MarkSuccessFul("dbo", logid);
                     }
                 }
                 catch (Exception ex)

@@ -38,8 +38,8 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
         foreach (var edmProperty in simpleProperties)
         {
 #>
-	[DataMember(Name="<#=Core.ToLowerCamel(edmProperty.Name).Replace("iD","id")#>")]
-    <#=codeStringGenerator.Property(edmProperty).Replace("System.DateTime", "System.DateTime?")#>
+	[DataMember(Name="<#=Core.ToLowerCamel(edmProperty.Name).Replace("iD","id").Replace("oUID","ouid")#>")]
+    <#=codeStringGenerator.Property(edmProperty)#>
 
 <#
         }

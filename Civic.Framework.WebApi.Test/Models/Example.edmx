@@ -8,6 +8,7 @@
   <EntityContainer Name="ExampleStoreContainer">
     <EntitySet Name="Environments" EntityType="Example.Store.Environments" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Entity1" EntityType="Example.Store.Entity1" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Entity2" EntityType="Example.Store.Entity2" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="EnvironmentEntity1" Association="Example.Store.EnvironmentEntity1">
       <End Role="Environment" EntitySet="Environments" />
       <End Role="Entity1" EntitySet="Entity1" />
@@ -27,6 +28,17 @@
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
     <Property Name="EnvironmentID" Type="int" Nullable="false" />
     <Property Name="Dte" Type="datetime" Nullable="false" />
+    <Property Name="Dte2" Type="datetime" Nullable="true" />
+    <Property Name="Dble1" Type="float" Nullable="false" />
+    <Property Name="Dec1" Type="decimal" Nullable="false" Precision="12" Scale="3" />
+  </EntityType>
+  <EntityType Name="Entity2">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="ff" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ff" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <Association Name="EnvironmentEntity1">
     <End Role="Environment" Type="Example.Store.Environments" Multiplicity="1" />
@@ -69,6 +81,9 @@
           <NavigationProperty Name="Environment" Relationship="Example.EnvironmentEntity1" FromRole="Entity1" ToRole="Environment" />
           <Property Type="Int32" Name="EnvironmentID" Nullable="false" />
           <Property Type="DateTime" Name="Dte" Nullable="false" />
+          <Property Name="Dte2" Type="DateTime" />
+          <Property Type="Double" Name="Dble1" Nullable="false" />
+          <Property Type="Decimal" Name="Dec1" Nullable="false" Precision="12" Scale="3" />
         </EntityType>
         <Association Name="EnvironmentEntity1">
           <End Type="Example.Environment" Role="Environment" Multiplicity="1" />
@@ -110,6 +125,17 @@
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="EnvironmentID" ColumnName="EnvironmentID" />
           <ScalarProperty Name="Dte" ColumnName="Dte" />
+          <ScalarProperty Name="Dte2" ColumnName="Dte2" />
+          <ScalarProperty Name="Dble1" ColumnName="Dble1" />
+          <ScalarProperty Name="Dec1" ColumnName="Dec1" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Entity2">
+      <EntityTypeMapping TypeName="IsTypeOf(Example.Entity2)">
+        <MappingFragment StoreEntitySet="Entity2">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ff" ColumnName="ff" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

@@ -12,11 +12,11 @@
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
-using Civic.T4.Entities;
+using Civic.Framework.WebApi.Test.Entities;
 
-using Entity2Entity = Civic.T4.Entities.Entity2;
+using Entity2Entity = Civic.Framework.WebApi.Test.Entities.Entity2;
 
-namespace Civic.T4.Services
+namespace Civic.Framework.WebApi.Test.Services
 {
 
     [ServiceContract(Namespace = "http://example.civic360.com/")]

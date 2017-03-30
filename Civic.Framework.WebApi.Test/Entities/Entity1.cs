@@ -15,7 +15,7 @@ using System.Runtime.Serialization;
 using Civic.Core.Data;
 using Civic.Framework.WebApi;
 
-namespace Civic.T4.Entities
+namespace Civic.Framework.WebApi.Test.Entities
 {
     [DataContract(Name = "entity1")]
     public partial class Entity1 : IEntity
@@ -27,7 +27,16 @@ namespace Civic.T4.Entities
         public int EnvironmentID { get; set; }
 
         [DataMember(Name = "dte")]
-        public System.DateTime? Dte { get; set; }
+        public System.DateTime Dte { get; set; }
+
+        [DataMember(Name = "dte2")]
+        public System.DateTime? Dte2 { get; set; }
+
+        [DataMember(Name = "dble1")]
+        public double Dble1 { get; set; }
+
+        [DataMember(Name = "dec1")]
+        public double Dec1 { get; set; }
 
 
         public Entity1 Copy()
@@ -36,7 +45,10 @@ namespace Civic.T4.Entities
                 {
                     Name = Name,
                     EnvironmentID = EnvironmentID,
-                    Dte = Dte
+                    Dte = Dte,
+                    Dte2 = Dte2,
+                    Dble1 = Dble1,
+                    Dec1 = Dec1
                 };
             return copy;
         }

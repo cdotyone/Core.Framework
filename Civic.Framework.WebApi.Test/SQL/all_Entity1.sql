@@ -16,6 +16,9 @@ BEGIN
 		 [e1].[Name]
 		,[e1].[EnvironmentID]
 		,[e1].[Dte]
+		,[e1].[Dte2]
+		,[e1].[Dble1]
+		,[e1].[Dec1]
 		-- t4-columns end
 	FROM [dbo].[Entity1] [e1]
 	WHERE	
@@ -47,6 +50,9 @@ BEGIN
 		 [e1].[Name]
 		,[e1].[EnvironmentID]
 		,[e1].[Dte]
+		,[e1].[Dte2]
+		,[e1].[Dble1]
+		,[e1].[Dec1]
 		-- t4-columns end
     FROM [dbo].[Entity1] [e1]'
 
@@ -71,6 +77,9 @@ CREATE PROCEDURE [dbo].[usp_Entity1Add]
 	  @name [nvarchar](max) out
 	, @environmentID [int]
 	, @dte [datetime]
+	, @dte2 [datetime]
+	, @dble1 [decimal](20,4)
+	, @dec1 [decimal](20,4)
 -- t4-params end
 AS
 BEGIN
@@ -81,6 +90,9 @@ BEGIN
 		 [Name]
 		,[EnvironmentID]
 		,[Dte]
+		,[Dte2]
+		,[Dble1]
+		,[Dec1]
 -- t4-columns end
 	) VALUES (
 
@@ -88,6 +100,9 @@ BEGIN
 		 @name
 		,@environmentID
 		,@dte
+		,@dte2
+		,@dble1
+		,@dec1
 -- t4-values end
 	)
 
@@ -105,6 +120,9 @@ CREATE PROCEDURE [dbo].[usp_Entity1Modify]
 	  @name [nvarchar](max)
 	, @environmentID [int]
 	, @dte [datetime]
+	, @dte2 [datetime]
+	, @dble1 [decimal](20,4)
+	, @dec1 [decimal](20,4)
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -114,6 +132,9 @@ BEGIN
 		 [Name] = @name
 		,[EnvironmentID] = @environmentID
 		,[Dte] = @dte
+		,[Dte2] = @dte2
+		,[Dble1] = @dble1
+		,[Dec1] = @dec1
 		-- t4-columns end
 	FROM [dbo].[Entity1] [e1]
 	WHERE	

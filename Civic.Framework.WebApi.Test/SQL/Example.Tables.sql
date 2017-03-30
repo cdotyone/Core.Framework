@@ -1,8 +1,8 @@
 ﻿-- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 08/10/2016 14:24:34
--- Generated from EDMX file: D:\devel\Civic360\civic-t4\Civic.T4\Models\Example.edmx
+-- Date Created: 03/30/2017 11:14:48
+-- Generated from EDMX file: C:\devel\Civic.Framework\WebApi\Civic.Framework.WebApi.Test\Models\Example.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -55,7 +55,10 @@ GO
 CREATE TABLE [dbo].[Entity1] (
     [Name] [nvarchar](max)  NOT NULL,
     [EnvironmentID] [int]  NOT NULL,
-    [Dte] [datetime]  NOT NULL
+    [Dte] [datetime]  NOT NULL,
+    [Dte2] [datetime]  NULL,
+    [Dble1] [decimal](20,4)  NOT NULL,
+    [Dec1] [decimal](20,4)  NOT NULL
 );
 GO
 

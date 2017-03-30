@@ -17,10 +17,10 @@ using System.Diagnostics;
 using Civic.Core.Data;
 using Civic.Framework.WebApi;
 using Civic.Framework.WebApi.Configuration;
-using Civic.T4.Entities;
+using Civic.Framework.WebApi.Test.Entities;
 
-using Entity1Entity = Civic.T4.Entities.Entity1;
-namespace Civic.T4.Data
+using Entity1Entity = Civic.Framework.WebApi.Test.Entities.Entity1;
+namespace Civic.Framework.WebApi.Test.Data
 {
     internal partial class ExampleData
     {
@@ -122,6 +122,9 @@ namespace Civic.T4.Data
             else command.AddInParameter("@name", T4Config.CheckUpperCase("dbo", "entity1", "name", entity1.Name));
             command.AddInParameter("@environmentid", entity1.EnvironmentID);
             command.AddInParameter("@dte", entity1.Dte.ToDB());
+            command.AddInParameter("@dte2", entity1.Dte2.ToDB());
+            command.AddInParameter("@dble1", entity1.Dble1);
+            command.AddInParameter("@dec1", entity1.Dec1);
 
         }
 
@@ -132,6 +135,9 @@ namespace Civic.T4.Data
             entity1.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? dataReader["Name"].ToString() : string.Empty;
             entity1.EnvironmentID = dataReader["EnvironmentID"] != null && !(dataReader["EnvironmentID"] is DBNull) ? Int32.Parse(dataReader["EnvironmentID"].ToString()) : 0;
             if (!(dataReader["Dte"] is DBNull)) entity1.Dte = DateTime.Parse(dataReader["Dte"].ToString()).FromDB();
+            if (!(dataReader["Dte2"] is DBNull)) entity1.Dte2 = DateTime.Parse(dataReader["Dte2"].ToString()).FromDB();
+            entity1.Dble1 = double.Parse(dataReader["Dble1"] != null && !(dataReader["Dble1"] is DBNull) && dataReader["Dble1"] != null ? dataReader["Dble1"].ToString() : "0");
+            entity1.Dec1 = double.Parse(dataReader["Dec1"] != null && !(dataReader["Dec1"] is DBNull) && dataReader["Dec1"] != null ? dataReader["Dec1"].ToString() : "0");
             return true;
         }
     }

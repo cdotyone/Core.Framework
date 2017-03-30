@@ -15,12 +15,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Web.Http;
-using Civic.T4.Services;
-using Civic.T4.Entities;
+using Civic.Framework.WebApi.Test.Services;
+using Civic.Framework.WebApi.Test.Entities;
 using Civic.Framework.WebApi;
-using Entity2Entity = Civic.T4.Entities.Entity2;
+using Entity2Entity = Civic.Framework.WebApi.Test.Entities.Entity2;
 
-namespace Civic.T4.Controllers
+namespace Civic.Framework.WebApi.Test.Controllers
 {
     [RoutePrefix("api/example/1.0/Entity2")]
     [System.CodeDom.Compiler.GeneratedCode("STE-EF", ".NET 3.5")]

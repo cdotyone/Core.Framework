@@ -1,18 +1,18 @@
-<#@ include file="$(SolutionDir)\Civic.Framework.WebApi\T4\TemplateFilemanager.CS.ttinclude" #>
-<#@ include file="$(SolutionDir)\Civic.Framework.WebApi\T4\Core.ttinclude"#>
+<#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\TemplateFilemanager.CS.ttinclude" #>
+<#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\Core.ttinclude"#>
 /*
 <#
 var fileManager = TemplateFileManager.Create(this);
 fileManager.IsAutoIndentEnabled = true;
 fileManager.CanOverwriteExistingFile = true;
 #>
-<#@ include file="$(SolutionDir)\Civic.Framework.WebApi\T4\DBProcs.ttinclude"#>
-<#@ include file="$(SolutionDir)\Civic.Framework.WebApi\T4\DBTables.ttinclude"#>
-<#@ include file="$(SolutionDir)\Civic.Framework.WebApi\T4\DB.ttinclude"#>
-<#@ include file="$(SolutionDir)\Civic.Framework.WebApi\T4\Data.ttinclude"#>
-<#@ include file="$(SolutionDir)\Civic.Framework.WebApi\T4\Entities.ttinclude"#>
-<#@ include file="$(SolutionDir)\Civic.Framework.WebApi\T4\WebAPI.ttinclude"#>
-<#@ include file="$(SolutionDir)\Civic.Framework.WebApi\T4\WCF.ttinclude"#>
+<#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\DBProcs.ttinclude"#>
+<#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\DBTables.ttinclude"#>
+<#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\DB.ttinclude"#>
+<#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\Data.ttinclude"#>
+<#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\Entities.ttinclude"#>
+<#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\WebAPI.ttinclude"#>
+<#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\WCF.ttinclude"#>
 <#
 EmbedEdmx(Host.TemplateFile.ToString(), fileManager);
 fileManager.Process();

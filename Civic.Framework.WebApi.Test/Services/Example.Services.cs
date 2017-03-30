@@ -17,10 +17,10 @@ using Civic.Core.Configuration;
 using Civic.Core.Data;
 using Civic.Core.Logging;
 using Civic.Framework.WebApi;
-using Civic.T4.Entities;
+using Civic.Framework.WebApi.Test.Entities;
 
 
-namespace Civic.T4.Services
+namespace Civic.Framework.WebApi.Test.Services
 {
 
 
@@ -61,13 +61,13 @@ namespace Civic.T4.Services
             {
                 case "entity1":
                 case "Entity1":
-                    return new Civic.T4.Entities.Entity1();
+                    return new Civic.Framework.WebApi.Test.Entities.Entity1();
                 case "entity2":
                 case "Entity2":
-                    return new Civic.T4.Entities.Entity2();
+                    return new Civic.Framework.WebApi.Test.Entities.Entity2();
                 case "environment":
                 case "Environment":
-                    return new Civic.T4.Entities.Environment();
+                    return new Civic.Framework.WebApi.Test.Entities.Environment();
             };
 
             return null;

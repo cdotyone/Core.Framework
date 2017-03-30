@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 11/02/2015 13:43:53
--- Generated from EDMX file: D:\devel\Civic360\civic-t4\Civic.T4\Models\Example.edmx
+-- Date Created: 03/30/2017 11:06:56
+-- Generated from EDMX file: C:\devel\Civic.Framework\WebApi\Civic.Framework.WebApi.Test\Models\Example.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -31,6 +31,9 @@ GO
 IF OBJECT_ID(N'[dbo].[Entity1]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Entity1];
 GO
+IF OBJECT_ID(N'[dbo].[Entity2]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Entity2];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -47,7 +50,17 @@ GO
 CREATE TABLE [dbo].[Entity1] (
     [Name] nvarchar(max)  NOT NULL,
     [EnvironmentID] int  NOT NULL,
-    [Dte] datetime  NOT NULL
+    [Dte] datetime  NOT NULL,
+    [Dte2] datetime  NULL,
+    [Dble1] float  NOT NULL,
+    [Dec1] decimal(12,3)  NOT NULL
+);
+GO
+
+-- Creating table 'Entity2'
+CREATE TABLE [dbo].[Entity2] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [ff] nvarchar(max)  NOT NULL
 );
 GO
 
@@ -65,6 +78,12 @@ GO
 ALTER TABLE [dbo].[Entity1]
 ADD CONSTRAINT [PK_Entity1]
     PRIMARY KEY CLUSTERED ([Name] ASC);
+GO
+
+-- Creating primary key on [Id], [ff] in table 'Entity2'
+ALTER TABLE [dbo].[Entity2]
+ADD CONSTRAINT [PK_Entity2]
+    PRIMARY KEY CLUSTERED ([Id], [ff] ASC);
 GO
 
 -- --------------------------------------------------
