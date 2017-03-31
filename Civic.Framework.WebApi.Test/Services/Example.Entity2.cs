@@ -24,7 +24,7 @@ namespace Civic.Framework.WebApi.Test.Services
 
     public partial class ExampleService
     {
-        public Entity2Entity GetEntity2(Int32 id, String ff)
+        public Entity2Entity GetEntity2(Int32 someID, String ff)
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "GetEntity2Byff"))
             {
@@ -33,7 +33,7 @@ namespace Civic.Framework.WebApi.Test.Services
                 {
                     using (var database = Connection)
                     {
-                        return Data.ExampleData.GetEntity2(id, ff, database);
+                        return Data.ExampleData.GetEntity2(someID, ff, database);
                     }
                 }
                 catch (Exception ex)
@@ -77,7 +77,7 @@ namespace Civic.Framework.WebApi.Test.Services
                 {
                     using (var db = Connection)
                     {
-                        var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", entity2.Id.ToString() + entity2.ff.ToString() + "", entity2);
+                        var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", entity2.SomeID.ToString() + entity2.ff.ToString() + "", entity2);
                         Data.ExampleData.AddEntity2(entity2, db);
                         AuditManager.MarkSuccessFul("dbo", logid);
                     }
@@ -99,8 +99,8 @@ namespace Civic.Framework.WebApi.Test.Services
                 {
                     using (var db = Connection)
                     {
-                        var before = Data.ExampleData.GetEntity2(entity2.Id, entity2.ff, db);
-                        var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.Id.ToString() + before.ff.ToString() + "", before, entity2);
+                        var before = Data.ExampleData.GetEntity2(entity2.SomeID, entity2.ff, db);
+                        var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.SomeID.ToString() + before.ff.ToString() + "", before, entity2);
                         Data.ExampleData.ModifyEntity2(entity2, db);
                         AuditManager.MarkSuccessFul("dbo", logid);
                     }
@@ -113,7 +113,7 @@ namespace Civic.Framework.WebApi.Test.Services
             }
         }
 
-        public void RemoveEntity2(Int32 id, String ff)
+        public void RemoveEntity2(Int32 someID, String ff)
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "RemoveEntity2"))
             {
@@ -122,9 +122,9 @@ namespace Civic.Framework.WebApi.Test.Services
                 {
                     using (var db = Connection)
                     {
-                        var before = Data.ExampleData.GetEntity2(id, ff, db);
-                        var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.Id.ToString() + before.ff.ToString() + "", before);
-                        Data.ExampleData.RemoveEntity2(id, ff, db);
+                        var before = Data.ExampleData.GetEntity2(someID, ff, db);
+                        var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.SomeID.ToString() + before.ff.ToString() + "", before);
+                        Data.ExampleData.RemoveEntity2(someID, ff, db);
                         AuditManager.MarkSuccessFul("dbo", logid);
                     }
                 }

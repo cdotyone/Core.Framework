@@ -15,6 +15,10 @@ IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneral
 DROP FUNCTION [<#=apiGeneralSchemaName#>].[udf_Split]
 GO
 
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_GetSysDate]'))
+DROP FUNCTION [<#=apiGeneralSchemaName#>].[udf_GetSysDate]
+GO
+
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[usp_ProcessFilter]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [<#=apiGeneralSchemaName#>].[usp_ProcessFilter]
 GO
@@ -24,6 +28,15 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
+CREATE FUNCTION [<#=apiGeneralSchemaName#>].[udf_GetSysDate]()
+RETURNS datetime
+AS
+BEGIN
+	RETURN getdate()
+END
+GO
+
 
 CREATE FUNCTION [<#=apiGeneralSchemaName#>].[udf_Split] (
       @InputString                  VARCHAR(8000),
@@ -476,8 +489,50 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 <#
 		file.Close();		
 	}
-}
-
-#>
+}#>
 <#=ImportData(dataPath+"\\"+edmxFileName + ".SeedData.xml",apiSchemaName)#>
 <#=ImportData(dataPath+"\\"+edmxFileName + ".MockData.xml",apiSchemaName)#>
+<#
+
+fileManager.StartNewFile(edmxFileName + ".Procs.sql", folderName:"SQL");
+#>
+
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_GetSysDate]'))
+DROP FUNCTION [<#=apiGeneralSchemaName#>].[udf_GetSysDate]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE FUNCTION [<#=apiGeneralSchemaName#>].[udf_GetSysDate]()
+RETURNS datetime
+AS
+BEGIN
+	RETURN getdate()
+END
+GO
+
+<#
+
+	foreach(var filename in Directory.GetFiles(sqlPath,"usp_*.sql")) {
+		var fi = new FileInfo(filename);
+		if(!File.Exists(dataPath+"\\"+fi.Name)) {
+			file = File.OpenText(filename);
+	#><#=file.ReadToEnd()#>
+	<# file.Close();
+		}
+	}
+
+	foreach(var filename in Directory.GetFiles(sqlPath,"all_*.sql")) {
+		var fi = new FileInfo(filename);
+		if(!File.Exists(dataPath+"\\"+fi.Name)) {
+			file = File.OpenText(filename);
+	#><#=file.ReadToEnd()#>
+	<# file.Close();
+		}
+	}
+
+#>

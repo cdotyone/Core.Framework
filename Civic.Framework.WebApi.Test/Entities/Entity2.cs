@@ -20,19 +20,27 @@ namespace Civic.Framework.WebApi.Test.Entities
     [DataContract(Name = "entity2")]
     public partial class Entity2 : IEntity
     {
-        [DataMember(Name = "id")]
-        public int Id { get; set; }
+        [DataMember(Name = "someID")]
+        public int SomeID { get; set; }
 
         [DataMember(Name = "ff")]
         public string ff { get; set; }
+
+        [DataMember(Name = "modified")]
+        public System.DateTime Modified { get; set; }
+
+        [DataMember(Name = "otherDate")]
+        public System.DateTime? OtherDate { get; set; }
 
 
         public Entity2 Copy()
         {
             var copy = new Entity2
                 {
-                    Id = Id,
-                    ff = ff
+                    SomeID = SomeID,
+                    ff = ff,
+                    Modified = Modified,
+                    OtherDate = OtherDate
                 };
             return copy;
         }
@@ -41,7 +49,7 @@ namespace Civic.Framework.WebApi.Test.Entities
         {
             get
             {
-                return this.Id.ToString();
+                return this.SomeID.ToString();
             }
         }
 
@@ -63,7 +71,7 @@ namespace Civic.Framework.WebApi.Test.Entities
         {
             var service = new Services.ExampleService();
             service.Connection = connection;
-            service.RemoveEntity2(Id, ff);
+            service.RemoveEntity2(SomeID, ff);
         }
 
     }

@@ -25,7 +25,7 @@ namespace Civic.Framework.WebApi.Test.Data
     internal partial class ExampleData
     {
 
-        internal static Entity2Entity GetEntity2(Int32 id, String ff, IDBConnection database)
+        internal static Entity2Entity GetEntity2(Int32 someID, String ff, IDBConnection database)
         {
             Debug.Assert(database != null);
 
@@ -33,14 +33,14 @@ namespace Civic.Framework.WebApi.Test.Data
 
             using (var command = database.CreateStoredProcCommand("dbo", "usp_Entity2Get"))
             {
-                command.AddInParameter("@id", id);
+                command.AddInParameter("@someID", someID);
                 command.AddInParameter("@ff", ff);
 
                 command.ExecuteReader(dataReader =>
                     {
                         if (populateEntity2(entity2Returned, dataReader))
                         {
-                            entity2Returned.Id = id;
+                            entity2Returned.SomeID = someID;
                             entity2Returned.ff = ff;
                         }
                         else entity2Returned = null;
@@ -88,8 +88,8 @@ namespace Civic.Framework.WebApi.Test.Data
             {
                 buildEntity2CommandParameters(entity2, command, true);
                 command.ExecuteNonQuery();
-                entity2.Id = Int32.Parse(
-                command.GetOutParameter("@id").Value.ToString());
+                entity2.SomeID = Int32.Parse(
+                command.GetOutParameter("@someid").Value.ToString());
             }
         }
 
@@ -108,13 +108,13 @@ namespace Civic.Framework.WebApi.Test.Data
             return list;
         }
 
-        internal static void RemoveEntity2(Int32 id, String ff, IDBConnection database)
+        internal static void RemoveEntity2(Int32 someID, String ff, IDBConnection database)
         {
             Debug.Assert(database != null);
 
             using (var command = database.CreateStoredProcCommand("dbo", "usp_Entity2Remove"))
             {
-                command.AddInParameter("@id", id);
+                command.AddInParameter("@someID", someID);
                 command.AddInParameter("@ff", ff);
                 command.ExecuteNonQuery();
             }
@@ -123,10 +123,11 @@ namespace Civic.Framework.WebApi.Test.Data
         private static void buildEntity2CommandParameters(Entity2Entity entity2, IDBCommand command, bool addRecord)
         {
             Debug.Assert(command != null);
-            if (addRecord) command.AddParameter("@id", ParameterDirection.InputOutput, entity2.Id);
-            else command.AddInParameter("@id", entity2.Id);
+            if (addRecord) command.AddParameter("@someid", ParameterDirection.InputOutput, entity2.SomeID);
+            else command.AddInParameter("@someid", entity2.SomeID);
             if (addRecord) command.AddParameter("@ff", ParameterDirection.InputOutput, T4Config.CheckUpperCase("dbo", "entity2", "ff", entity2.ff));
             else command.AddInParameter("@ff", T4Config.CheckUpperCase("dbo", "entity2", "ff", entity2.ff));
+            command.AddInParameter("@otherdate", entity2.OtherDate.ToDB());
 
         }
 
@@ -134,8 +135,10 @@ namespace Civic.Framework.WebApi.Test.Data
         {
             if (dataReader == null || !dataReader.Read()) return false;
 
-            entity2.Id = dataReader["Id"] != null && !(dataReader["Id"] is DBNull) ? Int32.Parse(dataReader["Id"].ToString()) : 0;
+            entity2.SomeID = dataReader["SomeID"] != null && !(dataReader["SomeID"] is DBNull) ? Int32.Parse(dataReader["SomeID"].ToString()) : 0;
             entity2.ff = dataReader["ff"] != null && !string.IsNullOrEmpty(dataReader["ff"].ToString()) ? dataReader["ff"].ToString() : string.Empty;
+            if (!(dataReader["Modified"] is DBNull)) entity2.Modified = DateTime.Parse(dataReader["Modified"].ToString()).FromDB();
+            if (!(dataReader["OtherDate"] is DBNull)) entity2.OtherDate = DateTime.Parse(dataReader["OtherDate"].ToString()).FromDB();
             return true;
         }
     }

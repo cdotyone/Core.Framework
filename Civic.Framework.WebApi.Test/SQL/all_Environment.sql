@@ -84,7 +84,7 @@ BEGIN
 -- t4-values end
 	)
 
-SET @ID = SCOPE_IDENTITY()
+SET @id = SCOPE_IDENTITY()
 END
 GO
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentModify]') AND type in (N'P', N'PC'))

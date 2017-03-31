@@ -239,6 +239,7 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]<#}#>
 		if(hasCreatedBy && (parameterName.ToLower()=="@modifiedby" || parameterName.ToLower()=="@createdby") ) continue;
 		if(!hasCreatedBy && parameterName.ToLower()=="@modifiedby") parameterName = "@createdBy";
 		if(parameterName.ToLower()=="@createdby") hasCreatedBy = true;
+		
 
 		if(ef.IsKey(edmProperty)) {
 #>
@@ -248,7 +249,7 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]<#}#>
 #>
 	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
 <#
-		}
+		} 		
 		i++;
 	}
 #>
@@ -270,7 +271,7 @@ BEGIN
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {
 		parameterName = Core.GetParameterName(edmProperty.Name);
-		if(parameterName.ToLower()=="@id") continue;
+		if(Core.IsIdentity(edmProperty)) continue;
 			#>
 		<#=(i>0 ? ",[" + edmProperty.ToString() : " [" + edmProperty.ToString())#>]
 <#
@@ -287,14 +288,14 @@ BEGIN
 
 -- t4-values begin
 <#  i=0;
-	var hasID = false;
+	string idName = null;
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {
 		parameterName = Core.GetParameterName(edmProperty.Name);
-		if(parameterName.ToLower()=="@id") { hasID=true; continue;}
+		if(Core.IsIdentity(edmProperty)) { idName=parameterName;  continue; }
 		if(parameterName.ToLower()=="@modifiedby") parameterName = "@createdby";
-		if(parameterName.ToLower()=="@modified") parameterName = "getutcdate()";
-		if(parameterName.ToLower()=="@created") parameterName = "getutcdate()";
+		if(parameterName.ToLower()=="@modified") parameterName = "["+apiGeneralSchemaName+"].udf_getSysDate()";
+		if(parameterName.ToLower()=="@created") parameterName = "["+apiGeneralSchemaName+"].udf_getSysDate()";
 #>
 		<#=(i>0 ? "," + parameterName : " " + parameterName)#>
 <#
@@ -307,7 +308,7 @@ BEGIN
 	if(!string.IsNullOrEmpty(userContent)) {#><#=userContent#><#} else {#>
 	)
 
-<#if(hasID) { #>SET @ID = SCOPE_IDENTITY()<#}#>
+<#if(idName!=null) { #>SET <#=idName#> = SCOPE_IDENTITY()<#}#>
 
 END
 GO
@@ -360,9 +361,9 @@ BEGIN
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {
 		parameterName = Core.GetParameterName(edmProperty.Name);
-		if(parameterName.ToLower()=="@id") continue;
+		if(Core.IsIdentity(edmProperty)) continue;
 		if(parameterName.ToLower()=="@createdby" || parameterName.ToLower()=="@created") continue;
-		if(parameterName.ToLower()=="@modified") parameterName = "getutcdate()";
+		if(parameterName.ToLower()=="@modified") parameterName = "["+apiGeneralSchemaName+"].udf_getSysDate()";
 			#>
 		<#=(i>0 ? ",[" + edmProperty.ToString() : " [" + edmProperty.ToString())#>] = <#=parameterName#>
 <#

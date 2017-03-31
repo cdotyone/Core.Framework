@@ -159,13 +159,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\Entity1Controller.cs">
+    <Compile Include="Controllers\ExampleEntity1Controller.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Controllers\Entity2Controller.cs">
+    <Compile Include="Controllers\ExampleEntity2Controller.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Controllers\EnvironmentController.cs">
+    <Compile Include="Controllers\ExampleEnvironmentController.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Data\ExampleData.cs">

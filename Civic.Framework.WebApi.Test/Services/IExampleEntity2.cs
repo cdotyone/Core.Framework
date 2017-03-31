@@ -26,7 +26,7 @@ namespace Civic.Framework.WebApi.Test.Services
         List<Entity2Entity> GetPagedEntity2(int skip, ref int count, bool retCount, string filterBy, string orderBy);
 
         [OperationContract]
-        Entity2Entity GetEntity2(Int32 id, String ff);
+        Entity2Entity GetEntity2(Int32 someID, String ff);
 
         [OperationContract]
         void AddEntity2(Entity2Entity entity2);
@@ -35,7 +35,7 @@ namespace Civic.Framework.WebApi.Test.Services
         void ModifyEntity2(Entity2Entity entity2);
 
         [OperationContract]
-        void RemoveEntity2(Int32 id, String ff);
+        void RemoveEntity2(Int32 someID, String ff);
 
     }
 

@@ -6,7 +6,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity2Get]
-	  @id [int]
+	  @someID [int]
 	, @ff [nvarchar](max)
 AS
 BEGIN
@@ -14,13 +14,15 @@ BEGIN
 
 	SELECT	
 		-- t4-columns begin
-		 [e2].[Id]
+		 [e2].[SomeID]
 		,[e2].[ff]
+		,[e2].[Modified]
+		,[e2].[OtherDate]
 		-- t4-columns end
 	FROM [dbo].[Entity2] [e2]
 	WHERE	
 		-- t4-where begin
-	    [e2].[Id] = @id
+	    [e2].[SomeID] = @someID
 	AND [e2].[ff] = @ff
 		-- t4-where end
 END
@@ -45,8 +47,10 @@ BEGIN
 	DECLARE @select nvarchar(max)
     SET @select = 'SELECT	
 		-- t4-columns begin
-		 [e2].[Id]
+		 [e2].[SomeID]
 		,[e2].[ff]
+		,[e2].[Modified]
+		,[e2].[OtherDate]
 		-- t4-columns end
     FROM [dbo].[Entity2] [e2]'
 
@@ -68,8 +72,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity2Add]
 -- t4-params begin
-	  @id [int] out
+	  @someID [int] out
 	, @ff [nvarchar](max) out
+	, @otherDate [datetime]
 -- t4-params end
 AS
 BEGIN
@@ -78,15 +83,19 @@ BEGIN
 	INSERT INTO [dbo].[Entity2](
 -- t4-columns begin
 		 [ff]
+		,[Modified]
+		,[OtherDate]
 -- t4-columns end
 	) VALUES (
 
 -- t4-values begin
 		 @ff
+		,[civic].udf_getSysDate()
+		,@otherDate
 -- t4-values end
 	)
 
-SET @ID = SCOPE_IDENTITY()
+SET @someID = SCOPE_IDENTITY()
 END
 GO
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity2Modify]') AND type in (N'P', N'PC'))
@@ -97,8 +106,9 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity2Modify]
-	  @id [int]
+	  @someID [int]
 	, @ff [nvarchar](max)
+	, @otherDate [datetime]
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -106,11 +116,13 @@ BEGIN
 	UPDATE [e2] SET 
 		-- t4-columns begin
 		 [ff] = @ff
+		,[Modified] = [civic].udf_getSysDate()
+		,[OtherDate] = @otherDate
 		-- t4-columns end
 	FROM [dbo].[Entity2] [e2]
 	WHERE	
 		-- t4-where begin
-	    [e2].[Id] = @id
+	    [e2].[SomeID] = @someID
 	AND [e2].[ff] = @ff
 		-- t4-where end
 END
@@ -123,7 +135,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity2Remove]
-	  @id [int]
+	  @someID [int]
 	, @ff [nvarchar](max)
 AS
 BEGIN
@@ -132,7 +144,7 @@ BEGIN
 	DELETE FROM [dbo].[Entity2]
 	WHERE	
 		-- t4-where begin
-	    [Id] = @id
+	    [SomeID] = @someID
 	AND [ff] = @ff
 		-- t4-where end
 END

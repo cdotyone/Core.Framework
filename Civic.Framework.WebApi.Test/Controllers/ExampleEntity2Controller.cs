@@ -39,10 +39,10 @@ namespace Civic.Framework.WebApi.Test.Controllers
             return new QueryMetadata<Entity2Entity>(result, resultLimit);
         }
 
-        [Route("{id}/{ff}")]
-        public QueryMetadata<Entity2Entity> Get(Int32 id, String ff)
+        [Route("{someID}/{ff}")]
+        public QueryMetadata<Entity2Entity> Get(Int32 someID, String ff)
         {
-            var result = new List<Entity2Entity> { _service.GetEntity2(id, ff) };
+            var result = new List<Entity2Entity> { _service.GetEntity2(someID, ff) };
             return new QueryMetadata<Entity2Entity>(result, 1);
         }
 
@@ -53,18 +53,18 @@ namespace Civic.Framework.WebApi.Test.Controllers
             return value.ff;
         }
 
-        [Route("{id}/{ff}")]
-        public void Put(Int32 id, String ff, [FromBody]Entity2Entity value)
+        [Route("{someID}/{ff}")]
+        public void Put(Int32 someID, String ff, [FromBody]Entity2Entity value)
         {
-            value.Id = id;
+            value.SomeID = someID;
             value.ff = ff;
             _service.ModifyEntity2(value);
         }
 
-        [Route("{id}/{ff}")]
-        public void Delete(Int32 id, String ff)
+        [Route("{someID}/{ff}")]
+        public void Delete(Int32 someID, String ff)
         {
-            _service.RemoveEntity2(id, ff);
+            _service.RemoveEntity2(someID, ff);
         }
     }
 }

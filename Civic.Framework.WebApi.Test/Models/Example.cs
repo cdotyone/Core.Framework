@@ -54,6 +54,8 @@ Error processing file Example.DB.Rebuild.sql Error HRESULT E_FAIL has been retur
 //-> Example.DB.Rebuild.sql
 Error processing file Example.Defaults.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
 //-> Example.Defaults.sql
+Error processing file Example.Procs.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
+//-> Example.Procs.sql
 Error processing file Example.Tables.sql Error HRESULT E_FAIL has been returned from a call to a COM component.
 //-> Example.Tables.sql
 // Generated helper templates
@@ -83,6 +85,7 @@ Error processing file Example.Tables.sql Error HRESULT E_FAIL has been returned 
 // Civic.Framework.WebApi.Test\Data\ExampleData.Environment.cs
 // Civic.Framework.WebApi.Test\Data\ExampleData.Entity2.cs
 // Civic.Framework.WebApi.Test\Data\ExampleData.Entity1.cs
+// Civic.Framework.WebApi.Test\SQL\Example.Procs.sql
 // Civic.Framework.WebApi.Test\SQL\Example.DB.Rebuild.sql
 // Civic.Framework.WebApi.Test\SQL\Example.Tables.sql
 // Civic.Framework.WebApi.Test\SQL\all_Environment.sql

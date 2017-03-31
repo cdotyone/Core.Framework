@@ -742,6 +742,13 @@ public static string GetParameterName(string name)
 	return "@" + (name.ToLower()=="id" ? "id" : name.Substring(0,1).ToLower() + name.Substring(1));
 }
 
+public static bool IsIdentity(EdmProperty edmProperty) 
+{
+		MetadataProperty identity = null;
+		edmProperty.MetadataProperties.TryGetValue("http://schemas.microsoft.com/ado/2009/02/edm/annotation" + ":StoreGeneratedPattern", false, out identity);
+		return (identity != null && identity.Value.ToString() == "Identity");
+}
+
 public static string GetParameterType(CodeGenerationTools code, EdmProperty edmProperty) {
 	switch(code.Escape(edmProperty.TypeUsage.EdmType).ToLower()) 
 	{

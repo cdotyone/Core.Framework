@@ -7,6 +7,10 @@ IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_S
 DROP FUNCTION [civic].[udf_Split]
 GO
 
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_GetSysDate]'))
+DROP FUNCTION [civic].[udf_GetSysDate]
+GO
+
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[usp_ProcessFilter]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [civic].[usp_ProcessFilter]
 GO
@@ -16,6 +20,15 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
+CREATE FUNCTION [civic].[udf_GetSysDate]()
+RETURNS datetime
+AS
+BEGIN
+	RETURN getdate()
+END
+GO
+
 
 CREATE FUNCTION [civic].[udf_Split] (
       @InputString                  VARCHAR(8000),
@@ -378,7 +391,7 @@ GO
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 03/30/2017 12:14:48
+-- Date Created: 03/30/2017 19:54:55
 -- Generated from EDMX file: C:\devel\Civic.Framework\WebApi\Civic.Framework.WebApi.Test\Models\Example.edmx
 -- --------------------------------------------------
 
@@ -441,8 +454,10 @@ GO
 
 -- Creating table 'Entity2'
 CREATE TABLE [dbo].[Entity2] (
-    [Id] [int] IDENTITY(1,1) NOT NULL,
-    [ff] [nvarchar](max)  NOT NULL
+    [SomeID] [int] IDENTITY(1,1) NOT NULL,
+    [ff] [nvarchar](max)  NOT NULL,
+    [Modified] [datetime]  NOT NULL,
+    [OtherDate] [datetime]  NULL
 );
 GO
 
@@ -464,11 +479,11 @@ ADD CONSTRAINT [PK_Entity1]
     PRIMARY KEY ([Name]ASC);
 GO
 
--- Creating primary key on [Id], [ff] in table 'Entity2'
+-- Creating primary key on [SomeID], [ff] in table 'Entity2'
 ALTER TABLE [dbo].[Entity2]
 ADD CONSTRAINT [PK_Entity2]
 
-    PRIMARY KEY ([Id], [ff]ASC);
+    PRIMARY KEY ([SomeID], [ff]ASC);
 GO
 
 -- --------------------------------------------------
@@ -536,6 +551,7 @@ CREATE DEFAULT [civic].[udf_Zero]
 AS 0
 GO
 -- t4-defaults begin
+EXECUTE sp_bindefault N'civic.udf_GetDate', N'[dbo].[Entity2].[Modified]';
 -- t4-defaults end
 GO
 
@@ -713,7 +729,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity2Get]
-	  @id [int]
+	  @someID [int]
 	, @ff [nvarchar](max)
 AS
 BEGIN
@@ -721,13 +737,15 @@ BEGIN
 
 	SELECT	
 		-- t4-columns begin
-		 [e2].[Id]
+		 [e2].[SomeID]
 		,[e2].[ff]
+		,[e2].[Modified]
+		,[e2].[OtherDate]
 		-- t4-columns end
 	FROM [dbo].[Entity2] [e2]
 	WHERE	
 		-- t4-where begin
-	    [e2].[Id] = @id
+	    [e2].[SomeID] = @someID
 	AND [e2].[ff] = @ff
 		-- t4-where end
 END
@@ -752,8 +770,10 @@ BEGIN
 	DECLARE @select nvarchar(max)
     SET @select = 'SELECT	
 		-- t4-columns begin
-		 [e2].[Id]
+		 [e2].[SomeID]
 		,[e2].[ff]
+		,[e2].[Modified]
+		,[e2].[OtherDate]
 		-- t4-columns end
     FROM [dbo].[Entity2] [e2]'
 
@@ -775,8 +795,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity2Add]
 -- t4-params begin
-	  @id [int] out
+	  @someID [int] out
 	, @ff [nvarchar](max) out
+	, @otherDate [datetime]
 -- t4-params end
 AS
 BEGIN
@@ -785,15 +806,19 @@ BEGIN
 	INSERT INTO [dbo].[Entity2](
 -- t4-columns begin
 		 [ff]
+		,[Modified]
+		,[OtherDate]
 -- t4-columns end
 	) VALUES (
 
 -- t4-values begin
 		 @ff
+		,[civic].udf_getSysDate()
+		,@otherDate
 -- t4-values end
 	)
 
-SET @ID = SCOPE_IDENTITY()
+SET @someID = SCOPE_IDENTITY()
 END
 GO
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity2Modify]') AND type in (N'P', N'PC'))
@@ -804,8 +829,9 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity2Modify]
-	  @id [int]
+	  @someID [int]
 	, @ff [nvarchar](max)
+	, @otherDate [datetime]
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -813,11 +839,13 @@ BEGIN
 	UPDATE [e2] SET 
 		-- t4-columns begin
 		 [ff] = @ff
+		,[Modified] = [civic].udf_getSysDate()
+		,[OtherDate] = @otherDate
 		-- t4-columns end
 	FROM [dbo].[Entity2] [e2]
 	WHERE	
 		-- t4-where begin
-	    [e2].[Id] = @id
+	    [e2].[SomeID] = @someID
 	AND [e2].[ff] = @ff
 		-- t4-where end
 END
@@ -830,7 +858,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity2Remove]
-	  @id [int]
+	  @someID [int]
 	, @ff [nvarchar](max)
 AS
 BEGIN
@@ -839,7 +867,7 @@ BEGIN
 	DELETE FROM [dbo].[Entity2]
 	WHERE	
 		-- t4-where begin
-	    [Id] = @id
+	    [SomeID] = @someID
 	AND [ff] = @ff
 		-- t4-where end
 END
@@ -931,7 +959,7 @@ BEGIN
 -- t4-values end
 	)
 
-SET @ID = SCOPE_IDENTITY()
+SET @id = SCOPE_IDENTITY()
 END
 GO
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_EnvironmentModify]') AND type in (N'P', N'PC'))
@@ -987,5 +1015,4 @@ INSERT INTO [dbo].[Environments]([Name]) VALUES ('Stage');
 INSERT INTO [dbo].[Environments]([Name]) VALUES ('Prod');
 
 GO
-
 

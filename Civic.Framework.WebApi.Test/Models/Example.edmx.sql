@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 03/30/2017 11:06:56
+-- Date Created: 03/30/2017 13:43:49
 -- Generated from EDMX file: C:\devel\Civic.Framework\WebApi\Civic.Framework.WebApi.Test\Models\Example.edmx
 -- --------------------------------------------------
 
@@ -59,7 +59,7 @@ GO
 
 -- Creating table 'Entity2'
 CREATE TABLE [dbo].[Entity2] (
-    [Id] int IDENTITY(1,1) NOT NULL,
+    [SomeID] int IDENTITY(1,1) NOT NULL,
     [ff] nvarchar(max)  NOT NULL
 );
 GO
@@ -80,10 +80,10 @@ ADD CONSTRAINT [PK_Entity1]
     PRIMARY KEY CLUSTERED ([Name] ASC);
 GO
 
--- Creating primary key on [Id], [ff] in table 'Entity2'
+-- Creating primary key on [SomeID], [ff] in table 'Entity2'
 ALTER TABLE [dbo].[Entity2]
 ADD CONSTRAINT [PK_Entity2]
-    PRIMARY KEY CLUSTERED ([Id], [ff] ASC);
+    PRIMARY KEY CLUSTERED ([SomeID], [ff] ASC);
 GO
 
 -- --------------------------------------------------
