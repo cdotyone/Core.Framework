@@ -145,10 +145,16 @@
     <Content Include="SQL\all_Environment.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
+    <Content Include="SQL\Example.DB.Procs.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
     <Content Include="SQL\Example.DB.Rebuild.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
     <Content Include="SQL\Example.Defaults.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\Example.Procs.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
     <Content Include="SQL\Example.Tables.sql">

@@ -494,6 +494,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 <#=ImportData(dataPath+"\\"+edmxFileName + ".MockData.xml",apiSchemaName)#>
 <#
 
+fileManager.EndBlock();
 fileManager.StartNewFile(edmxFileName + ".Procs.sql", folderName:"SQL");
 #>
 
