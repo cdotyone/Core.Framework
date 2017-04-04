@@ -45,7 +45,7 @@ namespace Civic.Framework.WebApi.Test.Services
 
         public INamedElement Configuration { get; set; }
 
-        public string ModuleName { get { return "civic"; } }
+        public string ModuleName { get { return "example"; } }
 
         public List<string> EntitiesProvided
         {

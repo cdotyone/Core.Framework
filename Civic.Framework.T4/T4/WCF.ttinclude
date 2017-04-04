@@ -31,7 +31,7 @@ public partial class <#=edmxFileName#>Service : I<#=edmxFileName#>, IEntityServi
 
 	public INamedElement Configuration { get; set; }
 
-    public string ModuleName { get { return "<#=apiGeneralSchemaName#>"; } }
+    public string ModuleName { get { return "<#=edmxFileName.ToLower()#>"; } }
         
 	public List<string> EntitiesProvided { 
 		get {
