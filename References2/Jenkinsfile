@@ -1,0 +1,9 @@
+node('windows') {
+	checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: true]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '9678bd1f-e6af-4514-9193-50cb41afc960', url: "git@git.civic360.com:Civic.Framework/${env.JOB_BASE_NAME}.git"]]])
+
+    def workspace = pwd()
+    bat("C:\\Builds\\.nuget\\nuget.exe restore Civic.Framework.${env.JOB_BASE_NAME}.sln -ConfigFile C:\\Build\\.nuget\\NuGet.Config")
+    bat("C:\\Builds\\.nuget\\AssemblyVersionSetter.exe -e ${env.BUILD_NUMBER}.0 \"${workspace}\\References\"")
+    bat("\"C:\\Program Files (x86)\\MSBuild\\14.0\\Bin\\amd64\\msbuild.exe\" Civic.Framework.${env.JOB_BASE_NAME}.sln /m /tv:14.0 /p:DoEvents=false /p:Configuration=\"Nuget\" /p:Platform=\"Any Cpu\"")
+    bat("C:\\Builds\\.nuget\\pack.bat \"${workspace}\" \"${workspace}\"")
+}
