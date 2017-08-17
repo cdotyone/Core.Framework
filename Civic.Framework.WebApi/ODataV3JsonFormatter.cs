@@ -87,7 +87,10 @@ namespace Civic.Framework.WebApi
                 {
                     var buf1 = Encoding.UTF8.GetBytes("{\"value\":");
                     writeStream.Write(buf1, 0, buf1.Length);
-                }).ContinueWith(t2 => { base.WriteToStreamAsync(type, value, writeStream, content, transportContext); })
+                }).ContinueWith(t2 =>
+			    {
+			        base.WriteToStreamAsync(type, value, writeStream, content, transportContext);
+			    })
                   .ContinueWith(t3 => {
                     var buffer = new StringBuilder();
 
