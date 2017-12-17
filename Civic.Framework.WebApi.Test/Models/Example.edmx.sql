@@ -1,9 +1,9 @@
 
 -- --------------------------------------------------
--- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
+-- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 03/30/2017 13:43:49
--- Generated from EDMX file: C:\devel\Civic.Framework\WebApi\Civic.Framework.WebApi.Test\Models\Example.edmx
+-- Date Created: 12/17/2017 06:47:04
+-- Generated from EDMX file: D:\devel\Civic\Civic.Framework\WebApi\Civic.Framework.WebApi.Test\Models\Example.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -60,7 +60,9 @@ GO
 -- Creating table 'Entity2'
 CREATE TABLE [dbo].[Entity2] (
     [SomeID] int IDENTITY(1,1) NOT NULL,
-    [ff] nvarchar(max)  NOT NULL
+    [ff] nvarchar(max)  NOT NULL,
+    [Modified] datetime  NOT NULL,
+    [OtherDate] datetime  NULL
 );
 GO
 
@@ -97,6 +99,7 @@ ADD CONSTRAINT [FK_EnvironmentEntity1]
     REFERENCES [dbo].[Environments]
         ([ID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_EnvironmentEntity1'
 CREATE INDEX [IX_FK_EnvironmentEntity1]

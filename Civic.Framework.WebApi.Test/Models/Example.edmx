@@ -39,6 +39,8 @@
     </Key>
     <Property Name="SomeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="ff" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Modified" Type="datetime" Nullable="false" />
+    <Property Name="OtherDate" Type="datetime" Nullable="true" />
   </EntityType>
   <Association Name="EnvironmentEntity1">
     <End Role="Environment" Type="Example.Store.Environments" Multiplicity="1" />
@@ -138,6 +140,8 @@
         <MappingFragment StoreEntitySet="Entity2">
           <ScalarProperty Name="SomeID" ColumnName="SomeID" />
           <ScalarProperty Name="ff" ColumnName="ff" />
+          <ScalarProperty Name="Modified" ColumnName="Modified" />
+          <ScalarProperty Name="OtherDate" ColumnName="OtherDate" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -156,6 +160,7 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="True" />
       </DesignerInfoPropertySet>
     </edmx:Options>
     <!-- Diagram content (shape and connector positions) -->

@@ -1,12 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civic.Framework.WebApi", "Civic.Framework.WebApi\Civic.Framework.WebApi.csproj", "{E8F58C4A-41DE-40C7-994B-9E2230C30553}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{54D7CD44-0610-43DD-9FCE-7480335B3B4F}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		References\civic.snk = References\civic.snk
 		References\Jenkinsfile = References\Jenkinsfile
 		README.md = README.md
@@ -66,5 +67,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E091A1FA-DA47-4490-9C6E-37E456652B04} = {54D7CD44-0610-43DD-9FCE-7480335B3B4F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C322C4C1-D60A-4212-B9BB-1D33323EF3B9}
 	EndGlobalSection
 EndGlobal
