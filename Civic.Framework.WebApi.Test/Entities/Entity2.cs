@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-#pragma warning disable 1591 // this is for supress no xml comments in public members warnings
+#pragma warning disable 1591 // this is for supress no xml comments in public members warnings 
 
 using System;
 using System.Collections.Generic;
@@ -30,18 +30,18 @@ namespace Civic.Framework.WebApi.Test.Entities
         public System.DateTime Modified { get; set; }
 
         [DataMember(Name = "otherDate")]
-        public System.DateTime? OtherDate { get; set; }
+        public Nullable<System.DateTime> OtherDate { get; set; }
 
 
         public Entity2 Copy()
         {
             var copy = new Entity2
-                {
-                    SomeID = SomeID,
-                    ff = ff,
-                    Modified = Modified,
-                    OtherDate = OtherDate
-                };
+            {
+                SomeID = SomeID,
+                ff = ff,
+                Modified = Modified,
+                OtherDate = OtherDate
+            };
             return copy;
         }
 

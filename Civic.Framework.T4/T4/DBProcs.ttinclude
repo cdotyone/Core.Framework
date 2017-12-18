@@ -443,18 +443,6 @@ GO
 		&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+ entity.Name + "GetBy" + toEntity.Name + ".sql", apiBundleSQLFiles, out userContent))  {	
 
 	NavigationProperty[] foreignKeys = entity.NavigationProperties.ToArray();
-
-	//System.Diagnostics.Debugger.Break();
-	AssociationType association = null;	
-	try {
-	association = metadataWorkspace 
-		.GetItems<AssociationType>(DataSpace.SSpace)
-		.Single(a => a.Name == navProperty.RelationshipType.Name);
-	} catch {
-	}
-	if(association==null) continue;
-
-	var toColumns = String.Join(",", association.ReferentialConstraints.SelectMany(rc => rc.ToProperties));
 #>
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]
@@ -469,7 +457,6 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetBy<#=toEntity.Name
     {
 		if(!ef.IsKey(edmProperty)) continue;
 	#>
-	<#=i>0 ? ", " + Core.GetParameterName(toColumns) : "  " + Core.GetParameterName(toColumns)#> <#=Core.GetParameterType(code,edmProperty) #>
 <#	}
 #>
 AS
@@ -494,7 +481,6 @@ BEGIN
     {
 		if(!ef.IsKey(edmProperty)) continue;
 	#>
-	<#=(i>0 ? "AND " + tableAlias+".["+toColumns : "    " + tableAlias+".["+toColumns)#>] = <#=Core.GetParameterName(toColumns)#>
 <#
 		i++;
 	}

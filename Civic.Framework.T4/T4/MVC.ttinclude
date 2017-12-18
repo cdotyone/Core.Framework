@@ -15,7 +15,7 @@ public static class <#=edmxFileName#>Controllers
 <#
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
-#>		list.Add(new EntityRoute { EntityName="<#=entity.Name#>",PluralName="<#=GetPluralName(entity.Name)#>", Controller = new <#=entity.Name#>Controller() });
+#>		list.Add(new EntityRoute { EntityName="<#=entity.Name#>",PluralName="<#=entity.Name#>", Controller = new <#=entity.Name#>Controller() });
 <#
 }
 #>

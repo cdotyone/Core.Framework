@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-#pragma warning disable 1591 // this is for supress no xml comments in public members warnings
+#pragma warning disable 1591 // this is for supress no xml comments in public members warnings 
 
 using System;
 using System.Collections.Generic;
@@ -30,7 +30,7 @@ namespace Civic.Framework.WebApi.Test.Entities
         public System.DateTime Dte { get; set; }
 
         [DataMember(Name = "dte2")]
-        public System.DateTime? Dte2 { get; set; }
+        public Nullable<System.DateTime> Dte2 { get; set; }
 
         [DataMember(Name = "dble1")]
         public double Dble1 { get; set; }
@@ -42,14 +42,14 @@ namespace Civic.Framework.WebApi.Test.Entities
         public Entity1 Copy()
         {
             var copy = new Entity1
-                {
-                    Name = Name,
-                    EnvironmentID = EnvironmentID,
-                    Dte = Dte,
-                    Dte2 = Dte2,
-                    Dble1 = Dble1,
-                    Dec1 = Dec1
-                };
+            {
+                Name = Name,
+                EnvironmentID = EnvironmentID,
+                Dte = Dte,
+                Dte2 = Dte2,
+                Dble1 = Dble1,
+                Dec1 = Dec1
+            };
             return copy;
         }
 

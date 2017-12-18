@@ -1,6 +1,6 @@
 ﻿<#
 
-EdmItemCollection ExistingStore2 = (EdmItemCollection)metadataWorkspace.GetItemCollection(DataSpace.CSpace);
+//EdmItemCollection ExistingStore2 = (EdmItemCollection)metadataWorkspace.GetItemCollection(DataSpace.CSpace);
 
 
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))

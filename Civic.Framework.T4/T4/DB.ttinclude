@@ -464,19 +464,6 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 			var toEntity = navProperty.ToEndMember.GetEntityType();
 			NavigationProperty[] foreignKeys = entity.NavigationProperties.ToArray();
-
-			AssociationType association = null;	
-			try {
-			association = metadataWorkspace 
-				.GetItems<AssociationType>(DataSpace.SSpace)
-				.Single(a => a.Name == navProperty.RelationshipType.Name);
-			} catch {
-			}
-			if(association==null) continue;
-
-			var toColumns = String.Join(",", association.ReferentialConstraints.SelectMany(rc => rc.ToProperties));
-
-			names.Add("usp_" + entity.Name + "GetBy"+ toEntity.Name +".sql");
 		}
 	}
 

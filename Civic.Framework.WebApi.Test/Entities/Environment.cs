@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-#pragma warning disable 1591 // this is for supress no xml comments in public members warnings
+#pragma warning disable 1591 // this is for supress no xml comments in public members warnings 
 
 using System;
 using System.Collections.Generic;
@@ -30,10 +30,10 @@ namespace Civic.Framework.WebApi.Test.Entities
         public Environment Copy()
         {
             var copy = new Environment
-                {
-                    ID = ID,
-                    Name = Name
-                };
+            {
+                ID = ID,
+                Name = Name
+            };
             return copy;
         }
 

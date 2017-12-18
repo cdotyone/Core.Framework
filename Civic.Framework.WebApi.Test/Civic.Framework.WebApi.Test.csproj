@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -42,35 +42,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Civic.Core.Audit, Version=1.23.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Audit.1.23.8\lib\net40\Civic.Core.Audit.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Civic.Core.Caching, Version=1.23.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Caching.1.23.5\lib\net40\Civic.Core.Caching.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Civic.Core.Configuration, Version=1.23.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Configuration.1.23.5\lib\net40\Civic.Core.Configuration.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Civic.Core.Data, Version=1.23.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Data.1.23.4\lib\net40\Civic.Core.Data.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Civic.Core.Framework, Version=1.23.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Framework.1.23.4\lib\net40\Civic.Core.Framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Civic.Core.Logging, Version=1.23.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Logging.1.23.5\lib\net40\Civic.Core.Logging.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <PackageReference Include="Civic.Core.Audit" Version="1.24.57" />
+    <PackageReference Include="Civic.Core.Caching" Version="1.24.56" />
+    <PackageReference Include="Civic.Core.Configuration" Version="1.24.50" />
+    <PackageReference Include="Civic.Core.Data" Version="1.24.47" />
+    <PackageReference Include="Civic.Core.Framework" Version="1.24.61" />
+    <PackageReference Include="Civic.Core.Logging" Version="1.24.46" />
+    <PackageReference Include="EntityFramework" Version="6.2.0" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.3" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.3" />
+    <PackageReference Include="Microsoft.Web.Infrastructure" Version="1.0.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -78,10 +65,6 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
@@ -91,12 +74,38 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
+    <Folder Include="App_Data\" />
+    <Folder Include="App_Start\" />
+    <Folder Include="Security\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Controllers\Example.txt4" />
+    <Content Include="Data\Example.txt4" />
+    <Content Include="Entities\Example.txt4" />
+    <Content Include="Services\Example.txt4" />
+    <Content Include="SQL\Example.DB.Rebuild.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\Example.Procs.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\Example.txt4" />
+    <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceer40EN.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlcecompact40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceca40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\Microsoft.VC90.CRT\README_ENU.txt" />
+    <None Include="_bin_deployableAssemblies\x86\Microsoft.VC90.CRT\msvcr90.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlcese40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceqp40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceme40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceer40EN.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlcecompact40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceca40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
+    <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\msvcr90.dll" />
     <EmbeddedResource Include="Example.edmx.xml">
       <DependentUpon>Example.txt4</DependentUpon>
     </EmbeddedResource>
@@ -112,24 +121,13 @@
     <Content Include="SQL\all_Environment.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
-    <Content Include="SQL\Example.DB.Procs.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\Example.DB.Rebuild.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
     <Content Include="SQL\Example.Defaults.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\Example.Procs.sql">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Content>
-    <Content Include="SQL\Example.Tables.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <None Include="_bin_deployableAssemblies\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ExampleEntity1Controller.cs">
@@ -183,8 +181,8 @@
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Services\Example.Environment.cs">
-      <SubType>Code</SubType>
       <DependentUpon>Example.txt4</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Services\Example.Services.cs">
       <DependentUpon>Example.txt4</DependentUpon>
@@ -204,7 +202,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
-    <Content Include="packages.config" />
     <Content Include="T4\t4settings.ttinclude" />
     <Content Include="T4\t4generate.ttinclude" />
     <Content Include="Models\Example.tt">
@@ -215,24 +212,16 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Example.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Controllers\Example.txt4" />
-    <Content Include="Data\Example.txt4" />
-    <Content Include="Entities\Example.txt4" />
     <Content Include="Example.txt4" />
-    <Content Include="Services\Example.txt4" />
-    <Content Include="SQL\Example.txt4" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="App_Start\" />
-    <Folder Include="Security\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
@@ -245,6 +234,24 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nuget-45|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nuget-46|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />

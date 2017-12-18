@@ -1,10 +1,13 @@
 ﻿<#
 
-//System.Diagnostics.Debugger.Launch();
+System.Diagnostics.Debugger.Launch();
 Version targetVersion = new Version();
 
-EdmItemCollection ExistingStore = (EdmItemCollection)metadataWorkspace.GetItemCollection(DataSpace.CSpace);
-EdmItemCollection Store = ExistingStore;
+ItemCollection ExistingStore = itemCollection as ItemCollection;
+
+//EdmItemCollection ExistingStore = new 
+//EdmItemCollection ExistingStore = (EdmItemCollection)metadataWorkspace.GetItemCollection(DataSpace.CSpace);
+//EdmItemCollection Store = ExistingStore;
 
 fileManager.StartNewFile(edmxFileName + ".Tables.sql", folderName:"SQL");
 
