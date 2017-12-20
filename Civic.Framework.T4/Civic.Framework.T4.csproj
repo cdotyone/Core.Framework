@@ -124,7 +124,7 @@
     <None Include="nuget\Content\Models\Example.tt">
       <LastGenOutput>Example1.cs</LastGenOutput>
     </None>
-    <None Include="nuget\Content\T4\t4generate.ttinclude.pp">
+    <None Include="nuget\Content\any\any\T4\t4generate.ttinclude.pp">
       <LastGenOutput>Example.cs</LastGenOutput>
     </None>
     <Compile Include="..\References\VersionInfo.cs">
@@ -161,7 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="nuget\Content\Models\Example.edmx" />
-    <None Include="nuget\Content\T4\t4settings.ttinclude">
+    <None Include="nuget\Content\any\any\T4\t4settings.ttinclude">
       <LastGenOutput>Example.cs</LastGenOutput>
     </None>
     <None Include="T4\GenerateTSQL.ttinclude" />
