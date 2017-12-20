@@ -124,7 +124,7 @@
     <None Include="nuget\Content\Models\Example.tt">
       <LastGenOutput>Example1.cs</LastGenOutput>
     </None>
-    <None Include="nuget\Content\T4\t4generate.ttinclude">
+    <None Include="nuget\Content\T4\t4generate.ttinclude.pp">
       <LastGenOutput>Example.cs</LastGenOutput>
     </None>
     <Compile Include="..\References\VersionInfo.cs">
