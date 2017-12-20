@@ -127,8 +127,6 @@
     <None Include="nuget\Content\T4\t4generate.ttinclude">
       <LastGenOutput>Example.cs</LastGenOutput>
     </None>
-    <None Include="nuget\Tools\Uninstall.ps1" />
-    <None Include="nuget\Tools\Install.ps1" />
     <Compile Include="..\References\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
