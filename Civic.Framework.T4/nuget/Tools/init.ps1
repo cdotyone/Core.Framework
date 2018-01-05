@@ -1,5 +1,10 @@
-﻿param($rootPath, $toolsPath, $package, $project)
+﻿#param($rootPath, $toolsPath, $package, $project)
 
-Write-Output $rootPath
-Write-Output $toolsPath
-Write-Output $package
+$regex = new-object System.Text.RegularExpressions.Regex ('(.*\\).*', [System.Text.RegularExpressions.RegexOptions]::MultiLine)
+$base = $regex.split($rootPath)[1] + 'T4'
+
+$rootPath += '\T4'
+
+Write-Output Copying Templates From $rootPath To $base
+
+Copy-Item $rootPath $base -recurse -force
