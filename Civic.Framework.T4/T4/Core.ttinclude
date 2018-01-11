@@ -24,7 +24,7 @@ var ef = new MetadataTools(this);
 var typeMapper = new TypeMapper(code, ef, textTransform.Errors);
 
 var fileManager = TemplateFileManager.Create(this);
-fileManager.IsAutoIndentEnabled = true;
+//fileManager.IsAutoIndentEnabled = true;
 fileManager.CanOverwriteExistingFile = true;
 
 var itemCollection = new EdmMetadataLoader(textTransform.Host, textTransform.Errors).CreateEdmItemCollection(inputFile);
