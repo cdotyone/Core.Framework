@@ -168,16 +168,14 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
 			}
 
-		}
-		<#
+		}<#
 		if((keyType=="Int32" || keyType=="int") && keyName=="Id") {
 #>
 
 		return -1;
 <#
 		}
-		#>
-	}
+#>	}
 
 	public void Modify<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>) 
 	{
