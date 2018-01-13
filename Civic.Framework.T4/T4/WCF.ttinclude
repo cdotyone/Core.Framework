@@ -73,7 +73,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 {
 	fileManager.StartNewFile(edmxFileName + "."+entity.Name+".cs", folderName:"Services");
 
-	WriteHeader("System", "System.ServiceModel.Activation", "System.Collections.Generic", "Civic.Core.Framework.Security", "Civic.Core.Audit", "Civic.Core.Logging", namespaceName + ".Entities");
+	WriteHeader("System", "System.ServiceModel.Activation", "System.Collections.Generic", "Civic.Core.Framework.Security", "Civic.Core.Audit", "Civic.Core.Logging", "Civic.Framework.WebApi", namespaceName + ".Entities");
 	#>
 using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 
@@ -101,6 +101,8 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Get<#=code.Escape(entity)#>By<#=code.Escape(keyName)#>")) {
 
+            if (!AuthorizationHelper.CanView("<#=apiSchemaName#>", "<#=code.Escape(entity)#>")) throw new NotImplementedException();
+
 			try {		
                 using (var database = Connection) {
 					return Data.<#=edmxFileName#>Data.Get<#=code.Escape(entity)#>(<# foreach(var key in keys.Keys) { #><#=Core.GetMethodParameterName(key)#>, <#}#>database);
@@ -119,6 +121,8 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 	public List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(int skip, ref int count, bool retCount, string filterBy, string orderBy) 
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "GetPaged<#=code.Escape(entity)#>")) {
+
+            if (!AuthorizationHelper.CanView("<#=apiSchemaName#>", "<#=code.Escape(entity)#>")) throw new NotImplementedException();
 
 			try {
                 using (var database = Connection) {
