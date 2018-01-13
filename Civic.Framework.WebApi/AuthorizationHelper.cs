@@ -1,5 +1,7 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Security.Claims;
 using System.Web;
+using Civic.Framework.WebApi.Configuration;
 
 namespace Civic.Framework.WebApi
 {
@@ -7,6 +9,8 @@ namespace Civic.Framework.WebApi
     {
         public static bool CanModify(string module, string entityname)
         {
+            if (T4Config.GetCanModify(module, entityname)) return true;
+
             var context = HttpContext.Current;
             var claimsPrincipal = context.User as ClaimsPrincipal;
             if (claimsPrincipal != null)
@@ -21,6 +25,8 @@ namespace Civic.Framework.WebApi
 
         public static bool CanAdd(string module, string entityname)
         {
+            if (T4Config.GetCanAdd(module, entityname)) return true;
+
             var context = HttpContext.Current;
             var claimsPrincipal = context.User as ClaimsPrincipal;
             if (claimsPrincipal != null)
@@ -33,8 +39,16 @@ namespace Civic.Framework.WebApi
             return false;
         }
 
+        [Obsolete("Please use CanRemove Instead")]
         public static bool CanDelete(string module, string entityname)
         {
+            return CanRemove(module, entityname);
+        }
+
+        public static bool CanRemove(string module, string entityname)
+        {
+            if (T4Config.GetCanRemove(module, entityname)) return true;
+
             var context = HttpContext.Current;
             var claimsPrincipal = context.User as ClaimsPrincipal;
             if (claimsPrincipal != null)
@@ -49,6 +63,8 @@ namespace Civic.Framework.WebApi
 
         public static bool CanView(string module, string entityname)
         {
+            if (T4Config.GetCanView(module, entityname)) return true;
+
             var context = HttpContext.Current;
             var claimsPrincipal = context.User as ClaimsPrincipal;
             if (claimsPrincipal != null)

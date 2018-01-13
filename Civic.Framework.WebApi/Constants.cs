@@ -8,7 +8,12 @@
         public const string CONFIG_FORCEUPPER = "forceUpperCase";
         public const string CONFIG_MAX = "max";
 
-   	    public const string CONFIG_USE_LOCALTIME_PROP = "useLocalTime";
+	    public const string CONFIG_CANVIEW = "canView";
+	    public const string CONFIG_CANADD = "canAdd";
+	    public const string CONFIG_CANMODIFY = "canModify";
+	    public const string CONFIG_CANREMOVE = "canRemove";
+
+        public const string CONFIG_USE_LOCALTIME_PROP = "useLocalTime";
    	    public const bool CONFIG_USE_LOCALTIME_DEFAULT = true;
 
 	}

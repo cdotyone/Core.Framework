@@ -9,6 +9,12 @@ namespace Civic.Framework.WebApi.Configuration
         private static bool _checked;
         private static Dictionary<string, int> _maxRowOverrides;
         private static Dictionary<string, bool> _forceUpperOverrides;
+
+        private static Dictionary<string, bool> _allowViewOverrides;
+        private static Dictionary<string, bool> _allowAddOverrides;
+        private static Dictionary<string, bool> _allowModifyOverrides;
+        private static Dictionary<string, bool> _allowRemoveOverrides;
+
         private static object _lock = new object();
 
         public T4Config(INamedElement element)
@@ -24,6 +30,17 @@ namespace Civic.Framework.WebApi.Configuration
                 ForceUpperCase = bool.Parse(Attributes[Constants.CONFIG_FORCEUPPER]);
             if (Attributes.ContainsKey(Constants.CONFIG_MAX))
                 Max = int.Parse(Attributes[Constants.CONFIG_MAX]);
+
+            if (Attributes.ContainsKey(Constants.CONFIG_CANVIEW))
+                CanView = bool.Parse(Attributes[Constants.CONFIG_CANVIEW]);
+            if (Attributes.ContainsKey(Constants.CONFIG_CANADD))
+                CanAdd = bool.Parse(Attributes[Constants.CONFIG_CANADD]);
+            if (Attributes.ContainsKey(Constants.CONFIG_CANMODIFY))
+                CanModify = bool.Parse(Attributes[Constants.CONFIG_CANMODIFY]);
+            if (Attributes.ContainsKey(Constants.CONFIG_CANREMOVE))
+                CanRemove = bool.Parse(Attributes[Constants.CONFIG_CANREMOVE]);
+
+
         }
 
         /// <summary>
@@ -58,6 +75,18 @@ namespace Civic.Framework.WebApi.Configuration
         [ConfigurationProperty(Constants.CONFIG_MAX, DefaultValue = 100)]
         public int Max { get; set; }
 
+        [ConfigurationProperty(Constants.CONFIG_CANVIEW, DefaultValue = true)]
+        public bool CanView { get; set; }
+
+        [ConfigurationProperty(Constants.CONFIG_CANADD, DefaultValue = false)]
+        public bool CanAdd { get; set; }
+
+        [ConfigurationProperty(Constants.CONFIG_CANMODIFY, DefaultValue = false)]
+        public bool CanModify { get; set; }
+
+        [ConfigurationProperty(Constants.CONFIG_CANREMOVE, DefaultValue = false)]
+        public bool CanRemove { get; set; }
+
         [ConfigurationProperty(Constants.CONFIG_USE_LOCALTIME_PROP, DefaultValue = Constants.CONFIG_USE_LOCALTIME_DEFAULT)]
         public bool UseLocalTime { get; set; }
 
@@ -88,12 +117,92 @@ namespace Civic.Framework.WebApi.Configuration
             return max;
         }
 
+        public static bool GetCanView(string schema, string name)
+        {
+            if (_allowViewOverrides == null) CacheConfig();
+
+            var ekey = schema + "." + name;
+
+            if (_current == null && !_checked) _current = Current;
+
+            var canAdd = _current == null ? true : _current.CanView;
+            if (!canAdd) return false;
+            if (_allowViewOverrides != null)
+            {
+                if (_allowViewOverrides.ContainsKey(ekey)) canAdd = _allowViewOverrides[ekey];
+                else if (_allowViewOverrides.ContainsKey(schema)) canAdd = _allowViewOverrides[schema];
+            }
+
+            return canAdd;
+        }
+
+        public static bool GetCanAdd(string schema, string name)
+        {
+            if (_allowAddOverrides == null) CacheConfig();
+
+            var ekey = schema + "." + name;
+
+            if (_current == null && !_checked) _current = Current;
+
+            var canAdd = _current == null ? false : _current.CanAdd;
+            if (canAdd) return true;
+            if (_allowAddOverrides != null)
+            {
+                if (_allowAddOverrides.ContainsKey(ekey)) canAdd = _allowAddOverrides[ekey];
+                else if (_allowAddOverrides.ContainsKey(schema)) canAdd = _allowAddOverrides[schema];
+            }
+
+            return canAdd;
+        }
+
+        public static bool GetCanModify(string schema, string name)
+        {
+            if (_allowModifyOverrides == null) CacheConfig();
+
+            var ekey = schema + "." + name;
+
+            if (_current == null && !_checked) _current = Current;
+
+            var canModify = _current == null ? false : _current.CanModify;
+            if (canModify) return true;
+            if (_allowModifyOverrides != null)
+            {
+                if (_allowModifyOverrides.ContainsKey(ekey)) canModify = _allowModifyOverrides[ekey];
+                else if (_allowModifyOverrides.ContainsKey(schema)) canModify = _allowModifyOverrides[schema];
+            }
+
+            return canModify;
+        }
+
+        public static bool GetCanRemove(string schema, string name)
+        {
+            if (_allowRemoveOverrides == null) CacheConfig();
+
+            var ekey = schema + "." + name;
+
+            if (_current == null && !_checked) _current = Current;
+
+            var canModify = _current == null ? false : _current.CanRemove;
+            if (canModify) return true;
+            if (_allowRemoveOverrides != null)
+            {
+                if (_allowRemoveOverrides.ContainsKey(ekey)) canModify = _allowRemoveOverrides[ekey];
+                else if (_allowRemoveOverrides.ContainsKey(schema)) canModify = _allowRemoveOverrides[schema];
+            }
+
+            return canModify;
+        }
+
+
         public static void CacheConfig()
         {
             lock (_lock)
             {
                 _maxRowOverrides = new Dictionary<string, int>();
                 _forceUpperOverrides = new Dictionary<string, bool>();
+                _allowAddOverrides = new Dictionary<string, bool>();
+                _allowModifyOverrides = new Dictionary<string, bool>();
+                _allowRemoveOverrides = new Dictionary<string, bool>();
 
                 var config = Current;
                 if (config != null)
@@ -116,6 +225,27 @@ namespace Civic.Framework.WebApi.Configuration
                                 _forceUpperOverrides[skey] = force;
                         }
 
+                        if (schema.Value.Attributes.ContainsKey(Constants.CONFIG_CANVIEW))
+                        {
+                            if (bool.TryParse(schema.Value.Attributes[Constants.CONFIG_CANVIEW], out force))
+                                _allowViewOverrides[skey] = force;
+                        }
+                        if (schema.Value.Attributes.ContainsKey(Constants.CONFIG_CANADD))
+                        {
+                            if (bool.TryParse(schema.Value.Attributes[Constants.CONFIG_CANADD], out force))
+                                _allowAddOverrides[skey] = force;
+                        }
+                        if (schema.Value.Attributes.ContainsKey(Constants.CONFIG_CANMODIFY))
+                        {
+                            if (bool.TryParse(schema.Value.Attributes[Constants.CONFIG_CANMODIFY], out force))
+                                _allowModifyOverrides[skey] = force;
+                        }
+                        if (schema.Value.Attributes.ContainsKey(Constants.CONFIG_CANREMOVE))
+                        {
+                            if (bool.TryParse(schema.Value.Attributes[Constants.CONFIG_CANREMOVE], out force))
+                                _allowRemoveOverrides[skey] = force;
+                        }
+
 
                         if (schema.Value.Children != null)
                         {
@@ -132,6 +262,28 @@ namespace Civic.Framework.WebApi.Configuration
                                     if (bool.TryParse(element.Value.Attributes[Constants.CONFIG_FORCEUPPER], out force))
                                         _forceUpperOverrides[ekey] = force;
                                 }
+
+                                if (element.Value.Attributes.ContainsKey(Constants.CONFIG_CANVIEW))
+                                {
+                                    if (bool.TryParse(element.Value.Attributes[Constants.CONFIG_CANVIEW], out force))
+                                        _allowViewOverrides[ekey] = force;
+                                }
+                                if (element.Value.Attributes.ContainsKey(Constants.CONFIG_CANADD))
+                                {
+                                    if (bool.TryParse(element.Value.Attributes[Constants.CONFIG_CANADD], out force))
+                                        _allowAddOverrides[ekey] = force;
+                                }
+                                if (element.Value.Attributes.ContainsKey(Constants.CONFIG_CANMODIFY))
+                                {
+                                    if (bool.TryParse(element.Value.Attributes[Constants.CONFIG_CANMODIFY], out force))
+                                        _allowModifyOverrides[ekey] = force;
+                                }
+                                if (element.Value.Attributes.ContainsKey(Constants.CONFIG_CANREMOVE))
+                                {
+                                    if (bool.TryParse(element.Value.Attributes[Constants.CONFIG_CANREMOVE], out force))
+                                        _allowRemoveOverrides[ekey] = force;
+                                }
+
 
                                 if (element.Value.Children != null)
                                 {
