@@ -1,24 +1,16 @@
-﻿#param($rootPath, $toolsPath, $package, $project)
+﻿$regex = new-object System.Text.RegularExpressions.Regex ('(.*\\).*', [System.Text.RegularExpressions.RegexOptions]::MultiLine)
+$base = $regex.split($PSScriptRoot)[1]
 
-$message = "Root Path " 
-$message += $PSScriptRoot
-Write-Host $message
+Write-Host "Base " + $base
 
-$message = "ToolsPath " 
-$message += $toolsPath
-Write-Host $message
+$regex = new-object System.Text.RegularExpressions.Regex ('(.*\\).*(\\)', [System.Text.RegularExpressions.RegexOptions]::MultiLine)
+$rootPath = $regex.split($PSScriptRoot)[1]
 
-$message = "Package " 
-$message += $package
-Write-Host $message
-
-$regex = new-object System.Text.RegularExpressions.Regex ('(.*\\).*', [System.Text.RegularExpressions.RegexOptions]::MultiLine)
-$base = $regex.split($toolsPath)[1]
+Write-Host "Root " + $rootPath
 
 $rootPath += '0.0.0.0'
 
-$message = "Copying Templates From $rootPath To" 
-$messeg += $base
+$message = "Copying Templates From " + $base + " To " + $rootPath
 Write-Host $message
 
-Copy-Item $rootPath $base -recurse -force
+Copy-Item $base $rootPath -recurse -force
