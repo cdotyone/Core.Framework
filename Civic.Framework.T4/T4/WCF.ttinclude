@@ -139,6 +139,8 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Add<#=code.Escape(entity)#>")) {
 
+            if (!AuthorizationHelper.CanAdd("<#=apiSchemaName#>", "<#=code.Escape(entity)#>")) throw new NotImplementedException();
+
 			try {
                 using(var db = Connection) {
 	                var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", <# foreach(var key in keys.Keys) { #><#=code.Escape(lowerName)#>.<#=key#>.ToString()+<#}#>"", <#=code.Escape(lowerName)#>);
@@ -177,6 +179,8 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Modify<#=code.Escape(entity)#>")) {
 
+            if (!AuthorizationHelper.CanModify("<#=apiSchemaName#>", "<#=code.Escape(entity)#>")) throw new NotImplementedException();
+
 			try {
                 using(var db = Connection) {
 					var before = Data.<#=edmxFileName#>Data.Get<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + lowerName + "."+ key)#><#}#>, db);
@@ -196,6 +200,8 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 	public void Remove<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> ) 
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Remove<#=code.Escape(entity)#>")) {
+
+            if (!AuthorizationHelper.CanRemove("<#=apiSchemaName#>", "<#=code.Escape(entity)#>")) throw new NotImplementedException();
 
 			try {
 				using(var db = Connection) {
