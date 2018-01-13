@@ -33,6 +33,7 @@ namespace Civic.Framework.WebApi.Configuration
 
             if (Attributes.ContainsKey(Constants.CONFIG_CANVIEW))
                 CanView = bool.Parse(Attributes[Constants.CONFIG_CANVIEW]);
+            else CanView = true;
             if (Attributes.ContainsKey(Constants.CONFIG_CANADD))
                 CanAdd = bool.Parse(Attributes[Constants.CONFIG_CANADD]);
             if (Attributes.ContainsKey(Constants.CONFIG_CANMODIFY))
