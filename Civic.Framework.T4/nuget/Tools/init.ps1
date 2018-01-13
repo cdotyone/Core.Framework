@@ -1,6 +1,6 @@
 ﻿#param($rootPath, $toolsPath, $package, $project)
 
-Write-Output "Root Path "+$rootPath)
+Write-Output "Root Path "+$rootPath
 Write-Output "ToolsPath "+$toolsPath
 Write-Output "Package "+$package
 
