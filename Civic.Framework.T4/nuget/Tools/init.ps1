@@ -1,14 +1,20 @@
 ﻿#param($rootPath, $toolsPath, $package, $project)
 
-Write-Host "Root Path "+$rootPath
-Write-Host "ToolsPath "+$toolsPath
-Write-Host "Package "+$package
+$message = "Root Path " + $rootPath
+Write-Host $message
+
+$message = "ToolsPath " + $toolsPath
+Write-Host $message
+
+$message = "Package " + $package
+Write-Host $message
 
 $regex = new-object System.Text.RegularExpressions.Regex ('(.*\\).*', [System.Text.RegularExpressions.RegexOptions]::MultiLine)
 $base = $regex.split($toolsPath)[1]
 
 $rootPath += '0.0.0.0'
 
-Write-Host "Copying Templates From $rootPath To" + $base
+$message = "Copying Templates From $rootPath To" + $base
+Write-Host $message
 
 Copy-Item $rootPath $base -recurse -force
