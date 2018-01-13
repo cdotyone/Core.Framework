@@ -101,7 +101,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Get<#=code.Escape(entity)#>By<#=code.Escape(keyName)#>")) {
 
-            if (!AuthorizationHelper.CanView("<#=apiSchemaName#>", "<#=code.Escape(entity)#>")) throw new NotImplementedException();
+            if (!AuthorizationHelper.CanView("<#=apiSchemaName#>", "<#=lowerName)#>")) throw new NotImplementedException();
 
 			try {		
                 using (var database = Connection) {
@@ -122,7 +122,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "GetPaged<#=code.Escape(entity)#>")) {
 
-            if (!AuthorizationHelper.CanView("<#=apiSchemaName#>", "<#=code.Escape(entity)#>")) throw new NotImplementedException();
+            if (!AuthorizationHelper.CanView("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
 
 			try {
                 using (var database = Connection) {
@@ -143,7 +143,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Add<#=code.Escape(entity)#>")) {
 
-            if (!AuthorizationHelper.CanAdd("<#=apiSchemaName#>", "<#=code.Escape(entity)#>")) throw new NotImplementedException();
+            if (!AuthorizationHelper.CanAdd("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
 
 			try {
                 using(var db = Connection) {
@@ -181,7 +181,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Modify<#=code.Escape(entity)#>")) {
 
-            if (!AuthorizationHelper.CanModify("<#=apiSchemaName#>", "<#=code.Escape(entity)#>")) throw new NotImplementedException();
+            if (!AuthorizationHelper.CanModify("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
 
 			try {
                 using(var db = Connection) {
@@ -203,7 +203,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Remove<#=code.Escape(entity)#>")) {
 
-            if (!AuthorizationHelper.CanRemove("<#=apiSchemaName#>", "<#=code.Escape(entity)#>")) throw new NotImplementedException();
+            if (!AuthorizationHelper.CanRemove("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
 
 			try {
 				using(var db = Connection) {

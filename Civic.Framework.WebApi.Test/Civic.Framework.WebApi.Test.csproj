@@ -42,12 +42,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Civic.Core.Audit" Version="1.24.57" />
-    <PackageReference Include="Civic.Core.Caching" Version="1.24.56" />
-    <PackageReference Include="Civic.Core.Configuration" Version="1.24.50" />
-    <PackageReference Include="Civic.Core.Data" Version="1.24.47" />
-    <PackageReference Include="Civic.Core.Framework" Version="1.24.61" />
-    <PackageReference Include="Civic.Core.Logging" Version="1.24.46" />
+    <PackageReference Include="Civic.Core.Audit" Version="1.24.329" />
+    <PackageReference Include="Civic.Core.Caching" Version="1.24.72" />
+    <PackageReference Include="Civic.Core.Configuration" Version="1.24.73" />
+    <PackageReference Include="Civic.Core.Data" Version="1.24.76" />
+    <PackageReference Include="Civic.Core.Framework" Version="1.24.77" />
+    <PackageReference Include="Civic.Core.Logging" Version="1.24.74" />
     <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.3" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.3" />

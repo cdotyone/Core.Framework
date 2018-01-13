@@ -32,6 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -42,6 +43,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -72,10 +74,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Civic.Core.Caching" Version="1.24.56" />
-    <PackageReference Include="Civic.Core.Configuration" Version="1.24.50" />
-    <PackageReference Include="Civic.Core.Data" Version="1.24.47" />
-    <PackageReference Include="Civic.Core.Logging" Version="1.24.46" />
+    <PackageReference Include="Civic.Core.Caching" Version="1.24.72" />
+    <PackageReference Include="Civic.Core.Configuration" Version="1.24.73" />
+    <PackageReference Include="Civic.Core.Data" Version="1.24.76" />
+    <PackageReference Include="Civic.Core.Logging" Version="1.24.74" />
     <PackageReference Include="Microsoft.Web.Infrastructure" Version="1.0.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="WebActivatorEx" Version="2.2.0" />
