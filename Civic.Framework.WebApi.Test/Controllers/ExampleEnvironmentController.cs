@@ -23,48 +23,48 @@ using EnvironmentEntity = Civic.Framework.WebApi.Test.Entities.Environment;
 namespace Civic.Framework.WebApi.Test.Controllers
 {
     [RoutePrefix("api/example/1.0/Environment")]
-    [System.CodeDom.Compiler.GeneratedCode("STE-EF", ".NET 3.5")]
-    public partial class ExampleEnvironmentController : ApiController
+    [System.CodeDom.Compiler.GeneratedCode("STE-EF",".NET 3.5")]
+    public partial class ExampleEnvironmentController : ApiController 
     {
-        private static readonly ExampleService _service = new ExampleService();
-
-        [Route("")]
-        public QueryMetadata<EnvironmentEntity> Get()
-        {
-            ODataV3QueryOptions options = this.GetOptions();
-            var maxrows = Civic.Framework.WebApi.Configuration.T4Config.GetMaxRows("dbo", "environment");
-            var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
-            string orderby = options.ProcessOrderByOptions();
-            var result = _service.GetPagedEnvironment(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
-            return new QueryMetadata<EnvironmentEntity>(result, resultLimit);
-        }
-
-        [Route("{id}")]
-        public QueryMetadata<EnvironmentEntity> Get(Int32 id)
-        {
-            var result = new List<EnvironmentEntity> { _service.GetEnvironment(id) };
-            return new QueryMetadata<EnvironmentEntity>(result, 1);
-        }
-
-        [Route("")]
-        public Int32 Post([FromBody]EnvironmentEntity value)
-        {
-            _service.AddEnvironment(value);
-            return value.ID;
-        }
-
-        [Route("{id}")]
-        public void Put(Int32 id, [FromBody]EnvironmentEntity value)
-        {
-            value.ID = id;
-            _service.ModifyEnvironment(value);
-        }
-
-        [Route("{id}")]
-        public void Delete(Int32 id)
-        {
-            _service.RemoveEnvironment(id);
-        }
+    	private static readonly ExampleService _service = new ExampleService();
+    
+    	[Route("")]
+    	public QueryMetadata<EnvironmentEntity> Get()
+    	{
+    		ODataV3QueryOptions options = this.GetOptions();
+    		var maxrows = Civic.Framework.WebApi.Configuration.T4Config.GetMaxRows("dbo","environment");
+    		var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
+    		string orderby = options.ProcessOrderByOptions();
+    		var result = _service.GetPagedEnvironment(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
+    		return new QueryMetadata<EnvironmentEntity>(result, resultLimit);
+    	}
+    
+    	[Route("{id}")]
+    	public QueryMetadata<EnvironmentEntity> Get( Int32 id )
+    	{
+    		var result = new List<EnvironmentEntity> { _service.GetEnvironment( id) };
+    		return new QueryMetadata<EnvironmentEntity>(result, 1);
+    	}
+    
+    	[Route("")]
+    	public Int32 Post([FromBody]EnvironmentEntity value)
+    	{
+    		_service.AddEnvironment(value);
+    		return value.ID;
+    	}
+    
+    	[Route("{id}")]
+    	public void Put(Int32 id, [FromBody]EnvironmentEntity value)
+    	{
+    		value.ID = id;
+    		_service.ModifyEnvironment(value);
+    	}
+    
+    	[Route("{id}")]
+    	public void Delete( Int32 id )
+    	{
+    		_service.RemoveEnvironment( id );
+    	}
     }
 }
 

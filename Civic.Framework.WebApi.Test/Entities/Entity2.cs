@@ -17,63 +17,62 @@ using Civic.Framework.WebApi;
 
 namespace Civic.Framework.WebApi.Test.Entities
 {
-    [DataContract(Name = "entity2")]
+    [DataContract(Name="entity2")]
     public partial class Entity2 : IEntity
     {
-        [DataMember(Name = "someID")]
+    	[DataMember(Name="someID")]
         public int SomeID { get; set; }
-
-        [DataMember(Name = "ff")]
+    
+    	[DataMember(Name="ff")]
         public string ff { get; set; }
-
-        [DataMember(Name = "modified")]
+    
+    	[DataMember(Name="modified")]
         public System.DateTime Modified { get; set; }
-
-        [DataMember(Name = "otherDate")]
+    
+    	[DataMember(Name="otherDate")]
         public Nullable<System.DateTime> OtherDate { get; set; }
-
-
+    
+    
         public Entity2 Copy()
         {
             var copy = new Entity2
-            {
-                SomeID = SomeID,
-                ff = ff,
-                Modified = Modified,
-                OtherDate = OtherDate
-            };
+                {
+    			SomeID = SomeID
+    			,ff = ff
+    			,Modified = Modified
+    			,OtherDate = OtherDate
+                };
             return copy;
         }
-
-        public string IdentityID
-        {
-            get
-            {
-                return this.SomeID.ToString();
-            }
-        }
-
+    
+    	public string IdentityID 
+        { 
+    		get {
+    	return this.SomeID.ToString();
+    }
+    	}
+    
         public void Add(IDBConnection connection)
         {
-            var service = new Services.ExampleService();
-            service.Connection = connection;
-            service.AddEntity2(this);
+    		var service = new Services.ExampleService();
+    		service.Connection = connection;
+    		service.AddEntity2(this);
         }
-
+    
         public void Modify(IDBConnection connection)
         {
-            var service = new Services.ExampleService();
-            service.Connection = connection;
-            service.ModifyEntity2(this);
+    		var service = new Services.ExampleService();
+    		service.Connection = connection;
+    		service.ModifyEntity2(this);
         }
-
+    
         public void Remove(IDBConnection connection)
         {
-            var service = new Services.ExampleService();
-            service.Connection = connection;
-            service.RemoveEntity2(SomeID, ff);
+    		var service = new Services.ExampleService();
+    		service.Connection = connection;
+    		service.RemoveEntity2(SomeID , ff );
         }
-
+    
     }
 }
 

@@ -57,8 +57,10 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
     {
 		var pcounter = 0;
         foreach (var edmProperty in simpleProperties)
-        {#>
-			<#=(pcounter==0?"":",")+edmProperty.Name#> = <#=edmProperty.Name#><#
+        {
+#>
+			<#=(pcounter==0?"":",")+edmProperty.Name#> = <#=edmProperty.Name#>
+<#
 			pcounter++;
 		}
 	}
@@ -67,7 +69,8 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
         return copy;
     }
 
-	public string IdentityID { 
+	public string IdentityID 
+    { 
 		get {
 <#
 		bool foundIdentity = false;
@@ -81,7 +84,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 			{
 				foundIdentity= true;
 #>
-				return this.<#=code.Escape(edmProperty)#>.ToString();
+	return this.<#=code.Escape(edmProperty)#>.ToString();
 <#
 				break;
 			} 
@@ -103,7 +106,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		}
 
 
-#>		}
+#>}
 	}
 
     public void Add(IDBConnection connection)

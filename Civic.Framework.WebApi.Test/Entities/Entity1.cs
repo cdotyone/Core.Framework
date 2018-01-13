@@ -17,71 +17,70 @@ using Civic.Framework.WebApi;
 
 namespace Civic.Framework.WebApi.Test.Entities
 {
-    [DataContract(Name = "entity1")]
+    [DataContract(Name="entity1")]
     public partial class Entity1 : IEntity
     {
-        [DataMember(Name = "name")]
+    	[DataMember(Name="name")]
         public string Name { get; set; }
-
-        [DataMember(Name = "environmentID")]
+    
+    	[DataMember(Name="environmentID")]
         public int EnvironmentID { get; set; }
-
-        [DataMember(Name = "dte")]
+    
+    	[DataMember(Name="dte")]
         public System.DateTime Dte { get; set; }
-
-        [DataMember(Name = "dte2")]
+    
+    	[DataMember(Name="dte2")]
         public Nullable<System.DateTime> Dte2 { get; set; }
-
-        [DataMember(Name = "dble1")]
+    
+    	[DataMember(Name="dble1")]
         public double Dble1 { get; set; }
-
-        [DataMember(Name = "dec1")]
+    
+    	[DataMember(Name="dec1")]
         public double Dec1 { get; set; }
-
-
+    
+    
         public Entity1 Copy()
         {
             var copy = new Entity1
-            {
-                Name = Name,
-                EnvironmentID = EnvironmentID,
-                Dte = Dte,
-                Dte2 = Dte2,
-                Dble1 = Dble1,
-                Dec1 = Dec1
-            };
+                {
+    			Name = Name
+    			,EnvironmentID = EnvironmentID
+    			,Dte = Dte
+    			,Dte2 = Dte2
+    			,Dble1 = Dble1
+    			,Dec1 = Dec1
+                };
             return copy;
         }
-
-        public string IdentityID
-        {
-            get
-            {
-                return null;
-            }
-        }
-
+    
+    	public string IdentityID 
+        { 
+    		get {
+    			return null;
+    		}
+    	}
+    
         public void Add(IDBConnection connection)
         {
-            var service = new Services.ExampleService();
-            service.Connection = connection;
-            service.AddEntity1(this);
+    		var service = new Services.ExampleService();
+    		service.Connection = connection;
+    		service.AddEntity1(this);
         }
-
+    
         public void Modify(IDBConnection connection)
         {
-            var service = new Services.ExampleService();
-            service.Connection = connection;
-            service.ModifyEntity1(this);
+    		var service = new Services.ExampleService();
+    		service.Connection = connection;
+    		service.ModifyEntity1(this);
         }
-
+    
         public void Remove(IDBConnection connection)
         {
-            var service = new Services.ExampleService();
-            service.Connection = connection;
-            service.RemoveEntity1(Name);
+    		var service = new Services.ExampleService();
+    		service.Connection = connection;
+    		service.RemoveEntity1(Name );
         }
-
+    
     }
 }
 

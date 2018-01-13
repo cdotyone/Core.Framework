@@ -22,58 +22,53 @@ using Civic.Framework.WebApi.Test.Entities;
 
 namespace Civic.Framework.WebApi.Test.Services
 {
-
-
+    
+    
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public partial class ExampleService : IExample, IEntityService
     {
-
-        private IDBConnection _connection;
-
-        public IDBConnection Connection
+    	
+    	private IDBConnection _connection;
+    
+    	public IDBConnection Connection
         {
-            get
-            {
-                if (_connection == null) _connection = DatabaseFactory.CreateDatabase("Example");
-                return _connection;
-            }
-            set
-            {
-                _connection = value;
-            }
+    		get {
+    			if(_connection==null) _connection = DatabaseFactory.CreateDatabase("Example");
+    	        return _connection;
+    		}
+    		set {
+    			_connection = value;
+    		}
         }
-
-        public INamedElement Configuration { get; set; }
-
+    
+    	public INamedElement Configuration { get; set; }
+    
         public string ModuleName { get { return "example"; } }
-
-        public List<string> EntitiesProvided
-        {
-            get
-            {
-                return new List<string> { "entity1", "entity2", "environment" };
-            }
+            
+    	public List<string> EntitiesProvided { 
+    		get {
+    			return new List<string> { "entity1","entity2","environment" }; 
+    		}
         }
-
-        public IEntity Create(string name)
-        {
-            switch (name)
-            {
-                case "entity1":
-                case "Entity1":
-                    return new Civic.Framework.WebApi.Test.Entities.Entity1();
-                case "entity2":
-                case "Entity2":
-                    return new Civic.Framework.WebApi.Test.Entities.Entity2();
-                case "environment":
-                case "Environment":
-                    return new Civic.Framework.WebApi.Test.Entities.Environment();
-            };
-
-            return null;
+    
+    	public IEntity Create(string name)
+    	{
+    		switch(name) {
+    					case "entity1":
+    			case "Entity1":
+    				return new Civic.Framework.WebApi.Test.Entities.Entity1();
+    					case "entity2":
+    			case "Entity2":
+    				return new Civic.Framework.WebApi.Test.Entities.Entity2();
+    					case "environment":
+    			case "Environment":
+    				return new Civic.Framework.WebApi.Test.Entities.Environment();
+    				};
+    
+    		return null;
         }
     }
-
+    
 }
 
 

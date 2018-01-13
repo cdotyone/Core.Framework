@@ -18,27 +18,26 @@ using EnvironmentEntity = Civic.Framework.WebApi.Test.Entities.Environment;
 
 namespace Civic.Framework.WebApi.Test.Services
 {
-
+    
     [ServiceContract(Namespace = "http://example.civic360.com/")]
     public interface IExampleEnvironment
     {
-        [OperationContract]
-        List<EnvironmentEntity> GetPagedEnvironment(int skip, ref int count, bool retCount, string filterBy, string orderBy);
-
-        [OperationContract]
-        EnvironmentEntity GetEnvironment(Int32 id);
-
-        [OperationContract]
-        void AddEnvironment(EnvironmentEntity environment);
-
-        [OperationContract]
-        void ModifyEnvironment(EnvironmentEntity environment);
-
-        [OperationContract]
-        void RemoveEnvironment(Int32 id);
-
+    	[OperationContract]
+    	List<EnvironmentEntity> GetPagedEnvironment(int skip, ref int count, bool retCount, string filterBy, string orderBy);
+    
+    	[OperationContract]
+    	EnvironmentEntity GetEnvironment( Int32 id);
+    
+    	[OperationContract]
+    	void AddEnvironment(EnvironmentEntity environment);
+    
+    	[OperationContract]
+    	void ModifyEnvironment(EnvironmentEntity environment);
+    
+    	[OperationContract]
+    	void RemoveEnvironment( Int32 id );
     }
-
 }
+
 
 

@@ -23,49 +23,49 @@ using Entity2Entity = Civic.Framework.WebApi.Test.Entities.Entity2;
 namespace Civic.Framework.WebApi.Test.Controllers
 {
     [RoutePrefix("api/example/1.0/Entity2")]
-    [System.CodeDom.Compiler.GeneratedCode("STE-EF", ".NET 3.5")]
-    public partial class ExampleEntity2Controller : ApiController
+    [System.CodeDom.Compiler.GeneratedCode("STE-EF",".NET 3.5")]
+    public partial class ExampleEntity2Controller : ApiController 
     {
-        private static readonly ExampleService _service = new ExampleService();
-
-        [Route("")]
-        public QueryMetadata<Entity2Entity> Get()
-        {
-            ODataV3QueryOptions options = this.GetOptions();
-            var maxrows = Civic.Framework.WebApi.Configuration.T4Config.GetMaxRows("dbo", "entity2");
-            var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
-            string orderby = options.ProcessOrderByOptions();
-            var result = _service.GetPagedEntity2(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
-            return new QueryMetadata<Entity2Entity>(result, resultLimit);
-        }
-
-        [Route("{someID}/{ff}")]
-        public QueryMetadata<Entity2Entity> Get(Int32 someID, String ff)
-        {
-            var result = new List<Entity2Entity> { _service.GetEntity2(someID, ff) };
-            return new QueryMetadata<Entity2Entity>(result, 1);
-        }
-
-        [Route("")]
-        public String Post([FromBody]Entity2Entity value)
-        {
-            _service.AddEntity2(value);
-            return value.ff;
-        }
-
-        [Route("{someID}/{ff}")]
-        public void Put(Int32 someID, String ff, [FromBody]Entity2Entity value)
-        {
-            value.SomeID = someID;
-            value.ff = ff;
-            _service.ModifyEntity2(value);
-        }
-
-        [Route("{someID}/{ff}")]
-        public void Delete(Int32 someID, String ff)
-        {
-            _service.RemoveEntity2(someID, ff);
-        }
+    	private static readonly ExampleService _service = new ExampleService();
+    
+    	[Route("")]
+    	public QueryMetadata<Entity2Entity> Get()
+    	{
+    		ODataV3QueryOptions options = this.GetOptions();
+    		var maxrows = Civic.Framework.WebApi.Configuration.T4Config.GetMaxRows("dbo","entity2");
+    		var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
+    		string orderby = options.ProcessOrderByOptions();
+    		var result = _service.GetPagedEntity2(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
+    		return new QueryMetadata<Entity2Entity>(result, resultLimit);
+    	}
+    
+    	[Route("{someID}/{ff}")]
+    	public QueryMetadata<Entity2Entity> Get( Int32 someID, String ff )
+    	{
+    		var result = new List<Entity2Entity> { _service.GetEntity2( someID, ff) };
+    		return new QueryMetadata<Entity2Entity>(result, 1);
+    	}
+    
+    	[Route("")]
+    	public String Post([FromBody]Entity2Entity value)
+    	{
+    		_service.AddEntity2(value);
+    		return value.ff;
+    	}
+    
+    	[Route("{someID}/{ff}")]
+    	public void Put(Int32 someID, String ff, [FromBody]Entity2Entity value)
+    	{
+    		value.SomeID = someID;
+    		value.ff = ff;
+    		_service.ModifyEntity2(value);
+    	}
+    
+    	[Route("{someID}/{ff}")]
+    	public void Delete( Int32 someID, String ff )
+    	{
+    		_service.RemoveEntity2( someID, ff );
+    	}
     }
 }
 

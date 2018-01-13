@@ -18,25 +18,24 @@ using Entity2Entity = Civic.Framework.WebApi.Test.Entities.Entity2;
 
 namespace Civic.Framework.WebApi.Test.Services
 {
-
+    
     [ServiceContract(Namespace = "http://example.civic360.com/")]
     public interface IExampleEntity2
     {
-        [OperationContract]
-        List<Entity2Entity> GetPagedEntity2(int skip, ref int count, bool retCount, string filterBy, string orderBy);
-
-        [OperationContract]
-        Entity2Entity GetEntity2(Int32 someID, String ff);
-
-        [OperationContract]
-        void AddEntity2(Entity2Entity entity2);
-
-        [OperationContract]
-        void ModifyEntity2(Entity2Entity entity2);
-
-        [OperationContract]
-        void RemoveEntity2(Int32 someID, String ff);
-
+    	[OperationContract]
+    	List<Entity2Entity> GetPagedEntity2(int skip, ref int count, bool retCount, string filterBy, string orderBy);
+    
+    	[OperationContract]
+    	Entity2Entity GetEntity2( Int32 someID, String ff);
+    
+    	[OperationContract]
+    	void AddEntity2(Entity2Entity entity2);
+    
+    	[OperationContract]
+    	void ModifyEntity2(Entity2Entity entity2);
+    
+    	[OperationContract]
+    	void RemoveEntity2( Int32 someID, String ff );
     }
-
 }
+

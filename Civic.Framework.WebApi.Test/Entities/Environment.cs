@@ -17,55 +17,54 @@ using Civic.Framework.WebApi;
 
 namespace Civic.Framework.WebApi.Test.Entities
 {
-    [DataContract(Name = "environment")]
+    [DataContract(Name="environment")]
     public partial class Environment : IEntity
     {
-        [DataMember(Name = "id")]
+    	[DataMember(Name="id")]
         public int ID { get; set; }
-
-        [DataMember(Name = "name")]
+    
+    	[DataMember(Name="name")]
         public string Name { get; set; }
-
-
+    
+    
         public Environment Copy()
         {
             var copy = new Environment
-            {
-                ID = ID,
-                Name = Name
-            };
+                {
+    			ID = ID
+    			,Name = Name
+                };
             return copy;
         }
-
-        public string IdentityID
-        {
-            get
-            {
-                return this.ID.ToString();
-            }
-        }
-
+    
+    	public string IdentityID 
+        { 
+    		get {
+    	return this.ID.ToString();
+    }
+    	}
+    
         public void Add(IDBConnection connection)
         {
-            var service = new Services.ExampleService();
-            service.Connection = connection;
-            service.AddEnvironment(this);
+    		var service = new Services.ExampleService();
+    		service.Connection = connection;
+    		service.AddEnvironment(this);
         }
-
+    
         public void Modify(IDBConnection connection)
         {
-            var service = new Services.ExampleService();
-            service.Connection = connection;
-            service.ModifyEnvironment(this);
+    		var service = new Services.ExampleService();
+    		service.Connection = connection;
+    		service.ModifyEnvironment(this);
         }
-
+    
         public void Remove(IDBConnection connection)
         {
-            var service = new Services.ExampleService();
-            service.Connection = connection;
-            service.RemoveEnvironment(ID);
+    		var service = new Services.ExampleService();
+    		service.Connection = connection;
+    		service.RemoveEnvironment(ID );
         }
-
+    
     }
 }
 
