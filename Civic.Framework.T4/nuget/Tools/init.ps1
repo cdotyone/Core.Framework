@@ -1,7 +1,7 @@
 ﻿#param($rootPath, $toolsPath, $package, $project)
 
 $message = "Root Path " 
-$message += $rootPath
+$message += $PSScriptRoot
 Write-Host $message
 
 $message = "ToolsPath " 
