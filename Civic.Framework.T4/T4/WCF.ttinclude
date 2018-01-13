@@ -101,7 +101,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Get<#=code.Escape(entity)#>By<#=code.Escape(keyName)#>")) {
 
-            if (!AuthorizationHelper.CanView("<#=apiSchemaName#>", "<#=lowerName)#>")) throw new NotImplementedException();
+            if (!AuthorizationHelper.CanView("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
 
 			try {		
                 using (var database = Connection) {
