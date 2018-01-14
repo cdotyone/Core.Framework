@@ -13,4 +13,6 @@ $rootPath += '0.0.0.0'
 $message = "Copying Templates From " + $base + " To " + $rootPath
 Write-Host $message
 
+Remove-Item $rootPath -Recurse -ErrorAction Ignore
+
 Copy-Item $base $rootPath -recurse -force
