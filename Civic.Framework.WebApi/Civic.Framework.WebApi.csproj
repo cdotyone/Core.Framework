@@ -109,7 +109,6 @@
     <Compile Include="..\References\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="AuthorizationHelper.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Configuration\T4Config.cs" />
     <Compile Include="Constants.cs" />
