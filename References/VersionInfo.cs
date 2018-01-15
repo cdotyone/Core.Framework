@@ -3,4 +3,4 @@
 [assembly: AssemblyVersion("2.11.0.0")]
 [assembly: AssemblyFileVersion("2.11.0.0")]
 [assembly: AssemblyCompany("Civic Engineering & IT")]
-[assembly: AssemblyCopyright("Copyright © 2017 Civic Engineering & IT")]
+[assembly: AssemblyCopyright("Copyright © 2018 Civic Engineering & IT")]
