@@ -5,6 +5,7 @@ using Civic.Framework.WebApi.Configuration;
 
 namespace Civic.Framework.WebApi
 {
+    [Obsolete("Moved to Civic.Api.Security.AuthorizationHelper in Civic.Api")]
     public static class AuthorizationHelper
     {
         public static bool CanModify(string module, string entityname)
