@@ -98,13 +98,13 @@ internal partial class <#=edmxFileName#>Data
 		return list;
 	}
 
-	internal static <#=((keyType=="Int32" || keyType=="int") && keyName.ToLower()=="id"?"int":"void")#> Add<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>, IDBConnection database)
+	internal static <#=((keyType=="Int32" || keyType=="int") && keyName.ToLower()=="id"?"int":"void")#> Add<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>, IDBConnection database)
 	{ 
         Debug.Assert(database!=null);
 
 		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Add"))
 		{
-			build<#=code.Escape(entity)#>CommandParameters( <#=lowerName#>, command, true );
+			build<#=code.Escape(entity)#>CommandParameters( <#=code.Escape(lowerName)#>, command, true );
 			command.ExecuteNonQuery();<#
 		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
 		{
@@ -121,7 +121,7 @@ internal partial class <#=edmxFileName#>Data
 		}
 	}
 
-	internal static List<<#=code.Escape(entity)#>Entity> Modify<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>, IDBConnection database)
+	internal static List<<#=code.Escape(entity)#>Entity> Modify<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>, IDBConnection database)
 	{ 
         Debug.Assert(database!=null);
 
@@ -129,7 +129,7 @@ internal partial class <#=edmxFileName#>Data
 
 		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Modify"))
 		{
-			build<#=code.Escape(entity)#>CommandParameters( <#=lowerName#>, command, false );
+			build<#=code.Escape(entity)#>CommandParameters( <#=code.Escape(lowerName)#>, command, false );
 			command.ExecuteNonQuery();
 		}
 
@@ -153,14 +153,15 @@ command.ExecuteNonQuery();
 		}
 	}
 
-	private static void build<#=code.Escape(entity)#>CommandParameters( <#=code.Escape(entity)#>Entity <#=lowerName#>, IDBCommand command, bool addRecord )
+	private static void build<#=code.Escape(entity)#>CommandParameters( <#=code.Escape(entity)#>Entity entity, IDBCommand command, bool addRecord )
 	{ 
         Debug.Assert(command!=null);
 <#
 		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
 		{
 			var ptype=code.Escape(edmProperty.TypeUsage.EdmType).ToLower().Replace("@","");
-			var pname = lowerName+"."+code.Escape(edmProperty.Name);
+			
+			var pname = "entity."+code.Escape(edmProperty.Name);
 			if(ptype=="string") pname = "T4Config.CheckUpperCase(\""+apiSchemaName.ToLower()+"\",\""+code.Escape(entity).ToLower()+"\",\""+code.Escape(edmProperty.Name).ToLower()+"\"," + pname + ")";
 
 			if(ef.IsKey(edmProperty)) { #>
@@ -168,30 +169,20 @@ command.ExecuteNonQuery();
 		else command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>);
 <#
 			} else {
-				if(edmProperty.Name.ToLower()=="createdby") { #>
-		if(addRecord) command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>);
-<#					continue;
-				}
-				if(edmProperty.Name.ToLower()=="modifiedby") { #>
-		if(!addRecord) command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>);
-<#					continue;
-				}
 				if(edmProperty.Name.ToLower()=="created" || edmProperty.Name.ToLower()=="modified") continue;
-				if(ptype=="datetime") {#>
-		command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>.ToDB());
-				<#
-					continue;
+				if(ptype=="datetime"){
+					pname+=".ToDB()";
 				}
+			}
 			#>
 		command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>);
 <#
-			}
 		}
 #>
 
 	}
 	
-	private static bool populate<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=lowerName#>, IDataReader dataReader)
+	private static bool populate<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity entity, IDataReader dataReader)
 	{
 		if (dataReader==null || !dataReader.Read()) return false;
 		<#
@@ -199,26 +190,26 @@ command.ExecuteNonQuery();
 		{
 			var ptype=code.Escape(edmProperty.TypeUsage.EdmType).ToLower().Replace("@","");
 			if(ptype=="int32" || ptype=="int" || ptype=="int64" || ptype=="long" || ptype=="float") {#>						
-		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) ? Int32.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) : 0;<#
+		entity.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) ? Int32.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) : 0;<#
 			} else 
 			if(ptype=="boolean") {#>						
-		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) && Boolean.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString());<#
+		entity.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) && Boolean.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString());<#
 			} else
 			if(ptype=="decimal" || ptype=="double") {#>						
-		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = double.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) && dataReader["<#=code.Escape(edmProperty.Name)#>"] != null ? dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString() : "0");<#
+		entity.<#=code.Escape(edmProperty.Name)#> = double.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) && dataReader["<#=code.Escape(edmProperty.Name)#>"] != null ? dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString() : "0");<#
 			} else
 			if(ptype=="datetime") {#>					
-		if(!(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull)) <#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = DateTime.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()).FromDB();<#
+		if(!(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull)) entity.<#=code.Escape(edmProperty.Name)#> = DateTime.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()).FromDB();<#
 			} else {#>
 					
-		<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !string.IsNullOrEmpty(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) ? dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString() : string.Empty;<#
-			}
+		entity.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !string.IsNullOrEmpty(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) ? dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString() : string.Empty;<#
 		}
+	}
 #>
 		
 			return true;
-		}
 	}
+}
 <#
 EndNamespace(namespaceName);
 

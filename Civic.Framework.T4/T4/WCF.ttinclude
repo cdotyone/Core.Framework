@@ -187,7 +187,7 @@ public partial class <#=edmxFileName#>Service
 
 			try {
                 using(var db = Connection) {
-					var before = Data.<#=edmxFileName#>Data.Get<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + lowerName + "."+ key)#><#}#>, db);
+					var before = Data.<#=edmxFileName#>Data.Get<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + code.Escape(lowerName) + "."+ key)#><#}#>, db);
 					var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", <# foreach(var key in keys.Keys) { #>before.<#=key#>.ToString()+<#}#>"", before, <#=code.Escape(lowerName)#>);
 					Data.<#=edmxFileName#>Data.Modify<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>, db);
 					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);
@@ -307,4 +307,3 @@ public interface I<#=edmxFileName+entity.Name#>
 
 //fileManager.EndBlock();
 #>
-
