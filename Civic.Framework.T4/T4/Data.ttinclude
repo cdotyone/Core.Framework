@@ -168,7 +168,7 @@ command.ExecuteNonQuery();
    		if(addRecord) command.AddParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", ParameterDirection.InputOutput,  <#=pname#>);
 		else command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>);
 <#
-				continue
+				continue;
 			} else {
 				if(edmProperty.Name.ToLower()=="created" || edmProperty.Name.ToLower()=="modified") continue;
 				if(ptype=="datetime"){
