@@ -28,35 +28,36 @@ namespace Civic.Framework.WebApi
                     {
                         var query = (KeyValuePair<string, string>[])request.Properties["MS_QueryNameValuePairs"];
 
-                        Dictionary<string, string> requestContext = new Dictionary<string, string>();
                         foreach (var pair in query)
                         {
-                            requestContext[pair.Key.ToLowerInvariant()] = pair.Value;
+                            var name = pair.Key.ToLowerInvariant();
+                            switch (name)
+                            {
+                                case "$top":
+                                    int.TryParse(pair.Value, NumberStyles.Integer, null, out var top);
+                                    raw.Top = top;
+                                    break;
+                                case "$skip":
+                                    int.TryParse(pair.Value, NumberStyles.Integer, null, out var skip);
+                                    raw.Skip = skip;
+                                    break;
+                                case "$inlinecount":
+                                    raw.InlineCount = string.Compare(pair.Value, "allpages", StringComparison.InvariantCultureIgnoreCase) == 0;
+                                    break;
+                                case "$orderby":
+                                    raw.OrderBy = pair.Value;
+                                    break;
+                                case "$filter":
+                                    raw.Filter = pair.Value;
+                                    break;
+                                case "$expand":
+                                    raw.Expand = pair.Value;
+                                    break;
+                                case "$format":
+                                    raw.Format = pair.Value;
+                                    break;
+                            }
                         }
-
-                        if (requestContext.ContainsKey("$top"))
-                        {
-                            int.TryParse(requestContext["$top"], NumberStyles.Integer, null, out var top);
-                            raw.Top = top;
-                        }
-
-                        if (requestContext.ContainsKey("$skip"))
-                        {
-                            int.TryParse(requestContext["$skip"], NumberStyles.Integer, null, out var skip);
-                            raw.Skip = skip;
-                        }
-
-                        if (requestContext.ContainsKey("$inlinecount"))
-                            raw.InlineCount = string.Compare(requestContext["$inlinecount"], "allpages", StringComparison.InvariantCultureIgnoreCase) == 0;
-
-                        if (requestContext.ContainsKey("$orderby"))
-                            raw.OrderBy = requestContext["$orderby"];
-                        if (requestContext.ContainsKey("$filter"))
-                            raw.Filter = requestContext["$filter"];
-                        if (requestContext.ContainsKey("$expand"))
-                            raw.Expand = requestContext["$expand"];
-                        if (requestContext.ContainsKey("$format"))
-                            raw.Format = requestContext["$format"];
 
                         actionContext.ControllerContext.RouteData.Values.Add("options", raw);
                     }
