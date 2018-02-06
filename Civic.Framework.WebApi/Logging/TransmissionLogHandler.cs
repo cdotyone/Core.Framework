@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Civic.Core.Logging;
@@ -9,32 +12,39 @@ namespace Civic.Framework.WebApi.Logging
 {
     public class TransmissionLogHandler : DelegatingHandler
     {
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var logMetadata = BuildRequestMetadata(request);
-            var response = await base.SendAsync(request, cancellationToken);
-            logMetadata = BuildResponseMetadata(logMetadata, response);
-            Logger.LogTransmission(JsonConvert.SerializeObject(logMetadata, Formatting.Indented));
-            return response;
-        }
+            var trackingGUID = Guid.NewGuid().ToString();
+            var logMetadata = new WebApiTransmission(request);
+            logMetadata.Content = request.Content.ReadAsStringAsync().Result;
+            Logger.LogTransmission(trackingGUID, JsonConvert.SerializeObject(logMetadata, Formatting.Indented));
 
-        private LogMetadata BuildRequestMetadata(HttpRequestMessage request)
-        {
-            LogMetadata log = new LogMetadata
+            return base.SendAsync(request, cancellationToken).ContinueWith(task =>
             {
-                RequestMethod = request.Method.Method,
-                RequestTimestamp = DateTime.Now,
-                RequestUri = request.RequestUri.ToString()
-            };
-            return log;
+                logMetadata = logMetadata.CreateResponse(task.Result);
+                logMetadata.Content = task.Result.Content.ReadAsStringAsync().Result;
+                Logger.LogTransmission(trackingGUID, JsonConvert.SerializeObject(logMetadata, Formatting.Indented));
+
+                return task.Result;
+            });
         }
 
-        private LogMetadata BuildResponseMetadata(LogMetadata logMetadata, HttpResponseMessage response)
+        protected Dictionary<string, string> extractHeaders(HttpHeaders h)
         {
-            logMetadata.ResponseStatusCode = response.StatusCode;
-            logMetadata.ResponseTimestamp = DateTime.Now;
-            logMetadata.ResponseContentType = response.Content.Headers.ContentType.MediaType;
-            return logMetadata;
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            foreach (var i in h.ToList())
+            {
+                if (i.Value != null)
+                {
+                    string header = string.Empty;
+                    foreach (var j in i.Value)
+                    {
+                        header += j + " ";
+                    }
+                    dict.Add(i.Key, header);
+                }
+            }
+            return dict;
         }
     }
 }
