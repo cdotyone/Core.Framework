@@ -8,14 +8,6 @@ namespace Civic.Framework.WebApi
 {
     public static class AuthorizationHelper
     {
-        public static string Username
-        {
-            get
-            {
-                return AuthenticationConfig.Current.UsernameHasDomain ? IdentityManager.Username : IdentityManager.UsernameOnly;
-            }
-        }
-
         public static bool CanModify(string module, string entityname)
         {
             if (T4Config.GetCanModify(module, entityname)) return true;

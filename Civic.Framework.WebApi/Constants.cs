@@ -15,8 +15,5 @@
 
         public const string CONFIG_USE_LOCALTIME_PROP = "useLocalTime";
    	    public const bool CONFIG_USE_LOCALTIME_DEFAULT = true;
-
-	    public const string CONFIG_USERNAMEHASDOMAIN_PROP = "usernameHasDomains";
-	    public const bool CONFIG_USERNAMEHASDOMAIN_DEFAULT = false;
     }
 }
