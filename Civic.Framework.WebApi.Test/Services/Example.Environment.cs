@@ -12,7 +12,6 @@
 using System;
 using System.ServiceModel.Activation;
 using System.Collections.Generic;
-using Civic.Core.Framework.Security;
 using Civic.Core.Audit;
 using Civic.Core.Logging;
 using Civic.Framework.WebApi;
