@@ -73,7 +73,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 {
 	fileManager.StartNewFile(edmxFileName + "."+entity.Name+".cs", folderName:"Services");
 
-	WriteHeader("System", "System.ServiceModel.Activation", "System.Collections.Generic", "Civic.Core.Security", "Civic.Core.Audit", "Civic.Core.Logging", "Civic.Api.Security", namespaceName + ".Entities");
+	WriteHeader("System", "System.ServiceModel.Activation", "System.Collections.Generic", "Civic.Core.Security", "Civic.Core.Audit", "Civic.Core.Logging", "Civic.Framework.WebApi", namespaceName + ".Entities");
 	#>
 using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 
