@@ -24,6 +24,12 @@ namespace Civic.Framework.WebApi
             return dte;
         }
 
+        public static string EnsureUIDOnCreate(this string uid)
+        {
+            if (!string.IsNullOrEmpty(uid)) return uid;
+            return Guid.NewGuid().ToString().Replace("-", "");
+        }
+
         public static DateTime ToDB(this DateTime dte)
         {
             if (T4Config.Current.UseLocalTime)
