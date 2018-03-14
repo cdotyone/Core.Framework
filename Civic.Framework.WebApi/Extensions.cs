@@ -27,7 +27,7 @@ namespace Civic.Framework.WebApi
         public static string EnsureUIDOnCreate(this string uid)
         {
             if (!string.IsNullOrEmpty(uid)) return uid;
-            return Guid.NewGuid().ToString().Replace("-", "");
+            return Guid.NewGuid().ToString().Replace("-", "").ToUpper();
         }
 
         public static DateTime ToDB(this DateTime dte)
