@@ -74,12 +74,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Civic.Core.Caching" Version="1.25.1239" />
+    <PackageReference Include="Civic.Core.Caching" Version="1.25.1258" />
     <PackageReference Include="Civic.Core.Configuration" Version="1.25.1227" />
-    <PackageReference Include="Civic.Core.Data" Version="1.25.1237" />
-    <PackageReference Include="Civic.Core.Logging" Version="1.26.1226" />
+    <PackageReference Include="Civic.Core.Data" Version="1.25.1256" />
+    <PackageReference Include="Civic.Core.Logging" Version="1.26.1235" />
     <PackageReference Include="Civic.Core.Security">
-      <Version>1.25.887</Version>
+      <Version>1.25.1240</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNet.WebApi.Core">
       <Version>5.2.4</Version>
