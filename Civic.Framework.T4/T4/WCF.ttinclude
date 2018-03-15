@@ -21,7 +21,7 @@ public partial class <#=edmxFileName#>Service : I<#=edmxFileName#>, IEntityServi
 	public IDBConnection Connection
     {
 		get {
-			if(_connection==null) _connection = DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
+			if(_connection==null) return DatabaseFactory.CreateDatabase("<#=edmxFileName#>");
 	        return _connection;
 		}
 		set {
