@@ -74,18 +74,18 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Civic.Core.Caching" Version="1.24.912" />
-    <PackageReference Include="Civic.Core.Configuration" Version="1.24.881" />
-    <PackageReference Include="Civic.Core.Data" Version="1.24.910" />
-    <PackageReference Include="Civic.Core.Logging" Version="1.26.882" />
+    <PackageReference Include="Civic.Core.Caching" Version="1.25.1239" />
+    <PackageReference Include="Civic.Core.Configuration" Version="1.25.1227" />
+    <PackageReference Include="Civic.Core.Data" Version="1.25.1237" />
+    <PackageReference Include="Civic.Core.Logging" Version="1.26.1226" />
     <PackageReference Include="Civic.Core.Security">
       <Version>1.25.887</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNet.WebApi.Core">
-      <Version>5.2.3</Version>
+      <Version>5.2.4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Web.Infrastructure" Version="1.0.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
     <PackageReference Include="WebActivatorEx" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
