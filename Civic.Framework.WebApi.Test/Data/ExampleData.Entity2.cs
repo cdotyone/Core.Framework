@@ -120,27 +120,27 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	private static void buildEntity2CommandParameters( Entity2Entity entity2, IDBCommand command, bool addRecord )
+    	private static void buildEntity2CommandParameters( Entity2Entity entity, IDBCommand command, bool addRecord )
     	{ 
             Debug.Assert(command!=null);
-       		if(addRecord) command.AddParameter("@someid", ParameterDirection.InputOutput,  entity2.SomeID);
-    		else command.AddInParameter("@someid", entity2.SomeID);
-       		if(addRecord) command.AddParameter("@ff", ParameterDirection.InputOutput,  T4Config.CheckUpperCase("dbo","entity2","ff",entity2.ff));
-    		else command.AddInParameter("@ff", T4Config.CheckUpperCase("dbo","entity2","ff",entity2.ff));
-    		command.AddInParameter("@otherdate", entity2.OtherDate.ToDB());
-    				
+       		if(addRecord) command.AddParameter("@someid", ParameterDirection.InputOutput,  entity.SomeID);
+    		else command.AddInParameter("@someid", entity.SomeID);
+       		if(addRecord) command.AddParameter("@ff", ParameterDirection.InputOutput,  T4Config.CheckUpperCase("dbo","entity2","ff",entity.ff));
+    		else command.AddInParameter("@ff", T4Config.CheckUpperCase("dbo","entity2","ff",entity.ff));
+    		command.AddInParameter("@otherdate", entity.OtherDate.ToDB());
+    
     	}
     	
-    	private static bool populateEntity2(Entity2Entity entity2, IDataReader dataReader)
+    	private static bool populateEntity2(Entity2Entity entity, IDataReader dataReader)
     	{
     		if (dataReader==null || !dataReader.Read()) return false;
     								
-    		entity2.SomeID = dataReader["SomeID"] != null && !(dataReader["SomeID"] is DBNull) ? Int32.Parse(dataReader["SomeID"].ToString()) : 0;					
-    		entity2.ff = dataReader["ff"] != null && !string.IsNullOrEmpty(dataReader["ff"].ToString()) ? dataReader["ff"].ToString() : string.Empty;					
-    		if(!(dataReader["Modified"] is DBNull)) entity2.Modified = DateTime.Parse(dataReader["Modified"].ToString()).FromDB();					
-    		if(!(dataReader["OtherDate"] is DBNull)) entity2.OtherDate = DateTime.Parse(dataReader["OtherDate"].ToString()).FromDB();		
+    		entity.SomeID = dataReader["SomeID"] != null && !(dataReader["SomeID"] is DBNull) ? Int32.Parse(dataReader["SomeID"].ToString()) : 0;					
+    		entity.ff = dataReader["ff"] != null && !string.IsNullOrEmpty(dataReader["ff"].ToString()) ? dataReader["ff"].ToString() : string.Empty;					
+    		if(!(dataReader["Modified"] is DBNull)) entity.Modified = DateTime.Parse(dataReader["Modified"].ToString()).FromDB();					
+    		if(!(dataReader["OtherDate"] is DBNull)) entity.OtherDate = DateTime.Parse(dataReader["OtherDate"].ToString()).FromDB();		
     			return true;
-    		}
     	}
+    }
 }
 

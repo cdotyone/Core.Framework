@@ -148,15 +148,7 @@ public partial class <#=edmxFileName#>Service
 			try {
                 using(var db = Connection) {
 	                var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", <# foreach(var key in keys.Keys) { #><#=code.Escape(lowerName)#>.<#=key#>.ToString()+<#}#>"", <#=code.Escape(lowerName)#>);
-			<#
-			if((keyType=="Int32" || keyType=="int") && keyName=="Id") {#>
-					var retval = Data.<#=edmxFileName#>Data.Add<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>, db);
-					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid, retval);<#
-			} else {
-	#> 		Data.<#=edmxFileName#>Data.Add<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>, db);
-					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);<#
-			} #>
-
+					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? "+\"_\"+" : " ") + code.Escape(lowerName) + "."+ key)+".ToString()"#><#}#>);
 			<#
 			if((keyType=="Int32" || keyType=="int") && keyName=="Id") {#>
 				return retval;

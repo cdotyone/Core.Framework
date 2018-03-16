@@ -12,7 +12,7 @@
 using System;
 using System.ServiceModel.Activation;
 using System.Collections.Generic;
-Civic.Core.Security;
+using Civic.Core.Security;
 using Civic.Core.Audit;
 using Civic.Core.Logging;
 using Civic.Framework.WebApi;
@@ -76,8 +76,7 @@ namespace Civic.Framework.WebApi.Test.Services
     			try {
                     using(var db = Connection) {
     	                var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", entity2.SomeID.ToString()+entity2.ff.ToString()+"", entity2);
-    			 		Data.ExampleData.AddEntity2(entity2, db);
-    					AuditManager.MarkSuccessFul("dbo", logid);
+    					AuditManager.MarkSuccessFul("dbo", logid,  entity2.SomeID.ToString()+"_"+entity2.ff.ToString());
     				}
     			} 
     			catch (Exception ex)

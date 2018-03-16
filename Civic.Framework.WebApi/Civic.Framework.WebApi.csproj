@@ -74,6 +74,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Civic.Core.Audit">
+      <Version>1.25.1257</Version>
+    </PackageReference>
     <PackageReference Include="Civic.Core.Caching" Version="1.25.1258" />
     <PackageReference Include="Civic.Core.Configuration" Version="1.25.1227" />
     <PackageReference Include="Civic.Core.Data" Version="1.25.1256" />

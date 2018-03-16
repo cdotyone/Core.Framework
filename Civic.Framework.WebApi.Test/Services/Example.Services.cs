@@ -33,7 +33,7 @@ namespace Civic.Framework.WebApi.Test.Services
     	public IDBConnection Connection
         {
     		get {
-    			if(_connection==null) _connection = DatabaseFactory.CreateDatabase("Example");
+    			if(_connection==null) return DatabaseFactory.CreateDatabase("Example");
     	        return _connection;
     		}
     		set {

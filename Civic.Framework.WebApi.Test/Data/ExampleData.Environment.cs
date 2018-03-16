@@ -118,23 +118,23 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	private static void buildEnvironmentCommandParameters( EnvironmentEntity environment, IDBCommand command, bool addRecord )
+    	private static void buildEnvironmentCommandParameters( EnvironmentEntity entity, IDBCommand command, bool addRecord )
     	{ 
             Debug.Assert(command!=null);
-       		if(addRecord) command.AddParameter("@id", ParameterDirection.InputOutput,  environment.ID);
-    		else command.AddInParameter("@id", environment.ID);
-    		command.AddInParameter("@name", T4Config.CheckUpperCase("dbo","environment","name",environment.Name));
+       		if(addRecord) command.AddParameter("@id", ParameterDirection.InputOutput,  entity.ID);
+    		else command.AddInParameter("@id", entity.ID);
+    		command.AddInParameter("@name", T4Config.CheckUpperCase("dbo","environment","name",entity.Name));
     
     	}
     	
-    	private static bool populateEnvironment(EnvironmentEntity environment, IDataReader dataReader)
+    	private static bool populateEnvironment(EnvironmentEntity entity, IDataReader dataReader)
     	{
     		if (dataReader==null || !dataReader.Read()) return false;
     								
-    		environment.ID = dataReader["ID"] != null && !(dataReader["ID"] is DBNull) ? Int32.Parse(dataReader["ID"].ToString()) : 0;					
-    		environment.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? dataReader["Name"].ToString() : string.Empty;		
+    		entity.ID = dataReader["ID"] != null && !(dataReader["ID"] is DBNull) ? Int32.Parse(dataReader["ID"].ToString()) : 0;					
+    		entity.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? dataReader["Name"].ToString() : string.Empty;		
     			return true;
-    		}
     	}
+    }
 }
 

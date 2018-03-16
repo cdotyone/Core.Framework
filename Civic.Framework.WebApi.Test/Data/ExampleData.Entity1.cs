@@ -115,31 +115,31 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	private static void buildEntity1CommandParameters( Entity1Entity entity1, IDBCommand command, bool addRecord )
+    	private static void buildEntity1CommandParameters( Entity1Entity entity, IDBCommand command, bool addRecord )
     	{ 
             Debug.Assert(command!=null);
-       		if(addRecord) command.AddParameter("@name", ParameterDirection.InputOutput,  T4Config.CheckUpperCase("dbo","entity1","name",entity1.Name));
-    		else command.AddInParameter("@name", T4Config.CheckUpperCase("dbo","entity1","name",entity1.Name));
-    		command.AddInParameter("@environmentid", entity1.EnvironmentID);
-    		command.AddInParameter("@dte", entity1.Dte.ToDB());
-    						command.AddInParameter("@dte2", entity1.Dte2.ToDB());
-    						command.AddInParameter("@dble1", entity1.Dble1);
-    		command.AddInParameter("@dec1", entity1.Dec1);
+       		if(addRecord) command.AddParameter("@name", ParameterDirection.InputOutput,  T4Config.CheckUpperCase("dbo","entity1","name",entity.Name));
+    		else command.AddInParameter("@name", T4Config.CheckUpperCase("dbo","entity1","name",entity.Name));
+    		command.AddInParameter("@environmentid", entity.EnvironmentID);
+    		command.AddInParameter("@dte", entity.Dte.ToDB());
+    		command.AddInParameter("@dte2", entity.Dte2.ToDB());
+    		command.AddInParameter("@dble1", entity.Dble1);
+    		command.AddInParameter("@dec1", entity.Dec1);
     
     	}
     	
-    	private static bool populateEntity1(Entity1Entity entity1, IDataReader dataReader)
+    	private static bool populateEntity1(Entity1Entity entity, IDataReader dataReader)
     	{
     		if (dataReader==null || !dataReader.Read()) return false;
     							
-    		entity1.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? dataReader["Name"].ToString() : string.Empty;						
-    		entity1.EnvironmentID = dataReader["EnvironmentID"] != null && !(dataReader["EnvironmentID"] is DBNull) ? Int32.Parse(dataReader["EnvironmentID"].ToString()) : 0;					
-    		if(!(dataReader["Dte"] is DBNull)) entity1.Dte = DateTime.Parse(dataReader["Dte"].ToString()).FromDB();					
-    		if(!(dataReader["Dte2"] is DBNull)) entity1.Dte2 = DateTime.Parse(dataReader["Dte2"].ToString()).FromDB();						
-    		entity1.Dble1 = double.Parse(dataReader["Dble1"] != null && !(dataReader["Dble1"] is DBNull) && dataReader["Dble1"] != null ? dataReader["Dble1"].ToString() : "0");						
-    		entity1.Dec1 = double.Parse(dataReader["Dec1"] != null && !(dataReader["Dec1"] is DBNull) && dataReader["Dec1"] != null ? dataReader["Dec1"].ToString() : "0");		
+    		entity.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? dataReader["Name"].ToString() : string.Empty;						
+    		entity.EnvironmentID = dataReader["EnvironmentID"] != null && !(dataReader["EnvironmentID"] is DBNull) ? Int32.Parse(dataReader["EnvironmentID"].ToString()) : 0;					
+    		if(!(dataReader["Dte"] is DBNull)) entity.Dte = DateTime.Parse(dataReader["Dte"].ToString()).FromDB();					
+    		if(!(dataReader["Dte2"] is DBNull)) entity.Dte2 = DateTime.Parse(dataReader["Dte2"].ToString()).FromDB();						
+    		entity.Dble1 = double.Parse(dataReader["Dble1"] != null && !(dataReader["Dble1"] is DBNull) && dataReader["Dble1"] != null ? dataReader["Dble1"].ToString() : "0");						
+    		entity.Dec1 = double.Parse(dataReader["Dec1"] != null && !(dataReader["Dec1"] is DBNull) && dataReader["Dec1"] != null ? dataReader["Dec1"].ToString() : "0");		
     			return true;
-    		}
     	}
+    }
 }
 
