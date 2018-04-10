@@ -104,6 +104,7 @@ namespace Civic.Framework.WebApi.Configuration
             if (_maxRowOverrides == null) CacheConfig();
 
             var ekey = schema + "." + name;
+            ekey = ekey.ToLowerInvariant();
 
             if (_current == null && !_checked) _current = Current;
 
@@ -123,7 +124,7 @@ namespace Civic.Framework.WebApi.Configuration
             if (_allowViewOverrides == null) CacheConfig();
 
             var ekey = schema + "." + name;
-
+            ekey = ekey.ToLowerInvariant();
             if (_current == null && !_checked) _current = Current;
 
             var canAdd = _current == null ? true : _current.CanView;
@@ -142,6 +143,7 @@ namespace Civic.Framework.WebApi.Configuration
             if (_allowAddOverrides == null) CacheConfig();
 
             var ekey = schema + "." + name;
+            ekey = ekey.ToLowerInvariant();
 
             if (_current == null && !_checked) _current = Current;
 
@@ -161,6 +163,7 @@ namespace Civic.Framework.WebApi.Configuration
             if (_allowModifyOverrides == null) CacheConfig();
 
             var ekey = schema + "." + name;
+            ekey = ekey.ToLowerInvariant();
 
             if (_current == null && !_checked) _current = Current;
 
@@ -180,6 +183,7 @@ namespace Civic.Framework.WebApi.Configuration
             if (_allowRemoveOverrides == null) CacheConfig();
 
             var ekey = schema + "." + name;
+            ekey = ekey.ToLowerInvariant();
 
             if (_current == null && !_checked) _current = Current;
 
@@ -311,7 +315,9 @@ namespace Civic.Framework.WebApi.Configuration
             if (_forceUpperOverrides == null) CacheConfig();
 
             var ekey = schema + "." + name;
+            ekey = ekey.ToLowerInvariant();
             var fkey = ekey + "." + field;
+            fkey = fkey.ToLowerInvariant();
 
             if (_current == null && !_checked) _current = Current;
 
