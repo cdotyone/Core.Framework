@@ -123,7 +123,8 @@ namespace Civic.Framework.WebApi.Configuration
         {
             if (_allowViewOverrides == null) CacheConfig();
 
-            var ekey = schema + "." + name;
+            var lschema = schema.ToLowerInvariant();
+            var ekey = lschema + "." + name;
             ekey = ekey.ToLowerInvariant();
             if (_current == null && !_checked) _current = Current;
 
@@ -131,7 +132,8 @@ namespace Civic.Framework.WebApi.Configuration
             if (!canAdd) return false;
             if (_allowViewOverrides != null)
             {
-                if (_allowViewOverrides.ContainsKey(ekey)) canAdd = _allowViewOverrides[ekey];
+                if (_allowViewOverrides.ContainsKey(lschema)) canAdd = _allowViewOverrides[lschema];
+                else if (_allowViewOverrides.ContainsKey(ekey)) canAdd = _allowViewOverrides[ekey];
                 else if (_allowViewOverrides.ContainsKey(schema)) canAdd = _allowViewOverrides[schema];
             }
 
@@ -142,7 +144,8 @@ namespace Civic.Framework.WebApi.Configuration
         {
             if (_allowAddOverrides == null) CacheConfig();
 
-            var ekey = schema + "." + name;
+            var lschema = schema.ToLowerInvariant();
+            var ekey = lschema + "." + name;
             ekey = ekey.ToLowerInvariant();
 
             if (_current == null && !_checked) _current = Current;
@@ -151,7 +154,8 @@ namespace Civic.Framework.WebApi.Configuration
             if (canAdd) return true;
             if (_allowAddOverrides != null)
             {
-                if (_allowAddOverrides.ContainsKey(ekey)) canAdd = _allowAddOverrides[ekey];
+                if(_allowAddOverrides.ContainsKey(lschema)) canAdd = _allowAddOverrides[lschema];
+                else if (_allowAddOverrides.ContainsKey(ekey)) canAdd = _allowAddOverrides[ekey];
                 else if (_allowAddOverrides.ContainsKey(schema)) canAdd = _allowAddOverrides[schema];
             }
 
@@ -162,7 +166,8 @@ namespace Civic.Framework.WebApi.Configuration
         {
             if (_allowModifyOverrides == null) CacheConfig();
 
-            var ekey = schema + "." + name;
+            var lschema = schema.ToLowerInvariant();
+            var ekey = lschema + "." + name;
             ekey = ekey.ToLowerInvariant();
 
             if (_current == null && !_checked) _current = Current;
@@ -171,7 +176,8 @@ namespace Civic.Framework.WebApi.Configuration
             if (canModify) return true;
             if (_allowModifyOverrides != null)
             {
-                if (_allowModifyOverrides.ContainsKey(ekey)) canModify = _allowModifyOverrides[ekey];
+                if (_allowModifyOverrides.ContainsKey(lschema)) canModify = _allowModifyOverrides[lschema];
+                else if (_allowModifyOverrides.ContainsKey(ekey)) canModify = _allowModifyOverrides[ekey];
                 else if (_allowModifyOverrides.ContainsKey(schema)) canModify = _allowModifyOverrides[schema];
             }
 
@@ -182,20 +188,22 @@ namespace Civic.Framework.WebApi.Configuration
         {
             if (_allowRemoveOverrides == null) CacheConfig();
 
-            var ekey = schema + "." + name;
+            var lschema = schema.ToLowerInvariant();
+            var ekey = lschema + "." + name;
             ekey = ekey.ToLowerInvariant();
 
             if (_current == null && !_checked) _current = Current;
 
-            var canModify = _current == null ? false : _current.CanRemove;
-            if (canModify) return true;
+            var canRemove = _current == null ? false : _current.CanRemove;
+            if (canRemove) return true;
             if (_allowRemoveOverrides != null)
             {
-                if (_allowRemoveOverrides.ContainsKey(ekey)) canModify = _allowRemoveOverrides[ekey];
-                else if (_allowRemoveOverrides.ContainsKey(schema)) canModify = _allowRemoveOverrides[schema];
+                if (_allowRemoveOverrides.ContainsKey(lschema)) canRemove = _allowRemoveOverrides[lschema];
+                else if (_allowRemoveOverrides.ContainsKey(ekey)) canRemove = _allowRemoveOverrides[ekey];
+                else if (_allowRemoveOverrides.ContainsKey(schema)) canRemove = _allowRemoveOverrides[schema];
             }
 
-            return canModify;
+            return canRemove;
         }
 
 
