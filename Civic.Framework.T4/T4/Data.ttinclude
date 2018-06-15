@@ -165,6 +165,8 @@ command.ExecuteNonQuery();
 			if(ptype=="string" && edmProperty.Nullable) pname = "T4Config.CheckUpperCase(\""+apiSchemaName.ToLower()+"\",\""+code.Escape(entity).ToLower()+"\",\""+code.Escape(edmProperty.Name).ToLower()+"\"," + pname + ", false)";
 			if(ptype=="string" && !edmProperty.Nullable) pname = "T4Config.CheckUpperCase(\""+apiSchemaName.ToLower()+"\",\""+code.Escape(entity).ToLower()+"\",\""+code.Escape(edmProperty.Name).ToLower()+"\"," + pname + ")";
 
+			if(ptype=="string" && edmProperty.Name.EndsWith("UID")) pname = "entity."+code.Escape(edmProperty.Name)+".ToUpper()";
+
 			if(ef.IsKey(edmProperty)) { #>
    		if(addRecord) command.AddParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", ParameterDirection.InputOutput,  <#=pname#>);
 		else command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>);

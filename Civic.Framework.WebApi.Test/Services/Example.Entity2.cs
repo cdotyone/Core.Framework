@@ -76,7 +76,10 @@ namespace Civic.Framework.WebApi.Test.Services
     			try {
                     using(var db = Connection) {
     	                var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", entity2.SomeID.ToString()+entity2.ff.ToString()+"", entity2);
-    					AuditManager.MarkSuccessFul("dbo", logid,  entity2.SomeID.ToString()+"_"+entity2.ff.ToString());
+    			 		Data.ExampleData.AddEntity2(entity2, db);
+					AuditManager.MarkSuccessFul("dbo", logid);
+
+    
     				}
     			} 
     			catch (Exception ex)

@@ -76,7 +76,10 @@ namespace Civic.Framework.WebApi.Test.Services
     			try {
                     using(var db = Connection) {
     	                var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", environment.ID.ToString()+"", environment);
-    					AuditManager.MarkSuccessFul("dbo", logid,  environment.ID.ToString());
+    			 		Data.ExampleData.AddEnvironment(environment, db);
+					AuditManager.MarkSuccessFul("dbo", logid);
+
+    
     				}
     			} 
     			catch (Exception ex)

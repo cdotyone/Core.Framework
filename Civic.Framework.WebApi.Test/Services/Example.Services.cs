@@ -47,7 +47,7 @@ namespace Civic.Framework.WebApi.Test.Services
             
     	public List<string> EntitiesProvided { 
     		get {
-    			return new List<string> { "entity1","entity2","environment" }; 
+    			return new List<string> { "entity1","entity2","entity3","environment" }; 
     		}
         }
     
@@ -60,6 +60,9 @@ namespace Civic.Framework.WebApi.Test.Services
     					case "entity2":
     			case "Entity2":
     				return new Civic.Framework.WebApi.Test.Entities.Entity2();
+    					case "entity3":
+    			case "Entity3":
+    				return new Civic.Framework.WebApi.Test.Entities.Entity3();
     					case "environment":
     			case "Environment":
     				return new Civic.Framework.WebApi.Test.Entities.Environment();
