@@ -162,7 +162,8 @@ command.ExecuteNonQuery();
 			var ptype=code.Escape(edmProperty.TypeUsage.EdmType).ToLower().Replace("@","");
 			
 			var pname = "entity."+code.Escape(edmProperty.Name);
-			if(ptype=="string") pname = "T4Config.CheckUpperCase(\""+apiSchemaName.ToLower()+"\",\""+code.Escape(entity).ToLower()+"\",\""+code.Escape(edmProperty.Name).ToLower()+"\"," + pname + ")";
+			if(ptype=="string" && edmProperty.Nullable) pname = "T4Config.CheckUpperCase(\""+apiSchemaName.ToLower()+"\",\""+code.Escape(entity).ToLower()+"\",\""+code.Escape(edmProperty.Name).ToLower()+"\"," + pname + ", false)";
+			if(ptype=="string" && !edmProperty.Nullable) pname = "T4Config.CheckUpperCase(\""+apiSchemaName.ToLower()+"\",\""+code.Escape(entity).ToLower()+"\",\""+code.Escape(edmProperty.Name).ToLower()+"\"," + pname + ")";
 
 			if(ef.IsKey(edmProperty)) { #>
    		if(addRecord) command.AddParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", ParameterDirection.InputOutput,  <#=pname#>);
