@@ -317,9 +317,15 @@ namespace Civic.Framework.WebApi.Configuration
             }
         }
 
-        public static string CheckUpperCase(string schema, string name, string field, string instring, bool allowEmpty = true)
+
+        public static string CheckUpperCase(string schema, string name, string field, string instring)
         {
-            if (string.IsNullOrEmpty(instring) && !allowEmpty) return allowEmpty ? instring : null;
+            return CheckUpperCase(schema, name, field, instring, true);
+        }
+
+        public static string CheckUpperCase(string schema, string name, string field, string instring, bool allowEmpty)
+        {
+            if (string.IsNullOrEmpty(instring)) return allowEmpty ? instring : null;
             if (_forceUpperOverrides == null) CacheConfig();
 
             var ekey = schema + "." + name;

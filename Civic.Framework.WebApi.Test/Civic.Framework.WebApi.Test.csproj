@@ -82,6 +82,9 @@
   <ItemGroup>
     <Content Include="Controllers\Example.txt4" />
     <Content Include="Data\Example.txt4" />
+    <Content Include="SQL\all_Entity3.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
     <Content Include="SQL\Example.DB.Rebuild.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
@@ -120,6 +123,9 @@
     <Compile Include="Controllers\ExampleEntity2Controller.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\ExampleEntity3Controller.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\ExampleEnvironmentController.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
@@ -132,6 +138,9 @@
     <Compile Include="Data\ExampleData.Entity2.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
+    <Compile Include="Data\ExampleData.Entity3.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
     <Compile Include="Data\ExampleData.Environment.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
@@ -139,6 +148,9 @@
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Entities\Entity2.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Entity3.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Entities\Environment.cs">
@@ -164,6 +176,9 @@
     <Compile Include="Services\Example.Entity2.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
+    <Compile Include="Services\Example.Entity3.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
     <Compile Include="Services\Example.Environment.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
@@ -177,6 +192,9 @@
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Services\IExampleEntity2.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Services\IExampleEntity3.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Services\IExampleEnvironment.cs">
