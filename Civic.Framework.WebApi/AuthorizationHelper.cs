@@ -22,7 +22,7 @@ namespace Civic.Framework.WebApi
 
         public static bool CanAdd(string module, string entityname)
         {
-            if (T4Config.GetCanModify(module, entityname)) return true;
+            if (T4Config.GetCanAdd(module, entityname)) return true;
 
             var context = HttpContext.Current;
             if (context == null) return true; // NOT a web users, security to be handled by application
@@ -40,7 +40,7 @@ namespace Civic.Framework.WebApi
 
         public static bool CanRemove(string module, string entityname)
         {
-            if (T4Config.GetCanModify(module, entityname)) return true;
+            if (T4Config.GetCanRemove(module, entityname)) return true;
 
             var context = HttpContext.Current;
             if (context == null) return true; // NOT a web users, security to be handled by application
@@ -52,7 +52,7 @@ namespace Civic.Framework.WebApi
 
         public static bool CanView(string module, string entityname)
         {
-            if (T4Config.GetCanModify(module, entityname)) return true;
+            if (T4Config.GetCanView(module, entityname)) return true;
 
             var context = HttpContext.Current;
             if (context == null) return true; // NOT a web users, security to be handled by application
@@ -64,8 +64,6 @@ namespace Civic.Framework.WebApi
 
         public static bool HasPermission(string module, string entityname, string permission, bool exact = false)
         {
-            if (T4Config.GetCanModify(module, entityname)) return true;
-
             var context = HttpContext.Current;
             if (context == null) return true; // NOT a web users, security to be handled by application
 
