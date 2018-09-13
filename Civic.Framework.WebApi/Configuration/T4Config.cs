@@ -213,6 +213,7 @@ namespace Civic.Framework.WebApi.Configuration
             {
                 _maxRowOverrides = new Dictionary<string, int>();
                 _forceUpperOverrides = new Dictionary<string, bool>();
+                _allowViewOverrides = new Dictionary<string, bool>();
                 _allowAddOverrides = new Dictionary<string, bool>();
                 _allowModifyOverrides = new Dictionary<string, bool>();
                 _allowRemoveOverrides = new Dictionary<string, bool>();
