@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Civic.Core.Configuration;
@@ -11,6 +12,8 @@ namespace Civic.Framework.WebApi
     public interface IEntityService
     {
         IDBConnection Connection { get; set; }
+
+        ClaimsPrincipal Who { get; set; }
 
         INamedElement Configuration { get; set; }
 
