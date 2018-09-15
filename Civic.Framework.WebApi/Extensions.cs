@@ -21,7 +21,7 @@ namespace Civic.Framework.WebApi
             {
                 return dte.Value.ToLocalTime();
             }
-            return dte;
+            return dte.Value.ToUniversalTime();
         }
 
         public static string EnsureUIDOnCreate(this string uid)
@@ -36,13 +36,13 @@ namespace Civic.Framework.WebApi
             {
                 return dte.ToLocalTime();
             }
-            return dte;
+            return dte.ToUniversalTime();
         }
 
         public static DateTime? Date(this DateTime? dte)
         {
             if (!dte.HasValue) return null;
-            return dte.Value.Date;
+            return dte.Value.Date.ToUniversalTime();
         }
     }
 }
