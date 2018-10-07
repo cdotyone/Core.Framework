@@ -9,8 +9,6 @@ namespace Civic.Framework.WebApi
 {
     public interface IEntity2 : IEntity
     {
-        string IdentityID { get; }
-
         void Add(IEntityService service);
 
         void Modify(IEntityService service);
