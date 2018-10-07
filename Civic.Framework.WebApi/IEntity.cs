@@ -11,10 +11,10 @@ namespace Civic.Framework.WebApi
     {
         string IdentityID { get; }
 
-        void Add(IEntityService service);
+        void Add(IDBConnection connection);
 
-        void Modify(IEntityService service);
+        void Modify(IDBConnection connection);
 
-        void Remove(IEntityService service);
+        void Remove(IDBConnection connection);
     }
 }
