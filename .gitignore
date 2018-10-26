@@ -108,3 +108,4 @@ Backup*/
 UpgradeLog*.XML
 .vs
 _bin_deployableAssemblies
+*.lnk

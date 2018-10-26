@@ -43,12 +43,12 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Civic.Core.Audit">
-      <Version>1.26.0</Version>
+      <Version>1.26.1</Version>
     </PackageReference>
     <PackageReference Include="Civic.Core.Caching" Version="1.26.3" />
     <PackageReference Include="Civic.Core.Configuration" Version="1.26.0" />
-    <PackageReference Include="Civic.Core.Data" Version="1.26.1" />
-    <PackageReference Include="Civic.Core.Logging" Version="1.27.3" />
+    <PackageReference Include="Civic.Core.Data" Version="1.27.0" />
+    <PackageReference Include="Civic.Core.Logging" Version="1.27.5" />
     <PackageReference Include="Civic.Core.Security">
       <Version>1.26.1</Version>
     </PackageReference>
