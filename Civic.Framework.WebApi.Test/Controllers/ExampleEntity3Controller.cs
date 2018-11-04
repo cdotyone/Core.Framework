@@ -39,10 +39,10 @@ namespace Civic.Framework.WebApi.Test.Controllers
     		return new QueryMetadata<Entity3Entity>(result, resultLimit);
     	}
     
-    	[Route("{someUID}/{ff}")]
-    	public QueryMetadata<Entity3Entity> Get( String someUID, String ff )
+    	[Route("{someUID}")]
+    	public QueryMetadata<Entity3Entity> Get( String someUID )
     	{
-    		var result = new List<Entity3Entity> { _service.GetEntity3( someUID, ff) };
+    		var result = new List<Entity3Entity> { _service.GetEntity3( someUID) };
     		return new QueryMetadata<Entity3Entity>(result, 1);
     	}
     
@@ -50,21 +50,20 @@ namespace Civic.Framework.WebApi.Test.Controllers
     	public String Post([FromBody]Entity3Entity value)
     	{
     		_service.AddEntity3(value);
-    		return value.ff;
+    		return value.SomeUID;
     	}
     
-    	[Route("{someUID}/{ff}")]
-    	public void Put(String someUID, String ff, [FromBody]Entity3Entity value)
+    	[Route("{someUID}")]
+    	public void Put(String someUID, [FromBody]Entity3Entity value)
     	{
     		value.SomeUID = someUID;
-    		value.ff = ff;
     		_service.ModifyEntity3(value);
     	}
     
-    	[Route("{someUID}/{ff}")]
-    	public void Delete( String someUID, String ff )
+    	[Route("{someUID}")]
+    	public void Delete( String someUID )
     	{
-    		_service.RemoveEntity3( someUID, ff );
+    		_service.RemoveEntity3( someUID );
     	}
     }
 }

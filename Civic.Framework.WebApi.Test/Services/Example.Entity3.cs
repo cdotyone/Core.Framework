@@ -25,15 +25,15 @@ namespace Civic.Framework.WebApi.Test.Services
     
     public partial class ExampleService
     	{
-    	public Entity3Entity GetEntity3( String someUID, String ff) 
+    	public Entity3Entity GetEntity3( String someUID) 
     	{
-            using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "GetEntity3Byff")) {
+            using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "GetEntity3BySomeUID")) {
     
                 if (!AuthorizationHelper.CanView("dbo", "entity3")) throw new NotImplementedException();
     
     			try {		
                     using (var database = Connection) {
-    					return Data.ExampleData.GetEntity3(someUID, ff, database);
+    					return Data.ExampleData.GetEntity3(someUID, database);
     				}
     			}
     			catch (Exception ex)
@@ -75,7 +75,7 @@ namespace Civic.Framework.WebApi.Test.Services
     
     			try {
                     using(var db = Connection) {
-    	                var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", entity3.SomeUID.ToString()+entity3.ff.ToString()+"", entity3);
+    	                var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", entity3.SomeUID.ToString()+"", entity3);
     			 		Data.ExampleData.AddEntity3(entity3, db);
 					AuditManager.MarkSuccessFul("dbo", logid);
 
@@ -98,8 +98,8 @@ namespace Civic.Framework.WebApi.Test.Services
     
     			try {
                     using(var db = Connection) {
-    					var before = Data.ExampleData.GetEntity3( entity3.SomeUID, entity3.ff, db);
-    					var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.SomeUID.ToString()+before.ff.ToString()+"", before, entity3);
+    					var before = Data.ExampleData.GetEntity3( entity3.SomeUID, db);
+    					var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.SomeUID.ToString()+"", before, entity3);
     					Data.ExampleData.ModifyEntity3(entity3, db);
     					AuditManager.MarkSuccessFul("dbo", logid);
     				}
@@ -112,7 +112,7 @@ namespace Civic.Framework.WebApi.Test.Services
     		}
     	}
     
-    	public void RemoveEntity3( String someUID, String ff ) 
+    	public void RemoveEntity3( String someUID ) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleService), "RemoveEntity3")) {
     
@@ -120,9 +120,9 @@ namespace Civic.Framework.WebApi.Test.Services
     
     			try {
     				using(var db = Connection) {
-    					var before = Data.ExampleData.GetEntity3( someUID, ff, db);
-    					var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.SomeUID.ToString()+before.ff.ToString()+"", before);
-    					Data.ExampleData.RemoveEntity3( someUID, ff, db);
+    					var before = Data.ExampleData.GetEntity3( someUID, db);
+    					var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.SomeUID.ToString()+"", before);
+    					Data.ExampleData.RemoveEntity3( someUID, db);
     					AuditManager.MarkSuccessFul("dbo", logid);
     				}
     			}

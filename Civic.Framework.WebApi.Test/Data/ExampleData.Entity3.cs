@@ -25,7 +25,7 @@ namespace Civic.Framework.WebApi.Test.Data
     internal partial class ExampleData
     {
     
-    	internal static Entity3Entity GetEntity3( String someUID,  String ff, IDBConnection database)
+    	internal static Entity3Entity GetEntity3( String someUID, IDBConnection database)
     	{
             Debug.Assert(database!=null);
     
@@ -34,14 +34,12 @@ namespace Civic.Framework.WebApi.Test.Data
     		using (var command = database.CreateStoredProcCommand("dbo","usp_Entity3Get"))
     		{
     			command.AddInParameter("@someUID", someUID);
-    			command.AddInParameter("@ff", ff);
     			
                 command.ExecuteReader(dataReader =>
                     {
                         if (populateEntity3(entity3Returned, dataReader))
                         {
     					entity3Returned.SomeUID = someUID;
-    					entity3Returned.ff = ff;
     					                    }
                         else entity3Returned = null;
                     });
@@ -86,7 +84,8 @@ namespace Civic.Framework.WebApi.Test.Data
     
     		using (var command = database.CreateStoredProcCommand("dbo","usp_Entity3Add"))
     		{
-    			buildEntity3CommandParameters( entity3, command, true );
+    			buildEntity3CommandParameters( entity3, command, true ); 
+    			entity3.SomeUID = entity3.SomeUID.InsureUID(); 
     			command.ExecuteNonQuery();
     		}
     	}
@@ -106,14 +105,13 @@ namespace Civic.Framework.WebApi.Test.Data
     		return list;
     	}
     
-    	internal static void RemoveEntity3( String someUID, String ff, IDBConnection database )
+    	internal static void RemoveEntity3( String someUID, IDBConnection database )
     	{
             Debug.Assert(database!=null);
     
     		using (var command = database.CreateStoredProcCommand("dbo","usp_Entity3Remove"))
     		{
     			command.AddInParameter("@someUID", someUID);
-    			command.AddInParameter("@ff", ff);
     			command.ExecuteNonQuery();
     		}
     	}
@@ -121,10 +119,9 @@ namespace Civic.Framework.WebApi.Test.Data
     	private static void buildEntity3CommandParameters( Entity3Entity entity, IDBCommand command, bool addRecord )
     	{ 
             Debug.Assert(command!=null);
-       		if(addRecord) command.AddParameter("@someuid", ParameterDirection.InputOutput,  entity.SomeUID.ToUpper());
-    		else command.AddInParameter("@someuid", entity.SomeUID.ToUpper());
-       		if(addRecord) command.AddParameter("@ff", ParameterDirection.InputOutput,  T4Config.CheckUpperCase("dbo","entity3","ff",entity.ff));
-    		else command.AddInParameter("@ff", T4Config.CheckUpperCase("dbo","entity3","ff",entity.ff));
+    		command.AddInParameter("@someuid", entity.SomeUID.ToUpper());
+       		if(addRecord) command.AddParameter("@someid", ParameterDirection.InputOutput,  entity.SomeID);
+    		else command.AddInParameter("@someid", entity.SomeID);
     		command.AddInParameter("@otherdate", entity.OtherDate.ToDB());
     
     	}
@@ -133,8 +130,8 @@ namespace Civic.Framework.WebApi.Test.Data
     	{
     		if (dataReader==null || !dataReader.Read()) return false;
     							
-    		entity.SomeUID = dataReader["SomeUID"] != null && !string.IsNullOrEmpty(dataReader["SomeUID"].ToString()) ? dataReader["SomeUID"].ToString() : string.Empty;					
-    		entity.ff = dataReader["ff"] != null && !string.IsNullOrEmpty(dataReader["ff"].ToString()) ? dataReader["ff"].ToString() : string.Empty;					
+    		entity.SomeUID = dataReader["SomeUID"] != null && !string.IsNullOrEmpty(dataReader["SomeUID"].ToString()) ? dataReader["SomeUID"].ToString() : string.Empty;						
+    		entity.SomeID = dataReader["SomeID"] != null && !(dataReader["SomeID"] is DBNull) ? Int64.Parse(dataReader["SomeID"].ToString()) : 0;					
     		if(!(dataReader["Modified"] is DBNull)) entity.Modified = DateTime.Parse(dataReader["Modified"].ToString()).FromDB();					
     		if(!(dataReader["OtherDate"] is DBNull)) entity.OtherDate = DateTime.Parse(dataReader["OtherDate"].ToString()).FromDB();		
     			return true;

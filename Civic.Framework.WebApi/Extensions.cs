@@ -44,5 +44,11 @@ namespace Civic.Framework.WebApi
             if (!dte.HasValue) return null;
             return dte.Value.Date.ToUniversalTime();
         }
+
+        public static string InsureUID(this string uid)
+        {
+            if (!string.IsNullOrEmpty(uid)) return Guid.NewGuid().ToString().Replace("-","").ToUpperInvariant();
+            return uid;
+        }
     }
 }

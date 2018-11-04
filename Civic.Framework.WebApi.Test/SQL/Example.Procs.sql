@@ -344,7 +344,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity3Get]
 	  @someUID [nvarchar](max)
-	, @ff [nvarchar](max)
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -352,7 +351,7 @@ BEGIN
 	SELECT	
 		-- t4-columns begin
 		 [e3].[SomeUID]
-		,[e3].[ff]
+		,[e3].[SomeID]
 		,[e3].[Modified]
 		,[e3].[OtherDate]
 		-- t4-columns end
@@ -360,7 +359,6 @@ BEGIN
 	WHERE	
 		-- t4-where begin
 	    [e3].[SomeUID] = @someUID
-	AND [e3].[ff] = @ff
 		-- t4-where end
 END
 GO
@@ -385,7 +383,7 @@ BEGIN
     SET @select = 'SELECT	
 		-- t4-columns begin
 		 [e3].[SomeUID]
-		,[e3].[ff]
+		,[e3].[SomeID]
 		,[e3].[Modified]
 		,[e3].[OtherDate]
 		-- t4-columns end
@@ -410,7 +408,7 @@ GO
 CREATE PROCEDURE [dbo].[usp_Entity3Add]
 -- t4-params begin
 	  @someUID [nvarchar](max) out
-	, @ff [nvarchar](max) out
+	, @someID [bigint]
 	, @otherDate [datetime]
 -- t4-params end
 AS
@@ -419,14 +417,14 @@ BEGIN
 
 	INSERT INTO [dbo].[Entity3](
 -- t4-columns begin
-		 [ff]
+		 [SomeID]
 		,[Modified]
 		,[OtherDate]
 -- t4-columns end
 	) VALUES (
 
 -- t4-values begin
-		 @ff
+		 @someID
 		,[civic].udf_getSysDate()
 		,@otherDate
 -- t4-values end
@@ -444,7 +442,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity3Modify]
 	  @someUID [nvarchar](max)
-	, @ff [nvarchar](max)
+	, @someID [bigint]
 	, @otherDate [datetime]
 AS
 BEGIN
@@ -452,7 +450,7 @@ BEGIN
 
 	UPDATE [e3] SET 
 		-- t4-columns begin
-		 [ff] = @ff
+		 [SomeID] = @someID
 		,[Modified] = [civic].udf_getSysDate()
 		,[OtherDate] = @otherDate
 		-- t4-columns end
@@ -460,7 +458,6 @@ BEGIN
 	WHERE	
 		-- t4-where begin
 	    [e3].[SomeUID] = @someUID
-	AND [e3].[ff] = @ff
 		-- t4-where end
 END
 GO
@@ -473,7 +470,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity3Remove]
 	  @someUID [nvarchar](max)
-	, @ff [nvarchar](max)
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -482,7 +478,6 @@ BEGIN
 	WHERE	
 		-- t4-where begin
 	    [SomeUID] = @someUID
-	AND [ff] = @ff
 		-- t4-where end
 END
 GO

@@ -3,7 +3,7 @@
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
     fileManager.StartNewFile(entity.Name + ".cs", folderName:"Entities");
-	WriteHeader("System","System.Collections.Generic","System.Runtime.Serialization","Civic.Core.Data","Civic.Framework.WebApi");
+	WriteHeader("System","System.Collections.Generic","System.Runtime.Serialization","Civic.Core.Data","Civic.Framework.WebApi", "Newtonsoft.Json");
 
     BeginNamespace(namespaceName + ".Entities", code);
 
@@ -35,11 +35,18 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
     var simpleProperties = typeMapper.GetSimpleProperties(entity);
     if (simpleProperties.Any())
     {
+		var keyUID = simpleProperties.Where((sprop) => sprop.Name.ToLower().EndsWith("uid") && ef.IsKey(sprop)).FirstOrDefault();
+		var matchID = simpleProperties.Where((sprop) => keyUID!=null && sprop.Name.ToLower() == keyUID.Name.ToLower().Substring(0,keyUID.Name.Length-3)+"id").FirstOrDefault();
+
         foreach (var edmProperty in simpleProperties)
         {
 #>
-	[DataMember(Name="<#=Core.ToLowerCamel(edmProperty.Name).Replace("iD","id").Replace("oUID","ouid")#>")]
-    <#=codeStringGenerator.Property(edmProperty)#>
+	[DataMember(Name="<#=Core.ToLowerCamel(edmProperty.Name).Replace("iD","id").Replace("oUID","ouid").Replace("uID","uid")#>")]
+<#
+	if(keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name) {#>
+	[JsonIgnore]
+<#}
+#>    <#=codeStringGenerator.Property(edmProperty)#>
 
 <#
         }

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Civic.Core.Data;
 using Civic.Framework.WebApi;
+using Newtonsoft.Json;
 
 namespace Civic.Framework.WebApi.Test.Entities
 {
@@ -23,8 +24,9 @@ namespace Civic.Framework.WebApi.Test.Entities
     	[DataMember(Name="someUID")]
         public string SomeUID { get; set; }
     
-    	[DataMember(Name="ff")]
-        public string ff { get; set; }
+    	[DataMember(Name="someID")]
+    	[JsonIgnore]
+        public long SomeID { get; set; }
     
     	[DataMember(Name="modified")]
         public System.DateTime Modified { get; set; }
@@ -38,7 +40,7 @@ namespace Civic.Framework.WebApi.Test.Entities
             var copy = new Entity3
                 {
     			SomeUID = SomeUID
-    			,ff = ff
+    			,SomeID = SomeID
     			,Modified = Modified
     			,OtherDate = OtherDate
                 };
@@ -70,7 +72,7 @@ namespace Civic.Framework.WebApi.Test.Entities
         {
     		var service = new Services.ExampleService();
     		service.Connection = connection;
-    		service.RemoveEntity3(SomeUID , ff );
+    		service.RemoveEntity3(SomeUID );
         }
     
     }

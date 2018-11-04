@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Civic.Core.Data;
 using Civic.Framework.WebApi;
+using Newtonsoft.Json;
 
 namespace Civic.Framework.WebApi.Test.Entities
 {

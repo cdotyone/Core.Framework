@@ -113,10 +113,9 @@
         <EntityType Name="Entity3">
           <Key>
             <PropertyRef Name="SomeUID" />
-            <PropertyRef Name="ff" />
           </Key>
           <Property Name="SomeUID" Type="String" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ff" Type="String" Nullable="false" />
+          <Property Name="SomeID" Type="Int64" Nullable="false" />
           <Property Name="Modified" Type="DateTime" Nullable="false" />
           <Property Name="OtherDate" Type="DateTime" />
         </EntityType>

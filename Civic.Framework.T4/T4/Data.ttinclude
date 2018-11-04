@@ -104,7 +104,17 @@ internal partial class <#=edmxFileName#>Data
 
 		using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Add"))
 		{
-			build<#=code.Escape(entity)#>CommandParameters( <#=code.Escape(lowerName)#>, command, true );
+			build<#=code.Escape(entity)#>CommandParameters( <#=code.Escape(lowerName)#>, command, true );<#
+		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+		{
+			if(ef.IsKey(edmProperty)) { 
+				if(code.Escape(edmProperty.TypeUsage.EdmType).ToLower()=="string" && edmProperty.Name.ToLower().EndsWith("uid")) { 
+			#> 
+			<#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#> = <#=code.Escape(lowerName)#>.<#=code.Escape(edmProperty.Name)#>.InsureUID(); <#
+				}
+			}
+		}#>
+
 			command.ExecuteNonQuery();<#
 		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
 		{
@@ -157,6 +167,9 @@ command.ExecuteNonQuery();
 	{ 
         Debug.Assert(command!=null);
 <#
+		var keyUID = entity.Properties.Where((sprop) => sprop.Name.ToLower().EndsWith("uid") && ef.IsKey(sprop)).FirstOrDefault();
+		var matchID = entity.Properties.Where((sprop) => keyUID!=null && sprop.Name.ToLower() == keyUID.Name.ToLower().Substring(0,keyUID.Name.Length-3)+"id").FirstOrDefault();
+
 		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
 		{
 			var ptype=code.Escape(edmProperty.TypeUsage.EdmType).ToLower().Replace("@","");
@@ -167,7 +180,7 @@ command.ExecuteNonQuery();
 
 			if(ptype=="string" && edmProperty.Name.EndsWith("UID")) pname = "entity."+code.Escape(edmProperty.Name)+".ToUpper()";
 
-			if(ef.IsKey(edmProperty)) { #>
+			if((ef.IsKey(edmProperty) && keyUID==null) || (keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name)) { #>
    		if(addRecord) command.AddParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", ParameterDirection.InputOutput,  <#=pname#>);
 		else command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>);
 <#
@@ -178,6 +191,8 @@ command.ExecuteNonQuery();
 					pname+=".ToDB()";
 				}
 			}
+
+		
 			#>
 		command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>);
 <#
@@ -194,7 +209,7 @@ command.ExecuteNonQuery();
 		{
 			var ptype=code.Escape(edmProperty.TypeUsage.EdmType).ToLower().Replace("@","");
 			if(ptype=="int32" || ptype=="int" || ptype=="int64" || ptype=="long" || ptype=="float") {#>						
-		entity.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) ? Int32.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) : 0;<#
+		entity.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) ? <#=code.Escape(edmProperty.TypeUsage.EdmType).Replace("@","")#>.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) : 0;<#
 			} else 
 			if(ptype=="boolean") {#>						
 		entity.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) && Boolean.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString());<#
@@ -209,8 +224,7 @@ command.ExecuteNonQuery();
 		entity.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !string.IsNullOrEmpty(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) ? dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString() : string.Empty;<#
 		}
 	}
-#>
-		
+#>		
 			return true;
 	}
 }
