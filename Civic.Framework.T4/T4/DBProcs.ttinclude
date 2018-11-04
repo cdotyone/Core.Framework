@@ -232,6 +232,9 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]<#}#>
   i=0;
 	hasCreatedBy = false;
 
+	var keyUID = entity.Properties.Where((sprop) => sprop.Name.ToLower().EndsWith("uid") && ef.IsKey(sprop)).FirstOrDefault();
+	var matchID = entity.Properties.Where((sprop) => keyUID!=null && sprop.Name.ToLower() == keyUID.Name.ToLower().Substring(0,keyUID.Name.Length-3)+"id").FirstOrDefault();
+
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {
 		parameterName = Core.GetParameterName(edmProperty.Name);
@@ -241,7 +244,7 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]<#}#>
 		if(parameterName.ToLower()=="@createdby") hasCreatedBy = true;
 		
 
-		if(ef.IsKey(edmProperty)) {
+		if((ef.IsKey(edmProperty) && keyUID==null) || (keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name)) {
 #>
 	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #> out
 <#
