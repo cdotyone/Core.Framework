@@ -24,12 +24,6 @@ namespace Civic.Framework.WebApi
             return dte.Value.ToUniversalTime();
         }
 
-        public static string EnsureUIDOnCreate(this string uid)
-        {
-            if (!string.IsNullOrEmpty(uid)) return uid;
-            return Guid.NewGuid().ToString().Replace("-", "").ToUpper();
-        }
-
         public static DateTime ToDB(this DateTime dte)
         {
             if (T4Config.Current.UseLocalTime)
@@ -47,8 +41,10 @@ namespace Civic.Framework.WebApi
 
         public static string InsureUID(this string uid)
         {
-            if (!string.IsNullOrEmpty(uid)) return Guid.NewGuid().ToString().Replace("-","").ToUpperInvariant();
-            return uid;
+            if (!string.IsNullOrEmpty(uid))
+                return uid;
+            return Guid.NewGuid().ToString().Replace("-","").ToUpperInvariant();
+            
         }
     }
 }
