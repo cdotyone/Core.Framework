@@ -44,12 +44,12 @@ namespace Civic.Framework.WebApi.Test.Entities
         {
             var copy = new Entity1
                 {
-    			Name = Name
-    			,EnvironmentID = EnvironmentID
-    			,Dte = Dte
-    			,Dte2 = Dte2
-    			,Dble1 = Dble1
-    			,Dec1 = Dec1
+    			Name = Name,
+    			EnvironmentID = EnvironmentID,
+    			Dte = Dte,
+    			Dte2 = Dte2,
+    			Dble1 = Dble1,
+    			Dec1 = Dec1
                 };
             return copy;
         }
@@ -58,7 +58,7 @@ namespace Civic.Framework.WebApi.Test.Entities
         { 
     		get {
     					return null;
-    		}
+    				}
     	}
     
         public void Add(IDBConnection connection)

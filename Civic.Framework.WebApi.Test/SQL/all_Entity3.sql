@@ -70,8 +70,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity3Add]
 -- t4-params begin
-	  @someUID [nvarchar](max) out
-	, @someID [bigint]
+	  @someUID [nvarchar](max)
+	, @someID [bigint] out
 	, @otherDate [datetime]
 -- t4-params end
 AS

@@ -109,6 +109,7 @@
           <Property Type="String" Name="ff" Nullable="false" />
           <Property Type="DateTime" Name="Modified" Nullable="false" />
           <Property Type="DateTime" Name="OtherDate" />
+          <Property Name="OID" Type="String" Nullable="false" />
         </EntityType>
         <EntityType Name="Entity3">
           <Key>

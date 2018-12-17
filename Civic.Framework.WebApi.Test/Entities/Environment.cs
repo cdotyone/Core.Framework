@@ -32,8 +32,8 @@ namespace Civic.Framework.WebApi.Test.Entities
         {
             var copy = new Environment
                 {
-    			ID = ID
-    			,Name = Name
+    			ID = ID,
+    			Name = Name
                 };
             return copy;
         }
@@ -41,8 +41,8 @@ namespace Civic.Framework.WebApi.Test.Entities
     	public string IdentityID 
         { 
     		get {
-    	return this.ID.ToString();
-    }
+    		return this.ID.ToString();
+    		}
     	}
     
         public void Add(IDBConnection connection)

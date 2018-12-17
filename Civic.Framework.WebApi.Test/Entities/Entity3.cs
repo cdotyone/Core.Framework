@@ -39,10 +39,10 @@ namespace Civic.Framework.WebApi.Test.Entities
         {
             var copy = new Entity3
                 {
-    			SomeUID = SomeUID
-    			,SomeID = SomeID
-    			,Modified = Modified
-    			,OtherDate = OtherDate
+    			SomeUID = SomeUID,
+    			SomeID = SomeID,
+    			Modified = Modified,
+    			OtherDate = OtherDate
                 };
             return copy;
         }
@@ -50,8 +50,8 @@ namespace Civic.Framework.WebApi.Test.Entities
     	public string IdentityID 
         { 
     		get {
-    	return this.SomeUID.ToString();
-    }
+    		return this.SomeUID.ToString();
+    		}
     	}
     
         public void Add(IDBConnection connection)

@@ -33,15 +33,22 @@ namespace Civic.Framework.WebApi.Test.Entities
     	[DataMember(Name="otherDate")]
         public Nullable<System.DateTime> OtherDate { get; set; }
     
+    	[DataMember(Name="oid")]
+    	[JsonIgnore]
+        public string OID { get; set; }
+    
+    	[DataMember(Name="OUID")]
+    	public string OUID { get; set; }
     
         public Entity2 Copy()
         {
             var copy = new Entity2
                 {
-    			SomeID = SomeID
-    			,ff = ff
-    			,Modified = Modified
-    			,OtherDate = OtherDate
+    			SomeID = SomeID,
+    			ff = ff,
+    			Modified = Modified,
+    			OtherDate = OtherDate,
+    			OID = OID
                 };
             return copy;
         }
@@ -49,8 +56,8 @@ namespace Civic.Framework.WebApi.Test.Entities
     	public string IdentityID 
         { 
     		get {
-    	return this.SomeID.ToString();
-    }
+    		return this.SomeID.ToString();
+    		}
     	}
     
         public void Add(IDBConnection connection)

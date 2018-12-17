@@ -18,6 +18,7 @@ BEGIN
 		,[e2].[ff]
 		,[e2].[Modified]
 		,[e2].[OtherDate]
+		,[e2].[OID]
 		-- t4-columns end
 	FROM [dbo].[Entity2] [e2]
 	WHERE	
@@ -51,6 +52,7 @@ BEGIN
 		,[e2].[ff]
 		,[e2].[Modified]
 		,[e2].[OtherDate]
+		,[e2].[OID]
 		-- t4-columns end
     FROM [dbo].[Entity2] [e2]'
 
@@ -75,6 +77,7 @@ CREATE PROCEDURE [dbo].[usp_Entity2Add]
 	  @someID [int] out
 	, @ff [nvarchar](max) out
 	, @otherDate [datetime]
+	, @oID [nvarchar](max)
 -- t4-params end
 AS
 BEGIN
@@ -85,6 +88,7 @@ BEGIN
 		 [ff]
 		,[Modified]
 		,[OtherDate]
+		,[OID]
 -- t4-columns end
 	) VALUES (
 
@@ -92,6 +96,7 @@ BEGIN
 		 @ff
 		,[civic].udf_getSysDate()
 		,@otherDate
+		,@oID
 -- t4-values end
 	)
 
@@ -109,6 +114,7 @@ CREATE PROCEDURE [dbo].[usp_Entity2Modify]
 	  @someID [int]
 	, @ff [nvarchar](max)
 	, @otherDate [datetime]
+	, @oID [nvarchar](max)
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -118,6 +124,7 @@ BEGIN
 		 [ff] = @ff
 		,[Modified] = [civic].udf_getSysDate()
 		,[OtherDate] = @otherDate
+		,[OID] = @oID
 		-- t4-columns end
 	FROM [dbo].[Entity2] [e2]
 	WHERE	
