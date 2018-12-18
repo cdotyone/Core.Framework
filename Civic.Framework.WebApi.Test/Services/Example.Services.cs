@@ -34,7 +34,24 @@ namespace Civic.Framework.WebApi.Test.Services
     	public IDBConnection Connection
         {
     		get {
-    			if(_connection==null) return DatabaseFactory.CreateDatabase("Example");
+    
+                if (_connection == null && Who != null)
+                {
+                    return DatabaseFactory.CreateDatabase("Example").AddClaimsDefaults(Who);
+                }
+                else if (_connection == null && Who == null)
+                {
+                    return DatabaseFactory.CreateDatabase("Example");
+                }
+                else if (_connection != null && Who != null)
+                {
+                    return _connection.AddClaimsDefaults(Who);
+                }
+                else
+                {
+                    return _connection;
+                }
+    
     	        return _connection;
     		}
     		set {
