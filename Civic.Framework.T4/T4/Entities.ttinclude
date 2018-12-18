@@ -9,7 +9,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 #>
 [DataContract(Name="<#=Core.ToLowerCamel(entity.Name)#>")]
-<#=codeStringGenerator.EntityClassOpening(entity)#> : IEntity
+<#=codeStringGenerator.EntityClassOpening(entity)#> : IEntity2
 {
 <#
     var propertiesWithDefaultValues = typeMapper.GetPropertiesWithDefaultValues(entity);
@@ -121,27 +121,52 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 #>		}
 	}
 
+	#region IEntity
+
     public void Add(IDBConnection connection)
     {
 		var service = new Services.<#=edmxFileName#>Service();
 		service.Connection = connection;
-		service.Add<#=entity.Name#>(this);
+		this.Add(service);
     }
 
     public void Modify(IDBConnection connection)
     {
 		var service = new Services.<#=edmxFileName#>Service();
 		service.Connection = connection;
-		service.Modify<#=entity.Name#>(this);
+		this.Modify(service);
     }
 
     public void Remove(IDBConnection connection)
     {
 		var service = new Services.<#=edmxFileName#>Service();
 		service.Connection = connection;
-		service.Remove<#=entity.Name#>(<# var keyCounter = 0; foreach(var key in keys) { keyCounter++; #><#=(keyCounter>1?", ":"")+key#> <# }#>);
+		this.Remove(service);
     }
 
+	#endregion IEntity
+
+	#region IEntity2
+
+    public void Add(IEntityService iservice)
+    {
+        var service = iservice as Services.<#=edmxFileName#>Service;
+        service.AddClient(this);
+    }
+
+    public void Modify(IEntityService iservice)
+    {
+        var service = iservice as Services.<#=edmxFileName#>Service;
+        service.ModifyClient(this);
+    }
+
+    public void Remove(IEntityService iservice)
+    {
+        var service = iservice as Services.<#=edmxFileName#>Service;
+        service.RemoveClient(ClientCode);
+    }
+
+	#endregion IEntity2
 }
 <#
     EndNamespace(namespaceName + ".Entities");

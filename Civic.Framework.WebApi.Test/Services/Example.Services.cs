@@ -12,6 +12,7 @@
 using System;
 using System.ServiceModel.Activation;
 using System.Collections.Generic;
+using System.Security.Claims;
 using Civic.Core.Audit;
 using Civic.Core.Configuration;
 using Civic.Core.Data;
@@ -39,6 +40,13 @@ namespace Civic.Framework.WebApi.Test.Services
     		set {
     			_connection = value;
     		}
+        }
+    
+        private ClaimsPrincipal _who = null;
+        public ClaimsPrincipal Who
+        {
+            get { return _who == null && OperationContext.Current != null ? OperationContext.Current.ClaimsPrincipal : _who; }
+            set { _who = value; }
         }
     
     	public INamedElement Configuration { get; set; }

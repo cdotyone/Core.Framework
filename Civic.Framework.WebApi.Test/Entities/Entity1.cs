@@ -19,7 +19,7 @@ using Newtonsoft.Json;
 namespace Civic.Framework.WebApi.Test.Entities
 {
     [DataContract(Name="entity1")]
-    public partial class Entity1 : IEntity
+    public partial class Entity1 : IEntity2
     {
     	[DataMember(Name="name")]
         public string Name { get; set; }
@@ -61,27 +61,52 @@ namespace Civic.Framework.WebApi.Test.Entities
     				}
     	}
     
+    	#region IEntity
+    
         public void Add(IDBConnection connection)
         {
     		var service = new Services.ExampleService();
     		service.Connection = connection;
-    		service.AddEntity1(this);
+    		this.Add(service);
         }
     
         public void Modify(IDBConnection connection)
         {
     		var service = new Services.ExampleService();
     		service.Connection = connection;
-    		service.ModifyEntity1(this);
+    		this.Modify(service);
         }
     
         public void Remove(IDBConnection connection)
         {
     		var service = new Services.ExampleService();
     		service.Connection = connection;
-    		service.RemoveEntity1(Name );
+    		this.Remove(service);
         }
     
+    	#endregion IEntity
+    
+    	#region IEntity2
+    
+        public void Add(IEntityService iservice)
+        {
+            var service = iservice as Services.ExampleService;
+            service.AddClient(this);
+        }
+    
+        public void Modify(IEntityService iservice)
+        {
+            var service = iservice as Services.ExampleService;
+            service.ModifyClient(this);
+        }
+    
+        public void Remove(IEntityService iservice)
+        {
+            var service = iservice as Services.ExampleService;
+            service.RemoveClient(ClientCode);
+        }
+    
+    	#endregion IEntity2
     }
 }
 
