@@ -133,7 +133,8 @@ namespace Civic.Framework.WebApi.Test.Data
     								
     		entity.ID = dataReader["ID"] != null && !(dataReader["ID"] is DBNull) ? Int32.Parse(dataReader["ID"].ToString()) : 0;					
     		entity.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? dataReader["Name"].ToString() : string.Empty;		
-    			return true;
+    
+    		return true;
     	}
     }
 }

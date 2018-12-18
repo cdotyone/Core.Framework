@@ -134,7 +134,8 @@ namespace Civic.Framework.WebApi.Test.Data
     		entity.SomeID = dataReader["SomeID"] != null && !(dataReader["SomeID"] is DBNull) ? Int64.Parse(dataReader["SomeID"].ToString()) : 0;					
     		if(!(dataReader["Modified"] is DBNull)) entity.Modified = DateTime.Parse(dataReader["Modified"].ToString()).FromDB();					
     		if(!(dataReader["OtherDate"] is DBNull)) entity.OtherDate = DateTime.Parse(dataReader["OtherDate"].ToString()).FromDB();		
-    			return true;
+    
+    		return true;
     	}
     }
 }

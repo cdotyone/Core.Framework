@@ -128,7 +128,6 @@ namespace Civic.Framework.WebApi.Test.Data
        		if(addRecord) command.AddParameter("@ff", ParameterDirection.InputOutput,  T4Config.CheckUpperCase("dbo","entity2","ff",entity.ff));
     		else command.AddInParameter("@ff", T4Config.CheckUpperCase("dbo","entity2","ff",entity.ff));
     		command.AddInParameter("@otherdate", entity.OtherDate.ToDB());
-    		command.AddInParameter("@oid", T4Config.CheckUpperCase("dbo","entity2","oid",entity.OID));
     
     	}
     	
@@ -139,9 +138,10 @@ namespace Civic.Framework.WebApi.Test.Data
     		entity.SomeID = dataReader["SomeID"] != null && !(dataReader["SomeID"] is DBNull) ? Int32.Parse(dataReader["SomeID"].ToString()) : 0;					
     		entity.ff = dataReader["ff"] != null && !string.IsNullOrEmpty(dataReader["ff"].ToString()) ? dataReader["ff"].ToString() : string.Empty;					
     		if(!(dataReader["Modified"] is DBNull)) entity.Modified = DateTime.Parse(dataReader["Modified"].ToString()).FromDB();					
-    		if(!(dataReader["OtherDate"] is DBNull)) entity.OtherDate = DateTime.Parse(dataReader["OtherDate"].ToString()).FromDB();					
-    		entity.OID = dataReader["OID"] != null && !string.IsNullOrEmpty(dataReader["OID"].ToString()) ? dataReader["OID"].ToString() : string.Empty;		
-    			return true;
+    		if(!(dataReader["OtherDate"] is DBNull)) entity.OtherDate = DateTime.Parse(dataReader["OtherDate"].ToString()).FromDB();				
+        	entity.OUID = dataReader["OUID"] != null && !string.IsNullOrEmpty(dataReader["OUID"].ToString()) ? dataReader["OUID"].ToString() : string.Empty;		
+    
+    		return true;
     	}
     }
 }

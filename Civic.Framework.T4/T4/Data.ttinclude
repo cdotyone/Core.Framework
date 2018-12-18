@@ -179,6 +179,7 @@ command.ExecuteNonQuery();
 			if(ptype=="string" && !edmProperty.Nullable) pname = "T4Config.CheckUpperCase(\""+apiSchemaName.ToLower()+"\",\""+code.Escape(entity).ToLower()+"\",\""+code.Escape(edmProperty.Name).ToLower()+"\"," + pname + ")";
 
 			if(ptype=="string" && edmProperty.Name.EndsWith("UID")) pname = "entity."+code.Escape(edmProperty.Name)+".ToUpper()";
+			if(ptype=="string" && edmProperty.Name=="OID" && code.Escape(entity).ToLower()!="orgunit") continue;
 
 			if((ef.IsKey(edmProperty) && keyUID==null) || (keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name)) { #>
    		if(addRecord) command.AddParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", ParameterDirection.InputOutput,  <#=pname#>);
@@ -208,6 +209,11 @@ command.ExecuteNonQuery();
 		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
 		{
 			var ptype=code.Escape(edmProperty.TypeUsage.EdmType).ToLower().Replace("@","");
+
+			if(edmProperty.Name=="OID" && code.Escape(entity).ToLower()!="orgunit") { #>
+				
+    	entity.OUID = dataReader["OUID"] != null && !string.IsNullOrEmpty(dataReader["OUID"].ToString()) ? dataReader["OUID"].ToString() : string.Empty;<#						
+			} else 
 			if(ptype=="int32" || ptype=="int" || ptype=="int64" || ptype=="long" || ptype=="float") {#>						
 		entity.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) ? <#=code.Escape(edmProperty.TypeUsage.EdmType).Replace("@","")#>.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) : 0;<#
 			} else 
@@ -225,7 +231,8 @@ command.ExecuteNonQuery();
 		}
 	}
 #>		
-			return true;
+
+		return true;
 	}
 }
 <#

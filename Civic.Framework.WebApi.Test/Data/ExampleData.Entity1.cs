@@ -138,7 +138,8 @@ namespace Civic.Framework.WebApi.Test.Data
     		if(!(dataReader["Dte2"] is DBNull)) entity.Dte2 = DateTime.Parse(dataReader["Dte2"].ToString()).FromDB();						
     		entity.Dble1 = double.Parse(dataReader["Dble1"] != null && !(dataReader["Dble1"] is DBNull) && dataReader["Dble1"] != null ? dataReader["Dble1"].ToString() : "0");						
     		entity.Dec1 = double.Parse(dataReader["Dec1"] != null && !(dataReader["Dec1"] is DBNull) && dataReader["Dec1"] != null ? dataReader["Dec1"].ToString() : "0");		
-    			return true;
+    
+    		return true;
     	}
     }
 }
