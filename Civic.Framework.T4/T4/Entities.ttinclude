@@ -151,19 +151,19 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
     public void Add(IEntityService iservice)
     {
         var service = iservice as Services.<#=edmxFileName#>Service;
-        service.AddClient(this);
+        service.Add<#=entity.Name#>(this);
     }
 
     public void Modify(IEntityService iservice)
     {
         var service = iservice as Services.<#=edmxFileName#>Service;
-        service.ModifyClient(this);
+        service.Modify<#=entity.Name#>(this);
     }
 
     public void Remove(IEntityService iservice)
     {
         var service = iservice as Services.<#=edmxFileName#>Service;
-        service.RemoveClient(ClientCode);
+        service.Remove<#=entity.Name#>(<# var keyCounter = 0; foreach(var key in keys) { keyCounter++; #><#=(keyCounter>1?", ":"")+key#> <# }#>);
     }
 
 	#endregion IEntity2

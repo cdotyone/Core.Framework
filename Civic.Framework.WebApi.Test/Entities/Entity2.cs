@@ -90,19 +90,19 @@ namespace Civic.Framework.WebApi.Test.Entities
         public void Add(IEntityService iservice)
         {
             var service = iservice as Services.ExampleService;
-            service.AddClient(this);
+            service.AddEntity2(this);
         }
     
         public void Modify(IEntityService iservice)
         {
             var service = iservice as Services.ExampleService;
-            service.ModifyClient(this);
+            service.ModifyEntity2(this);
         }
     
         public void Remove(IEntityService iservice)
         {
             var service = iservice as Services.ExampleService;
-            service.RemoveClient(ClientCode);
+            service.RemoveEntity2(SomeID , ff );
         }
     
     	#endregion IEntity2

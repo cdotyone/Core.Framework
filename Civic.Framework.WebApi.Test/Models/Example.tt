@@ -1,4 +1,5 @@
 ﻿<#@ template language="C#" debug="true" hostspecific="true"#>
+<#@ template language="C#" debug="true" hostspecific="true"#>
 <#@ include file="..\T4\t4settings.ttinclude"#>
 <#
 apiPackageName="example"; 

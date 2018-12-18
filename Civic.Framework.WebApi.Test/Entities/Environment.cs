@@ -75,19 +75,19 @@ namespace Civic.Framework.WebApi.Test.Entities
         public void Add(IEntityService iservice)
         {
             var service = iservice as Services.ExampleService;
-            service.AddClient(this);
+            service.AddEnvironment(this);
         }
     
         public void Modify(IEntityService iservice)
         {
             var service = iservice as Services.ExampleService;
-            service.ModifyClient(this);
+            service.ModifyEnvironment(this);
         }
     
         public void Remove(IEntityService iservice)
         {
             var service = iservice as Services.ExampleService;
-            service.RemoveClient(ClientCode);
+            service.RemoveEnvironment(ID );
         }
     
     	#endregion IEntity2
