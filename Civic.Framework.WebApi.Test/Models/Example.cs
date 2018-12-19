@@ -23,6 +23,7 @@
 // Civic.Framework.WebApi.Test\Services\Example.Entity3.cs
 // Civic.Framework.WebApi.Test\Services\Example.Entity2.cs
 // Civic.Framework.WebApi.Test\Services\Example.Entity1.cs
+// Civic.Framework.WebApi.Test\Services\Example.Package.cs
 // Civic.Framework.WebApi.Test\Services\Example.Services.cs
 // Civic.Framework.WebApi.Test\Controllers\ExampleEnvironmentController.cs
 // Civic.Framework.WebApi.Test\Controllers\ExampleEntity3Controller.cs

@@ -102,6 +102,9 @@
     <PackageReference Include="SimpleInjector.Integration.WebApi">
       <Version>4.4.2</Version>
     </PackageReference>
+    <PackageReference Include="SimpleInjector.Packaging">
+      <Version>4.4.2</Version>
+    </PackageReference>
     <PackageReference Include="WebActivatorEx" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>

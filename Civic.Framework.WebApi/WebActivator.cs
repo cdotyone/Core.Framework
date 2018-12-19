@@ -1,4 +1,7 @@
-﻿using System.Web.Http;
+﻿using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Civic.Core.Logging;
 using Civic.Framework.WebApi.Logging;
@@ -16,6 +19,11 @@ namespace Civic.Framework.WebApi
             container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
 
             // Register your types, for instance using the scoped lifestyle:
+            var assemblies = from file in new DirectoryInfo(typeof(WebActivator).Assembly.Location).GetFiles()
+                where file.Extension.ToLower() == ".dll"
+                select Assembly.Load(AssemblyName.GetAssemblyName(file.FullName));
+            container.RegisterPackages(assemblies);
+
             //container.Register<IUserRepository, SqlUserRepository>(Lifestyle.Scoped);
 
             var versionSelector = new VersionControllerSelector(GlobalConfiguration.Configuration);

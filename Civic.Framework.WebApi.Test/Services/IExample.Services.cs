@@ -11,7 +11,7 @@
 
 using System.Collections.Generic;
 using System.ServiceModel;
-using SimpleInjector;
+using Civic.Framework.WebApi;
 using Civic.Framework.WebApi.Test.Entities;
 
 

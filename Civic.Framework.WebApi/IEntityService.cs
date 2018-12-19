@@ -23,7 +23,5 @@ namespace Civic.Framework.WebApi
         List<string> EntitiesProvided { get; }
 
         IEntity Create(string name);
-
-        void Register(Container container);
     }
 }
