@@ -3,7 +3,7 @@
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
     fileManager.StartNewFile(entity.Name + ".cs", folderName:"Entities");
-	WriteHeader("System","System.Collections.Generic","System.Runtime.Serialization","Civic.Core.Data","Civic.Framework.WebApi", "Newtonsoft.Json");
+	WriteHeader("System","System.Collections.Generic","System.Runtime.Serialization","Civic.Core.Data","Civic.Framework.WebApi", "Newtonsoft.Json" , namespaceName+".Services");
 
     BeginNamespace(namespaceName + ".Entities", code);
 
@@ -125,22 +125,22 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
     public void Add(IDBConnection connection)
     {
-		var service = new Services.<#=edmxFileName#>Service();
-		service.Connection = connection;
+        var service = <#=edmxFileName#>Service.Create();
+        service.Connection = connection;
 		this.Add(service);
     }
 
     public void Modify(IDBConnection connection)
     {
-		var service = new Services.<#=edmxFileName#>Service();
-		service.Connection = connection;
+        var service = <#=edmxFileName#>Service.Create();
+        service.Connection = connection;
 		this.Modify(service);
     }
 
     public void Remove(IDBConnection connection)
     {
-		var service = new Services.<#=edmxFileName#>Service();
-		service.Connection = connection;
+        var service = <#=edmxFileName#>Service.Create();
+        service.Connection = connection;
 		this.Remove(service);
     }
 
