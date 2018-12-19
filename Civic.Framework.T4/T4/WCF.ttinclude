@@ -85,6 +85,12 @@ public partial class <#=edmxFileName#>Service : I<#=edmxFileName#>, IEntityServi
 
 		return null;
     }
+
+    public static HomePortService Create()
+    {
+        var container = new Container();
+        return container.GetInstance<<#=edmxFileName#>Service>();
+    }
 }
 
 <#

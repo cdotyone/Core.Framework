@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web.Http;
@@ -19,13 +20,11 @@ namespace Civic.Framework.WebApi
             container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
 
             // Register your types, for instance using the scoped lifestyle:
-            var path = Path.GetDirectoryName(typeof(WebActivator).Assembly.Location);
-            var assemblies = from file in new DirectoryInfo(path).GetFiles()
-                where file.Extension.ToLower() == ".dll"
+            var path = AppDomain.CurrentDomain.DynamicDirectory; ;
+            var assemblies = from file in new DirectoryInfo(path).GetFiles("*.dll", SearchOption.AllDirectories)
                 select Assembly.Load(AssemblyName.GetAssemblyName(file.FullName));
-            container.RegisterPackages(assemblies);
-
-            //container.Register<IUserRepository, SqlUserRepository>(Lifestyle.Scoped);
+            var alist = assemblies.ToList();
+            container.RegisterPackages(alist);
 
             var versionSelector = new VersionControllerSelector(GlobalConfiguration.Configuration);
 
@@ -40,8 +39,7 @@ namespace Civic.Framework.WebApi
             else Logger.LogTrace(LoggingBoundaries.Host, "Transmission logging off");
 
             // This is an extension method from the integration package.
-            container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
-
+            container.RegisterWebApiControllers(GlobalConfiguration.Configuration, alist);
             container.Verify();
 
             GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
