@@ -12,6 +12,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Web.Http;
@@ -26,7 +27,13 @@ namespace Civic.Framework.WebApi.Test.Controllers
     [System.CodeDom.Compiler.GeneratedCode("STE-EF",".NET 3.5")]
     public partial class ExampleEntity2Controller : ApiController 
     {
-    	private static readonly ExampleService _service = new ExampleService();
+    	private readonly IExample _service;
+    
+    	public ExampleEntity2Controller(IExample service)
+        {
+            service.Who = User as ClaimsPrincipal;
+    		_service = service;
+        }
     
     	[Route("")]
     	public QueryMetadata<Entity2Entity> Get()

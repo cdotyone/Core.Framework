@@ -13,6 +13,7 @@ using System;
 using System.ServiceModel.Activation;
 using System.Collections.Generic;
 using System.Security.Claims;
+using SimpleInjector;
 using Civic.Core.Audit;
 using Civic.Core.Configuration;
 using Civic.Core.Data;
@@ -26,7 +27,7 @@ namespace Civic.Framework.WebApi.Test.Services
     
     
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
-    public partial class ExampleService : IExample, IEntityService
+    public partial class ExampleService : IExample
     {
     	
     	private IDBConnection _connection;
@@ -94,6 +95,11 @@ namespace Civic.Framework.WebApi.Test.Services
     				};
     
     		return null;
+        }
+    
+        public void Register(Container container)
+        {
+    		container.Register<IExample, ExampleService>(Lifestyle.Scoped);
         }
     }
     

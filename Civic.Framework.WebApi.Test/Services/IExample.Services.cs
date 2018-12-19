@@ -11,13 +11,14 @@
 
 using System.Collections.Generic;
 using System.ServiceModel;
+using SimpleInjector;
 using Civic.Framework.WebApi.Test.Entities;
 
 
 namespace Civic.Framework.WebApi.Test.Services
 {
     [ServiceContract(Namespace = "http://example.civic360.com/")]
-    public interface IExample : IExampleEntity1,IExampleEntity2,IExampleEntity3,IExampleEnvironment
+    public interface IExample : IEntityService,IExampleEntity1,IExampleEntity2,IExampleEntity3,IExampleEnvironment
     {
     }
 }

@@ -12,7 +12,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		continue;
 
     fileManager.StartNewFile(edmxFileName + entity.Name + "Controller.cs", folderName:"Controllers");
-	WriteHeader("System","System.Collections","System.Collections.Generic","System.Globalization","System.Runtime.Serialization","System.Web.Http", namespaceName + ".Services",namespaceName + ".Entities", "Civic.Framework.WebApi", entity.Name + "Entity = " + namespaceName +".Entities." + entity.Name );
+	WriteHeader("System","System.Collections","System.Collections.Generic","System.Security.Claims","System.Globalization","System.Runtime.Serialization","System.Web.Http", namespaceName + ".Services",namespaceName + ".Entities", "Civic.Framework.WebApi", entity.Name + "Entity = " + namespaceName +".Entities." + entity.Name );
     BeginNamespace(namespaceName+".Controllers", code);
 	
 	var lowerName = entity.Name.ToLower();
@@ -32,7 +32,13 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 [System.CodeDom.Compiler.GeneratedCode("STE-EF",".NET 3.5")]
 <#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=edmxFileName+entity.Name#>Controller : ApiController 
 {
-	private static readonly <#=edmxFileName#>Service _service = new <#=edmxFileName#>Service();
+	private readonly I<#=edmxFileName#> _service;
+
+	public <#=edmxFileName+entity.Name#>Controller(I<#=edmxFileName#> service)
+    {
+        service.Who = User as ClaimsPrincipal;
+		_service = service;
+    }
 
 	[Route("")]
 	public QueryMetadata<<#=entity.Name#>Entity> Get()
