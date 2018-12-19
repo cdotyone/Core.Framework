@@ -19,7 +19,8 @@ namespace Civic.Framework.WebApi
             container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
 
             // Register your types, for instance using the scoped lifestyle:
-            var assemblies = from file in new DirectoryInfo(typeof(WebActivator).Assembly.Location).GetFiles()
+            var path = Path.GetDirectoryName(typeof(WebActivator).Assembly.Location);
+            var assemblies = from file in new DirectoryInfo(path).GetFiles()
                 where file.Extension.ToLower() == ".dll"
                 select Assembly.Load(AssemblyName.GetAssemblyName(file.FullName));
             container.RegisterPackages(assemblies);
