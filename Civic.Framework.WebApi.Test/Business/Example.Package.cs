@@ -11,16 +11,17 @@
 
 using SimpleInjector.Packaging;
 using SimpleInjector;
+using Civic.Framework.WebApi.Test.Interfaces;
 
 
-namespace Civic.Framework.WebApi.Test.Services
+namespace Civic.Framework.WebApi.Test.Business
 {
     
     public class ExamplePackage : IPackage
     {
         public void RegisterServices(Container container)
         {
-    		container.Register<IExample, ExampleService>(Lifestyle.Scoped);
+    		container.Register<IExampleFacade, ExampleBusinessFacade>(Lifestyle.Scoped);
         }
     }
     

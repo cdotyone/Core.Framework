@@ -19,8 +19,9 @@ using Newtonsoft.Json;
 namespace Civic.Framework.WebApi.Test.Entities
 {
     [DataContract(Name="entity2")]
-    public partial class Entity2 : IEntity2
+    public partial class Entity2 : IEntity
     {
+    
     	[DataMember(Name="someID")]
         public int SomeID { get; set; }
     
@@ -40,72 +41,13 @@ namespace Civic.Framework.WebApi.Test.Entities
     	[DataMember(Name="OUID")]
     	public string OUID { get; set; }
     
-        public Entity2 Copy()
-        {
-            var copy = new Entity2
-                {
-    			SomeID = SomeID,
-    			ff = ff,
-    			Modified = Modified,
-    			OtherDate = OtherDate,
-    			OID = OID
-                };
-            return copy;
-        }
-    
     	public string IdentityID 
         { 
     		get {
-    			return this.SomeID.ToString();
+    			return SomeID.ToString()+"|"+ff.ToString();
     		}
     	}
     
-    	#region IEntity
-    
-        public void Add(IDBConnection connection)
-        {
-    		var service = new Services.ExampleService();
-    		service.Connection = connection;
-    		this.Add(service);
-        }
-    
-        public void Modify(IDBConnection connection)
-        {
-    		var service = new Services.ExampleService();
-    		service.Connection = connection;
-    		this.Modify(service);
-        }
-    
-        public void Remove(IDBConnection connection)
-        {
-    		var service = new Services.ExampleService();
-    		service.Connection = connection;
-    		this.Remove(service);
-        }
-    
-    	#endregion IEntity
-    
-    	#region IEntity2
-    
-        public void Add(IEntityService iservice)
-        {
-            var service = iservice as Services.ExampleService;
-            service.AddEntity2(this);
-        }
-    
-        public void Modify(IEntityService iservice)
-        {
-            var service = iservice as Services.ExampleService;
-            service.ModifyEntity2(this);
-        }
-    
-        public void Remove(IEntityService iservice)
-        {
-            var service = iservice as Services.ExampleService;
-            service.RemoveEntity2(SomeID , ff );
-        }
-    
-    	#endregion IEntity2
     }
 }
 

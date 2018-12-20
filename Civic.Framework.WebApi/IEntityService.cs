@@ -10,6 +10,7 @@ using SimpleInjector;
 
 namespace Civic.Framework.WebApi
 {
+    [Obsolete]
     public interface IEntityService
     {
         IDBConnection Connection { get; set; }

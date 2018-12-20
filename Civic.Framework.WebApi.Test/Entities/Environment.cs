@@ -19,78 +19,22 @@ using Newtonsoft.Json;
 namespace Civic.Framework.WebApi.Test.Entities
 {
     [DataContract(Name="environment")]
-    public partial class Environment : IEntity2
+    public partial class Environment : IEntity
     {
+    
     	[DataMember(Name="id")]
         public int ID { get; set; }
     
     	[DataMember(Name="name")]
         public string Name { get; set; }
     
-    
-        public Environment Copy()
-        {
-            var copy = new Environment
-                {
-    			ID = ID,
-    			Name = Name
-                };
-            return copy;
-        }
-    
     	public string IdentityID 
         { 
     		get {
-    			return this.ID.ToString();
+    			return ID.ToString();
     		}
     	}
     
-    	#region IEntity
-    
-        public void Add(IDBConnection connection)
-        {
-    		var service = new Services.ExampleService();
-    		service.Connection = connection;
-    		this.Add(service);
-        }
-    
-        public void Modify(IDBConnection connection)
-        {
-    		var service = new Services.ExampleService();
-    		service.Connection = connection;
-    		this.Modify(service);
-        }
-    
-        public void Remove(IDBConnection connection)
-        {
-    		var service = new Services.ExampleService();
-    		service.Connection = connection;
-    		this.Remove(service);
-        }
-    
-    	#endregion IEntity
-    
-    	#region IEntity2
-    
-        public void Add(IEntityService iservice)
-        {
-            var service = iservice as Services.ExampleService;
-            service.AddEnvironment(this);
-        }
-    
-        public void Modify(IEntityService iservice)
-        {
-            var service = iservice as Services.ExampleService;
-            service.ModifyEnvironment(this);
-        }
-    
-        public void Remove(IEntityService iservice)
-        {
-            var service = iservice as Services.ExampleService;
-            service.RemoveEnvironment(ID );
-        }
-    
-    	#endregion IEntity2
     }
 }
 

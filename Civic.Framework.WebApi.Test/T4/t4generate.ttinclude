@@ -5,8 +5,9 @@
 <#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\DB.ttinclude"#>
 <#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\Data.ttinclude"#>
 <#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\Entities.ttinclude"#>
+<#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\Business.ttinclude"#>
+<#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\Interfaces.ttinclude"#>
 <#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\WebAPI.ttinclude"#>
-<#@ include file="$(SolutionDir)\Civic.Framework.T4\T4\WCF.ttinclude"#>
 <#
 EmbedEdmx(Host.TemplateFile.ToString(), fileManager);
 fileManager.Process();

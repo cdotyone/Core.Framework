@@ -1,0 +1,128 @@
+﻿<#
+
+string interfacesPath = new FileInfo(Host.TemplateFile).DirectoryName.Replace("\\Models","\\Interfaces");
+
+if (!typeMapper.VerifyCaseInsensitiveTypeUniqueness(typeMapper.GetAllGlobalItems(itemCollection), inputFile))
+{
+    return "";
+}
+
+var operations = new List<string>();
+var facades = new List<string>();
+if(File.Exists(interfacesPath+"\\I"+edmxFileName+"Custom.cs")) {
+	operations.Add("I"+edmxFileName+"Custom");
+}
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+	operations.Add("IOperation"+entity.Name);
+	facades.Add("IFacade"+entity.Name);
+}
+
+fileManager.StartNewFile("I" + edmxFileName + "Repository.cs", folderName:"Interfaces");
+WriteHeader(namespaceName);
+
+BeginNamespace(namespaceName+".Interfaces", code);
+#>
+public interface I<#=edmxFileName#>Repository : <#=string.Join(",",operations)#>
+{
+}
+<#
+EndNamespace(namespaceName);
+
+
+fileManager.StartNewFile("I" + edmxFileName + "Facade.cs", folderName:"Interfaces");
+WriteHeader(namespaceName);
+
+BeginNamespace(namespaceName+".Interfaces", code);
+#>
+public interface I<#=edmxFileName#>Facade : <#=string.Join(",",facades)#>
+{
+}
+<#
+EndNamespace(namespaceName);
+
+
+// Emit Entity Types
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+	fileManager.StartNewFile("IOperation" + entity.Name + ".cs", folderName:"Interfaces");
+	WriteHeader("System", "System.Collections.Generic", "System.Security.Claims", namespaceName + ".Entities"); 
+#>
+using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
+
+<# BeginNamespace(namespaceName+".Interfaces", code); #>
+
+public interface IOperation<#=entity.Name#>
+{
+<#
+
+	var lowerName = entity.Name.ToLower();
+	var keys = new Dictionary<string,string>();
+	var keyType="";
+	var keyName="";
+    foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+        if (ef.IsKey(edmProperty)) {
+			keyName = edmProperty.Name;
+			keys[keyName] = code.Escape(edmProperty.TypeUsage.EdmType);
+			keyType = code.Escape(edmProperty.TypeUsage.EdmType);
+		}
+	}
+
+#>
+	List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy);
+
+	<#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(ClaimsPrincipal who, <# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
+
+	<#=((keyType=="Int32" || keyType=="int") && keyName=="Id"?"int":"void")#> Add<#=code.Escape(entity)#>(ClaimsPrincipal who, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>);
+
+	void Modify<#=code.Escape(entity)#>(ClaimsPrincipal who, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>);
+
+	void Remove<#=code.Escape(entity)#>(ClaimsPrincipal who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
+}
+<#
+	EndNamespace(namespaceName);
+}
+
+
+
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+	fileManager.StartNewFile("IFacade" + entity.Name + ".cs", folderName:"Interfaces");
+	WriteHeader("System", "System.Collections.Generic", "System.Security.Claims", namespaceName + ".Entities"); 
+#>
+using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
+
+<# BeginNamespace(namespaceName+".Interfaces", code); #>
+
+public interface IFacade<#=entity.Name#>
+{
+<#
+
+	var lowerName = entity.Name.ToLower();
+	var keys = new Dictionary<string,string>();
+	var keyType="";
+	var keyName="";
+    foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+        if (ef.IsKey(edmProperty)) {
+			keyName = edmProperty.Name;
+			keys[keyName] = code.Escape(edmProperty.TypeUsage.EdmType);
+			keyType = code.Escape(edmProperty.TypeUsage.EdmType);
+		}
+	}
+
+#>
+	List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy);
+
+	<#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(ClaimsPrincipal who, <# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
+
+	void Save<#=code.Escape(entity)#>(ClaimsPrincipal who, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>);
+
+	void Remove<#=code.Escape(entity)#>(ClaimsPrincipal who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
+}
+<#
+	EndNamespace(namespaceName);
+}
+
+#>

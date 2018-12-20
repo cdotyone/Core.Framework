@@ -1,0 +1,161 @@
+﻿<#
+
+string businessPath = new FileInfo(Host.TemplateFile).DirectoryName.Replace("\\Models","\\Business");
+
+fileManager.StartNewFile(edmxFileName + ".Package.cs", folderName:"Business");
+
+WriteHeader("SimpleInjector.Packaging","SimpleInjector", namespaceName + ".Interfaces");
+#>
+
+<#
+BeginNamespace(namespaceName+".Business", code);
+#>
+
+public class <#=edmxFileName#>Package : IPackage
+{
+    public void RegisterServices(Container container)
+    {
+		container.Register<I<#=edmxFileName#>Facade, <#=edmxFileName#>BusinessFacade>(Lifestyle.Scoped);
+    }
+}
+
+<#
+EndNamespace(namespaceName);
+#>
+
+<#
+// Emit Entity Types
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+	fileManager.StartNewFile(edmxFileName + "."+entity.Name+".cs", folderName:"Business");
+
+	WriteHeader("System", "System.Security.Claims", "System.Collections.Generic", "Civic.Core.Security", "Civic.Core.Audit", "Civic.Core.Logging");
+	#>
+using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
+
+<# BeginNamespace(namespaceName+".Business", code);#>
+
+public partial class <#=edmxFileName#>BusinessFacade
+{
+
+<#
+
+	var lowerName = entity.Name.ToLower();
+	var keys = new Dictionary<string,string>();
+	var keyType="";
+	var keyName="";
+    foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+        if (ef.IsKey(edmProperty)) {
+			keyName = edmProperty.Name;
+			keys[keyName] = code.Escape(edmProperty.TypeUsage.EdmType);
+			keyType = code.Escape(edmProperty.TypeUsage.EdmType);
+		}
+	}
+
+#>
+	public <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(ClaimsPrincipal who,<# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#>) 
+	{
+        using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>BusinessFacade), "Get<#=code.Escape(entity)#>")) {
+
+            if (!AuthorizationHelper.CanView("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
+
+			try {		
+				return _respository.Get<#=code.Escape(entity)#>(who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " "))#><#=Core.GetMethodParameterName(key)#><#}#>);
+			}
+			catch (Exception ex)
+			{
+				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+			}
+
+		}
+
+		return null;
+	}
+	
+	public List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy) 
+	{
+        using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>BusinessFacade), "GetPaged<#=code.Escape(entity)#>")) {
+
+            if (!AuthorizationHelper.CanView("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
+
+			try {
+				return _respository.GetPaged<#=entity.Name#>(who, skip, ref count, retCount, filterBy, orderBy);
+			}
+			catch (Exception ex)
+			{
+				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+			}
+
+		}
+
+		return null;
+	}
+
+	public void Save<#=code.Escape(entity)#>(ClaimsPrincipal who, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>) 
+	{
+        using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>BusinessFacade), "Save<#=code.Escape(entity)#>")) {
+
+            if (!AuthorizationHelper.CanModify("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
+
+			try {
+				var before = _respository.Get<#=code.Escape(entity)#>(who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + code.Escape(lowerName) + "."+ key)#><#}#>);
+				var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", before.IdentityID , before, <#=code.Escape(lowerName)#>);
+				_respository.Modify<#=code.Escape(entity)#>(who, <#=code.Escape(lowerName)#>);
+				AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);
+			}
+			catch (Exception ex)
+			{
+				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+			}
+		}
+	}
+
+	public void Remove<#=code.Escape(entity)#>(ClaimsPrincipal who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> ) 
+	{
+        using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>BusinessFacade), "Remove<#=code.Escape(entity)#>")) {
+
+            if (!AuthorizationHelper.CanRemove("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
+
+			try {
+				var before = _respository.Get<#=code.Escape(entity)#>(who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>);
+				var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", before.IdentityID , before);
+				_respository.Remove<#=code.Escape(entity)#>(who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>);
+				AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);
+			}
+			catch (Exception ex)
+			{
+				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+			}
+
+		}
+	}
+}
+<#
+	EndNamespace(namespaceName);
+
+}
+
+if (!typeMapper.VerifyCaseInsensitiveTypeUniqueness(typeMapper.GetAllGlobalItems(itemCollection), inputFile))
+{
+    return "";
+}
+
+
+fileManager.StartNewFile(edmxFileName + "BusinessFacade.cs", folderName:"Business");
+
+WriteHeader(namespaceName+".Interfaces");
+
+BeginNamespace(namespaceName+".Business", code);#>
+
+public partial class <#=edmxFileName#>BusinessFacade : I<#=edmxFileName#>Facade
+{
+	private readonly IExampleRepository _respository;
+	public <#=edmxFileName#>BusinessFacade(IExampleRepository respository) 
+	{
+		_respository = respository;
+	}
+}
+<#
+	EndNamespace(namespaceName);
+#>

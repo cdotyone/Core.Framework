@@ -140,6 +140,7 @@
     <Compile Include="..\References\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
+    <Content Include="T4\Business.ttinclude" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="nuget\Content\Models\Example.SeedData.xml" />
@@ -177,6 +178,7 @@
     <None Include="nuget\Tools\init.ps1">
       <SubType>Component</SubType>
     </None>
+    <Content Include="T4\Interfaces.ttinclude" />
     <None Include="T4\GenerateTSQL.ttinclude" />
     <None Include="T4\TemplateFilemanager.CS.ttinclude" />
   </ItemGroup>

@@ -65,7 +65,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -84,7 +83,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Controllers\Example.txt4" />
-    <Content Include="Data\Example.txt4" />
     <Content Include="SQL\all_Entity3.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
@@ -96,7 +94,6 @@
     </Content>
     <Content Include="SQL\Example.txt4" />
     <Content Include="Entities\Example.txt4" />
-    <Content Include="Services\Example.txt4" />
     <EmbeddedResource Include="Example.edmx.xml">
       <DependentUpon>Example.txt4</DependentUpon>
     </EmbeddedResource>
@@ -120,6 +117,24 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Example.Entity1.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Example.Entity2.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Example.Entity3.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Example.Environment.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Example.Package.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Business\ExampleBusinessFacade.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\ExampleEntity1Controller.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
@@ -132,19 +147,22 @@
     <Compile Include="Controllers\ExampleEnvironmentController.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleData.cs">
+    <Compile Include="Data\ExampleSqlRepository.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleData.Entity1.cs">
+    <Compile Include="Data\ExampleSqlRepository.Entity1.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleData.Entity2.cs">
+    <Compile Include="Data\ExampleSqlRepository.Entity2.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleData.Entity3.cs">
+    <Compile Include="Data\ExampleSqlRepository.Entity3.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleData.Environment.cs">
+    <Compile Include="Data\ExampleSqlRepository.Environment.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ExampleSqlRepositoryPackage.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Entities\Entity1.cs">
@@ -162,6 +180,36 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IExampleFacade.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IExampleRepository.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IFacadeEntity1.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IFacadeEntity2.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IFacadeEntity3.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IFacadeEnvironment.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IOperationEntity1.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IOperationEntity2.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IOperationEntity3.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IOperationEnvironment.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
     <Compile Include="Models\Example.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -173,36 +221,6 @@
       <DependentUpon>Example.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Example.Entity1.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Services\Example.Entity2.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Services\Example.Entity3.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Services\Example.Environment.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Services\Example.Services.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Services\IExample.Services.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Services\IExampleEntity1.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Services\IExampleEntity2.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Services\IExampleEntity3.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Services\IExampleEnvironment.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -217,6 +235,9 @@
       <LastGenOutput>Example.Designer.cs</LastGenOutput>
     </EntityDeploy>
     <Content Include="Example.txt4" />
+    <Content Include="Business\Example.txt4" />
+    <Content Include="Data\Example.txt4" />
+    <Content Include="Interfaces\Example.txt4" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
