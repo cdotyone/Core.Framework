@@ -9,7 +9,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 #>
 [DataContract(Name="<#=Core.ToLowerCamel(entity.Name)#>")]
-<#=codeStringGenerator.EntityClassOpening(entity)#> : IEntity
+<#=codeStringGenerator.EntityClassOpening(entity)#> : IEntityIdentity
 {
 
 <#
@@ -86,6 +86,14 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 #>}
 	}
 
+
+    [DataMember(Name = "_schema")]
+    public string schema { get { return "<#=apiSchemaName#>"; } }
+
+    [DataMember(Name = "_entity")]
+    public string entity { get { return "<#=entity.Name#>"; } }
+
+	public static IEntityIdentity Info = new <#=entity.Name#>();
 }
 <#
     EndNamespace(namespaceName + ".Entities");

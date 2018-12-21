@@ -19,7 +19,7 @@ using Newtonsoft.Json;
 namespace Civic.Framework.WebApi.Test.Entities
 {
     [DataContract(Name="environment")]
-    public partial class Environment : IEntity
+    public partial class Environment : IEntityIdentity
     {
     
     	[DataMember(Name="id")]
@@ -35,6 +35,14 @@ namespace Civic.Framework.WebApi.Test.Entities
     		}
     	}
     
+    
+        [DataMember(Name = "_schema")]
+        public string schema { get { return "dbo"; } }
+    
+        [DataMember(Name = "_entity")]
+        public string entity { get { return "Environment"; } }
+    
+    	public static IEntityIdentity Info = new Environment();
     }
 }
 

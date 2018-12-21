@@ -8,6 +8,7 @@ namespace Civic.Framework.WebApi
 {
     public static class AuthorizationHelper
     {
+        [Obsolete("use claims principle versions")]
         public static bool CanModify(string module, string entityname)
         {
             if (T4Config.GetCanModify(module, entityname)) return true;
@@ -20,6 +21,7 @@ namespace Civic.Framework.WebApi
             return CanModify(claimsPrincipal, module, entityname);
         }
 
+        [Obsolete("use claims principle versions")]
         public static bool CanAdd(string module, string entityname)
         {
             if (T4Config.GetCanAdd(module, entityname)) return true;
@@ -38,6 +40,7 @@ namespace Civic.Framework.WebApi
             return CanRemove(module, entityname);
         }
 
+        [Obsolete("use claims principle versions")]
         public static bool CanRemove(string module, string entityname)
         {
             if (T4Config.GetCanRemove(module, entityname)) return true;
@@ -50,6 +53,7 @@ namespace Civic.Framework.WebApi
             return CanRemove(claimsPrincipal, module, entityname);
         }
 
+        [Obsolete("use claims principle versions")]
         public static bool CanView(string module, string entityname)
         {
             if (T4Config.GetCanView(module, entityname)) return true;
@@ -62,6 +66,7 @@ namespace Civic.Framework.WebApi
             return CanView(claimsPrincipal, module, entityname);
         }
 
+        [Obsolete("use claims principle versions")]
         public static bool HasPermission(string module, string entityname, string permission, bool exact = false)
         {
             var context = HttpContext.Current;
@@ -73,14 +78,41 @@ namespace Civic.Framework.WebApi
         }
 
 
+        public static bool CanModify(ClaimsPrincipal claimsPrincipal, IEntityIdentity entity)
+        {
+            return CanModify(claimsPrincipal, entity.schema,entity.entity);
+        }
+
+        public static bool CanAdd(ClaimsPrincipal claimsPrincipal, IEntityIdentity entity)
+        {
+            return CanModify(claimsPrincipal, entity.schema, entity.entity);
+        }
+
+        public static bool CanRemove(ClaimsPrincipal claimsPrincipal, IEntityIdentity entity)
+        {
+            return CanModify(claimsPrincipal, entity.schema, entity.entity);
+        }
+
+        public static bool CanView(ClaimsPrincipal claimsPrincipal, IEntityIdentity entity)
+        {
+            return CanModify(claimsPrincipal, entity.schema, entity.entity);
+        }
+
+        public static bool HasPermission(ClaimsPrincipal claimsPrincipal, IEntityIdentity entity, string permission, bool exact = false)
+        {
+            return HasPermission(claimsPrincipal, entity.schema, entity.entity, permission, exact);
+        }
+
+
         public static bool CanModify(ClaimsPrincipal claimsPrincipal, string module, string entityname)
         {
             if (T4Config.GetCanModify(module, entityname)) return true;
             if (claimsPrincipal != null)
             {
+                var prefix = module.ToUpperInvariant() + "." + entityname.ToUpperInvariant();
                 return
-                    claimsPrincipal.IsInRole(module.ToUpperInvariant() + "." + entityname.ToUpperInvariant() + "_M") ||
-                    claimsPrincipal.IsInRole(module.ToUpperInvariant() + "." + entityname.ToUpperInvariant() + "_F");
+                    claimsPrincipal.IsInRole(prefix + "_M") ||
+                    claimsPrincipal.IsInRole(prefix + "_F");
             }
 
             return false;
@@ -91,9 +123,10 @@ namespace Civic.Framework.WebApi
             if (T4Config.GetCanAdd(module, entityname)) return true;
             if (claimsPrincipal != null)
             {
+                var prefix = module.ToUpperInvariant() + "." + entityname.ToUpperInvariant();
                 return
-                    claimsPrincipal.IsInRole(module.ToUpperInvariant() + "." + entityname.ToUpperInvariant() + "_A") ||
-                    claimsPrincipal.IsInRole(module.ToUpperInvariant() + "." + entityname.ToUpperInvariant() + "_F");
+                    claimsPrincipal.IsInRole(prefix + "_A") ||
+                    claimsPrincipal.IsInRole(prefix + "_F");
             }
 
             return false;
@@ -104,9 +137,10 @@ namespace Civic.Framework.WebApi
             if (T4Config.GetCanRemove(module, entityname)) return true;
             if (claimsPrincipal != null)
             {
+                var prefix = module.ToUpperInvariant() + "." + entityname.ToUpperInvariant();
                 return
-                    claimsPrincipal.IsInRole(module.ToUpperInvariant() + "." + entityname.ToUpperInvariant() + "_D") ||
-                    claimsPrincipal.IsInRole(module.ToUpperInvariant() + "." + entityname.ToUpperInvariant() + "_F");
+                    claimsPrincipal.IsInRole(prefix + "_D") ||
+                    claimsPrincipal.IsInRole(prefix + "_F");
             }
 
             return false;
@@ -118,9 +152,10 @@ namespace Civic.Framework.WebApi
 
             if (claimsPrincipal != null)
             {
+                var prefix = module.ToUpperInvariant() + "." + entityname.ToUpperInvariant();
                 return
-                    claimsPrincipal.IsInRole(module.ToUpperInvariant() + "." + entityname.ToUpperInvariant() + "_V") ||
-                    claimsPrincipal.IsInRole(module.ToUpperInvariant() + "." + entityname.ToUpperInvariant() + "_F");
+                    claimsPrincipal.IsInRole(prefix + "_V") ||
+                    claimsPrincipal.IsInRole(prefix + "_F");
             }
 
             return false;
@@ -130,9 +165,10 @@ namespace Civic.Framework.WebApi
         {
             if (claimsPrincipal != null)
             {
+                var prefix = module.ToUpperInvariant() + "." + entityname.ToUpperInvariant();
                 return
-                    claimsPrincipal.IsInRole(module.ToUpperInvariant() + "." + entityname.ToUpperInvariant() + "_" + permission.ToUpperInvariant()) ||
-                    (!exact && claimsPrincipal.IsInRole(module.ToUpperInvariant() + "." + entityname.ToUpperInvariant() + "_F"));
+                    claimsPrincipal.IsInRole(prefix + "_" + permission.ToUpperInvariant()) ||
+                    (!exact && claimsPrincipal.IsInRole(prefix + "_F"));
             }
 
             return false;

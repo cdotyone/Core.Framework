@@ -28,7 +28,7 @@ namespace Civic.Framework.WebApi.Test.Business
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "GetEnvironment")) {
     
-                if (!AuthorizationHelper.CanView("dbo", "environment")) throw new NotImplementedException();
+                if (!AuthorizationHelper.CanView(who, EnvironmentEntity.Info)) throw new NotImplementedException();
     
     			try {		
     				return _respository.GetEnvironment(who,  id);
@@ -47,7 +47,7 @@ namespace Civic.Framework.WebApi.Test.Business
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "GetPagedEnvironment")) {
     
-                if (!AuthorizationHelper.CanView("dbo", "environment")) throw new NotImplementedException();
+                if (!AuthorizationHelper.CanView(who, EnvironmentEntity.Info)) throw new NotImplementedException();
     
     			try {
     				return _respository.GetPagedEnvironment(who, skip, ref count, retCount, filterBy, orderBy);
@@ -62,30 +62,44 @@ namespace Civic.Framework.WebApi.Test.Business
     		return null;
     	}
     
-    	public void SaveEnvironment(ClaimsPrincipal who, EnvironmentEntity environment) 
+    	public void SaveEnvironment(ClaimsPrincipal who, EnvironmentEntity entity) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "SaveEnvironment")) {
+        
+                if (!AuthorizationHelper.CanModify(who, entity) && !AuthorizationHelper.CanAdd(who, entity)) throw new UnauthorizedAccessException();
+        
+        		try {
+        			var before = _respository.GetEnvironment(who,  entity.ID);
     
-                if (!AuthorizationHelper.CanModify("dbo", "environment")) throw new NotImplementedException();
+    			    if (before == null)
+    			    {
+                        if(!AuthorizationHelper.CanAdd(who, entity)) throw new UnauthorizedAccessException();
     
-    			try {
-    				var before = _respository.GetEnvironment(who,  environment.ID);
-    				var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.IdentityID , before, environment);
-    				_respository.ModifyEnvironment(who, environment);
-    				AuditManager.MarkSuccessFul("dbo", logid);
-    			}
-    			catch (Exception ex)
-    			{
-    				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-    			}
-    		}
+    			        var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", entity.IdentityID, entity);
+                        _respository.AddEntity1(who, entity);
+    			        AuditManager.MarkSuccessFul("dbo", logid);
+                    }
+    			    else
+    			    {
+    			        if (!AuthorizationHelper.CanModify(who, entity)) throw new UnauthorizedAccessException();
+    
+    			        var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.IdentityID , before, entity);
+    			        _respository.ModifyEntity1(who, entity);
+    			        AuditManager.MarkSuccessFul("dbo", logid);
+                    }
+        		}
+        		catch (Exception ex)
+        		{
+        			if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+        		}
+        	}
     	}
     
     	public void RemoveEnvironment(ClaimsPrincipal who,  Int32 id ) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "RemoveEnvironment")) {
     
-                if (!AuthorizationHelper.CanRemove("dbo", "environment")) throw new NotImplementedException();
+                if (!AuthorizationHelper.CanRemove(who, EnvironmentEntity.Info)) throw new NotImplementedException();
     
     			try {
     				var before = _respository.GetEnvironment(who,  id);

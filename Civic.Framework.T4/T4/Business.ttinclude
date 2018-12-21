@@ -58,7 +58,7 @@ public partial class <#=edmxFileName#>BusinessFacade
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>BusinessFacade), "Get<#=code.Escape(entity)#>")) {
 
-            if (!AuthorizationHelper.CanView("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
+            if (!AuthorizationHelper.CanView(who, <#=code.Escape(entity)#>Entity.Info)) throw new UnauthorizedAccessException();
 
 			try {		
 				return _respository.Get<#=code.Escape(entity)#>(who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " "))#><#=Core.GetMethodParameterName(key)#><#}#>);
@@ -77,7 +77,7 @@ public partial class <#=edmxFileName#>BusinessFacade
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>BusinessFacade), "GetPaged<#=code.Escape(entity)#>")) {
 
-            if (!AuthorizationHelper.CanView("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
+            if (!AuthorizationHelper.CanView(who, <#=code.Escape(entity)#>Entity.Info)) throw new UnauthorizedAccessException();
 
 			try {
 				return _respository.GetPaged<#=entity.Name#>(who, skip, ref count, retCount, filterBy, orderBy);
@@ -92,30 +92,44 @@ public partial class <#=edmxFileName#>BusinessFacade
 		return null;
 	}
 
-	public void Save<#=code.Escape(entity)#>(ClaimsPrincipal who, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>) 
+	public void Save<#=code.Escape(entity)#>(ClaimsPrincipal who, <#=code.Escape(entity)#>Entity entity) 
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>BusinessFacade), "Save<#=code.Escape(entity)#>")) {
+    
+            if (!AuthorizationHelper.CanModify(who, entity) && !AuthorizationHelper.CanAdd(who, entity)) throw new UnauthorizedAccessException();
+    
+    		try {
+    			var before = _respository.Get<#=code.Escape(entity)#>(who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + "entity."+ key)#><#}#>);
 
-            if (!AuthorizationHelper.CanModify("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
+			    if (before == null)
+			    {
+                    if(!AuthorizationHelper.CanAdd(who, entity)) throw new UnauthorizedAccessException();
 
-			try {
-				var before = _respository.Get<#=code.Escape(entity)#>(who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + code.Escape(lowerName) + "."+ key)#><#}#>);
-				var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", before.IdentityID , before, <#=code.Escape(lowerName)#>);
-				_respository.Modify<#=code.Escape(entity)#>(who, <#=code.Escape(lowerName)#>);
-				AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);
-			}
-			catch (Exception ex)
-			{
-				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-			}
-		}
+			        var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", entity.IdentityID, entity);
+                    _respository.AddEntity1(who, entity);
+			        AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);
+                }
+			    else
+			    {
+			        if (!AuthorizationHelper.CanModify(who, entity)) throw new UnauthorizedAccessException();
+
+			        var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", before.IdentityID , before, entity);
+			        _respository.ModifyEntity1(who, entity);
+			        AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);
+                }
+    		}
+    		catch (Exception ex)
+    		{
+    			if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+    		}
+    	}
 	}
 
 	public void Remove<#=code.Escape(entity)#>(ClaimsPrincipal who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> ) 
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>BusinessFacade), "Remove<#=code.Escape(entity)#>")) {
 
-            if (!AuthorizationHelper.CanRemove("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
+            if (!AuthorizationHelper.CanRemove(who, <#=code.Escape(entity)#>Entity.Info)) throw new UnauthorizedAccessException();
 
 			try {
 				var before = _respository.Get<#=code.Escape(entity)#>(who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>);

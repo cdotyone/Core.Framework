@@ -28,7 +28,7 @@ namespace Civic.Framework.WebApi.Test.Business
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "GetEntity3")) {
     
-                if (!AuthorizationHelper.CanView("dbo", "entity3")) throw new NotImplementedException();
+                if (!AuthorizationHelper.CanView(who, Entity3Entity.Info)) throw new NotImplementedException();
     
     			try {		
     				return _respository.GetEntity3(who,  someUID);
@@ -47,7 +47,7 @@ namespace Civic.Framework.WebApi.Test.Business
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "GetPagedEntity3")) {
     
-                if (!AuthorizationHelper.CanView("dbo", "entity3")) throw new NotImplementedException();
+                if (!AuthorizationHelper.CanView(who, Entity3Entity.Info)) throw new NotImplementedException();
     
     			try {
     				return _respository.GetPagedEntity3(who, skip, ref count, retCount, filterBy, orderBy);
@@ -62,30 +62,44 @@ namespace Civic.Framework.WebApi.Test.Business
     		return null;
     	}
     
-    	public void SaveEntity3(ClaimsPrincipal who, Entity3Entity entity3) 
+    	public void SaveEntity3(ClaimsPrincipal who, Entity3Entity entity) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "SaveEntity3")) {
+        
+                if (!AuthorizationHelper.CanModify(who, entity) && !AuthorizationHelper.CanAdd(who, entity)) throw new UnauthorizedAccessException();
+        
+        		try {
+        			var before = _respository.GetEntity3(who,  entity.SomeUID);
     
-                if (!AuthorizationHelper.CanModify("dbo", "entity3")) throw new NotImplementedException();
+    			    if (before == null)
+    			    {
+                        if(!AuthorizationHelper.CanAdd(who, entity)) throw new UnauthorizedAccessException();
     
-    			try {
-    				var before = _respository.GetEntity3(who,  entity3.SomeUID);
-    				var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.IdentityID , before, entity3);
-    				_respository.ModifyEntity3(who, entity3);
-    				AuditManager.MarkSuccessFul("dbo", logid);
-    			}
-    			catch (Exception ex)
-    			{
-    				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-    			}
-    		}
+    			        var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", entity.IdentityID, entity);
+                        _respository.AddEntity1(who, entity);
+    			        AuditManager.MarkSuccessFul("dbo", logid);
+                    }
+    			    else
+    			    {
+    			        if (!AuthorizationHelper.CanModify(who, entity)) throw new UnauthorizedAccessException();
+    
+    			        var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.IdentityID , before, entity);
+    			        _respository.ModifyEntity1(who, entity);
+    			        AuditManager.MarkSuccessFul("dbo", logid);
+                    }
+        		}
+        		catch (Exception ex)
+        		{
+        			if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+        		}
+        	}
     	}
     
     	public void RemoveEntity3(ClaimsPrincipal who,  String someUID ) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "RemoveEntity3")) {
     
-                if (!AuthorizationHelper.CanRemove("dbo", "entity3")) throw new NotImplementedException();
+                if (!AuthorizationHelper.CanRemove(who, Entity3Entity.Info)) throw new NotImplementedException();
     
     			try {
     				var before = _respository.GetEntity3(who,  someUID);
