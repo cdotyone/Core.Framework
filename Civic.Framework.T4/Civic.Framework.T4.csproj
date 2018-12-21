@@ -140,35 +140,35 @@
     <Compile Include="..\References\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
-    <Content Include="T4\Business.ttinclude" />
+    <Content Include="T4\3.0\Business.ttinclude" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="nuget\Content\Models\Example.SeedData.xml" />
-    <Content Include="T4\Core.ttinclude" />
+    <Content Include="T4\3.0\Core.ttinclude" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="T4\Data.ttinclude" />
+    <Content Include="T4\3.0\Data.ttinclude" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="T4\DB.ttinclude" />
+    <Content Include="T4\3.0\DB.ttinclude" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="T4\DBProcs.ttinclude" />
+    <Content Include="T4\3.0\DBProcs.ttinclude" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="T4\DBTables.ttinclude" />
+    <Content Include="T4\3.0\DBTables.ttinclude" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="T4\Entities.ttinclude" />
+    <Content Include="T4\3.0\Entities.ttinclude" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="T4\MVC.ttinclude" />
+    <Content Include="T4\3.0\MVC.ttinclude" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="T4\WCF.ttinclude" />
+    <Content Include="T4\3.0\WCF.ttinclude" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="T4\WebAPI.ttinclude" />
+    <Content Include="T4\3.0\WebAPI.ttinclude" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nuget\Content\Models\Example.edmx" />
@@ -178,9 +178,20 @@
     <None Include="nuget\Tools\init.ps1">
       <SubType>Component</SubType>
     </None>
-    <Content Include="T4\Interfaces.ttinclude" />
-    <None Include="T4\GenerateTSQL.ttinclude" />
-    <None Include="T4\TemplateFilemanager.CS.ttinclude" />
+    <Content Include="T4\3.0\Interfaces.ttinclude" />
+    <None Include="T4\2.0\Core.ttinclude" />
+    <None Include="T4\2.0\Data.ttinclude" />
+    <None Include="T4\2.0\DB.ttinclude" />
+    <None Include="T4\2.0\DBProcs.ttinclude" />
+    <None Include="T4\2.0\DBTables.ttinclude" />
+    <None Include="T4\2.0\Entities.ttinclude" />
+    <None Include="T4\2.0\GenerateTSQL.ttinclude" />
+    <None Include="T4\2.0\MVC.ttinclude" />
+    <None Include="T4\2.0\TemplateFilemanager.CS.ttinclude" />
+    <None Include="T4\2.0\WCF.ttinclude" />
+    <None Include="T4\2.0\WebAPI.ttinclude" />
+    <None Include="T4\3.0\GenerateTSQL.ttinclude" />
+    <None Include="T4\3.0\TemplateFilemanager.CS.ttinclude" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -1,0 +1,266 @@
+﻿<#
+
+fileManager.StartNewFile("Controllers." + edmxFileName + "Controllers.cs");
+
+WriteHeader(fileManager,"System.Collections.Generic");
+
+// Emit Entity Types
+BeginNamespace(namespaceName+".Controllers", code);
+#>
+public static class <#=edmxFileName#>Controllers
+{
+	public static EntityRoute[] GetEntityRoutes() 
+	{
+		var list = new List<EntityRoute>();
+<#
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+#>		list.Add(new EntityRoute { EntityName="<#=entity.Name#>",PluralName="<#=entity.Name#>", Controller = new <#=entity.Name#>Controller() });
+<#
+}
+#>
+		return list.ToArray();
+	}
+}
+<#
+EndNamespace(namespaceName);
+fileManager.EndBlock();
+
+// Emit Entity Types
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+    fileManager.StartNewFile("Controllers." + entity.Name + "Controller.cs");
+	WriteHeader(fileManager,"System.Web.Mvc",namespaceName + ".Services",namespaceName + ".Entities", namespaceName + ".Framework");
+    BeginNamespace(namespaceName+".Controllers", code);
+#>
+[System.CodeDom.Compiler.GeneratedCode("STE-EF",".NET 3.5")]
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=entity.Name#>Controller : RouteMapperController
+{
+	private static readonly <#=edmxFileName#>Service _service = new <#=edmxFileName#>Service();
+	
+	<# if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GETPAGED")) { #>
+	// GET /api/values
+	public ActionResult List()
+	{
+		int count = 0;
+		return this.Auto(_service.GetPaged<#=code.Escape(entity)#>(0, 100, ref count, null)); 
+	}
+
+	// GET /api/values
+	public ActionResult ListWithFill(string fillProperties)
+	{
+		int count = 0;
+		return this.Auto(_service.GetPaged<#=code.Escape(entity)#>(0, 100, ref count, fillProperties)); 
+	}
+	<# } #>
+
+	<# if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("ADD")) { #>
+	// POST /api/values
+	public ActionResult Post(<#=code.Escape(entity)#> value)
+	{
+		var id = _service.Add<#=code.Escape(entity)#>(value);
+		return GetById(id);
+	}
+	<# } #>
+
+	<# if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GETBY")) { #>
+	// GET /api/values/5
+	public ActionResult GetById(int id)
+	{
+		return this.Auto(_service.Get<#=code.Escape(entity)#>ById(id, null)) ;
+	}
+
+	// GET /api/values/5
+	public ActionResult GetByIdWithFill(int id, string fillProperties)
+	{
+		return this.Auto(_service.Get<#=code.Escape(entity)#>ById(id, fillProperties)) ;
+	}
+	<# } #>
+
+	<# if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("MODIFY")) { #>
+	// PUT /api/values/5
+	public void Put(int id, <#=code.Escape(entity)#> value)
+	{
+		value.Id=id;
+		_service.Modify<#=code.Escape(entity)#>(value);
+	}
+	<# } #>
+
+	<# if(entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("REMOVE")) { #>
+	// DELETE /api/values/5
+	public void Delete(int id)
+	{
+		_service.Remove<#=code.Escape(entity)#>(id);
+	}
+	<# } #>
+
+}
+<#
+    EndNamespace(namespaceName);
+	fileManager.EndBlock();
+}
+
+foreach (var complex in typeMapper.GetItemsToGenerate<ComplexType>(itemCollection))
+{
+    fileManager.StartNewFile(complex.Name + ".cs");
+    BeginNamespace(namespaceName, code);
+#>
+[System.CodeDom.Compiler.GeneratedCode("STE-EF",".NET 3.5")]
+<#=Accessibility.ForType(complex)#> partial class <#=code.Escape(complex)#> : INotifyComplexPropertyChanging, INotifyPropertyChanged
+{
+<#
+    region.Begin("Primitive Properties");
+
+    foreach(EdmProperty edmProperty in complex.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == complex))
+    {
+#>
+
+    [DataMember]
+    <#=Accessibility.ForProperty(edmProperty)#> <#=code.Escape(edmProperty.TypeUsage)#> <#=code.Escape(edmProperty)#>
+    {
+        <#=code.SpaceAfter(Accessibility.ForGetter(edmProperty))#>get { return <#=code.FieldName(edmProperty)#>; }
+        <#=code.SpaceAfter(Accessibility.ForSetter(edmProperty))#>set
+        {
+            if (<#=code.FieldName(edmProperty)#> != value)
+            {
+                OnComplexPropertyChanging();
+                <#=code.FieldName(edmProperty)#> = value;
+                OnPropertyChanged("<#=edmProperty.Name#>");
+            }
+        }
+    }
+    private <#=code.Escape(edmProperty.TypeUsage)#> <#=code.FieldName(edmProperty)#>;
+<#
+    }
+
+    region.End();
+
+    region.Begin("Complex Properties");
+
+    foreach(EdmProperty edmProperty in complex.Properties.Where(p => p.TypeUsage.EdmType is ComplexType && p.DeclaringType == complex))
+    {
+#>
+
+    [DataMember]
+    <#=Accessibility.ForProperty(edmProperty)#> <#=code.Escape(edmProperty.TypeUsage)#> <#=code.Escape(edmProperty)#>
+    {
+        <#=code.SpaceAfter(Accessibility.ForGetter(edmProperty))#>get
+        {
+            if (!<#=InitializedTrackingField(edmProperty, code)#> && <#=code.FieldName(edmProperty)#> == null)
+            {
+                <#=code.FieldName(edmProperty)#> = new <#=code.Escape(edmProperty.TypeUsage)#>();
+                ((INotifyComplexPropertyChanging)<#=code.FieldName(edmProperty)#>).ComplexPropertyChanging += HandleComplexPropertyChanging;
+            }
+            <#=InitializedTrackingField(edmProperty, code)#> = true;
+            return <#=code.FieldName(edmProperty)#>;
+        }
+        <#=code.SpaceAfter(Accessibility.ForSetter(edmProperty))#>set
+        {
+            <#=InitializedTrackingField(edmProperty, code)#> = true;
+            if (!Equals(<#=code.FieldName(edmProperty)#>, value))
+            {
+                if (<#=code.FieldName(edmProperty)#> != null)
+                {
+                    ((INotifyComplexPropertyChanging)<#=code.FieldName(edmProperty)#>).ComplexPropertyChanging -= HandleComplexPropertyChanging;
+                }
+
+                OnComplexPropertyChanging();
+                <#=code.FieldName(edmProperty)#> = value;
+                OnPropertyChanged("<#=edmProperty.Name#>");
+
+                if (value != null)
+                {
+                    ((INotifyComplexPropertyChanging)value).ComplexPropertyChanging += HandleComplexPropertyChanging;
+                }
+            }
+        }
+    }
+    private <#=code.Escape(edmProperty.TypeUsage)#> <#=code.FieldName(edmProperty)#>;
+    private bool <#=InitializedTrackingField(edmProperty, code)#>;
+<#
+    }
+
+    region.End();
+
+    region.Begin("ChangeTracking");
+#>
+
+    private void OnComplexPropertyChanging()
+    {
+        if (_complexPropertyChanging != null)
+        {
+            _complexPropertyChanging(this, new EventArgs());
+        }
+    }
+
+    event EventHandler INotifyComplexPropertyChanging.ComplexPropertyChanging { add { _complexPropertyChanging += value; } remove { _complexPropertyChanging -= value; } }
+    private event EventHandler _complexPropertyChanging;
+
+    private void OnPropertyChanged(String propertyName)
+    {
+        if (_propertyChanged != null)
+        {
+            _propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged { add { _propertyChanged += value; } remove { _propertyChanged -= value; } }
+    private event PropertyChangedEventHandler _propertyChanged;
+<#
+    if(complex.Properties.Where(p => p.TypeUsage.EdmType is ComplexType && p.DeclaringType == complex).Count() > 0)
+    {
+#>
+
+    private void HandleComplexPropertyChanging(object sender, EventArgs args)
+    {
+        // Bubble the event to all listeners because something changed in a nested complex property
+        OnComplexPropertyChanging();
+    }
+<#
+    }
+#>
+
+    public static void RecordComplexOriginalValues(String parentPropertyName, <#=code.Escape(complex)#> complexObject, ObjectChangeTracker changeTracker)
+    {
+        if (String.IsNullOrEmpty(parentPropertyName))
+        {
+            throw new ArgumentException("String parameter cannot be null or empty.", "parentPropertyName");
+        }
+
+        if (changeTracker == null)
+        {
+            throw new ArgumentNullException("changeTracker");
+        }
+<#
+        foreach(EdmProperty complexProperty in complex.Properties)
+        {
+            if (complexProperty.TypeUsage.EdmType is ComplexType)
+            {
+#>
+        <#=code.Escape(complexProperty.TypeUsage)#>.RecordComplexOriginalValues(String.Format(CultureInfo.InvariantCulture, "{0}.<#=complexProperty.Name#>", parentPropertyName), complexObject == null ? null : complexObject.<#=code.Escape(complexProperty)#>, changeTracker);
+<#
+            }
+            else
+            {
+#>
+        changeTracker.RecordOriginalValue(String.Format(CultureInfo.InvariantCulture, "{0}.<#=complexProperty.Name#>", parentPropertyName), complexObject == null ? null : (object)complexObject.<#=code.Escape(complexProperty)#>);
+<#
+            }
+        }
+#>
+    }
+<#
+    region.End();
+#>
+}
+<#
+    EndNamespace(namespaceName);
+	fileManager.EndBlock();
+}
+
+if (!typeMapper.VerifyCaseInsensitiveTypeUniqueness(typeMapper.GetAllGlobalItems(itemCollection), inputFile))
+{
+    return "";
+}
+
+#>

@@ -1,0 +1,183 @@
+﻿<#
+
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+    fileManager.StartNewFile(entity.Name + ".cs", folderName:"Entities");
+	WriteHeader("System","System.Collections.Generic","System.Runtime.Serialization","Civic.Core.Data","Civic.Framework.WebApi", "Newtonsoft.Json");
+
+    BeginNamespace(namespaceName + ".Entities", code);
+
+#>
+[DataContract(Name="<#=Core.ToLowerCamel(entity.Name)#>")]
+<#=codeStringGenerator.EntityClassOpening(entity)#> : IEntityIdentity
+{
+
+<#
+    var propertiesWithDefaultValues = typeMapper.GetPropertiesWithDefaultValues(entity);
+
+    if (propertiesWithDefaultValues.Any())
+    {
+#>
+    public <#=code.Escape(entity)#>()
+    {
+<#
+        foreach (var edmProperty in propertiesWithDefaultValues)
+        {
+#>
+        this.<#=code.Escape(edmProperty)#> = <#=typeMapper.CreateLiteral(edmProperty.DefaultValue)#>;
+<#
+        }
+#>
+    }
+
+<#
+    }
+
+    var simpleProperties = typeMapper.GetSimpleProperties(entity);
+    if (simpleProperties.Any())
+    {
+		var keyUID = simpleProperties.Where((sprop) => sprop.Name.ToLower().EndsWith("uid") && ef.IsKey(sprop)).FirstOrDefault();
+		var matchID = simpleProperties.Where((sprop) => keyUID!=null && sprop.Name.ToLower() == keyUID.Name.ToLower().Substring(0,keyUID.Name.Length-3)+"id").FirstOrDefault();
+
+        foreach (var edmProperty in simpleProperties)
+        {
+#>
+	[DataMember(Name="<#=Core.ToLowerCamel(edmProperty.Name).Replace("iD","id").Replace("oID","oid").Replace("oUID","ouid").Replace("uID","uid")#>")]
+<#
+	if((keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name) || edmProperty.Name=="OID" && Core.ToLowerCamel(entity.Name)!="orgUnit") {#>
+	[JsonIgnore]
+<#}
+#>    <#=codeStringGenerator.Property(edmProperty)#>
+
+<#
+	if(edmProperty.Name=="OID" && Core.ToLowerCamel(entity.Name)!="orgUnit") {#>
+	[DataMember(Name="OUID")]
+	public string OUID { get; set; }
+
+<#}
+
+        }
+    }
+
+#>
+	public string IdentityID 
+    { 
+		get {
+<#
+
+		var keys = new List<string>();
+		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+		{
+			if (ef.IsKey(edmProperty)) {
+				keys.Add(code.Escape(edmProperty.Name));
+			}
+		}
+
+
+
+		if(keys.Count==0) {
+		#>
+					return null;
+		<#			
+		} else {#>
+			return <#=string.Join(".ToString()+\"|\"+",keys)#>.ToString();
+		<#
+		}
+#>}
+	}
+
+
+    [DataMember(Name = "_schema")]
+    public string schema { get { return "<#=apiSchemaName#>"; } }
+
+    [DataMember(Name = "_entity")]
+    public string entity { get { return "<#=entity.Name#>"; } }
+
+	public static IEntityIdentity Info = new <#=entity.Name#>();
+}
+<#
+    EndNamespace(namespaceName + ".Entities");
+}
+
+foreach (var complex in typeMapper.GetItemsToGenerate<ComplexType>(itemCollection))
+{
+    fileManager.StartNewFile(complex.Name + ".cs", folderName:"Entities");
+    BeginNamespace(namespaceName + ".Entities", code);
+#>
+<#=codeStringGenerator.UsingDirectives(inHeader: false, includeCollections: false)#>
+<#=Accessibility.ForType(complex)#> partial class <#=code.Escape(complex)#>
+{
+<#
+    var propertiesWithDefaultValues = typeMapper.GetPropertiesWithDefaultValues(complex);
+
+    if (propertiesWithDefaultValues.Any())
+    {
+#>
+    public <#=code.Escape(complex)#>()
+    {
+<#
+        foreach (var edmProperty in propertiesWithDefaultValues)
+        {
+#>
+        this.<#=code.Escape(edmProperty)#> = <#=typeMapper.CreateLiteral(edmProperty.DefaultValue)#>;
+<#
+        }
+#>
+    }
+
+<#
+    }
+
+    var simpleProperties = typeMapper.GetSimpleProperties(complex);
+    if (simpleProperties.Any())
+    {
+        foreach(var edmProperty in simpleProperties)
+        {
+#>
+    <#=codeStringGenerator.Property(edmProperty).Replace("System.DateTime", "System.DateTime?") #>
+<#
+        }
+    }
+#>
+}
+<#
+    EndNamespace(namespaceName + ".Entities");
+}
+
+foreach (var enumType in typeMapper.GetEnumItemsToGenerate(itemCollection))
+{
+    fileManager.StartNewFile(enumType.Name + ".cs", folderName:"Entities");
+    BeginNamespace(namespaceName + ".Entities", code);
+#>
+<#=codeStringGenerator.UsingDirectives(inHeader: false, includeCollections: false)#>
+<#
+    if (typeMapper.EnumIsFlags(enumType))
+    {
+#>
+[Flags]
+<#
+    }
+#>
+<#=codeStringGenerator.EnumOpening(enumType)#>
+{
+<#
+    var foundOne = false;
+    
+    foreach (MetadataItem member in typeMapper.GetEnumMembers(enumType))
+    {
+        foundOne = true;
+#>
+    <#=code.Escape(typeMapper.GetEnumMemberName(member))#> = <#=typeMapper.GetEnumMemberValue(member)#>,
+<#
+    }
+
+    if (foundOne)
+    {
+        this.GenerationEnvironment.Remove(this.GenerationEnvironment.Length - 3, 1);
+    }
+#>
+}
+<#
+    EndNamespace(namespaceName + ".Entities");
+}
+#>

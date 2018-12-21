@@ -130,16 +130,18 @@
     <Compile Include="..\References\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="1.0\IEntity.cs" />
+    <Compile Include="2.0\IEntity2.cs" />
     <Compile Include="AuthorizationHelper.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Configuration\T4Config.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IDataConnectionProvider.cs" />
-    <Compile Include="IEntityIdentity.cs" />
+    <Compile Include="3.0\IEntityIdentity.cs" />
     <Compile Include="IEntityRouteManager.cs" />
-    <Compile Include="IEntityBusinessFacade.cs" />
-    <Compile Include="IEntityService.cs" />
+    <Compile Include="3.0\IEntityBusinessFacade.cs" />
+    <Compile Include="2.0\IEntityService.cs" />
     <Compile Include="IQueryMetadata.cs" />
     <Compile Include="EntityRoute.cs" />
     <Compile Include="Logging\WebApiTransmission.cs" />
