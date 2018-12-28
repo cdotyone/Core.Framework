@@ -18,7 +18,7 @@ namespace Civic.Framework.WebApi
     {
         public void RegisterServices(Container container)
         {
-    		container.Register<IRequestEntityFactory, RequestEntityFactory>(Lifestyle.Singleton);  
+    		container.Register<IEntityCreateFactory, EntityCreateFactory>(Lifestyle.Singleton);  
         }
     }
     

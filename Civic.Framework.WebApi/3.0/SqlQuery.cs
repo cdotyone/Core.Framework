@@ -51,7 +51,7 @@ namespace Civic.Framework.WebApi
                         }
 
                         var entity = new Entity();
-                        var factory =container.GetInstance<IRequestEntityFactory>();
+                        var factory =container.GetInstance<IEntityCreateFactory>();
 
                         command.ExecuteReader(dataReader =>
                         {
@@ -104,7 +104,7 @@ namespace Civic.Framework.WebApi
 
                         var entity = new Entity();
 
-                        var factory = container.GetInstance<IRequestEntityFactory>();
+                        var factory = container.GetInstance<IEntityCreateFactory>();
 
                         command.ExecuteReader(dataReader =>
                         {                            

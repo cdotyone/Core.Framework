@@ -115,6 +115,24 @@
     <Content Include="SQL\Example.Procs.sql">
       <DependentUpon>Example.txt4</DependentUpon>
     </Content>
+    <Content Include="SQL\Example.Views.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\view_Entity1.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\view_Entity2.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\view_Entity3.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\view_Environment.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
+    <Content Include="SQL\view_InstallationEnvironment.sql">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

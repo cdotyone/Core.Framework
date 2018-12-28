@@ -24,7 +24,7 @@ namespace Civic.Framework.WebApi.Test.Business
         {
     		container.Register<IExampleFacade, ExampleBusinessFacade>(Lifestyle.Scoped);
     
-    		var factory = new RequestEntityFactory(container);
+    		var factory = new EntityCreateFactory(container);
     
     		factory.Register<Entity1>(Entity1.Info);
     		factory.Register<Entity2>(Entity2.Info);

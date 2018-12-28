@@ -17,7 +17,7 @@ public class <#=edmxFileName#>Package : IPackage
     {
 		container.Register<I<#=edmxFileName#>Facade, <#=edmxFileName#>BusinessFacade>(Lifestyle.Scoped);
 
-		var factory = new RequestEntityFactory(container);
+		var factory = new EntityCreateFactory(container);
 
 <#		foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 		{

@@ -134,8 +134,9 @@
     <Compile Include="2.0\AuthorizationHelper.cs" />
     <Compile Include="2.0\IEntity2.cs" />
     <Compile Include="3.0\AuthorizationHelper.cs" />
+    <Compile Include="3.0\IEntityEvent.cs" />
     <Compile Include="3.0\WebApiPackage.cs" />
-    <Compile Include="3.0\RequestEntityFactory.cs" />
+    <Compile Include="3.0\EntityCreateFactory.cs" />
     <Compile Include="3.0\Entity.cs" />
     <Compile Include="3.0\EntityConverter.cs" />
     <Compile Include="3.0\EntityPropertyInfo.cs" />
@@ -143,7 +144,7 @@
     <Compile Include="3.0\IEntityInfo.cs" />
     <Compile Include="3.0\IEntityPropertyInfo.cs" />
     <Compile Include="1.0\AuthorizationHelper.cs" />
-    <Compile Include="3.0\IRequestEntityFactory.cs" />
+    <Compile Include="3.0\IEntityCreateFactory.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Configuration\T4Config.cs" />
     <Compile Include="Constants.cs" />
