@@ -1,6 +1,7 @@
 ﻿<#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model\0.0.0.0\T4\3.0\TemplateFilemanager.CS.ttinclude" #>
 <#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model\0.0.0.0\T4\3.0\Core.ttinclude"#>
 /*
+<#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model\0.0.0.0\T4\3.0\DBViews.ttinclude"#>
 <#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model\0.0.0.0\T4\3.0\DBProcs.ttinclude"#>
 <#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model\0.0.0.0\T4\3.0\DB.ttinclude"#>
 <#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model\0.0.0.0\T4\3.0\Data.ttinclude"#>

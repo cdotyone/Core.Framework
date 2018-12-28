@@ -53,6 +53,12 @@
 // Civic.Framework.WebApi.Test\Data\ExampleSqlRepository.Entity1.cs
 // Civic.Framework.WebApi.Test\SQL\Example.Procs.sql
 // Civic.Framework.WebApi.Test\SQL\Example.DB.Rebuild.sql
+// Civic.Framework.WebApi.Test\SQL\Example.Views.sql
+// Civic.Framework.WebApi.Test\SQL\view_InstallationEnvironment.sql
+// Civic.Framework.WebApi.Test\SQL\view_Environment.sql
+// Civic.Framework.WebApi.Test\SQL\view_Entity3.sql
+// Civic.Framework.WebApi.Test\SQL\view_Entity2.sql
+// Civic.Framework.WebApi.Test\SQL\view_Entity1.sql
 // Civic.Framework.WebApi.Test\SQL\all_InstallationEnvironment.sql
 // Civic.Framework.WebApi.Test\SQL\all_Environment.sql
 // Civic.Framework.WebApi.Test\SQL\all_Entity3.sql
