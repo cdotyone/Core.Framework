@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-#pragma warning disable 1591 // this is for supress no xml comments in public members warnings 
+#pragma warning disable 1591 // this is to supress no xml comments in public members warnings 
 
 using System;
 using System.Collections.Generic;
@@ -42,14 +42,25 @@ namespace Civic.Framework.WebApi.Test.Entities
     		}
     	}
     
-    
-        [DataMember(Name = "_schema")]
-        public string schema { get { return "dbo"; } }
-    
+        [DataMember(Name = "_module")]
+        public string _module { get { return Info.Module; } }
+        
         [DataMember(Name = "_entity")]
-        public string entity { get { return "Entity3"; } }
-    
-    	public static IEntityIdentity Info = new Entity3();
+        public string _entity { get { return Info.Entity; } }
+        
+        public static IEntityInfo Info = new EntityInfo
+    	{
+            Module = "dbo",
+            Entity = "Entity3",
+            Name = "dbo.Entity3",
+            Properties = new Dictionary<string, IEntityPropertyInfo>
+            {
+    			{"someUID", new EntityPropertyInfo { Name = "someUID", Type="string", IsKey=true }},
+    			{"someID", new EntityPropertyInfo { Name = "someID", Type="long" }},
+    			{"modified", new EntityPropertyInfo { Name = "modified", Type="DateTime" }},
+    			{"otherDate", new EntityPropertyInfo { Name = "otherDate", Type="DateTime>", IsNullable=true }},
+            }
+        };
     }
 }
 

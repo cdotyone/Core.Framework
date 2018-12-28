@@ -34,13 +34,6 @@ namespace Civic.Framework.WebApi
         /// <param name="expression">The root expression</param>
         /// <param name="properties">the property name map</param>
         /// <returns>Where clause</returns>
-        //public static string ExpandExpression(IDBCommand command, IExpression expression, string[] properties)
-        //{
-        //    var whereList = new List<string>();
-        //    var where = expandExpression(command, expression, properties, whereList);
-        //    return where;
-        //}
-
         private static string expandExpression(IDBCommand command, IExpression expression, string[] properties, List<string> whereList)
         {
             var sb = new StringBuilder();
@@ -60,9 +53,6 @@ namespace Civic.Framework.WebApi
 
                         switch (ce.Operator)
                         {
-                            case FieldOperator.Like:
-                                sb.AppendFormat("{0} like '%'+{1}+'%'", entityProperty, name);
-                                break;
                             case FieldOperator.Equal:
                                 sb.AppendFormat("{0} = {1}", entityProperty, name);
                                 break;
@@ -80,6 +70,21 @@ namespace Civic.Framework.WebApi
                                 break;
                             case FieldOperator.LessOrEqualThan:
                                 sb.AppendFormat("{0} <= {1}", entityProperty, name);
+                                break;
+                            case FieldOperator.Like:
+                                sb.AppendFormat("{0} like {1}", entityProperty, name);
+                                break;
+                            case FieldOperator.NotLike:
+                                sb.AppendFormat("{0} like {1}", entityProperty, name);
+                                break;
+                            case FieldOperator.Is:
+                                sb.AppendFormat("{0} IS {1}", entityProperty, name.Replace("NOTNULL","NOT NULL"));
+                                break;
+                            case FieldOperator.In:
+                                sb.AppendFormat("{0} IN (SELECT [item] from [civic].[udf_Split]({1},':'))", entityProperty, name);
+                                break;
+                            case FieldOperator.NotIn:
+                                sb.AppendFormat("{0} NOT IN (SELECT [item] from [civic].[udf_Split]({1},':'))", entityProperty, name);
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();

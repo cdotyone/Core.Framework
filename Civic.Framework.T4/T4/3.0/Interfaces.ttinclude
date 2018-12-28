@@ -35,7 +35,7 @@ WriteHeader(namespaceName);
 
 BeginNamespace(namespaceName+".Interfaces", code);
 #>
-public interface I<#=edmxFileName#>Facade : <#=string.Join(",",facades)#>
+public interface I<#=edmxFileName#>Facade : IEntityBusinessFacade,<#=string.Join(",",facades)#>
 {
 }
 <#

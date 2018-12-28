@@ -94,6 +94,9 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.Core">
       <Version>5.2.7</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost">
+      <Version>5.2.7</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Web.Infrastructure" Version="1.0.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="SimpleInjector">
@@ -105,7 +108,6 @@
     <PackageReference Include="SimpleInjector.Packaging">
       <Version>4.4.2</Version>
     </PackageReference>
-    <PackageReference Include="WebActivatorEx" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -114,8 +116,6 @@
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -131,8 +131,19 @@
       <Link>VersionInfo.cs</Link>
     </Compile>
     <Compile Include="1.0\IEntity.cs" />
+    <Compile Include="2.0\AuthorizationHelper.cs" />
     <Compile Include="2.0\IEntity2.cs" />
-    <Compile Include="AuthorizationHelper.cs" />
+    <Compile Include="3.0\AuthorizationHelper.cs" />
+    <Compile Include="3.0\WebApiPackage.cs" />
+    <Compile Include="3.0\RequestEntityFactory.cs" />
+    <Compile Include="3.0\Entity.cs" />
+    <Compile Include="3.0\EntityConverter.cs" />
+    <Compile Include="3.0\EntityPropertyInfo.cs" />
+    <Compile Include="3.0\EntityInfo.cs" />
+    <Compile Include="3.0\IEntityInfo.cs" />
+    <Compile Include="3.0\IEntityPropertyInfo.cs" />
+    <Compile Include="1.0\AuthorizationHelper.cs" />
+    <Compile Include="3.0\IRequestEntityFactory.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Configuration\T4Config.cs" />
     <Compile Include="Constants.cs" />
@@ -172,6 +183,7 @@
     <Compile Include="ODataV3Attribute.cs" />
     <Compile Include="QueryMetadata.cs" />
     <Compile Include="QueryMetadataXml.cs" />
+    <Compile Include="3.0\SqlQuery.cs" />
     <Compile Include="WebActivator.cs" />
     <Compile Include="VersionControllerSelector.cs" />
   </ItemGroup>

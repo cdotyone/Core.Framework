@@ -4,7 +4,7 @@ string businessPath = new FileInfo(Host.TemplateFile).DirectoryName.Replace("\\M
 
 fileManager.StartNewFile(edmxFileName + ".Package.cs", folderName:"Business");
 
-WriteHeader("SimpleInjector.Packaging","SimpleInjector", namespaceName + ".Interfaces");
+WriteHeader("SimpleInjector.Packaging","SimpleInjector", namespaceName + ".Entities", namespaceName + ".Interfaces");
 #>
 
 <#
@@ -16,6 +16,16 @@ public class <#=edmxFileName#>Package : IPackage
     public void RegisterServices(Container container)
     {
 		container.Register<I<#=edmxFileName#>Facade, <#=edmxFileName#>BusinessFacade>(Lifestyle.Scoped);
+
+		var factory = new RequestEntityFactory(container);
+
+<#		foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+		{
+#>		factory.Register<<#=entity.Name#>>(<#=entity.Name#>.Info);
+<#
+		}
+#>
+
     }
 }
 
@@ -96,25 +106,25 @@ public partial class <#=edmxFileName#>BusinessFacade
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>BusinessFacade), "Save<#=code.Escape(entity)#>")) {
     
-            if (!AuthorizationHelper.CanModify(who, entity) && !AuthorizationHelper.CanAdd(who, entity)) throw new UnauthorizedAccessException();
+            if (!AuthorizationHelper.CanModify(who, <#=code.Escape(entity)#>Entity.Info) && !AuthorizationHelper.CanAdd(who, <#=code.Escape(entity)#>Entity.Info)) throw new UnauthorizedAccessException();
     
     		try {
     			var before = _respository.Get<#=code.Escape(entity)#>(who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + "entity."+ key)#><#}#>);
 
 			    if (before == null)
 			    {
-                    if(!AuthorizationHelper.CanAdd(who, entity)) throw new UnauthorizedAccessException();
+                    if(!AuthorizationHelper.CanAdd(who, <#=code.Escape(entity)#>Entity.Info)) throw new UnauthorizedAccessException();
 
 			        var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", entity.IdentityID, entity);
-                    _respository.AddEntity1(who, entity);
+                    _respository.Add<#=code.Escape(entity)#>(who, entity);
 			        AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);
                 }
 			    else
 			    {
-			        if (!AuthorizationHelper.CanModify(who, entity)) throw new UnauthorizedAccessException();
+			        if (!AuthorizationHelper.CanModify(who, <#=code.Escape(entity)#>Entity.Info)) throw new UnauthorizedAccessException();
 
 			        var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", before.IdentityID , before, entity);
-			        _respository.ModifyEntity1(who, entity);
+			        _respository.Modify<#=code.Escape(entity)#>(who, entity);
 			        AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);
                 }
     		}
@@ -165,6 +175,7 @@ BeginNamespace(namespaceName+".Business", code);#>
 public partial class <#=edmxFileName#>BusinessFacade : I<#=edmxFileName#>Facade
 {
 	private readonly IExampleRepository _respository;
+
 	public <#=edmxFileName#>BusinessFacade(IExampleRepository respository) 
 	{
 		_respository = respository;

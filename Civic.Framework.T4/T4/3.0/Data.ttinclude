@@ -46,6 +46,12 @@ public partial class <#=edmxFileName#>SqlRepository
 
 			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Get"))
 			{
+		        var info = <#=code.Escape(entity)#>Entity.Info;
+		        if (!info.UseProcedureGet)
+		        {
+		            return SqlQuery.Get(Container, who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? "+\"|\"+" : " "))#><#=Core.GetMethodParameterName(key)+(keys[key]!="String" ? ".ToString()":"")#><#}#>, <#=code.Escape(entity)#>Entity.Info, database) as <#=code.Escape(entity)#>Entity;
+                }
+
 				<#
 				foreach(var key in keys.Keys)
 				{
@@ -76,6 +82,18 @@ public partial class <#=edmxFileName#>SqlRepository
 			Debug.Assert(database!=null);
 
 			var list = new List<<#=code.Escape(entity)#>Entity>();
+
+		    var info = <#=code.Escape(entity)#>Entity.Info;
+		    if (!info.UseProcedureGet)
+		    {
+		        var entityList = SqlQuery.GetPaged(Container, who, <#=code.Escape(entity)#>Entity.Info, skip, ref count, retCount, filterBy, orderBy, database);
+		        foreach (var entity in entityList)
+		        {
+		            list.Add(entity as <#=code.Escape(entity)#>Entity);
+		        }
+
+		        return list;
+		    }
 
 			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=entity.Name#>GetFiltered"))
 			{
@@ -240,13 +258,19 @@ EndNamespace(namespaceName);
 
 fileManager.StartNewFile(edmxFileName + "SqlRepository.cs", folderName:"Data");
 
-WriteHeader("System.Security.Claims","Civic.Core.Data", namespaceName +".Interfaces");
+WriteHeader("System.Security.Claims","SimpleInjector","Civic.Core.Data", namespaceName +".Interfaces");
 
 BeginNamespace(namespaceName + ".Data", code);
 
 #>
 public partial class <#=edmxFileName#>SqlRepository : I<#=edmxFileName#>Repository
 {
+	Container _container;
+
+	public <#=edmxFileName#>SqlRepository( Container container ) {
+		_container = container;
+	}
+
     public IDBConnection GetConnection( ClaimsPrincipal who )
     {
         if (who != null)
@@ -255,6 +279,12 @@ public partial class <#=edmxFileName#>SqlRepository : I<#=edmxFileName#>Reposito
         }
         return DatabaseFactory.CreateDatabase("<#=edmxFileName.ToLower()#>");
     }
+
+	public Container Container {
+		get {
+			return _container;
+		}
+	}
 }
 <#
 EndNamespace(namespaceName);

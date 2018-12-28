@@ -73,8 +73,6 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 			}
 		}
 
-
-
 		if(keys.Count==0) {
 		#>
 					return null;
@@ -86,14 +84,45 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 #>}
 	}
 
-
-    [DataMember(Name = "_schema")]
-    public string schema { get { return "<#=apiSchemaName#>"; } }
-
+    [DataMember(Name = "_module")]
+    public string _module { get { return Info.Module; } }
+    
     [DataMember(Name = "_entity")]
-    public string entity { get { return "<#=entity.Name#>"; } }
+    public string _entity { get { return Info.Entity; } }
+    
+    public static IEntityInfo Info = new EntityInfo
+	{
+        Module = "<#=apiSchemaName#>",
+        Entity = "<#=entity.Name#>",
+        Name = "<#=apiSchemaName#>.<#=entity.Name#>",
+        Properties = new Dictionary<string, IEntityPropertyInfo>
+        {
+<#
+    simpleProperties = typeMapper.GetSimpleProperties(entity);
+    if (simpleProperties.Any())
+    {
+		var keyUID = simpleProperties.Where((sprop) => sprop.Name.ToLower().EndsWith("uid") && ef.IsKey(sprop)).FirstOrDefault();
+		var matchID = simpleProperties.Where((sprop) => keyUID!=null && sprop.Name.ToLower() == keyUID.Name.ToLower().Substring(0,keyUID.Name.Length-3)+"id").FirstOrDefault();
+		
+        foreach (var edmProperty in simpleProperties)
+        {
 
-	public static IEntityIdentity Info = new <#=entity.Name#>();
+		var name = Core.ToLowerCamel(edmProperty.Name).Replace("iD","id").Replace("oID","oid").Replace("oUID","ouid").Replace("uID","uid");
+
+	if((keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name) || edmProperty.Name=="OID" && Core.ToLowerCamel(entity.Name)!="orgUnit") {#>
+<#}
+#>			{"<#=name#>", new EntityPropertyInfo { Name = "<#=name#>", Type="<#=typeMapper.GetTypeName(edmProperty.TypeUsage).Replace("System.DateTime","DateTime").Replace("Nullable<DateTime","DateTime")#>"<#if(ef.IsNullable(edmProperty.TypeUsage)) {#>, IsNullable=true<#}#><#if(ef.IsKey(edmProperty)) {#>, IsKey=true<#}#> }},
+<#
+	if(edmProperty.Name=="OID" && Core.ToLowerCamel(entity.Name)!="orgUnit") {#>
+			{"ouid", new EntityPropertyInfo { Name = "ouid", Type="string" }},
+<#}
+
+        }
+    }
+
+#>
+        }
+    };
 }
 <#
     EndNamespace(namespaceName + ".Entities");

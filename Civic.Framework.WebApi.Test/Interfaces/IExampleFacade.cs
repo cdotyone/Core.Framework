@@ -7,13 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-#pragma warning disable 1591 // this is for supress no xml comments in public members warnings 
+#pragma warning disable 1591 // this is to supress no xml comments in public members warnings 
 
 using Civic.Framework.WebApi.Test;
 
 namespace Civic.Framework.WebApi.Test.Interfaces
 {
-    public interface IExampleFacade : IFacadeEntity1,IFacadeEntity2,IFacadeEntity3,IFacadeEnvironment
+    public interface IExampleFacade : IEntityBusinessFacade,IFacadeEntity1,IFacadeEntity2,IFacadeEntity3,IFacadeEnvironment,IFacadeInstallationEnvironment
     {
     }
 }

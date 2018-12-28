@@ -2,12 +2,16 @@
 {
     public enum FieldOperator 
     {
-        Like,
         Equal,
         NotEqual,
         GreaterThan,
         GreaterOrEqualThan,
         LessThan,
         LessOrEqualThan,
+        Like,
+        NotLike,
+        Is,
+        In,
+        NotIn
     }
 }

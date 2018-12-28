@@ -7,18 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-#pragma warning disable 1591 // this is for supress no xml comments in public members warnings 
+#pragma warning disable 1591 // this is to supress no xml comments in public members warnings 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Security.Claims;
-using System.Globalization;
-using System.Runtime.Serialization;
 using System.Web.Http;
-using Civic.Framework.WebApi.Test.Services;
-using Civic.Framework.WebApi.Test.Entities;
-using Civic.Framework.WebApi;
+using Civic.Framework.WebApi.Test.Interfaces;
 using Entity3Entity = Civic.Framework.WebApi.Test.Entities.Entity3;
 
 namespace Civic.Framework.WebApi.Test.Controllers
@@ -27,12 +22,11 @@ namespace Civic.Framework.WebApi.Test.Controllers
     [System.CodeDom.Compiler.GeneratedCode("STE-EF",".NET 3.5")]
     public partial class ExampleEntity3Controller : ApiController 
     {
-    	private readonly IExample _service;
+    	private readonly IExampleFacade _facade;
     
-    	public ExampleEntity3Controller(IExample service)
+    	public ExampleEntity3Controller(IExampleFacade facade)
         {
-            service.Who = User as ClaimsPrincipal;
-    		_service = service;
+    		_facade = facade;
         }
     
     	[Route("")]
@@ -42,35 +36,35 @@ namespace Civic.Framework.WebApi.Test.Controllers
     		var maxrows = Civic.Framework.WebApi.Configuration.T4Config.GetMaxRows("dbo","entity3");
     		var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
     		string orderby = options.ProcessOrderByOptions();
-    		var result = _service.GetPagedEntity3(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
+    		var result = _facade.GetPagedEntity3(User as ClaimsPrincipal, options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
     		return new QueryMetadata<Entity3Entity>(result, resultLimit);
     	}
     
     	[Route("{someUID}")]
     	public QueryMetadata<Entity3Entity> Get( String someUID )
     	{
-    		var result = new List<Entity3Entity> { _service.GetEntity3( someUID) };
+    		var result = new List<Entity3Entity> { _facade.GetEntity3(User as ClaimsPrincipal,  someUID) };
     		return new QueryMetadata<Entity3Entity>(result, 1);
     	}
     
     	[Route("")]
-    	public String Post([FromBody]Entity3Entity value)
+    	public QueryMetadata<Entity3Entity> Post([FromBody]Entity3Entity value)
     	{
-    		_service.AddEntity3(value);
-    		return value.SomeUID;
+    		_facade.SaveEntity3(User as ClaimsPrincipal, value);
+    		var result = new List<Entity3Entity> { value };
+    		return new QueryMetadata<Entity3Entity>(result, 1);
     	}
     
     	[Route("{someUID}")]
     	public void Put(String someUID, [FromBody]Entity3Entity value)
     	{
-    		value.SomeUID = someUID;
-    		_service.ModifyEntity3(value);
+    		_facade.SaveEntity3(User as ClaimsPrincipal, value);
     	}
     
     	[Route("{someUID}")]
     	public void Delete( String someUID )
     	{
-    		_service.RemoveEntity3( someUID );
+    		_facade.RemoveEntity3(User as ClaimsPrincipal,  someUID );
     	}
     }
 }

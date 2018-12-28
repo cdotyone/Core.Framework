@@ -23,8 +23,6 @@ namespace Civic.Framework.WebApi.OData
             {
                 switch (fieldOperator)
                 {
-                    case "like":
-                        return FieldOperator.Like;
                     case "eq":
                         return FieldOperator.Equal;
                     case "neq":
@@ -37,6 +35,16 @@ namespace Civic.Framework.WebApi.OData
                         return FieldOperator.LessThan;
                     case "le":
                         return FieldOperator.LessOrEqualThan;
+                    case "like":
+                        return FieldOperator.Like;
+                    case "nk":
+                        return FieldOperator.NotLike;
+                    case "is":
+                        return FieldOperator.Is;
+                    case "in":
+                        return FieldOperator.In;
+                    case "nin":
+                        return FieldOperator.NotIn;
                 }
 
                 throw new ParserException("Invalid FieldOperator found " + fieldOperator);

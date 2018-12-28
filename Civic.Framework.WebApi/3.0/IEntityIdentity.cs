@@ -10,9 +10,9 @@ namespace Civic.Framework.WebApi
 
         #pragma warning disable IDE1006 // Naming Styles
         // ReSharper disable InconsistentNaming
-        string schema { get; }
+        string _module { get; }
 
-        string entity { get; }
+        string _entity { get;  }
         // ReSharper enable once InconsistentNaming
         #pragma warning restore IDE1006 // Naming Styles
     }

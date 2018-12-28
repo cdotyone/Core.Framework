@@ -7,10 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-#pragma warning disable 1591 // this is for supress no xml comments in public members warnings 
+#pragma warning disable 1591 // this is to supress no xml comments in public members warnings 
 
 using SimpleInjector.Packaging;
 using SimpleInjector;
+using Civic.Framework.WebApi.Test.Entities;
 using Civic.Framework.WebApi.Test.Interfaces;
 
 
@@ -22,6 +23,15 @@ namespace Civic.Framework.WebApi.Test.Business
         public void RegisterServices(Container container)
         {
     		container.Register<IExampleFacade, ExampleBusinessFacade>(Lifestyle.Scoped);
+    
+    		var factory = new RequestEntityFactory(container);
+    
+    		factory.Register<Entity1>(Entity1.Info);
+    		factory.Register<Entity2>(Entity2.Info);
+    		factory.Register<Entity3>(Entity3.Info);
+    		factory.Register<Environment>(Environment.Info);
+    		factory.Register<InstallationEnvironment>(InstallationEnvironment.Info);
+    
         }
     }
     

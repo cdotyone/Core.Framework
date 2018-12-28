@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>Civic.Framework.WebApi-SASS</id>
+    <id>Civic.Framework.WebApi</id>
     <version>$version$</version>
     <title />
     <authors>Chris Doty</authors>
@@ -23,7 +23,6 @@
         <dependency id="SimpleInjector" version="[4.4.2,5.0.0)" xmlns="" />
         <dependency id="SimpleInjector.Integration.WebApi" version="[4.4.2,5.0.0)" xmlns="" />
         <dependency id="SimpleInjector.Packaging" version="[4.4.2,5.0.0)" xmlns="" />
-        <dependency id="WebActivatorEx" version="[2.2.0,3.0.0)" xmlns="" />
       </group>
     </dependencies>
   </metadata>

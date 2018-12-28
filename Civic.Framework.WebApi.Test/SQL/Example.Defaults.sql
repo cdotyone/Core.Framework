@@ -42,5 +42,6 @@ GO
 -- t4-defaults begin
 EXECUTE sp_bindefault N'civic.udf_GetDate', N'[dbo].[Entity2].[Modified]';
 EXECUTE sp_bindefault N'civic.udf_GetDate', N'[dbo].[Entity3].[Modified]';
+EXECUTE sp_bindefault N'civic.udf_GetDate', N'[dbo].[InstallationEnvironment].[Modified]';
 -- t4-defaults end
 GO

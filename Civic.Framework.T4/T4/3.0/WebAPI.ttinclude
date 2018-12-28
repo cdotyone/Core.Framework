@@ -12,7 +12,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		continue;
 
     fileManager.StartNewFile(edmxFileName + entity.Name + "Controller.cs", folderName:"Controllers");
-	WriteHeader("System","System.Collections","System.Collections.Generic","System.Security.Claims","System.Globalization","System.Runtime.Serialization","System.Web.Http", namespaceName + ".Services",namespaceName + ".Entities", "Civic.Framework.WebApi", entity.Name + "Entity = " + namespaceName +".Entities." + entity.Name );
+	WriteHeader("System","System.Collections.Generic","System.Security.Claims","System.Web.Http", namespaceName +".Interfaces", entity.Name + "Entity = " + namespaceName +".Entities." + entity.Name );
     BeginNamespace(namespaceName+".Controllers", code);
 	
 	var lowerName = entity.Name.ToLower();
@@ -32,12 +32,11 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 [System.CodeDom.Compiler.GeneratedCode("STE-EF",".NET 3.5")]
 <#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=edmxFileName+entity.Name#>Controller : ApiController 
 {
-	private readonly I<#=edmxFileName#> _service;
+	private readonly I<#=edmxFileName#>Facade _facade;
 
-	public <#=edmxFileName+entity.Name#>Controller(I<#=edmxFileName#> service)
+	public <#=edmxFileName+entity.Name#>Controller(I<#=edmxFileName#>Facade facade)
     {
-        service.Who = User as ClaimsPrincipal;
-		_service = service;
+		_facade = facade;
     }
 
 	[Route("")]
@@ -47,40 +46,35 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		var maxrows = Civic.Framework.WebApi.Configuration.T4Config.GetMaxRows("<#=apiSchemaName.ToLower()#>","<#=entity.Name.ToLower()#>");
 		var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
 		string orderby = options.ProcessOrderByOptions();
-		var result = _service.GetPaged<#=entity.Name#>(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
+		var result = _facade.GetPaged<#=entity.Name#>(User as ClaimsPrincipal, options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
 		return new QueryMetadata<<#=entity.Name#>Entity>(result, resultLimit);
 	}
 
 	[Route("<# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? "/{" : "{") + Core.GetMethodParameterName(key) + "}" )#><#}#>")]
 	public QueryMetadata<<#=code.Escape(entity)#>Entity> Get(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> )
 	{
-		var result = new List<<#=code.Escape(entity)#>Entity> { _service.Get<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>) };
+		var result = new List<<#=code.Escape(entity)#>Entity> { _facade.Get<#=code.Escape(entity)#>(User as ClaimsPrincipal, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>) };
 		return new QueryMetadata<<#=code.Escape(entity)#>Entity>(result, 1);
 	}
 
 	[Route("")]
-	public <#=keyType#> Post([FromBody]<#=code.Escape(entity)#>Entity value)
+	public QueryMetadata<<#=code.Escape(entity)#>Entity> Post([FromBody]<#=code.Escape(entity)#>Entity value)
 	{
-		_service.Add<#=code.Escape(entity)#>(value);
-		return value.<#=keyName#>;
+		_facade.Save<#=code.Escape(entity)#>(User as ClaimsPrincipal, value);
+		var result = new List<<#=code.Escape(entity)#>Entity> { value };
+		return new QueryMetadata<<#=code.Escape(entity)#>Entity>(result, 1);
 	}
 
 	[Route("<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? "/{" : "{") + Core.GetMethodParameterName(key) + "}" )#><#}#>")]
 	public void Put(<# foreach(var key in keys.Keys) { #><#=keys[key]#> <#=Core.GetMethodParameterName(key)#>, <#}#>[FromBody]<#=code.Escape(entity)#>Entity value)
 	{
-		<#
-		foreach(var key in keys.Keys)
-		{
-	        #>value.<#=key#> = <#=Core.GetMethodParameterName(key)#>;
-		<#
-		}
-		#>_service.Modify<#=code.Escape(entity)#>(value);
+		_facade.Save<#=code.Escape(entity)#>(User as ClaimsPrincipal, value);
 	}
 
 	[Route("<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? "/{" : "{") + Core.GetMethodParameterName(key) + "}" )#><#}#>")]
 	public void Delete(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> )
 	{
-		_service.Remove<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#> );
+		_facade.Remove<#=code.Escape(entity)#>(User as ClaimsPrincipal, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#> );
 	}
 }
 <#
