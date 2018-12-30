@@ -9,6 +9,7 @@
 
 #pragma warning disable 1591 // this is to supress no xml comments in public members warnings 
 
+using System.Runtime.InteropServices;
 using SimpleInjector.Packaging;
 using SimpleInjector;
 
@@ -18,7 +19,13 @@ namespace Civic.Framework.WebApi
     {
         public void RegisterServices(Container container)
         {
-    		container.Register<IEntityCreateFactory, EntityCreateFactory>(Lifestyle.Singleton);  
+    		container.Register<IEntityCreateFactory, EntityCreateFactory>(Lifestyle.Singleton);
+            container.Register<IEntityEventHandlerFactory, EntityEventHandlerFactory>(Lifestyle.Singleton);
+
+            var factory = new EntityEventHandlerFactory(container);
+
+            factory.Register<BasicAuthorizationHandler>();
+            factory.Register<AuditLogHandler>();
         }
     }
     

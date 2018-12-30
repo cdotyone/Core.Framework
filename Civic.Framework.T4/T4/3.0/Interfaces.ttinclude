@@ -70,15 +70,15 @@ public interface IOperation<#=entity.Name#>
 	}
 
 #>
-	List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy);
+	List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy );
 
-	<#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(ClaimsPrincipal who, <# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
+	<#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(IEntityRequestContext context, <# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
 
-	<#=((keyType=="Int32" || keyType=="int") && keyName=="Id"?"int":"void")#> Add<#=code.Escape(entity)#>(ClaimsPrincipal who, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>);
+	<#=((keyType=="Int32" || keyType=="int") && keyName=="Id"?"int":"void")#> Add<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#> );
 
-	void Modify<#=code.Escape(entity)#>(ClaimsPrincipal who, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>);
+	void Modify<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#> );
 
-	void Remove<#=code.Escape(entity)#>(ClaimsPrincipal who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
+	void Remove<#=code.Escape(entity)#>(IEntityRequestContext context, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
 }
 <#
 	EndNamespace(namespaceName);
@@ -113,13 +113,22 @@ public interface IFacade<#=entity.Name#>
 	}
 
 #>
+	List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy);
+
+	<#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(IEntityRequestContext context, <# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
+
+	void Save<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>);
+
+	void Remove<#=code.Escape(entity)#>(IEntityRequestContext context, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
+
 	List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy);
 
-	<#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(ClaimsPrincipal who, <# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
+	<#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(ClaimsPrincipal who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
 
 	void Save<#=code.Escape(entity)#>(ClaimsPrincipal who, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>);
 
 	void Remove<#=code.Escape(entity)#>(ClaimsPrincipal who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
+
 }
 <#
 	EndNamespace(namespaceName);

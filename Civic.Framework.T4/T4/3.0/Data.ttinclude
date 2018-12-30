@@ -36,9 +36,9 @@ public partial class <#=edmxFileName#>SqlRepository
 	}
 
 #>
-	public <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(ClaimsPrincipal who, <# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#>)
+	public <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(IEntityRequestContext context, <# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#>)
 	{
-		using(var database = GetConnection(who)) {
+		using(var database = GetConnection(context)) {
 
 			Debug.Assert(database!=null);
 
@@ -49,7 +49,7 @@ public partial class <#=edmxFileName#>SqlRepository
 		        var info = <#=code.Escape(entity)#>Entity.Info;
 		        if (!info.UseProcedureGet)
 		        {
-		            return SqlQuery.Get(Container, who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? "+\"|\"+" : " "))#><#=Core.GetMethodParameterName(key)+(keys[key]!="String" ? ".ToString()":"")#><#}#>, <#=code.Escape(entity)#>Entity.Info, database) as <#=code.Escape(entity)#>Entity;
+		            return SqlQuery.Get(Container, context.Who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? "+\"|\"+" : " "))#><#=Core.GetMethodParameterName(key)+(keys[key]!="String" ? ".ToString()":"")#><#}#>, <#=code.Escape(entity)#>Entity.Info, database) as <#=code.Escape(entity)#>Entity;
                 }
 
 				<#
@@ -62,7 +62,7 @@ public partial class <#=edmxFileName#>SqlRepository
 
 				command.ExecuteReader(dataReader =>
 					{
-						if (populate<#=code.Escape(entity)#>(who, retval, dataReader))
+						if (populate<#=code.Escape(entity)#>(context, retval, dataReader))
 						{
 						<# foreach(var key in keys.Keys) { #>
 	retval.<#=code.Escape(key)#> = <#=Core.GetMethodParameterName(key)#>;
@@ -75,9 +75,9 @@ public partial class <#=edmxFileName#>SqlRepository
 		}
 	}
 
-	public List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+	public List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
 	{ 
-		using(var database = GetConnection(who)) {
+		using(var database = GetConnection(context)) {
 
 			Debug.Assert(database!=null);
 
@@ -86,7 +86,7 @@ public partial class <#=edmxFileName#>SqlRepository
 		    var info = <#=code.Escape(entity)#>Entity.Info;
 		    if (!info.UseProcedureGet)
 		    {
-		        var entityList = SqlQuery.GetPaged(Container, who, <#=code.Escape(entity)#>Entity.Info, skip, ref count, retCount, filterBy, orderBy, database);
+		        var entityList = SqlQuery.GetPaged(Container, context.Who, <#=code.Escape(entity)#>Entity.Info, skip, ref count, retCount, filterBy, orderBy, database);
 		        foreach (var entity in entityList)
 		        {
 		            list.Add(entity as <#=code.Escape(entity)#>Entity);
@@ -106,7 +106,7 @@ public partial class <#=edmxFileName#>SqlRepository
 				command.ExecuteReader(dataReader =>
 					{
 						var item = new <#=code.Escape(entity)#>Entity();
-						while(populate<#=code.Escape(entity)#>(who, item, dataReader))
+						while(populate<#=code.Escape(entity)#>(context, item, dataReader))
 						{
 							list.Add(item);
 							item = new <#=code.Escape(entity)#>Entity();
@@ -119,15 +119,15 @@ public partial class <#=edmxFileName#>SqlRepository
 		}
 	}
 
-	public void Add<#=code.Escape(entity)#>(ClaimsPrincipal who, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>)
+	public void Add<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>)
 	{ 
-		using(var database = GetConnection(who)) {
+		using(var database = GetConnection(context)) {
 
 			Debug.Assert(database!=null);
 
 			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Add"))
 			{
-				build<#=code.Escape(entity)#>CommandParameters(who, <#=code.Escape(lowerName)#>, command, true );<#
+				build<#=code.Escape(entity)#>CommandParameters(context, <#=code.Escape(lowerName)#>, command, true );<#
 			foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
 			{
 				if(ef.IsKey(edmProperty)) { 
@@ -143,23 +143,23 @@ public partial class <#=edmxFileName#>SqlRepository
 		}
 	}
 
-	public void Modify<#=code.Escape(entity)#>(ClaimsPrincipal who, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>)
+	public void Modify<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>)
 	{ 
-		using(var database = GetConnection(who)) {
+		using(var database = GetConnection(context)) {
 
 			Debug.Assert(database!=null);
 
 			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Modify"))
 			{
-				build<#=code.Escape(entity)#>CommandParameters(who, <#=code.Escape(lowerName)#>, command, false );
+				build<#=code.Escape(entity)#>CommandParameters(context, <#=code.Escape(lowerName)#>, command, false );
 				command.ExecuteNonQuery();
 			}
 		}
 	}
 
-	public void Remove<#=code.Escape(entity)#>(ClaimsPrincipal who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> )
+	public void Remove<#=code.Escape(entity)#>(IEntityRequestContext context, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> )
 	{
-		using(var database = GetConnection(who)) {
+		using(var database = GetConnection(context)) {
 
 			Debug.Assert(database!=null);
 
@@ -178,7 +178,7 @@ public partial class <#=edmxFileName#>SqlRepository
 		}
 	}
 
-	static void build<#=code.Escape(entity)#>CommandParameters(ClaimsPrincipal who, <#=code.Escape(entity)#>Entity entity, IDBCommand command, bool addRecord )
+	static void build<#=code.Escape(entity)#>CommandParameters(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity, IDBCommand command, bool addRecord )
 	{ 
         Debug.Assert(command!=null);
 <#
@@ -217,7 +217,7 @@ public partial class <#=edmxFileName#>SqlRepository
 
 	}
 	
-	private static bool populate<#=code.Escape(entity)#>(ClaimsPrincipal who, <#=code.Escape(entity)#>Entity entity, IDataReader dataReader)
+	private static bool populate<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity, IDataReader dataReader)
 	{
 		if (dataReader==null || !dataReader.Read()) return false;
 		<#
@@ -271,11 +271,11 @@ public partial class <#=edmxFileName#>SqlRepository : I<#=edmxFileName#>Reposito
 		_container = container;
 	}
 
-    public IDBConnection GetConnection( ClaimsPrincipal who )
+    public IDBConnection GetConnection( IEntityRequestContext context )
     {
-        if (who != null)
+        if (context.Who != null)
         {
-            return DatabaseFactory.CreateDatabase("<#=edmxFileName.ToLower()#>").AddClaimsDefaults(who);
+            return DatabaseFactory.CreateDatabase("<#=edmxFileName.ToLower()#>").AddClaimsDefaults(context.Who);
         }
         return DatabaseFactory.CreateDatabase("<#=edmxFileName.ToLower()#>");
     }
