@@ -24,9 +24,9 @@ namespace Civic.Framework.WebApi.Test.Data
 {
     public partial class ExampleSqlRepository
     {
-    	public Entity3Entity GetEntity3(ClaimsPrincipal who,  String someUID)
+    	public Entity3Entity GetEntity3(IEntityRequestContext context,  String someUID)
     	{
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
@@ -37,14 +37,14 @@ namespace Civic.Framework.WebApi.Test.Data
     		        var info = Entity3Entity.Info;
     		        if (!info.UseProcedureGet)
     		        {
-    		            return SqlQuery.Get(Container, who,  someUID, Entity3Entity.Info, database) as Entity3Entity;
+    		            return SqlQuery.Get(Container, context.Who,  someUID, Entity3Entity.Info, database) as Entity3Entity;
                     }
     
     				command.AddInParameter("@someUID", someUID);
     				
     				command.ExecuteReader(dataReader =>
     					{
-    						if (populateEntity3(who, retval, dataReader))
+    						if (populateEntity3(context, retval, dataReader))
     						{
     							retval.SomeUID = someUID;
     												}
@@ -55,9 +55,9 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	public List<Entity3Entity> GetPagedEntity3(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+    	public List<Entity3Entity> GetPagedEntity3(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
     	{ 
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
@@ -66,7 +66,7 @@ namespace Civic.Framework.WebApi.Test.Data
     		    var info = Entity3Entity.Info;
     		    if (!info.UseProcedureGet)
     		    {
-    		        var entityList = SqlQuery.GetPaged(Container, who, Entity3Entity.Info, skip, ref count, retCount, filterBy, orderBy, database);
+    		        var entityList = SqlQuery.GetPaged(Container, context.Who, Entity3Entity.Info, skip, ref count, retCount, filterBy, orderBy, database);
     		        foreach (var entity in entityList)
     		        {
     		            list.Add(entity as Entity3Entity);
@@ -86,7 +86,7 @@ namespace Civic.Framework.WebApi.Test.Data
     				command.ExecuteReader(dataReader =>
     					{
     						var item = new Entity3Entity();
-    						while(populateEntity3(who, item, dataReader))
+    						while(populateEntity3(context, item, dataReader))
     						{
     							list.Add(item);
     							item = new Entity3Entity();
@@ -99,38 +99,38 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	public void AddEntity3(ClaimsPrincipal who, Entity3Entity entity3)
+    	public void AddEntity3(IEntityRequestContext context, Entity3Entity entity3)
     	{ 
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity3Add"))
     			{
-    				buildEntity3CommandParameters(who, entity3, command, true ); 
+    				buildEntity3CommandParameters(context, entity3, command, true ); 
     				entity3.SomeUID = entity3.SomeUID.InsureUID(); 
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void ModifyEntity3(ClaimsPrincipal who, Entity3Entity entity3)
+    	public void ModifyEntity3(IEntityRequestContext context, Entity3Entity entity3)
     	{ 
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity3Modify"))
     			{
-    				buildEntity3CommandParameters(who, entity3, command, false );
+    				buildEntity3CommandParameters(context, entity3, command, false );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void RemoveEntity3(ClaimsPrincipal who,  String someUID )
+    	public void RemoveEntity3(IEntityRequestContext context,  String someUID )
     	{
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
@@ -143,7 +143,7 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	static void buildEntity3CommandParameters(ClaimsPrincipal who, Entity3Entity entity, IDBCommand command, bool addRecord )
+    	static void buildEntity3CommandParameters(IEntityRequestContext context, Entity3Entity entity, IDBCommand command, bool addRecord )
     	{ 
             Debug.Assert(command!=null);
     		command.AddInParameter("@someuid", entity.SomeUID.ToUpper());
@@ -153,7 +153,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	}
     	
-    	private static bool populateEntity3(ClaimsPrincipal who, Entity3Entity entity, IDataReader dataReader)
+    	private static bool populateEntity3(IEntityRequestContext context, Entity3Entity entity, IDataReader dataReader)
     	{
     		if (dataReader==null || !dataReader.Read()) return false;
     							

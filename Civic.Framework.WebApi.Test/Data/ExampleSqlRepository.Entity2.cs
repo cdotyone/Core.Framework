@@ -24,9 +24,9 @@ namespace Civic.Framework.WebApi.Test.Data
 {
     public partial class ExampleSqlRepository
     {
-    	public Entity2Entity GetEntity2(ClaimsPrincipal who,  Int32 someID, String ff)
+    	public Entity2Entity GetEntity2(IEntityRequestContext context,  Int32 someID, String ff)
     	{
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
@@ -37,7 +37,7 @@ namespace Civic.Framework.WebApi.Test.Data
     		        var info = Entity2Entity.Info;
     		        if (!info.UseProcedureGet)
     		        {
-    		            return SqlQuery.Get(Container, who,  someID.ToString()+"|"+ff, Entity2Entity.Info, database) as Entity2Entity;
+    		            return SqlQuery.Get(Container, context.Who,  someID.ToString()+"|"+ff, Entity2Entity.Info, database) as Entity2Entity;
                     }
     
     				command.AddInParameter("@someID", someID);
@@ -45,7 +45,7 @@ namespace Civic.Framework.WebApi.Test.Data
     				
     				command.ExecuteReader(dataReader =>
     					{
-    						if (populateEntity2(who, retval, dataReader))
+    						if (populateEntity2(context, retval, dataReader))
     						{
     							retval.SomeID = someID;
     							retval.ff = ff;
@@ -57,9 +57,9 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	public List<Entity2Entity> GetPagedEntity2(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+    	public List<Entity2Entity> GetPagedEntity2(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
     	{ 
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
@@ -68,7 +68,7 @@ namespace Civic.Framework.WebApi.Test.Data
     		    var info = Entity2Entity.Info;
     		    if (!info.UseProcedureGet)
     		    {
-    		        var entityList = SqlQuery.GetPaged(Container, who, Entity2Entity.Info, skip, ref count, retCount, filterBy, orderBy, database);
+    		        var entityList = SqlQuery.GetPaged(Container, context.Who, Entity2Entity.Info, skip, ref count, retCount, filterBy, orderBy, database);
     		        foreach (var entity in entityList)
     		        {
     		            list.Add(entity as Entity2Entity);
@@ -88,7 +88,7 @@ namespace Civic.Framework.WebApi.Test.Data
     				command.ExecuteReader(dataReader =>
     					{
     						var item = new Entity2Entity();
-    						while(populateEntity2(who, item, dataReader))
+    						while(populateEntity2(context, item, dataReader))
     						{
     							list.Add(item);
     							item = new Entity2Entity();
@@ -101,37 +101,37 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	public void AddEntity2(ClaimsPrincipal who, Entity2Entity entity2)
+    	public void AddEntity2(IEntityRequestContext context, Entity2Entity entity2)
     	{ 
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity2Add"))
     			{
-    				buildEntity2CommandParameters(who, entity2, command, true );
+    				buildEntity2CommandParameters(context, entity2, command, true );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void ModifyEntity2(ClaimsPrincipal who, Entity2Entity entity2)
+    	public void ModifyEntity2(IEntityRequestContext context, Entity2Entity entity2)
     	{ 
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity2Modify"))
     			{
-    				buildEntity2CommandParameters(who, entity2, command, false );
+    				buildEntity2CommandParameters(context, entity2, command, false );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void RemoveEntity2(ClaimsPrincipal who,  Int32 someID, String ff )
+    	public void RemoveEntity2(IEntityRequestContext context,  Int32 someID, String ff )
     	{
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
@@ -145,7 +145,7 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	static void buildEntity2CommandParameters(ClaimsPrincipal who, Entity2Entity entity, IDBCommand command, bool addRecord )
+    	static void buildEntity2CommandParameters(IEntityRequestContext context, Entity2Entity entity, IDBCommand command, bool addRecord )
     	{ 
             Debug.Assert(command!=null);
        		if(addRecord) command.AddParameter("@someid", ParameterDirection.InputOutput,  entity.SomeID);
@@ -156,7 +156,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	}
     	
-    	private static bool populateEntity2(ClaimsPrincipal who, Entity2Entity entity, IDataReader dataReader)
+    	private static bool populateEntity2(IEntityRequestContext context, Entity2Entity entity, IDataReader dataReader)
     	{
     		if (dataReader==null || !dataReader.Read()) return false;
     								

@@ -21,15 +21,15 @@ namespace Civic.Framework.WebApi.Test.Interfaces
     
     public interface IOperationEntity1
     {
-    	List<Entity1Entity> GetPagedEntity1(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy);
+    	List<Entity1Entity> GetPagedEntity1(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy );
     
-    	Entity1Entity GetEntity1(ClaimsPrincipal who,  String name );
+    	Entity1Entity GetEntity1(IEntityRequestContext context,  String name );
     
-    	void AddEntity1(ClaimsPrincipal who, Entity1Entity entity1);
+    	void AddEntity1(IEntityRequestContext context, Entity1Entity entity1 );
     
-    	void ModifyEntity1(ClaimsPrincipal who, Entity1Entity entity1);
+    	void ModifyEntity1(IEntityRequestContext context, Entity1Entity entity1 );
     
-    	void RemoveEntity1(ClaimsPrincipal who,  String name );
+    	void RemoveEntity1(IEntityRequestContext context,  String name );
     }
 }
 

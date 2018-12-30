@@ -24,9 +24,9 @@ namespace Civic.Framework.WebApi.Test.Data
 {
     public partial class ExampleSqlRepository
     {
-    	public EnvironmentEntity GetEnvironment(ClaimsPrincipal who,  Int32 id)
+    	public EnvironmentEntity GetEnvironment(IEntityRequestContext context,  Int32 id)
     	{
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
@@ -37,14 +37,14 @@ namespace Civic.Framework.WebApi.Test.Data
     		        var info = EnvironmentEntity.Info;
     		        if (!info.UseProcedureGet)
     		        {
-    		            return SqlQuery.Get(Container, who,  id.ToString(), EnvironmentEntity.Info, database) as EnvironmentEntity;
+    		            return SqlQuery.Get(Container, context.Who,  id.ToString(), EnvironmentEntity.Info, database) as EnvironmentEntity;
                     }
     
     				command.AddInParameter("@id", id);
     				
     				command.ExecuteReader(dataReader =>
     					{
-    						if (populateEnvironment(who, retval, dataReader))
+    						if (populateEnvironment(context, retval, dataReader))
     						{
     							retval.ID = id;
     												}
@@ -55,9 +55,9 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	public List<EnvironmentEntity> GetPagedEnvironment(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+    	public List<EnvironmentEntity> GetPagedEnvironment(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
     	{ 
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
@@ -66,7 +66,7 @@ namespace Civic.Framework.WebApi.Test.Data
     		    var info = EnvironmentEntity.Info;
     		    if (!info.UseProcedureGet)
     		    {
-    		        var entityList = SqlQuery.GetPaged(Container, who, EnvironmentEntity.Info, skip, ref count, retCount, filterBy, orderBy, database);
+    		        var entityList = SqlQuery.GetPaged(Container, context.Who, EnvironmentEntity.Info, skip, ref count, retCount, filterBy, orderBy, database);
     		        foreach (var entity in entityList)
     		        {
     		            list.Add(entity as EnvironmentEntity);
@@ -86,7 +86,7 @@ namespace Civic.Framework.WebApi.Test.Data
     				command.ExecuteReader(dataReader =>
     					{
     						var item = new EnvironmentEntity();
-    						while(populateEnvironment(who, item, dataReader))
+    						while(populateEnvironment(context, item, dataReader))
     						{
     							list.Add(item);
     							item = new EnvironmentEntity();
@@ -99,37 +99,37 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	public void AddEnvironment(ClaimsPrincipal who, EnvironmentEntity environment)
+    	public void AddEnvironment(IEntityRequestContext context, EnvironmentEntity environment)
     	{ 
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentAdd"))
     			{
-    				buildEnvironmentCommandParameters(who, environment, command, true );
+    				buildEnvironmentCommandParameters(context, environment, command, true );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void ModifyEnvironment(ClaimsPrincipal who, EnvironmentEntity environment)
+    	public void ModifyEnvironment(IEntityRequestContext context, EnvironmentEntity environment)
     	{ 
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentModify"))
     			{
-    				buildEnvironmentCommandParameters(who, environment, command, false );
+    				buildEnvironmentCommandParameters(context, environment, command, false );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void RemoveEnvironment(ClaimsPrincipal who,  Int32 id )
+    	public void RemoveEnvironment(IEntityRequestContext context,  Int32 id )
     	{
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
@@ -142,7 +142,7 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	static void buildEnvironmentCommandParameters(ClaimsPrincipal who, EnvironmentEntity entity, IDBCommand command, bool addRecord )
+    	static void buildEnvironmentCommandParameters(IEntityRequestContext context, EnvironmentEntity entity, IDBCommand command, bool addRecord )
     	{ 
             Debug.Assert(command!=null);
        		if(addRecord) command.AddParameter("@id", ParameterDirection.InputOutput,  entity.ID);
@@ -151,7 +151,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	}
     	
-    	private static bool populateEnvironment(ClaimsPrincipal who, EnvironmentEntity entity, IDataReader dataReader)
+    	private static bool populateEnvironment(IEntityRequestContext context, EnvironmentEntity entity, IDataReader dataReader)
     	{
     		if (dataReader==null || !dataReader.Read()) return false;
     								

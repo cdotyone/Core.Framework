@@ -17,10 +17,12 @@ namespace Civic.Framework.WebApi.Test.Business
     public partial class ExampleBusinessFacade : IExampleFacade
     {
     	private readonly IExampleRepository _respository;
+        private readonly IEntityEventHandlerFactory _handlers;
     
-    	public ExampleBusinessFacade(IExampleRepository respository) 
+    	public ExampleBusinessFacade(IExampleRepository respository, IEntityEventHandlerFactory handlers) 
     	{
     		_respository = respository;
+            _handlers = handlers;
     	}
     }
 }

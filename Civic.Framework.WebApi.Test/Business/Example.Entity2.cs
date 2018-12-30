@@ -13,7 +13,6 @@ using System;
 using System.Security.Claims;
 using System.Collections.Generic;
 using Civic.Core.Security;
-using Civic.Core.Audit;
 using Civic.Core.Logging;
 
 using Entity2Entity = Civic.Framework.WebApi.Test.Entities.Entity2;
@@ -24,14 +23,20 @@ namespace Civic.Framework.WebApi.Test.Business
     public partial class ExampleBusinessFacade
     {
     
-    	public Entity2Entity GetEntity2(ClaimsPrincipal who, Int32 someID, String ff) 
+    	public Entity2Entity GetEntity2(IEntityRequestContext context,  Int32 someID, String ff) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "GetEntity2")) {
     
-                if (!AuthorizationHelper.CanView(who, Entity2Entity.Info)) throw new UnauthorizedAccessException();
+    			try {	
+    				if (!_handlers.OnGetBefore(context, Entity2Entity.Info))
+    					return null;
     
-    			try {		
-    				return _respository.GetEntity2(who,  someID, ff);
+    				var entity = _respository.GetEntity2(context,  someID, ff);
+    				
+    				if (!_handlers.OnGetAfter(context, Entity2Entity.Info, entity))
+    					return null;
+    
+    				return entity;
     			}
     			catch (Exception ex)
     			{
@@ -43,14 +48,19 @@ namespace Civic.Framework.WebApi.Test.Business
     		return null;
     	}
     	
-    	public List<Entity2Entity> GetPagedEntity2(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy) 
+    	public List<Entity2Entity> GetPagedEntity2(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "GetPagedEntity2")) {
     
-                if (!AuthorizationHelper.CanView(who, Entity2Entity.Info)) throw new UnauthorizedAccessException();
-    
     			try {
-    				return _respository.GetPagedEntity2(who, skip, ref count, retCount, filterBy, orderBy);
+    				if (!_handlers.OnGetPagedBefore(context, Entity2Entity.Info))
+    					return null;
+    
+    				var list = _respository.GetPagedEntity2(context, skip, ref count, retCount, filterBy, orderBy);
+    
+    				list = _handlers.OnGetPagedAfter<Entity2Entity>(context, Entity2Entity.Info, list);
+    
+    				return list;
     			}
     			catch (Exception ex)
     			{
@@ -62,30 +72,31 @@ namespace Civic.Framework.WebApi.Test.Business
     		return null;
     	}
     
-    	public void SaveEntity2(ClaimsPrincipal who, Entity2Entity entity) 
+    	public void SaveEntity2(IEntityRequestContext context, Entity2Entity entity) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "SaveEntity2")) {
-        
-                if (!AuthorizationHelper.CanModify(who, Entity2Entity.Info) && !AuthorizationHelper.CanAdd(who, Entity2Entity.Info)) throw new UnauthorizedAccessException();
-        
         		try {
-        			var before = _respository.GetEntity2(who,  entity.SomeID, entity.ff);
+        			var before = _respository.GetEntity2(context,  entity.SomeID, entity.ff);
     
     			    if (before == null)
     			    {
-                        if(!AuthorizationHelper.CanAdd(who, Entity2Entity.Info)) throw new UnauthorizedAccessException();
+    					if (!_handlers.OnAddBefore(context, Entity2Entity.Info, entity))
+    						return;
     
-    			        var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", entity.IdentityID, entity);
-                        _respository.AddEntity2(who, entity);
-    			        AuditManager.MarkSuccessFul("dbo", logid);
+                        _respository.AddEntity2(context, entity);
+    
+    					if (!_handlers.OnAddAfter(context, Entity2Entity.Info, entity))
+    						return;
                     }
     			    else
     			    {
-    			        if (!AuthorizationHelper.CanModify(who, Entity2Entity.Info)) throw new UnauthorizedAccessException();
+    					if (!_handlers.OnModifyBefore(context, Entity2Entity.Info, before, entity))
+    						return;
     
-    			        var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.IdentityID , before, entity);
-    			        _respository.ModifyEntity2(who, entity);
-    			        AuditManager.MarkSuccessFul("dbo", logid);
+    			        _respository.ModifyEntity2(context, entity);
+    
+    					if (!_handlers.OnModifyAfter(context, Entity2Entity.Info, before, entity))
+    						return;
                     }
         		}
         		catch (Exception ex)
@@ -95,17 +106,20 @@ namespace Civic.Framework.WebApi.Test.Business
         	}
     	}
     
-    	public void RemoveEntity2(ClaimsPrincipal who,  Int32 someID, String ff ) 
+    	public void RemoveEntity2(IEntityRequestContext context,  Int32 someID, String ff ) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "RemoveEntity2")) {
     
-                if (!AuthorizationHelper.CanRemove(who, Entity2Entity.Info)) throw new UnauthorizedAccessException();
-    
     			try {
-    				var before = _respository.GetEntity2(who,  someID, ff);
-    				var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.IdentityID , before);
-    				_respository.RemoveEntity2(who,  someID, ff);
-    				AuditManager.MarkSuccessFul("dbo", logid);
+    				var before = _respository.GetEntity2(context,  someID, ff);
+    
+    				if (!_handlers.OnRemoveBefore(context, Entity2Entity.Info, before))
+    					return;
+    
+    				_respository.RemoveEntity2(context,  someID, ff);
+    
+    				if (!_handlers.OnRemoveAfter(context, Entity2Entity.Info, before))
+    					return;
     			}
     			catch (Exception ex)
     			{
@@ -114,6 +128,23 @@ namespace Civic.Framework.WebApi.Test.Business
     
     		}
     	}
+    
+    	public List<Entity2Entity> GetPagedEntity2(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
+    		return GetPagedEntity2(new EntityRequestContext {Who = who}, skip, ref count, retCount, filterBy, orderBy);
+    	}
+    
+    	public Entity2Entity GetEntity2(ClaimsPrincipal who, Int32 someID, String ff ) {
+    		return GetEntity2(new EntityRequestContext {Who = who}, someID, ff);
+    	}
+    
+    	public void SaveEntity2(ClaimsPrincipal who, Entity2Entity entity) {
+    		SaveEntity2(new EntityRequestContext {Who = who}, entity);
+    	}
+    
+    	public void RemoveEntity2(ClaimsPrincipal who, Int32 someID, String ff ) {
+    		RemoveEntity2(new EntityRequestContext {Who = who}, someID, ff);
+    	}
+    
     }
 }
 

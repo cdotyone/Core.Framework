@@ -24,9 +24,9 @@ namespace Civic.Framework.WebApi.Test.Data
 {
     public partial class ExampleSqlRepository
     {
-    	public InstallationEnvironmentEntity GetInstallationEnvironment(ClaimsPrincipal who,  String environmentCode)
+    	public InstallationEnvironmentEntity GetInstallationEnvironment(IEntityRequestContext context,  String environmentCode)
     	{
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
@@ -37,14 +37,14 @@ namespace Civic.Framework.WebApi.Test.Data
     		        var info = InstallationEnvironmentEntity.Info;
     		        if (!info.UseProcedureGet)
     		        {
-    		            return SqlQuery.Get(Container, who,  environmentCode, InstallationEnvironmentEntity.Info, database) as InstallationEnvironmentEntity;
+    		            return SqlQuery.Get(Container, context.Who,  environmentCode, InstallationEnvironmentEntity.Info, database) as InstallationEnvironmentEntity;
                     }
     
     				command.AddInParameter("@environmentCode", environmentCode);
     				
     				command.ExecuteReader(dataReader =>
     					{
-    						if (populateInstallationEnvironment(who, retval, dataReader))
+    						if (populateInstallationEnvironment(context, retval, dataReader))
     						{
     							retval.EnvironmentCode = environmentCode;
     												}
@@ -55,9 +55,9 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	public List<InstallationEnvironmentEntity> GetPagedInstallationEnvironment(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+    	public List<InstallationEnvironmentEntity> GetPagedInstallationEnvironment(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
     	{ 
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
@@ -66,7 +66,7 @@ namespace Civic.Framework.WebApi.Test.Data
     		    var info = InstallationEnvironmentEntity.Info;
     		    if (!info.UseProcedureGet)
     		    {
-    		        var entityList = SqlQuery.GetPaged(Container, who, InstallationEnvironmentEntity.Info, skip, ref count, retCount, filterBy, orderBy, database);
+    		        var entityList = SqlQuery.GetPaged(Container, context.Who, InstallationEnvironmentEntity.Info, skip, ref count, retCount, filterBy, orderBy, database);
     		        foreach (var entity in entityList)
     		        {
     		            list.Add(entity as InstallationEnvironmentEntity);
@@ -86,7 +86,7 @@ namespace Civic.Framework.WebApi.Test.Data
     				command.ExecuteReader(dataReader =>
     					{
     						var item = new InstallationEnvironmentEntity();
-    						while(populateInstallationEnvironment(who, item, dataReader))
+    						while(populateInstallationEnvironment(context, item, dataReader))
     						{
     							list.Add(item);
     							item = new InstallationEnvironmentEntity();
@@ -99,37 +99,37 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	public void AddInstallationEnvironment(ClaimsPrincipal who, InstallationEnvironmentEntity installationEnvironment)
+    	public void AddInstallationEnvironment(IEntityRequestContext context, InstallationEnvironmentEntity installationEnvironment)
     	{ 
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_InstallationEnvironmentAdd"))
     			{
-    				buildInstallationEnvironmentCommandParameters(who, installationEnvironment, command, true );
+    				buildInstallationEnvironmentCommandParameters(context, installationEnvironment, command, true );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void ModifyInstallationEnvironment(ClaimsPrincipal who, InstallationEnvironmentEntity installationEnvironment)
+    	public void ModifyInstallationEnvironment(IEntityRequestContext context, InstallationEnvironmentEntity installationEnvironment)
     	{ 
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_InstallationEnvironmentModify"))
     			{
-    				buildInstallationEnvironmentCommandParameters(who, installationEnvironment, command, false );
+    				buildInstallationEnvironmentCommandParameters(context, installationEnvironment, command, false );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void RemoveInstallationEnvironment(ClaimsPrincipal who,  String environmentCode )
+    	public void RemoveInstallationEnvironment(IEntityRequestContext context,  String environmentCode )
     	{
-    		using(var database = GetConnection(who)) {
+    		using(var database = GetConnection(context)) {
     
     			Debug.Assert(database!=null);
     
@@ -142,7 +142,7 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	static void buildInstallationEnvironmentCommandParameters(ClaimsPrincipal who, InstallationEnvironmentEntity entity, IDBCommand command, bool addRecord )
+    	static void buildInstallationEnvironmentCommandParameters(IEntityRequestContext context, InstallationEnvironmentEntity entity, IDBCommand command, bool addRecord )
     	{ 
             Debug.Assert(command!=null);
        		if(addRecord) command.AddParameter("@environmentcode", ParameterDirection.InputOutput,  T4Config.CheckUpperCase("dbo","installationenvironment","environmentcode",entity.EnvironmentCode));
@@ -153,7 +153,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	}
     	
-    	private static bool populateInstallationEnvironment(ClaimsPrincipal who, InstallationEnvironmentEntity entity, IDataReader dataReader)
+    	private static bool populateInstallationEnvironment(IEntityRequestContext context, InstallationEnvironmentEntity entity, IDataReader dataReader)
     	{
     		if (dataReader==null || !dataReader.Read()) return false;
     							

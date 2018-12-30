@@ -21,6 +21,14 @@ namespace Civic.Framework.WebApi.Test.Interfaces
     
     public interface IFacadeInstallationEnvironment
     {
+    	List<InstallationEnvironmentEntity> GetPagedInstallationEnvironment(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy);
+    
+    	InstallationEnvironmentEntity GetInstallationEnvironment(IEntityRequestContext context,  String environmentCode );
+    
+    	void SaveInstallationEnvironment(IEntityRequestContext context, InstallationEnvironmentEntity installationenvironment);
+    
+    	void RemoveInstallationEnvironment(IEntityRequestContext context,  String environmentCode );
+    
     	List<InstallationEnvironmentEntity> GetPagedInstallationEnvironment(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy);
     
     	InstallationEnvironmentEntity GetInstallationEnvironment(ClaimsPrincipal who,  String environmentCode );
@@ -28,6 +36,7 @@ namespace Civic.Framework.WebApi.Test.Interfaces
     	void SaveInstallationEnvironment(ClaimsPrincipal who, InstallationEnvironmentEntity installationenvironment);
     
     	void RemoveInstallationEnvironment(ClaimsPrincipal who,  String environmentCode );
+    
     }
 }
 

@@ -21,6 +21,14 @@ namespace Civic.Framework.WebApi.Test.Interfaces
     
     public interface IFacadeEntity2
     {
+    	List<Entity2Entity> GetPagedEntity2(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy);
+    
+    	Entity2Entity GetEntity2(IEntityRequestContext context,  Int32 someID, String ff );
+    
+    	void SaveEntity2(IEntityRequestContext context, Entity2Entity entity2);
+    
+    	void RemoveEntity2(IEntityRequestContext context,  Int32 someID, String ff );
+    
     	List<Entity2Entity> GetPagedEntity2(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy);
     
     	Entity2Entity GetEntity2(ClaimsPrincipal who,  Int32 someID, String ff );
@@ -28,6 +36,7 @@ namespace Civic.Framework.WebApi.Test.Interfaces
     	void SaveEntity2(ClaimsPrincipal who, Entity2Entity entity2);
     
     	void RemoveEntity2(ClaimsPrincipal who,  Int32 someID, String ff );
+    
     }
 }
 

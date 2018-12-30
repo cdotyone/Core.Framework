@@ -13,7 +13,6 @@ using System;
 using System.Security.Claims;
 using System.Collections.Generic;
 using Civic.Core.Security;
-using Civic.Core.Audit;
 using Civic.Core.Logging;
 
 using InstallationEnvironmentEntity = Civic.Framework.WebApi.Test.Entities.InstallationEnvironment;
@@ -24,14 +23,20 @@ namespace Civic.Framework.WebApi.Test.Business
     public partial class ExampleBusinessFacade
     {
     
-    	public InstallationEnvironmentEntity GetInstallationEnvironment(ClaimsPrincipal who, String environmentCode) 
+    	public InstallationEnvironmentEntity GetInstallationEnvironment(IEntityRequestContext context,  String environmentCode) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "GetInstallationEnvironment")) {
     
-                if (!AuthorizationHelper.CanView(who, InstallationEnvironmentEntity.Info)) throw new UnauthorizedAccessException();
+    			try {	
+    				if (!_handlers.OnGetBefore(context, InstallationEnvironmentEntity.Info))
+    					return null;
     
-    			try {		
-    				return _respository.GetInstallationEnvironment(who,  environmentCode);
+    				var entity = _respository.GetInstallationEnvironment(context,  environmentCode);
+    				
+    				if (!_handlers.OnGetAfter(context, InstallationEnvironmentEntity.Info, entity))
+    					return null;
+    
+    				return entity;
     			}
     			catch (Exception ex)
     			{
@@ -43,14 +48,19 @@ namespace Civic.Framework.WebApi.Test.Business
     		return null;
     	}
     	
-    	public List<InstallationEnvironmentEntity> GetPagedInstallationEnvironment(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy) 
+    	public List<InstallationEnvironmentEntity> GetPagedInstallationEnvironment(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "GetPagedInstallationEnvironment")) {
     
-                if (!AuthorizationHelper.CanView(who, InstallationEnvironmentEntity.Info)) throw new UnauthorizedAccessException();
-    
     			try {
-    				return _respository.GetPagedInstallationEnvironment(who, skip, ref count, retCount, filterBy, orderBy);
+    				if (!_handlers.OnGetPagedBefore(context, InstallationEnvironmentEntity.Info))
+    					return null;
+    
+    				var list = _respository.GetPagedInstallationEnvironment(context, skip, ref count, retCount, filterBy, orderBy);
+    
+    				list = _handlers.OnGetPagedAfter<InstallationEnvironmentEntity>(context, InstallationEnvironmentEntity.Info, list);
+    
+    				return list;
     			}
     			catch (Exception ex)
     			{
@@ -62,30 +72,31 @@ namespace Civic.Framework.WebApi.Test.Business
     		return null;
     	}
     
-    	public void SaveInstallationEnvironment(ClaimsPrincipal who, InstallationEnvironmentEntity entity) 
+    	public void SaveInstallationEnvironment(IEntityRequestContext context, InstallationEnvironmentEntity entity) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "SaveInstallationEnvironment")) {
-        
-                if (!AuthorizationHelper.CanModify(who, InstallationEnvironmentEntity.Info) && !AuthorizationHelper.CanAdd(who, InstallationEnvironmentEntity.Info)) throw new UnauthorizedAccessException();
-        
         		try {
-        			var before = _respository.GetInstallationEnvironment(who,  entity.EnvironmentCode);
+        			var before = _respository.GetInstallationEnvironment(context,  entity.EnvironmentCode);
     
     			    if (before == null)
     			    {
-                        if(!AuthorizationHelper.CanAdd(who, InstallationEnvironmentEntity.Info)) throw new UnauthorizedAccessException();
+    					if (!_handlers.OnAddBefore(context, InstallationEnvironmentEntity.Info, entity))
+    						return;
     
-    			        var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", entity.IdentityID, entity);
-                        _respository.AddInstallationEnvironment(who, entity);
-    			        AuditManager.MarkSuccessFul("dbo", logid);
+                        _respository.AddInstallationEnvironment(context, entity);
+    
+    					if (!_handlers.OnAddAfter(context, InstallationEnvironmentEntity.Info, entity))
+    						return;
                     }
     			    else
     			    {
-    			        if (!AuthorizationHelper.CanModify(who, InstallationEnvironmentEntity.Info)) throw new UnauthorizedAccessException();
+    					if (!_handlers.OnModifyBefore(context, InstallationEnvironmentEntity.Info, before, entity))
+    						return;
     
-    			        var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.IdentityID , before, entity);
-    			        _respository.ModifyInstallationEnvironment(who, entity);
-    			        AuditManager.MarkSuccessFul("dbo", logid);
+    			        _respository.ModifyInstallationEnvironment(context, entity);
+    
+    					if (!_handlers.OnModifyAfter(context, InstallationEnvironmentEntity.Info, before, entity))
+    						return;
                     }
         		}
         		catch (Exception ex)
@@ -95,17 +106,20 @@ namespace Civic.Framework.WebApi.Test.Business
         	}
     	}
     
-    	public void RemoveInstallationEnvironment(ClaimsPrincipal who,  String environmentCode ) 
+    	public void RemoveInstallationEnvironment(IEntityRequestContext context,  String environmentCode ) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "RemoveInstallationEnvironment")) {
     
-                if (!AuthorizationHelper.CanRemove(who, InstallationEnvironmentEntity.Info)) throw new UnauthorizedAccessException();
-    
     			try {
-    				var before = _respository.GetInstallationEnvironment(who,  environmentCode);
-    				var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "dbo", "dbo", before.IdentityID , before);
-    				_respository.RemoveInstallationEnvironment(who,  environmentCode);
-    				AuditManager.MarkSuccessFul("dbo", logid);
+    				var before = _respository.GetInstallationEnvironment(context,  environmentCode);
+    
+    				if (!_handlers.OnRemoveBefore(context, InstallationEnvironmentEntity.Info, before))
+    					return;
+    
+    				_respository.RemoveInstallationEnvironment(context,  environmentCode);
+    
+    				if (!_handlers.OnRemoveAfter(context, InstallationEnvironmentEntity.Info, before))
+    					return;
     			}
     			catch (Exception ex)
     			{
@@ -114,6 +128,23 @@ namespace Civic.Framework.WebApi.Test.Business
     
     		}
     	}
+    
+    	public List<InstallationEnvironmentEntity> GetPagedInstallationEnvironment(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
+    		return GetPagedInstallationEnvironment(new EntityRequestContext {Who = who}, skip, ref count, retCount, filterBy, orderBy);
+    	}
+    
+    	public InstallationEnvironmentEntity GetInstallationEnvironment(ClaimsPrincipal who, String environmentCode ) {
+    		return GetInstallationEnvironment(new EntityRequestContext {Who = who}, environmentCode);
+    	}
+    
+    	public void SaveInstallationEnvironment(ClaimsPrincipal who, InstallationEnvironmentEntity entity) {
+    		SaveInstallationEnvironment(new EntityRequestContext {Who = who}, entity);
+    	}
+    
+    	public void RemoveInstallationEnvironment(ClaimsPrincipal who, String environmentCode ) {
+    		RemoveInstallationEnvironment(new EntityRequestContext {Who = who}, environmentCode);
+    	}
+    
     }
 }
 

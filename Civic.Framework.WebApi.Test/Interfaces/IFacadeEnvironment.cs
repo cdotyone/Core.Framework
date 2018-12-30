@@ -21,6 +21,14 @@ namespace Civic.Framework.WebApi.Test.Interfaces
     
     public interface IFacadeEnvironment
     {
+    	List<EnvironmentEntity> GetPagedEnvironment(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy);
+    
+    	EnvironmentEntity GetEnvironment(IEntityRequestContext context,  Int32 id );
+    
+    	void SaveEnvironment(IEntityRequestContext context, EnvironmentEntity environment);
+    
+    	void RemoveEnvironment(IEntityRequestContext context,  Int32 id );
+    
     	List<EnvironmentEntity> GetPagedEnvironment(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy);
     
     	EnvironmentEntity GetEnvironment(ClaimsPrincipal who,  Int32 id );
@@ -28,6 +36,7 @@ namespace Civic.Framework.WebApi.Test.Interfaces
     	void SaveEnvironment(ClaimsPrincipal who, EnvironmentEntity environment);
     
     	void RemoveEnvironment(ClaimsPrincipal who,  Int32 id );
+    
     }
 }
 

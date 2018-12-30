@@ -24,11 +24,11 @@ namespace Civic.Framework.WebApi.Test.Data
     		_container = container;
     	}
     
-        public IDBConnection GetConnection( ClaimsPrincipal who )
+        public IDBConnection GetConnection( IEntityRequestContext context )
         {
-            if (who != null)
+            if (context.Who != null)
             {
-                return DatabaseFactory.CreateDatabase("example").AddClaimsDefaults(who);
+                return DatabaseFactory.CreateDatabase("example").AddClaimsDefaults(context.Who);
             }
             return DatabaseFactory.CreateDatabase("example");
         }

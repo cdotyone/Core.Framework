@@ -21,15 +21,15 @@ namespace Civic.Framework.WebApi.Test.Interfaces
     
     public interface IOperationEnvironment
     {
-    	List<EnvironmentEntity> GetPagedEnvironment(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy);
+    	List<EnvironmentEntity> GetPagedEnvironment(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy );
     
-    	EnvironmentEntity GetEnvironment(ClaimsPrincipal who,  Int32 id );
+    	EnvironmentEntity GetEnvironment(IEntityRequestContext context,  Int32 id );
     
-    	void AddEnvironment(ClaimsPrincipal who, EnvironmentEntity environment);
+    	void AddEnvironment(IEntityRequestContext context, EnvironmentEntity environment );
     
-    	void ModifyEnvironment(ClaimsPrincipal who, EnvironmentEntity environment);
+    	void ModifyEnvironment(IEntityRequestContext context, EnvironmentEntity environment );
     
-    	void RemoveEnvironment(ClaimsPrincipal who,  Int32 id );
+    	void RemoveEnvironment(IEntityRequestContext context,  Int32 id );
     }
 }
 
