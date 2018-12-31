@@ -14,6 +14,12 @@ namespace Civic.Framework.WebApi
 
         bool UseProcedureGetPaged { get; set; }
 
+        string RelatedModule { get; set; }
+
+        string RelatedEntity { get; set; }
+
+        string RelatedKeyName { get; set; }
+
         Dictionary<string, IEntityPropertyInfo> Properties { get; set; }
     }
 }

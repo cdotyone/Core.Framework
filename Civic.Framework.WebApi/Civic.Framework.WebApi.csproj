@@ -136,6 +136,7 @@
     <Compile Include="3.0\AuthorizationHelper.cs" />
     <Compile Include="3.0\AuditLogHandler.cs" />
     <Compile Include="3.0\BasicAuthorizationHandler.cs" />
+    <Compile Include="3.0\ServicesController.cs" />
     <Compile Include="3.0\EntityEventHandlerFactory.cs" />
     <Compile Include="3.0\EntityEventType.cs" />
     <Compile Include="3.0\SqlOperation.cs" />
