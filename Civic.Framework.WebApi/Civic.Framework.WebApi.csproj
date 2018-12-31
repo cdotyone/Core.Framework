@@ -138,9 +138,12 @@
     <Compile Include="3.0\BasicAuthorizationHandler.cs" />
     <Compile Include="3.0\EntityEventHandlerFactory.cs" />
     <Compile Include="3.0\EntityEventType.cs" />
+    <Compile Include="3.0\SqlOperation.cs" />
     <Compile Include="3.0\EntityRequestContext.cs" />
     <Compile Include="3.0\IEntityEventHandlerFactory.cs" />
     <Compile Include="3.0\IEntityEventHandler.cs" />
+    <Compile Include="3.0\EntityOperationType.cs" />
+    <Compile Include="3.0\IEntityOperation.cs" />
     <Compile Include="3.0\IEntityRequestContext.cs" />
     <Compile Include="3.0\WebApiPackage.cs" />
     <Compile Include="3.0\EntityCreateFactory.cs" />

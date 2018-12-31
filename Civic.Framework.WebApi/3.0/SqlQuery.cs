@@ -13,6 +13,46 @@ namespace Civic.Framework.WebApi
 {
     public class SqlQuery
     {
+        public static IDBConnection GetConnection(string dbCode, EntityOperationType type, IEntityIdentity entity, IEntityRequestContext context)
+        {
+            dbCode = DataConfig.Current.GetConnectionName(dbCode);
+
+            IDBConnection connection = null;
+            foreach (var operation in context.Operations)
+            {
+                var sqlOperation = operation as SqlOperation;
+                if (sqlOperation == null) continue;
+                if (sqlOperation.DbCode == dbCode)
+                {
+                    connection = sqlOperation.Connection;
+                }
+            }
+
+            if (connection == null && context.Who != null)
+            {
+                connection =  DatabaseFactory.CreateDatabase(dbCode).AddClaimsDefaults(context.Who);
+            }
+            if(connection==null) connection= DatabaseFactory.CreateDatabase(dbCode);
+
+            if (type != EntityOperationType.Get)
+            {
+                if (!connection.IsInTransaction)
+                {
+                    connection.BeginTrans();
+                }
+
+                context.Operations.Add(new SqlOperation
+                {
+                    DbCode = dbCode,
+                    Type = type,
+                    Entity = entity,
+                    Connection = connection
+                });
+            }
+
+            return connection;
+        }
+
         public static IEntityIdentity Get(Container container, ClaimsPrincipal who, string entityID, IEntityInfo info, IDBConnection database)
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(SqlQuery), "Get"))

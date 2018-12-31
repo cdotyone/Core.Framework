@@ -74,11 +74,11 @@ public interface IOperation<#=entity.Name#>
 
 	<#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(IEntityRequestContext context, <# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
 
-	<#=((keyType=="Int32" || keyType=="int") && keyName=="Id"?"int":"void")#> Add<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#> );
+	<#=((keyType=="Int32" || keyType=="int") && keyName=="Id"?"int":"void")#> Add<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity );
 
-	void Modify<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#> );
+	void Modify<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity );
 
-	void Remove<#=code.Escape(entity)#>(IEntityRequestContext context, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> );
+	void Remove<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity );
 }
 <#
 	EndNamespace(namespaceName);

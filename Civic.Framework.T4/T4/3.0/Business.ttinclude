@@ -116,13 +116,27 @@ public partial class <#=edmxFileName#>BusinessFacade
 	public void Save<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity) 
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>BusinessFacade), "Save<#=code.Escape(entity)#>")) {
-    		try {
+    		var first = context.Operations.Count == 0;
+
+			try {
     			var before = _respository.Get<#=code.Escape(entity)#>(context, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + "entity."+ key)#><#}#>);
 
 			    if (before == null)
 			    {
 					if (!_handlers.OnAddBefore(context, <#=code.Escape(entity)#>Entity.Info, entity))
 						return;
+<#
+					foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+					{
+						if(ef.IsKey(edmProperty)) { 
+							if(code.Escape(edmProperty.TypeUsage.EdmType).ToLower()=="string" && edmProperty.Name.ToLower().EndsWith("uid")) { 
+						#> 
+					entity.<#=code.Escape(edmProperty.Name)#> = entity.<#=code.Escape(edmProperty.Name)#>.InsureUID(); 
+<#
+							}
+						}
+					}
+#>
 
                     _respository.Add<#=code.Escape(entity)#>(context, entity);
 
@@ -140,16 +154,25 @@ public partial class <#=edmxFileName#>BusinessFacade
 						return;
                 }
     		}
-    		catch (Exception ex)
-    		{
-    			if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-    		}
+            catch (Exception ex)
+            {
+                context.Rollback();
+                if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+            }
+            finally
+            {
+                if (first)
+                {
+                    context.Commit();
+                }
+            }
     	}
 	}
 
 	public void Remove<#=code.Escape(entity)#>(IEntityRequestContext context, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> ) 
 	{
         using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>BusinessFacade), "Remove<#=code.Escape(entity)#>")) {
+            var first = context.Operations.Count == 0;
 
 			try {
 				var before = _respository.Get<#=code.Escape(entity)#>(context, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>);
@@ -157,15 +180,23 @@ public partial class <#=edmxFileName#>BusinessFacade
 				if (!_handlers.OnRemoveBefore(context, <#=code.Escape(entity)#>Entity.Info, before))
 					return;
 
-				_respository.Remove<#=code.Escape(entity)#>(context, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>);
+				_respository.Remove<#=code.Escape(entity)#>(context, before);
 
 				if (!_handlers.OnRemoveAfter(context, <#=code.Escape(entity)#>Entity.Info, before))
 					return;
 			}
-			catch (Exception ex)
-			{
-				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-			}
+            catch (Exception ex)
+            {
+                context.Rollback();
+                if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+            }
+            finally
+            {
+                if (first)
+                {
+                    context.Commit();
+                }
+            }
 
 		}
 	}

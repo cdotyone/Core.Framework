@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace Civic.Framework.WebApi
 {
@@ -7,5 +8,11 @@ namespace Civic.Framework.WebApi
         ClaimsPrincipal Who { get; set; }
 
         string TransactionUID { get; set; }
+
+        List<IEntityOperation> Operations { get; }
+
+        void Commit();
+
+        void Rollback();
     }
 }
