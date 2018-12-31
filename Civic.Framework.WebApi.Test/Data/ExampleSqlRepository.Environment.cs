@@ -26,7 +26,7 @@ namespace Civic.Framework.WebApi.Test.Data
     {
     	public EnvironmentEntity GetEnvironment(IEntityRequestContext context,  Int32 id)
     	{
-    		using(var database = GetConnection(context)) {
+    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Get, null ,context)) {
     
     			Debug.Assert(database!=null);
     
@@ -57,7 +57,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public List<EnvironmentEntity> GetPagedEnvironment(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
     	{ 
-    		using(var database = GetConnection(context)) {
+    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Get, null ,context)) {
     
     			Debug.Assert(database!=null);
     
@@ -99,46 +99,47 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	public void AddEnvironment(IEntityRequestContext context, EnvironmentEntity environment)
+    	public void AddEnvironment(IEntityRequestContext context, EnvironmentEntity entity)
     	{ 
-    		using(var database = GetConnection(context)) {
+    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Add, entity ,context)) {
     
     			Debug.Assert(database!=null);
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentAdd"))
     			{
-    				buildEnvironmentCommandParameters(context, environment, command, true );
+    				buildEnvironmentCommandParameters(context, entity, command, true );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void ModifyEnvironment(IEntityRequestContext context, EnvironmentEntity environment)
+    	public void ModifyEnvironment(IEntityRequestContext context, EnvironmentEntity entity)
     	{ 
-    		using(var database = GetConnection(context)) {
-    
+    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Modify, entity, context)) {
     			Debug.Assert(database!=null);
+    
+    			context.Operations.Add(new SqlOperation {
+    			});
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentModify"))
     			{
-    				buildEnvironmentCommandParameters(context, environment, command, false );
+    				buildEnvironmentCommandParameters(context, entity, command, false );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void RemoveEnvironment(IEntityRequestContext context,  Int32 id )
+    	public void RemoveEnvironment(IEntityRequestContext context, EnvironmentEntity entity )
     	{
-    		using(var database = GetConnection(context)) {
+    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Remove, entity, context)) {
     
     			Debug.Assert(database!=null);
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentRemove"))
     			{
-    				command.AddInParameter("@id", id);
-    					command.ExecuteNonQuery();
+    				buildEnvironmentCommandParameters(context, entity, command, false );
+    				command.ExecuteNonQuery();
     			}
-    
     		}
     	}
     

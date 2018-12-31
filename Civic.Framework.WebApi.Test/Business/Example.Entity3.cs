@@ -75,13 +75,17 @@ namespace Civic.Framework.WebApi.Test.Business
     	public void SaveEntity3(IEntityRequestContext context, Entity3Entity entity) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "SaveEntity3")) {
-        		try {
+        		var first = context.Operations.Count == 0;
+    
+    			try {
         			var before = _respository.GetEntity3(context,  entity.SomeUID);
     
     			    if (before == null)
     			    {
     					if (!_handlers.OnAddBefore(context, Entity3Entity.Info, entity))
     						return;
+     
+    					entity.SomeUID = entity.SomeUID.InsureUID(); 
     
                         _respository.AddEntity3(context, entity);
     
@@ -99,16 +103,25 @@ namespace Civic.Framework.WebApi.Test.Business
     						return;
                     }
         		}
-        		catch (Exception ex)
-        		{
-        			if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-        		}
+                catch (Exception ex)
+                {
+                    context.Rollback();
+                    if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+                }
+                finally
+                {
+                    if (first)
+                    {
+                        context.Commit();
+                    }
+                }
         	}
     	}
     
     	public void RemoveEntity3(IEntityRequestContext context,  String someUID ) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "RemoveEntity3")) {
+                var first = context.Operations.Count == 0;
     
     			try {
     				var before = _respository.GetEntity3(context,  someUID);
@@ -116,15 +129,23 @@ namespace Civic.Framework.WebApi.Test.Business
     				if (!_handlers.OnRemoveBefore(context, Entity3Entity.Info, before))
     					return;
     
-    				_respository.RemoveEntity3(context,  someUID);
+    				_respository.RemoveEntity3(context, before);
     
     				if (!_handlers.OnRemoveAfter(context, Entity3Entity.Info, before))
     					return;
     			}
-    			catch (Exception ex)
-    			{
-    				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-    			}
+                catch (Exception ex)
+                {
+                    context.Rollback();
+                    if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+                }
+                finally
+                {
+                    if (first)
+                    {
+                        context.Commit();
+                    }
+                }
     
     		}
     	}

@@ -75,7 +75,9 @@ namespace Civic.Framework.WebApi.Test.Business
     	public void SaveEntity2(IEntityRequestContext context, Entity2Entity entity) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "SaveEntity2")) {
-        		try {
+        		var first = context.Operations.Count == 0;
+    
+    			try {
         			var before = _respository.GetEntity2(context,  entity.SomeID, entity.ff);
     
     			    if (before == null)
@@ -99,16 +101,25 @@ namespace Civic.Framework.WebApi.Test.Business
     						return;
                     }
         		}
-        		catch (Exception ex)
-        		{
-        			if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-        		}
+                catch (Exception ex)
+                {
+                    context.Rollback();
+                    if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+                }
+                finally
+                {
+                    if (first)
+                    {
+                        context.Commit();
+                    }
+                }
         	}
     	}
     
     	public void RemoveEntity2(IEntityRequestContext context,  Int32 someID, String ff ) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "RemoveEntity2")) {
+                var first = context.Operations.Count == 0;
     
     			try {
     				var before = _respository.GetEntity2(context,  someID, ff);
@@ -116,15 +127,23 @@ namespace Civic.Framework.WebApi.Test.Business
     				if (!_handlers.OnRemoveBefore(context, Entity2Entity.Info, before))
     					return;
     
-    				_respository.RemoveEntity2(context,  someID, ff);
+    				_respository.RemoveEntity2(context, before);
     
     				if (!_handlers.OnRemoveAfter(context, Entity2Entity.Info, before))
     					return;
     			}
-    			catch (Exception ex)
-    			{
-    				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-    			}
+                catch (Exception ex)
+                {
+                    context.Rollback();
+                    if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+                }
+                finally
+                {
+                    if (first)
+                    {
+                        context.Commit();
+                    }
+                }
     
     		}
     	}

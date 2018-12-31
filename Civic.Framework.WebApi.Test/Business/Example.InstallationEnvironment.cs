@@ -75,7 +75,9 @@ namespace Civic.Framework.WebApi.Test.Business
     	public void SaveInstallationEnvironment(IEntityRequestContext context, InstallationEnvironmentEntity entity) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "SaveInstallationEnvironment")) {
-        		try {
+        		var first = context.Operations.Count == 0;
+    
+    			try {
         			var before = _respository.GetInstallationEnvironment(context,  entity.EnvironmentCode);
     
     			    if (before == null)
@@ -99,16 +101,25 @@ namespace Civic.Framework.WebApi.Test.Business
     						return;
                     }
         		}
-        		catch (Exception ex)
-        		{
-        			if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-        		}
+                catch (Exception ex)
+                {
+                    context.Rollback();
+                    if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+                }
+                finally
+                {
+                    if (first)
+                    {
+                        context.Commit();
+                    }
+                }
         	}
     	}
     
     	public void RemoveInstallationEnvironment(IEntityRequestContext context,  String environmentCode ) 
     	{
             using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(ExampleBusinessFacade), "RemoveInstallationEnvironment")) {
+                var first = context.Operations.Count == 0;
     
     			try {
     				var before = _respository.GetInstallationEnvironment(context,  environmentCode);
@@ -116,15 +127,23 @@ namespace Civic.Framework.WebApi.Test.Business
     				if (!_handlers.OnRemoveBefore(context, InstallationEnvironmentEntity.Info, before))
     					return;
     
-    				_respository.RemoveInstallationEnvironment(context,  environmentCode);
+    				_respository.RemoveInstallationEnvironment(context, before);
     
     				if (!_handlers.OnRemoveAfter(context, InstallationEnvironmentEntity.Info, before))
     					return;
     			}
-    			catch (Exception ex)
-    			{
-    				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-    			}
+                catch (Exception ex)
+                {
+                    context.Rollback();
+                    if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+                }
+                finally
+                {
+                    if (first)
+                    {
+                        context.Commit();
+                    }
+                }
     
     		}
     	}

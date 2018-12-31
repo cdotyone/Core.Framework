@@ -25,11 +25,11 @@ namespace Civic.Framework.WebApi.Test.Interfaces
     
     	EnvironmentEntity GetEnvironment(IEntityRequestContext context,  Int32 id );
     
-    	void AddEnvironment(IEntityRequestContext context, EnvironmentEntity environment );
+    	void AddEnvironment(IEntityRequestContext context, EnvironmentEntity entity );
     
-    	void ModifyEnvironment(IEntityRequestContext context, EnvironmentEntity environment );
+    	void ModifyEnvironment(IEntityRequestContext context, EnvironmentEntity entity );
     
-    	void RemoveEnvironment(IEntityRequestContext context,  Int32 id );
+    	void RemoveEnvironment(IEntityRequestContext context, EnvironmentEntity entity );
     }
 }
 

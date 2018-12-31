@@ -25,11 +25,11 @@ namespace Civic.Framework.WebApi.Test.Interfaces
     
     	Entity2Entity GetEntity2(IEntityRequestContext context,  Int32 someID, String ff );
     
-    	void AddEntity2(IEntityRequestContext context, Entity2Entity entity2 );
+    	void AddEntity2(IEntityRequestContext context, Entity2Entity entity );
     
-    	void ModifyEntity2(IEntityRequestContext context, Entity2Entity entity2 );
+    	void ModifyEntity2(IEntityRequestContext context, Entity2Entity entity );
     
-    	void RemoveEntity2(IEntityRequestContext context,  Int32 someID, String ff );
+    	void RemoveEntity2(IEntityRequestContext context, Entity2Entity entity );
     }
 }
 

@@ -24,15 +24,6 @@ namespace Civic.Framework.WebApi.Test.Data
     		_container = container;
     	}
     
-        public IDBConnection GetConnection( IEntityRequestContext context )
-        {
-            if (context.Who != null)
-            {
-                return DatabaseFactory.CreateDatabase("example").AddClaimsDefaults(context.Who);
-            }
-            return DatabaseFactory.CreateDatabase("example");
-        }
-    
     	public Container Container {
     		get {
     			return _container;

@@ -25,11 +25,11 @@ namespace Civic.Framework.WebApi.Test.Interfaces
     
     	Entity3Entity GetEntity3(IEntityRequestContext context,  String someUID );
     
-    	void AddEntity3(IEntityRequestContext context, Entity3Entity entity3 );
+    	void AddEntity3(IEntityRequestContext context, Entity3Entity entity );
     
-    	void ModifyEntity3(IEntityRequestContext context, Entity3Entity entity3 );
+    	void ModifyEntity3(IEntityRequestContext context, Entity3Entity entity );
     
-    	void RemoveEntity3(IEntityRequestContext context,  String someUID );
+    	void RemoveEntity3(IEntityRequestContext context, Entity3Entity entity );
     }
 }
 

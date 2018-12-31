@@ -26,7 +26,7 @@ namespace Civic.Framework.WebApi.Test.Data
     {
     	public Entity3Entity GetEntity3(IEntityRequestContext context,  String someUID)
     	{
-    		using(var database = GetConnection(context)) {
+    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Get, null ,context)) {
     
     			Debug.Assert(database!=null);
     
@@ -57,7 +57,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public List<Entity3Entity> GetPagedEntity3(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
     	{ 
-    		using(var database = GetConnection(context)) {
+    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Get, null ,context)) {
     
     			Debug.Assert(database!=null);
     
@@ -99,47 +99,47 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	public void AddEntity3(IEntityRequestContext context, Entity3Entity entity3)
+    	public void AddEntity3(IEntityRequestContext context, Entity3Entity entity)
     	{ 
-    		using(var database = GetConnection(context)) {
+    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Add, entity ,context)) {
     
     			Debug.Assert(database!=null);
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity3Add"))
     			{
-    				buildEntity3CommandParameters(context, entity3, command, true ); 
-    				entity3.SomeUID = entity3.SomeUID.InsureUID(); 
+    				buildEntity3CommandParameters(context, entity, command, true );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void ModifyEntity3(IEntityRequestContext context, Entity3Entity entity3)
+    	public void ModifyEntity3(IEntityRequestContext context, Entity3Entity entity)
     	{ 
-    		using(var database = GetConnection(context)) {
-    
+    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Modify, entity, context)) {
     			Debug.Assert(database!=null);
+    
+    			context.Operations.Add(new SqlOperation {
+    			});
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity3Modify"))
     			{
-    				buildEntity3CommandParameters(context, entity3, command, false );
+    				buildEntity3CommandParameters(context, entity, command, false );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void RemoveEntity3(IEntityRequestContext context,  String someUID )
+    	public void RemoveEntity3(IEntityRequestContext context, Entity3Entity entity )
     	{
-    		using(var database = GetConnection(context)) {
+    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Remove, entity, context)) {
     
     			Debug.Assert(database!=null);
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity3Remove"))
     			{
-    				command.AddInParameter("@someUID", someUID);
-    					command.ExecuteNonQuery();
+    				buildEntity3CommandParameters(context, entity, command, false );
+    				command.ExecuteNonQuery();
     			}
-    
     		}
     	}
     
