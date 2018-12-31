@@ -22,7 +22,7 @@ namespace Civic.Framework.WebApi.Test.Business
     {
         public void RegisterServices(Container container)
         {
-    		container.Register<IExampleFacade, ExampleBusinessFacade>(Lifestyle.Scoped);
+    		container.Register<IExampleFacade, ExampleBusinessFacade>(Lifestyle.Singleton);
     
     		var factory = new EntityCreateFactory(container);
     
@@ -31,6 +31,11 @@ namespace Civic.Framework.WebApi.Test.Business
     		factory.Register<Entity3>(Entity3.Info);
     		factory.Register<Environment>(Environment.Info);
     		factory.Register<InstallationEnvironment>(InstallationEnvironment.Info);
+    		container.Register<IFacadeEntity1, ExampleBusinessFacade>(Lifestyle.Singleton);
+    		container.Register<IFacadeEntity2, ExampleBusinessFacade>(Lifestyle.Singleton);
+    		container.Register<IFacadeEntity3, ExampleBusinessFacade>(Lifestyle.Singleton);
+    		container.Register<IFacadeEnvironment, ExampleBusinessFacade>(Lifestyle.Singleton);
+    		container.Register<IFacadeInstallationEnvironment, ExampleBusinessFacade>(Lifestyle.Singleton);
     
         }
     }

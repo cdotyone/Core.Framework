@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Civic.Framework.WebApi
 {
@@ -15,5 +14,13 @@ namespace Civic.Framework.WebApi
         string _entity { get;  }
         // ReSharper enable once InconsistentNaming
         #pragma warning restore IDE1006 // Naming Styles
+
+        IEntityInfo GetInfo();
+
+        void Load(IEntityRequestContext context);
+
+        void Save(IEntityRequestContext context);
+
+        void Remove(IEntityRequestContext context);
     }
 }

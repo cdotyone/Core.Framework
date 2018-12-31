@@ -26,11 +26,11 @@ namespace Civic.Framework.WebApi.Test.Data
     {
     	public InstallationEnvironmentEntity GetInstallationEnvironment(IEntityRequestContext context,  String environmentCode)
     	{
-    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Get, null ,context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null ,context)) {
     
     			Debug.Assert(database!=null);
     
-    			var retval = new InstallationEnvironmentEntity();
+       			var retval = Container.GetInstance<InstallationEnvironmentEntity>();
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_InstallationEnvironmentGet"))
     			{
@@ -57,7 +57,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public List<InstallationEnvironmentEntity> GetPagedInstallationEnvironment(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
     	{ 
-    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Get, null ,context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null ,context)) {
     
     			Debug.Assert(database!=null);
     
@@ -85,11 +85,11 @@ namespace Civic.Framework.WebApi.Test.Data
     			
     				command.ExecuteReader(dataReader =>
     					{
-    						var item = new InstallationEnvironmentEntity();
+       						var item = Container.GetInstance<InstallationEnvironmentEntity>();
     						while(populateInstallationEnvironment(context, item, dataReader))
     						{
     							list.Add(item);
-    							item = new InstallationEnvironmentEntity();
+       							item = Container.GetInstance<InstallationEnvironmentEntity>();
     						} 
     					});
     
@@ -101,7 +101,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public void AddInstallationEnvironment(IEntityRequestContext context, InstallationEnvironmentEntity entity)
     	{ 
-    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Add, entity ,context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Add, entity ,context)) {
     
     			Debug.Assert(database!=null);
     
@@ -115,7 +115,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public void ModifyInstallationEnvironment(IEntityRequestContext context, InstallationEnvironmentEntity entity)
     	{ 
-    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Modify, entity, context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, entity, context)) {
     			Debug.Assert(database!=null);
     
     			context.Operations.Add(new SqlOperation {
@@ -131,7 +131,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public void RemoveInstallationEnvironment(IEntityRequestContext context, InstallationEnvironmentEntity entity )
     	{
-    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Remove, entity, context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Remove, entity, context)) {
     
     			Debug.Assert(database!=null);
     

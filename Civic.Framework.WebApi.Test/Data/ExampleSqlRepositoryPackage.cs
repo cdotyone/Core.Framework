@@ -21,7 +21,7 @@ namespace Civic.Framework.WebApi.Test.Data
     {
         public void RegisterServices(Container container)
         {
-    		container.Register<IExampleRepository, ExampleSqlRepository>(Lifestyle.Scoped);
+    		container.Register<IExampleRepository, ExampleSqlRepository>(Lifestyle.Singleton);
         }
     }
     

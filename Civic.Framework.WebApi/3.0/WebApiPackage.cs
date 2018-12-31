@@ -24,8 +24,8 @@ namespace Civic.Framework.WebApi
 
             var factory = new EntityEventHandlerFactory(container);
 
-            factory.Register<BasicAuthorizationHandler>();
-            factory.Register<AuditLogHandler>();
+            factory.Register(new BasicAuthorizationHandler());
+            factory.Register(new AuditLogHandler());
         }
     }
     

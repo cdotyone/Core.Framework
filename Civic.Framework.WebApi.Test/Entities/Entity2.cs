@@ -15,6 +15,7 @@ using System.Runtime.Serialization;
 using Civic.Core.Data;
 using Civic.Framework.WebApi;
 using Newtonsoft.Json;
+using Civic.Framework.WebApi.Test.Interfaces;
 
 namespace Civic.Framework.WebApi.Test.Entities
 {
@@ -69,6 +70,28 @@ namespace Civic.Framework.WebApi.Test.Entities
     			{"ouid", new EntityPropertyInfo { Name = "ouid", Type="string" }},
             }
         };
+    
+    	private IFacadeEntity2 _facade;
+    	public Entity2(IFacadeEntity2 facade)
+    	{
+    		_facade = facade;
+    	}
+    
+    	public IEntityInfo GetInfo() {
+    		return Info;
+    	}
+    
+    	public void Load(IEntityRequestContext context) {
+    		_facade.GetEntity2(context,SomeID,ff);
+    	}
+    
+    	public void Save(IEntityRequestContext context) {
+    		_facade.SaveEntity2(context, this);
+    	}
+    
+    	public void Remove(IEntityRequestContext context) {
+    		_facade.RemoveEntity2(context,SomeID,ff);
+    	}
     }
 }
 

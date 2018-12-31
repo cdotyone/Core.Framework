@@ -15,13 +15,19 @@ public class <#=edmxFileName#>Package : IPackage
 {
     public void RegisterServices(Container container)
     {
-		container.Register<I<#=edmxFileName#>Facade, <#=edmxFileName#>BusinessFacade>(Lifestyle.Scoped);
+		container.Register<I<#=edmxFileName#>Facade, <#=edmxFileName#>BusinessFacade>(Lifestyle.Singleton);
 
 		var factory = new EntityCreateFactory(container);
 
 <#		foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 		{
 #>		factory.Register<<#=entity.Name#>>(<#=entity.Name#>.Info);
+<#
+		}
+
+		foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+		{
+#>		container.Register<IFacade<#=entity.Name#>, <#=edmxFileName#>BusinessFacade>(Lifestyle.Singleton);
 <#
 		}
 #>

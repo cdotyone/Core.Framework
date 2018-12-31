@@ -3,7 +3,7 @@
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
     fileManager.StartNewFile(entity.Name + ".cs", folderName:"Entities");
-	WriteHeader("System","System.Collections.Generic","System.Runtime.Serialization","Civic.Core.Data","Civic.Framework.WebApi", "Newtonsoft.Json");
+	WriteHeader("System","System.Collections.Generic","System.Runtime.Serialization","Civic.Core.Data","Civic.Framework.WebApi", "Newtonsoft.Json",namespaceName + ".Interfaces");
 
     BeginNamespace(namespaceName + ".Entities", code);
 
@@ -123,6 +123,28 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 #>
         }
     };
+
+	private IFacade<#=entity.Name#> _facade;
+	public <#=entity.Name#>(IFacade<#=entity.Name#> facade)
+	{
+		_facade = facade;
+	}
+
+	public IEntityInfo GetInfo() {
+		return Info;
+	}
+
+	public void Load(IEntityRequestContext context) {
+		_facade.Get<#=entity.Name#>(context,<#=string.Join(",", keys)#>);
+	}
+
+	public void Save(IEntityRequestContext context) {
+		_facade.Save<#=entity.Name#>(context, this);
+	}
+
+	public void Remove(IEntityRequestContext context) {
+		_facade.Remove<#=entity.Name#>(context,<#=string.Join(",", keys)#>);
+	}
 }
 <#
     EndNamespace(namespaceName + ".Entities");

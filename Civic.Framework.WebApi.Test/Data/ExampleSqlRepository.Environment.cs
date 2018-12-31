@@ -26,11 +26,11 @@ namespace Civic.Framework.WebApi.Test.Data
     {
     	public EnvironmentEntity GetEnvironment(IEntityRequestContext context,  Int32 id)
     	{
-    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Get, null ,context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null ,context)) {
     
     			Debug.Assert(database!=null);
     
-    			var retval = new EnvironmentEntity();
+       			var retval = Container.GetInstance<EnvironmentEntity>();
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentGet"))
     			{
@@ -57,7 +57,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public List<EnvironmentEntity> GetPagedEnvironment(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
     	{ 
-    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Get, null ,context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null ,context)) {
     
     			Debug.Assert(database!=null);
     
@@ -85,11 +85,11 @@ namespace Civic.Framework.WebApi.Test.Data
     			
     				command.ExecuteReader(dataReader =>
     					{
-    						var item = new EnvironmentEntity();
+       						var item = Container.GetInstance<EnvironmentEntity>();
     						while(populateEnvironment(context, item, dataReader))
     						{
     							list.Add(item);
-    							item = new EnvironmentEntity();
+       							item = Container.GetInstance<EnvironmentEntity>();
     						} 
     					});
     
@@ -101,7 +101,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public void AddEnvironment(IEntityRequestContext context, EnvironmentEntity entity)
     	{ 
-    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Add, entity ,context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Add, entity ,context)) {
     
     			Debug.Assert(database!=null);
     
@@ -115,7 +115,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public void ModifyEnvironment(IEntityRequestContext context, EnvironmentEntity entity)
     	{ 
-    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Modify, entity, context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, entity, context)) {
     			Debug.Assert(database!=null);
     
     			context.Operations.Add(new SqlOperation {
@@ -131,7 +131,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public void RemoveEnvironment(IEntityRequestContext context, EnvironmentEntity entity )
     	{
-    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Remove, entity, context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Remove, entity, context)) {
     
     			Debug.Assert(database!=null);
     

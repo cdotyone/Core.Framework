@@ -38,11 +38,11 @@ public partial class <#=edmxFileName#>SqlRepository
 #>
 	public <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(IEntityRequestContext context, <# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#>)
 	{
-		using(var database = SqlQuery.GetConnection("<#=apiSchemaName#>", EntityOperationType.Get, null ,context)) {
+		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Get, null ,context)) {
 
 			Debug.Assert(database!=null);
 
-			var retval = new <#=code.Escape(entity)#>Entity();
+   			var retval = Container.GetInstance<<#=code.Escape(entity)#>Entity>();
 
 			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Get"))
 			{
@@ -77,7 +77,7 @@ public partial class <#=edmxFileName#>SqlRepository
 
 	public List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
 	{ 
-		using(var database = SqlQuery.GetConnection("<#=apiSchemaName#>", EntityOperationType.Get, null ,context)) {
+		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Get, null ,context)) {
 
 			Debug.Assert(database!=null);
 
@@ -105,11 +105,11 @@ public partial class <#=edmxFileName#>SqlRepository
 			
 				command.ExecuteReader(dataReader =>
 					{
-						var item = new <#=code.Escape(entity)#>Entity();
+   						var item = Container.GetInstance<<#=code.Escape(entity)#>Entity>();
 						while(populate<#=code.Escape(entity)#>(context, item, dataReader))
 						{
 							list.Add(item);
-							item = new <#=code.Escape(entity)#>Entity();
+   							item = Container.GetInstance<<#=code.Escape(entity)#>Entity>();
 						} 
 					});
 
@@ -121,7 +121,7 @@ public partial class <#=edmxFileName#>SqlRepository
 
 	public void Add<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity)
 	{ 
-		using(var database = SqlQuery.GetConnection("<#=apiSchemaName#>", EntityOperationType.Add, entity ,context)) {
+		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Add, entity ,context)) {
 
 			Debug.Assert(database!=null);
 
@@ -135,7 +135,7 @@ public partial class <#=edmxFileName#>SqlRepository
 
 	public void Modify<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity)
 	{ 
-		using(var database = SqlQuery.GetConnection("<#=apiSchemaName#>", EntityOperationType.Modify, entity, context)) {
+		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Modify, entity, context)) {
 			Debug.Assert(database!=null);
 
 			context.Operations.Add(new SqlOperation {
@@ -151,7 +151,7 @@ public partial class <#=edmxFileName#>SqlRepository
 
 	public void Remove<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity )
 	{
-		using(var database = SqlQuery.GetConnection("<#=apiSchemaName#>", EntityOperationType.Remove, entity, context)) {
+		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Remove, entity, context)) {
 
 			Debug.Assert(database!=null);
 
@@ -286,7 +286,7 @@ public class <#=edmxFileName#>SqlRepositoryPackage : IPackage
 {
     public void RegisterServices(Container container)
     {
-		container.Register<I<#=edmxFileName#>Repository, <#=edmxFileName#>SqlRepository>(Lifestyle.Scoped);
+		container.Register<I<#=edmxFileName#>Repository, <#=edmxFileName#>SqlRepository>(Lifestyle.Singleton);
     }
 }
 

@@ -26,11 +26,11 @@ namespace Civic.Framework.WebApi.Test.Data
     {
     	public Entity1Entity GetEntity1(IEntityRequestContext context,  String name)
     	{
-    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Get, null ,context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null ,context)) {
     
     			Debug.Assert(database!=null);
     
-    			var retval = new Entity1Entity();
+       			var retval = Container.GetInstance<Entity1Entity>();
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity1Get"))
     			{
@@ -57,7 +57,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public List<Entity1Entity> GetPagedEntity1(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
     	{ 
-    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Get, null ,context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null ,context)) {
     
     			Debug.Assert(database!=null);
     
@@ -85,11 +85,11 @@ namespace Civic.Framework.WebApi.Test.Data
     			
     				command.ExecuteReader(dataReader =>
     					{
-    						var item = new Entity1Entity();
+       						var item = Container.GetInstance<Entity1Entity>();
     						while(populateEntity1(context, item, dataReader))
     						{
     							list.Add(item);
-    							item = new Entity1Entity();
+       							item = Container.GetInstance<Entity1Entity>();
     						} 
     					});
     
@@ -101,7 +101,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public void AddEntity1(IEntityRequestContext context, Entity1Entity entity)
     	{ 
-    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Add, entity ,context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Add, entity ,context)) {
     
     			Debug.Assert(database!=null);
     
@@ -115,7 +115,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public void ModifyEntity1(IEntityRequestContext context, Entity1Entity entity)
     	{ 
-    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Modify, entity, context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, entity, context)) {
     			Debug.Assert(database!=null);
     
     			context.Operations.Add(new SqlOperation {
@@ -131,7 +131,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public void RemoveEntity1(IEntityRequestContext context, Entity1Entity entity )
     	{
-    		using(var database = SqlQuery.GetConnection("dbo", EntityOperationType.Remove, entity, context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Remove, entity, context)) {
     
     			Debug.Assert(database!=null);
     

@@ -23,11 +23,10 @@ namespace Civic.Framework.WebApi
             }
         }
 
-        public void Register<THandler>(IEntityInfo info)
+        public void Register<THandler>(IEntityInfo info, THandler producerInstance)
             where THandler : class, IEntityEventHandler
         {
             var producer = (Lifestyle.Singleton).CreateProducer<IEntityEventHandler, THandler>(_container);
-            var producerInstance = producer.GetInstance();
 
             var handlers = producerInstance.Handlers;
 
@@ -44,12 +43,10 @@ namespace Civic.Framework.WebApi
             }
         }
 
-        public void Register<THandler>()
+        public void Register<THandler>(THandler producerInstance)
             where THandler : class, IEntityEventHandler
         {
             var producer = (Lifestyle.Singleton).CreateProducer<IEntityEventHandler, THandler>(_container);
-            var producerInstance = producer.GetInstance();
-
             var handlers = producerInstance.Handlers;
 
             foreach (EntityEventType val in Enum.GetValues(typeof(EntityEventType)))
