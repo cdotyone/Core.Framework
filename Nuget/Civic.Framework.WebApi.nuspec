@@ -12,7 +12,7 @@
     <summary>Civic.Framework.WebApi</summary>
     <dependencies>
       <group>
-        <dependency id="Civic.Core.Audit" version="[1.26.1,2.0.0)" xmlns="" />
+        <dependency id="Civic.Core.Audit" version="[1.26.5,2.0.0)" xmlns="" />
         <dependency id="Civic.Core.Caching" version="[1.26.3,2.0.0)" xmlns="" />
         <dependency id="Civic.Core.Configuration" version="[1.26.1,2.0.0)" xmlns="" />
         <dependency id="Civic.Core.Data" version="[1.27.3,2.0.0)" xmlns="" />
