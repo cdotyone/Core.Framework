@@ -19,6 +19,6 @@ namespace Civic.Framework.WebApi
 
         List<string> EntitiesProvided { get; }
 
-        IEntityIdentity Create(string name);
+        IEntity Create(string name);
     }
 }
