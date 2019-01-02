@@ -62,7 +62,7 @@ public partial class <#=edmxFileName#>SqlRepository
 
 				command.ExecuteReader(dataReader =>
 					{
-						if (populate<#=code.Escape(entity)#>(context, retval, dataReader))
+						if (SqlQuery.PopulateEntity(context, retval, dataReader))
 						{
 						<# foreach(var key in keys.Keys) { #>
 	retval.<#=code.Escape(key)#> = <#=Core.GetMethodParameterName(key)#>;
@@ -106,7 +106,7 @@ public partial class <#=edmxFileName#>SqlRepository
 				command.ExecuteReader(dataReader =>
 					{
    						var item = Container.GetInstance<<#=code.Escape(entity)#>Entity>();
-						while(populate<#=code.Escape(entity)#>(context, item, dataReader))
+						while(SqlQuery.PopulateEntity(context, item, dataReader))
 						{
 							list.Add(item);
    							item = Container.GetInstance<<#=code.Escape(entity)#>Entity>();
@@ -130,12 +130,20 @@ public partial class <#=edmxFileName#>SqlRepository
 				build<#=code.Escape(entity)#>CommandParameters(context, entity, command, true );
 				command.ExecuteNonQuery();
 			}
+
+		    context.Operations.Add(new SqlOperation
+		    {
+		        Type = EntityOperationType.Modify,
+		        DbCode = database.DBCode,
+		        Connection = database,
+		        Entity = entity
+		    });
 		}
 	}
 
-	public void Modify<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity)
+	public void Modify<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity before, <#=code.Escape(entity)#>Entity after)
 	{ 
-		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Modify, entity, context)) {
+		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Modify, before, context)) {
 			Debug.Assert(database!=null);
 
 			context.Operations.Add(new SqlOperation {
@@ -143,9 +151,17 @@ public partial class <#=edmxFileName#>SqlRepository
 
 			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Modify"))
 			{
-				build<#=code.Escape(entity)#>CommandParameters(context, entity, command, false );
+				build<#=code.Escape(entity)#>CommandParameters(context, before, command, false );
 				command.ExecuteNonQuery();
 			}
+
+		    context.Operations.Add(new SqlOperation
+		    {
+                Type = EntityOperationType.Modify,
+                DbCode = database.DBCode,
+                Connection = database,
+                Entity = before
+		    });
 		}
 	}
 
@@ -160,6 +176,14 @@ public partial class <#=edmxFileName#>SqlRepository
 				build<#=code.Escape(entity)#>CommandParameters(context, entity, command, false );
 				command.ExecuteNonQuery();
 			}
+
+		    context.Operations.Add(new SqlOperation
+		    {
+		        Type = EntityOperationType.Remove,
+		        DbCode = database.DBCode,
+		        Connection = database,
+		        Entity = entity
+		    });
 		}
 	}
 
@@ -199,40 +223,6 @@ public partial class <#=edmxFileName#>SqlRepository
 <#
 		}
 #>
-
-	}
-	
-	private static bool populate<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity, IDataReader dataReader)
-	{
-		if (dataReader==null || !dataReader.Read()) return false;
-		<#
-		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
-		{
-			var ptype=code.Escape(edmProperty.TypeUsage.EdmType).ToLower().Replace("@","");
-
-			if(edmProperty.Name=="OID" && code.Escape(entity).ToLower()!="orgunit") { #>
-				
-    	entity.OUID = dataReader["OUID"] != null && !string.IsNullOrEmpty(dataReader["OUID"].ToString()) ? dataReader["OUID"].ToString() : string.Empty;<#						
-			} else 
-			if(ptype=="int32" || ptype=="int" || ptype=="int64" || ptype=="long" || ptype=="float") {#>						
-		entity.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) ? <#=code.Escape(edmProperty.TypeUsage.EdmType).Replace("@","")#>.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) : 0;<#
-			} else 
-			if(ptype=="boolean") {#>						
-		entity.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) && Boolean.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString());<#
-			} else
-			if(ptype=="decimal" || ptype=="double") {#>						
-		entity.<#=code.Escape(edmProperty.Name)#> = double.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull) && dataReader["<#=code.Escape(edmProperty.Name)#>"] != null ? dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString() : "0");<#
-			} else
-			if(ptype=="datetime") {#>					
-		if(!(dataReader["<#=code.Escape(edmProperty.Name)#>"] is DBNull)) entity.<#=code.Escape(edmProperty.Name)#> = DateTime.Parse(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()).FromDB();<#
-			} else {#>
-					
-		entity.<#=code.Escape(edmProperty.Name)#> = dataReader["<#=code.Escape(edmProperty.Name)#>"] != null && !string.IsNullOrEmpty(dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString()) ? dataReader["<#=code.Escape(edmProperty.Name)#>"].ToString() : string.Empty;<#
-		}
-	}
-#>		
-
-		return true;
 	}
 }
 <#

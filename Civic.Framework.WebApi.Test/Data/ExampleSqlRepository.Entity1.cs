@@ -44,7 +44,7 @@ namespace Civic.Framework.WebApi.Test.Data
     				
     				command.ExecuteReader(dataReader =>
     					{
-    						if (populateEntity1(context, retval, dataReader))
+    						if (SqlQuery.PopulateEntity(context, retval, dataReader))
     						{
     							retval.Name = name;
     												}
@@ -86,7 +86,7 @@ namespace Civic.Framework.WebApi.Test.Data
     				command.ExecuteReader(dataReader =>
     					{
        						var item = Container.GetInstance<Entity1Entity>();
-    						while(populateEntity1(context, item, dataReader))
+    						while(SqlQuery.PopulateEntity(context, item, dataReader))
     						{
     							list.Add(item);
        							item = Container.GetInstance<Entity1Entity>();
@@ -110,12 +110,20 @@ namespace Civic.Framework.WebApi.Test.Data
     				buildEntity1CommandParameters(context, entity, command, true );
     				command.ExecuteNonQuery();
     			}
+    
+    		    context.Operations.Add(new SqlOperation
+    		    {
+    		        Type = EntityOperationType.Modify,
+    		        DbCode = database.DBCode,
+    		        Connection = database,
+    		        Entity = entity
+    		    });
     		}
     	}
     
-    	public void ModifyEntity1(IEntityRequestContext context, Entity1Entity entity)
+    	public void ModifyEntity1(IEntityRequestContext context, Entity1Entity before, Entity1Entity after)
     	{ 
-    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, entity, context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, before, context)) {
     			Debug.Assert(database!=null);
     
     			context.Operations.Add(new SqlOperation {
@@ -123,9 +131,17 @@ namespace Civic.Framework.WebApi.Test.Data
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity1Modify"))
     			{
-    				buildEntity1CommandParameters(context, entity, command, false );
+    				buildEntity1CommandParameters(context, before, command, false );
     				command.ExecuteNonQuery();
     			}
+    
+    		    context.Operations.Add(new SqlOperation
+    		    {
+                    Type = EntityOperationType.Modify,
+                    DbCode = database.DBCode,
+                    Connection = database,
+                    Entity = before
+    		    });
     		}
     	}
     
@@ -140,6 +156,14 @@ namespace Civic.Framework.WebApi.Test.Data
     				buildEntity1CommandParameters(context, entity, command, false );
     				command.ExecuteNonQuery();
     			}
+    
+    		    context.Operations.Add(new SqlOperation
+    		    {
+    		        Type = EntityOperationType.Remove,
+    		        DbCode = database.DBCode,
+    		        Connection = database,
+    		        Entity = entity
+    		    });
     		}
     	}
     
@@ -153,21 +177,6 @@ namespace Civic.Framework.WebApi.Test.Data
     		command.AddInParameter("@dte2", entity.Dte2.ToDB());
     		command.AddInParameter("@dble1", entity.Dble1);
     		command.AddInParameter("@dec1", entity.Dec1);
-    
-    	}
-    	
-    	private static bool populateEntity1(IEntityRequestContext context, Entity1Entity entity, IDataReader dataReader)
-    	{
-    		if (dataReader==null || !dataReader.Read()) return false;
-    							
-    		entity.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? dataReader["Name"].ToString() : string.Empty;						
-    		entity.EnvironmentID = dataReader["EnvironmentID"] != null && !(dataReader["EnvironmentID"] is DBNull) ? Int32.Parse(dataReader["EnvironmentID"].ToString()) : 0;					
-    		if(!(dataReader["Dte"] is DBNull)) entity.Dte = DateTime.Parse(dataReader["Dte"].ToString()).FromDB();					
-    		if(!(dataReader["Dte2"] is DBNull)) entity.Dte2 = DateTime.Parse(dataReader["Dte2"].ToString()).FromDB();						
-    		entity.Dble1 = double.Parse(dataReader["Dble1"] != null && !(dataReader["Dble1"] is DBNull) && dataReader["Dble1"] != null ? dataReader["Dble1"].ToString() : "0");						
-    		entity.Dec1 = double.Parse(dataReader["Dec1"] != null && !(dataReader["Dec1"] is DBNull) && dataReader["Dec1"] != null ? dataReader["Dec1"].ToString() : "0");		
-    
-    		return true;
     	}
     }
 }

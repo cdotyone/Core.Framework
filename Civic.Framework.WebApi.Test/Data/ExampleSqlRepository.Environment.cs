@@ -44,7 +44,7 @@ namespace Civic.Framework.WebApi.Test.Data
     				
     				command.ExecuteReader(dataReader =>
     					{
-    						if (populateEnvironment(context, retval, dataReader))
+    						if (SqlQuery.PopulateEntity(context, retval, dataReader))
     						{
     							retval.ID = id;
     												}
@@ -86,7 +86,7 @@ namespace Civic.Framework.WebApi.Test.Data
     				command.ExecuteReader(dataReader =>
     					{
        						var item = Container.GetInstance<EnvironmentEntity>();
-    						while(populateEnvironment(context, item, dataReader))
+    						while(SqlQuery.PopulateEntity(context, item, dataReader))
     						{
     							list.Add(item);
        							item = Container.GetInstance<EnvironmentEntity>();
@@ -110,12 +110,20 @@ namespace Civic.Framework.WebApi.Test.Data
     				buildEnvironmentCommandParameters(context, entity, command, true );
     				command.ExecuteNonQuery();
     			}
+    
+    		    context.Operations.Add(new SqlOperation
+    		    {
+    		        Type = EntityOperationType.Modify,
+    		        DbCode = database.DBCode,
+    		        Connection = database,
+    		        Entity = entity
+    		    });
     		}
     	}
     
-    	public void ModifyEnvironment(IEntityRequestContext context, EnvironmentEntity entity)
+    	public void ModifyEnvironment(IEntityRequestContext context, EnvironmentEntity before, EnvironmentEntity after)
     	{ 
-    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, entity, context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, before, context)) {
     			Debug.Assert(database!=null);
     
     			context.Operations.Add(new SqlOperation {
@@ -123,9 +131,17 @@ namespace Civic.Framework.WebApi.Test.Data
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentModify"))
     			{
-    				buildEnvironmentCommandParameters(context, entity, command, false );
+    				buildEnvironmentCommandParameters(context, before, command, false );
     				command.ExecuteNonQuery();
     			}
+    
+    		    context.Operations.Add(new SqlOperation
+    		    {
+                    Type = EntityOperationType.Modify,
+                    DbCode = database.DBCode,
+                    Connection = database,
+                    Entity = before
+    		    });
     		}
     	}
     
@@ -140,6 +156,14 @@ namespace Civic.Framework.WebApi.Test.Data
     				buildEnvironmentCommandParameters(context, entity, command, false );
     				command.ExecuteNonQuery();
     			}
+    
+    		    context.Operations.Add(new SqlOperation
+    		    {
+    		        Type = EntityOperationType.Remove,
+    		        DbCode = database.DBCode,
+    		        Connection = database,
+    		        Entity = entity
+    		    });
     		}
     	}
     
@@ -149,17 +173,6 @@ namespace Civic.Framework.WebApi.Test.Data
        		if(addRecord) command.AddParameter("@id", ParameterDirection.InputOutput,  entity.ID);
     		else command.AddInParameter("@id", entity.ID);
     		command.AddInParameter("@name", T4Config.CheckUpperCase("dbo","environment","name",entity.Name, false));
-    
-    	}
-    	
-    	private static bool populateEnvironment(IEntityRequestContext context, EnvironmentEntity entity, IDataReader dataReader)
-    	{
-    		if (dataReader==null || !dataReader.Read()) return false;
-    								
-    		entity.ID = dataReader["ID"] != null && !(dataReader["ID"] is DBNull) ? Int32.Parse(dataReader["ID"].ToString()) : 0;					
-    		entity.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? dataReader["Name"].ToString() : string.Empty;		
-    
-    		return true;
     	}
     }
 }

@@ -44,7 +44,7 @@ namespace Civic.Framework.WebApi.Test.Data
     				
     				command.ExecuteReader(dataReader =>
     					{
-    						if (populateInstallationEnvironment(context, retval, dataReader))
+    						if (SqlQuery.PopulateEntity(context, retval, dataReader))
     						{
     							retval.EnvironmentCode = environmentCode;
     												}
@@ -86,7 +86,7 @@ namespace Civic.Framework.WebApi.Test.Data
     				command.ExecuteReader(dataReader =>
     					{
        						var item = Container.GetInstance<InstallationEnvironmentEntity>();
-    						while(populateInstallationEnvironment(context, item, dataReader))
+    						while(SqlQuery.PopulateEntity(context, item, dataReader))
     						{
     							list.Add(item);
        							item = Container.GetInstance<InstallationEnvironmentEntity>();
@@ -110,12 +110,20 @@ namespace Civic.Framework.WebApi.Test.Data
     				buildInstallationEnvironmentCommandParameters(context, entity, command, true );
     				command.ExecuteNonQuery();
     			}
+    
+    		    context.Operations.Add(new SqlOperation
+    		    {
+    		        Type = EntityOperationType.Modify,
+    		        DbCode = database.DBCode,
+    		        Connection = database,
+    		        Entity = entity
+    		    });
     		}
     	}
     
-    	public void ModifyInstallationEnvironment(IEntityRequestContext context, InstallationEnvironmentEntity entity)
+    	public void ModifyInstallationEnvironment(IEntityRequestContext context, InstallationEnvironmentEntity before, InstallationEnvironmentEntity after)
     	{ 
-    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, entity, context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, before, context)) {
     			Debug.Assert(database!=null);
     
     			context.Operations.Add(new SqlOperation {
@@ -123,9 +131,17 @@ namespace Civic.Framework.WebApi.Test.Data
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_InstallationEnvironmentModify"))
     			{
-    				buildInstallationEnvironmentCommandParameters(context, entity, command, false );
+    				buildInstallationEnvironmentCommandParameters(context, before, command, false );
     				command.ExecuteNonQuery();
     			}
+    
+    		    context.Operations.Add(new SqlOperation
+    		    {
+                    Type = EntityOperationType.Modify,
+                    DbCode = database.DBCode,
+                    Connection = database,
+                    Entity = before
+    		    });
     		}
     	}
     
@@ -140,6 +156,14 @@ namespace Civic.Framework.WebApi.Test.Data
     				buildInstallationEnvironmentCommandParameters(context, entity, command, false );
     				command.ExecuteNonQuery();
     			}
+    
+    		    context.Operations.Add(new SqlOperation
+    		    {
+    		        Type = EntityOperationType.Remove,
+    		        DbCode = database.DBCode,
+    		        Connection = database,
+    		        Entity = entity
+    		    });
     		}
     	}
     
@@ -151,20 +175,6 @@ namespace Civic.Framework.WebApi.Test.Data
     		command.AddInParameter("@name", T4Config.CheckUpperCase("dbo","installationenvironment","name",entity.Name));
     		command.AddInParameter("@description", T4Config.CheckUpperCase("dbo","installationenvironment","description",entity.Description, false));
     		command.AddInParameter("@isvisible", T4Config.CheckUpperCase("dbo","installationenvironment","isvisible",entity.IsVisible));
-    
-    	}
-    	
-    	private static bool populateInstallationEnvironment(IEntityRequestContext context, InstallationEnvironmentEntity entity, IDataReader dataReader)
-    	{
-    		if (dataReader==null || !dataReader.Read()) return false;
-    							
-    		entity.EnvironmentCode = dataReader["EnvironmentCode"] != null && !string.IsNullOrEmpty(dataReader["EnvironmentCode"].ToString()) ? dataReader["EnvironmentCode"].ToString() : string.Empty;					
-    		entity.Name = dataReader["Name"] != null && !string.IsNullOrEmpty(dataReader["Name"].ToString()) ? dataReader["Name"].ToString() : string.Empty;					
-    		entity.Description = dataReader["Description"] != null && !string.IsNullOrEmpty(dataReader["Description"].ToString()) ? dataReader["Description"].ToString() : string.Empty;					
-    		entity.IsVisible = dataReader["IsVisible"] != null && !string.IsNullOrEmpty(dataReader["IsVisible"].ToString()) ? dataReader["IsVisible"].ToString() : string.Empty;					
-    		if(!(dataReader["Modified"] is DBNull)) entity.Modified = DateTime.Parse(dataReader["Modified"].ToString()).FromDB();		
-    
-    		return true;
     	}
     }
 }

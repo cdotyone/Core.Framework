@@ -27,7 +27,7 @@ namespace Civic.Framework.WebApi.Test.Interfaces
     
     	void AddEntity1(IEntityRequestContext context, Entity1Entity entity );
     
-    	void ModifyEntity1(IEntityRequestContext context, Entity1Entity entity );
+    	void ModifyEntity1(IEntityRequestContext context, Entity1Entity before, Entity1Entity after );
     
     	void RemoveEntity1(IEntityRequestContext context, Entity1Entity entity );
     }

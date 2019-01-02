@@ -45,7 +45,7 @@ namespace Civic.Framework.WebApi.Test.Data
     				
     				command.ExecuteReader(dataReader =>
     					{
-    						if (populateEntity2(context, retval, dataReader))
+    						if (SqlQuery.PopulateEntity(context, retval, dataReader))
     						{
     							retval.SomeID = someID;
     							retval.ff = ff;
@@ -88,7 +88,7 @@ namespace Civic.Framework.WebApi.Test.Data
     				command.ExecuteReader(dataReader =>
     					{
        						var item = Container.GetInstance<Entity2Entity>();
-    						while(populateEntity2(context, item, dataReader))
+    						while(SqlQuery.PopulateEntity(context, item, dataReader))
     						{
     							list.Add(item);
        							item = Container.GetInstance<Entity2Entity>();
@@ -112,12 +112,20 @@ namespace Civic.Framework.WebApi.Test.Data
     				buildEntity2CommandParameters(context, entity, command, true );
     				command.ExecuteNonQuery();
     			}
+    
+    		    context.Operations.Add(new SqlOperation
+    		    {
+    		        Type = EntityOperationType.Modify,
+    		        DbCode = database.DBCode,
+    		        Connection = database,
+    		        Entity = entity
+    		    });
     		}
     	}
     
-    	public void ModifyEntity2(IEntityRequestContext context, Entity2Entity entity)
+    	public void ModifyEntity2(IEntityRequestContext context, Entity2Entity before, Entity2Entity after)
     	{ 
-    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, entity, context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, before, context)) {
     			Debug.Assert(database!=null);
     
     			context.Operations.Add(new SqlOperation {
@@ -125,9 +133,17 @@ namespace Civic.Framework.WebApi.Test.Data
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity2Modify"))
     			{
-    				buildEntity2CommandParameters(context, entity, command, false );
+    				buildEntity2CommandParameters(context, before, command, false );
     				command.ExecuteNonQuery();
     			}
+    
+    		    context.Operations.Add(new SqlOperation
+    		    {
+                    Type = EntityOperationType.Modify,
+                    DbCode = database.DBCode,
+                    Connection = database,
+                    Entity = before
+    		    });
     		}
     	}
     
@@ -142,6 +158,14 @@ namespace Civic.Framework.WebApi.Test.Data
     				buildEntity2CommandParameters(context, entity, command, false );
     				command.ExecuteNonQuery();
     			}
+    
+    		    context.Operations.Add(new SqlOperation
+    		    {
+    		        Type = EntityOperationType.Remove,
+    		        DbCode = database.DBCode,
+    		        Connection = database,
+    		        Entity = entity
+    		    });
     		}
     	}
     
@@ -153,20 +177,6 @@ namespace Civic.Framework.WebApi.Test.Data
        		if(addRecord) command.AddParameter("@ff", ParameterDirection.InputOutput,  T4Config.CheckUpperCase("dbo","entity2","ff",entity.ff));
     		else command.AddInParameter("@ff", T4Config.CheckUpperCase("dbo","entity2","ff",entity.ff));
     		command.AddInParameter("@otherdate", entity.OtherDate.ToDB());
-    
-    	}
-    	
-    	private static bool populateEntity2(IEntityRequestContext context, Entity2Entity entity, IDataReader dataReader)
-    	{
-    		if (dataReader==null || !dataReader.Read()) return false;
-    								
-    		entity.SomeID = dataReader["SomeID"] != null && !(dataReader["SomeID"] is DBNull) ? Int32.Parse(dataReader["SomeID"].ToString()) : 0;					
-    		entity.ff = dataReader["ff"] != null && !string.IsNullOrEmpty(dataReader["ff"].ToString()) ? dataReader["ff"].ToString() : string.Empty;					
-    		if(!(dataReader["Modified"] is DBNull)) entity.Modified = DateTime.Parse(dataReader["Modified"].ToString()).FromDB();					
-    		if(!(dataReader["OtherDate"] is DBNull)) entity.OtherDate = DateTime.Parse(dataReader["OtherDate"].ToString()).FromDB();				
-        	entity.OUID = dataReader["OUID"] != null && !string.IsNullOrEmpty(dataReader["OUID"].ToString()) ? dataReader["OUID"].ToString() : string.Empty;		
-    
-    		return true;
     	}
     }
 }

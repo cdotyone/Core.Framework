@@ -76,7 +76,7 @@ public interface IOperation<#=entity.Name#>
 
 	<#=((keyType=="Int32" || keyType=="int") && keyName=="Id"?"int":"void")#> Add<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity );
 
-	void Modify<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity );
+	void Modify<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity before, <#=code.Escape(entity)#>Entity after );
 
 	void Remove<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity );
 }

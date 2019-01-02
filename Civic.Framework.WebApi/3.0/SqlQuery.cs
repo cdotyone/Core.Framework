@@ -95,11 +95,12 @@ namespace Civic.Framework.WebApi
 
                         command.ExecuteReader(dataReader =>
                         {
-                            while (populateEntity(entity, dataReader, info.Properties, true))
+                            while (PopulateEntity(entity, dataReader, info.Properties, true))
                             {
                                 var json = JsonConvert.SerializeObject(entity);
                                 item = factory.CreateNew(info);
                                 JsonConvert.PopulateObject(json, item);
+                                entity = new Entity();
                             }
                         });
                     }
@@ -148,7 +149,7 @@ namespace Civic.Framework.WebApi
 
                         command.ExecuteReader(dataReader =>
                         {                            
-                            while (populateEntity(entity, dataReader, info.Properties, true))
+                            while (PopulateEntity(entity, dataReader, info.Properties, true))
                             {
                                 var json = JsonConvert.SerializeObject(entity);
                                 var item = factory.CreateNew(info);
@@ -174,7 +175,7 @@ namespace Civic.Framework.WebApi
             return null;
         }
 
-        private static bool populateEntity(Entity entity, IDataReader dataReader, Dictionary<string, IEntityPropertyInfo> propertyNames, bool stripLeadUnderscore)
+        public static bool PopulateEntity(Entity entity, IDataReader dataReader, Dictionary<string, IEntityPropertyInfo> propertyNames, bool stripLeadUnderscore)
         {
             if (dataReader == null || !dataReader.Read()) return false;
 
@@ -273,5 +274,18 @@ namespace Civic.Framework.WebApi
             return true;
         }
 
+        public static bool PopulateEntity<T>(IEntityRequestContext context, T item, IDataReader dataReader)  where T : class, IEntityIdentity
+        {
+            if (dataReader == null || !dataReader.Read()) return false;
+
+            var entity = new Entity();
+            if (!PopulateEntity(entity, dataReader, item.GetInfo().Properties, false))
+                return false;
+
+            var json = JsonConvert.SerializeObject(entity);
+            JsonConvert.PopulateObject(json, item);
+
+            return true;
+        }
     }
 }

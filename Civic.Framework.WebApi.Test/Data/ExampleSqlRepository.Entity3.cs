@@ -44,7 +44,7 @@ namespace Civic.Framework.WebApi.Test.Data
     				
     				command.ExecuteReader(dataReader =>
     					{
-    						if (populateEntity3(context, retval, dataReader))
+    						if (SqlQuery.PopulateEntity(context, retval, dataReader))
     						{
     							retval.SomeUID = someUID;
     												}
@@ -86,7 +86,7 @@ namespace Civic.Framework.WebApi.Test.Data
     				command.ExecuteReader(dataReader =>
     					{
        						var item = Container.GetInstance<Entity3Entity>();
-    						while(populateEntity3(context, item, dataReader))
+    						while(SqlQuery.PopulateEntity(context, item, dataReader))
     						{
     							list.Add(item);
        							item = Container.GetInstance<Entity3Entity>();
@@ -110,12 +110,20 @@ namespace Civic.Framework.WebApi.Test.Data
     				buildEntity3CommandParameters(context, entity, command, true );
     				command.ExecuteNonQuery();
     			}
+    
+    		    context.Operations.Add(new SqlOperation
+    		    {
+    		        Type = EntityOperationType.Modify,
+    		        DbCode = database.DBCode,
+    		        Connection = database,
+    		        Entity = entity
+    		    });
     		}
     	}
     
-    	public void ModifyEntity3(IEntityRequestContext context, Entity3Entity entity)
+    	public void ModifyEntity3(IEntityRequestContext context, Entity3Entity before, Entity3Entity after)
     	{ 
-    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, entity, context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, before, context)) {
     			Debug.Assert(database!=null);
     
     			context.Operations.Add(new SqlOperation {
@@ -123,9 +131,17 @@ namespace Civic.Framework.WebApi.Test.Data
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity3Modify"))
     			{
-    				buildEntity3CommandParameters(context, entity, command, false );
+    				buildEntity3CommandParameters(context, before, command, false );
     				command.ExecuteNonQuery();
     			}
+    
+    		    context.Operations.Add(new SqlOperation
+    		    {
+                    Type = EntityOperationType.Modify,
+                    DbCode = database.DBCode,
+                    Connection = database,
+                    Entity = before
+    		    });
     		}
     	}
     
@@ -140,6 +156,14 @@ namespace Civic.Framework.WebApi.Test.Data
     				buildEntity3CommandParameters(context, entity, command, false );
     				command.ExecuteNonQuery();
     			}
+    
+    		    context.Operations.Add(new SqlOperation
+    		    {
+    		        Type = EntityOperationType.Remove,
+    		        DbCode = database.DBCode,
+    		        Connection = database,
+    		        Entity = entity
+    		    });
     		}
     	}
     
@@ -150,19 +174,6 @@ namespace Civic.Framework.WebApi.Test.Data
        		if(addRecord) command.AddParameter("@someid", ParameterDirection.InputOutput,  entity.SomeID);
     		else command.AddInParameter("@someid", entity.SomeID);
     		command.AddInParameter("@otherdate", entity.OtherDate.ToDB());
-    
-    	}
-    	
-    	private static bool populateEntity3(IEntityRequestContext context, Entity3Entity entity, IDataReader dataReader)
-    	{
-    		if (dataReader==null || !dataReader.Read()) return false;
-    							
-    		entity.SomeUID = dataReader["SomeUID"] != null && !string.IsNullOrEmpty(dataReader["SomeUID"].ToString()) ? dataReader["SomeUID"].ToString() : string.Empty;						
-    		entity.SomeID = dataReader["SomeID"] != null && !(dataReader["SomeID"] is DBNull) ? Int64.Parse(dataReader["SomeID"].ToString()) : 0;					
-    		if(!(dataReader["Modified"] is DBNull)) entity.Modified = DateTime.Parse(dataReader["Modified"].ToString()).FromDB();					
-    		if(!(dataReader["OtherDate"] is DBNull)) entity.OtherDate = DateTime.Parse(dataReader["OtherDate"].ToString()).FromDB();		
-    
-    		return true;
     	}
     }
 }

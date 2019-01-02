@@ -27,7 +27,7 @@ namespace Civic.Framework.WebApi.Test.Interfaces
     
     	void AddEnvironment(IEntityRequestContext context, EnvironmentEntity entity );
     
-    	void ModifyEnvironment(IEntityRequestContext context, EnvironmentEntity entity );
+    	void ModifyEnvironment(IEntityRequestContext context, EnvironmentEntity before, EnvironmentEntity after );
     
     	void RemoveEnvironment(IEntityRequestContext context, EnvironmentEntity entity );
     }
