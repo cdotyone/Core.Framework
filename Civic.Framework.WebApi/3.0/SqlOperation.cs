@@ -6,7 +6,9 @@ namespace Civic.Framework.WebApi
     {
         public EntityOperationType Type { get; set; }
 
-        public IEntityIdentity Entity { get; set; }
+        public IEntityIdentity Before { get; set; }
+
+        public IEntityIdentity After { get; set; }
 
         public void Commit()
         {

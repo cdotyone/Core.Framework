@@ -154,7 +154,7 @@ public partial class <#=edmxFileName#>BusinessFacade
 					if (!_handlers.OnModifyBefore(context, <#=code.Escape(entity)#>Entity.Info, before, entity))
 						return;
 
-			        _respository.Modify<#=code.Escape(entity)#>(context, entity);
+			        _respository.Modify<#=code.Escape(entity)#>(context, before, entity);
 
 					if (!_handlers.OnModifyAfter(context, <#=code.Escape(entity)#>Entity.Info, before, entity))
 						return;

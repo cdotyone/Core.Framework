@@ -26,7 +26,7 @@ namespace Civic.Framework.WebApi.Test.Data
     {
     	public Entity1Entity GetEntity1(IEntityRequestContext context,  String name)
     	{
-    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null ,context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null, null ,context)) {
     
     			Debug.Assert(database!=null);
     
@@ -57,7 +57,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public List<Entity1Entity> GetPagedEntity1(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
     	{ 
-    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null ,context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null, null ,context)) {
     
     			Debug.Assert(database!=null);
     
@@ -101,7 +101,7 @@ namespace Civic.Framework.WebApi.Test.Data
     
     	public void AddEntity1(IEntityRequestContext context, Entity1Entity entity)
     	{ 
-    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Add, entity ,context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Add, entity, null ,context)) {
     
     			Debug.Assert(database!=null);
     
@@ -110,44 +110,25 @@ namespace Civic.Framework.WebApi.Test.Data
     				buildEntity1CommandParameters(context, entity, command, true );
     				command.ExecuteNonQuery();
     			}
-    
-    		    context.Operations.Add(new SqlOperation
-    		    {
-    		        Type = EntityOperationType.Modify,
-    		        DbCode = database.DBCode,
-    		        Connection = database,
-    		        Entity = entity
-    		    });
     		}
     	}
     
     	public void ModifyEntity1(IEntityRequestContext context, Entity1Entity before, Entity1Entity after)
     	{ 
-    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, before, context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, before, after, context)) {
     			Debug.Assert(database!=null);
-    
-    			context.Operations.Add(new SqlOperation {
-    			});
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity1Modify"))
     			{
     				buildEntity1CommandParameters(context, before, command, false );
     				command.ExecuteNonQuery();
     			}
-    
-    		    context.Operations.Add(new SqlOperation
-    		    {
-                    Type = EntityOperationType.Modify,
-                    DbCode = database.DBCode,
-                    Connection = database,
-                    Entity = before
-    		    });
     		}
     	}
     
     	public void RemoveEntity1(IEntityRequestContext context, Entity1Entity entity )
     	{
-    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Remove, entity, context)) {
+    		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Remove, entity, null, context)) {
     
     			Debug.Assert(database!=null);
     
@@ -156,14 +137,6 @@ namespace Civic.Framework.WebApi.Test.Data
     				buildEntity1CommandParameters(context, entity, command, false );
     				command.ExecuteNonQuery();
     			}
-    
-    		    context.Operations.Add(new SqlOperation
-    		    {
-    		        Type = EntityOperationType.Remove,
-    		        DbCode = database.DBCode,
-    		        Connection = database,
-    		        Entity = entity
-    		    });
     		}
     	}
     

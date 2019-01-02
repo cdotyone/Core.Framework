@@ -2,7 +2,9 @@
 {
     public interface IEntityOperation
     {
-        IEntityIdentity Entity { get; set; }
+        IEntityIdentity Before { get; set; }
+
+        IEntityIdentity After { get; set; }
 
         EntityOperationType Type { get; set; }
 

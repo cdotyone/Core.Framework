@@ -95,7 +95,7 @@ namespace Civic.Framework.WebApi.Test.Business
     					if (!_handlers.OnModifyBefore(context, Entity1Entity.Info, before, entity))
     						return;
     
-    			        _respository.ModifyEntity1(context, entity);
+    			        _respository.ModifyEntity1(context, before, entity);
     
     					if (!_handlers.OnModifyAfter(context, Entity1Entity.Info, before, entity))
     						return;

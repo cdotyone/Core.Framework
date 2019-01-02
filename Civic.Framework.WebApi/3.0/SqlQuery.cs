@@ -13,7 +13,7 @@ namespace Civic.Framework.WebApi
 {
     public class SqlQuery
     {
-        public static IDBConnection GetConnection(string dbCode, EntityOperationType type, IEntityIdentity entity, IEntityRequestContext context)
+        public static IDBConnection GetConnection(string dbCode, EntityOperationType type, IEntityIdentity before, IEntityIdentity after, IEntityRequestContext context)
         {
             dbCode = DataConfig.Current.GetConnectionName(dbCode);
 
@@ -45,7 +45,8 @@ namespace Civic.Framework.WebApi
                 {
                     DbCode = dbCode,
                     Type = type,
-                    Entity = entity,
+                    Before = before,
+                    After = after,
                     Connection = connection
                 });
             }
