@@ -20,7 +20,7 @@ namespace Civic.Framework.WebApi
         {
             if (!AuthorizationHelper.CanAdd(context.Who, info))
             {
-                AuditManager.LogAccess<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity.IdentityID, null, null, entity, context.TransactionUID);
+                AuditManager.LogAccess<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
                 throw new UnauthorizedAccessException();
             }
             return true;
@@ -35,7 +35,7 @@ namespace Civic.Framework.WebApi
         {
             if (!AuthorizationHelper.CanModify(context.Who, info))
             {
-                AuditManager.LogAccess<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, before.IdentityID, null, null, before, context.TransactionUID);
+                AuditManager.LogAccess<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, before._key, null, null, before, context.TransactionUID);
                 throw new UnauthorizedAccessException();
             }
             return true;
@@ -50,7 +50,7 @@ namespace Civic.Framework.WebApi
         {
             if (!AuthorizationHelper.CanRemove(context.Who, info))
             {
-                AuditManager.LogAccess<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity.IdentityID, null, null, entity, context.TransactionUID);
+                AuditManager.LogAccess<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
                 throw new UnauthorizedAccessException();
             }
             return true;

@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Civic.Framework.WebApi
 {
     public interface IEntityIdentity
     {
-        [JsonIgnore]
-        string IdentityID { get; }
+        string _key { get; }
 
         #pragma warning disable IDE1006 // Naming Styles
         // ReSharper disable InconsistentNaming
@@ -17,7 +17,13 @@ namespace Civic.Framework.WebApi
 
         IEntityInfo GetInfo();
 
-        void Load(IEntityRequestContext context);
+        IEntityIdentity LoadByKey(IEntityRequestContext context, string key);
+
+        void RemoveByKey(IEntityRequestContext context, string key);
+
+        IEnumerable<IEntityIdentity> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy);
+
+        IEntityIdentity Load(IEntityRequestContext context);
 
         void Save(IEntityRequestContext context);
 

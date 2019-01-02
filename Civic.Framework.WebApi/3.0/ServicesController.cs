@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Web.Http;
 using Civic.Core.Logging;
+using Civic.Framework.WebApi.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -17,6 +18,44 @@ namespace Civic.Framework.WebApi
         public ServicesController(IEntityCreateFactory factory)
         {
             _factory = factory;
+        }
+
+        [Route("{module}/{version}/{entityName}")]
+        public IQueryMetadata Get(string module, string version, string entity)
+        {
+            var item = _factory.CreateNew(module, entity);
+
+            ODataV3QueryOptions options = this.GetOptions();
+            var maxrows = T4Config.GetMaxRows(module, entity);
+            var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
+            string orderby = options.ProcessOrderByOptions();
+
+            var context = new EntityRequestContext { Who = User as ClaimsPrincipal };
+
+            var result = item.GetPaged(context, options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
+            return new QueryMetadata<object>(result, resultLimit);
+        }
+
+        [Route("{module}/{version}/{entityName}/{key}")]
+        public IQueryMetadata Get(string dbCode, string module, string version, string entity, string key)
+        {
+            var item = _factory.CreateNew(module, entity);
+
+            var context = new EntityRequestContext { Who = User as ClaimsPrincipal };
+
+            var result = new List<object> { item.LoadByKey(context, key) };
+            return new QueryMetadata<object>(result, 1);
+        }
+
+        [Route("{module}/{version}/{entityName}/{key}")]
+        [HttpDelete]
+        public void Remove(string dbCode, string module, string version, string entity, string key)
+        {
+            var item = _factory.CreateNew(module, entity);
+
+            var context = new EntityRequestContext { Who = User as ClaimsPrincipal };
+
+            item.RemoveByKey(context, key);
         }
 
         [HttpPost]
@@ -75,7 +114,7 @@ namespace Civic.Framework.WebApi
                         throw new Exception($"Missing RelatedKeyName is not configured not sure what property to set on child object {obj}");
                     }
 
-                    obj[info.RelatedKeyName] = parent.IdentityID;
+                    obj[info.RelatedKeyName] = parent._key;
                 }
 
                 var replace = (from prop in obj.Properties() where prop.Value.ToString().StartsWith("{{") select prop.Name).ToList();
@@ -107,7 +146,7 @@ namespace Civic.Framework.WebApi
 
                             JsonConvert.PopulateObject(obj.ToString(), item);
                             item.Save(context);
-                            if (!string.IsNullOrEmpty(identity)) identities[identity.ToLower()] = item.IdentityID;
+                            if (!string.IsNullOrEmpty(identity)) identities[identity.ToLower()] = item._key;
 
                             result.Add(item);
                             break;

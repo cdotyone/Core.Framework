@@ -25,7 +25,7 @@ namespace Civic.Framework.WebApi
 
         public bool OnAddAfter<T>(IEntityRequestContext context, IEntityInfo info, T entity) where T : class, IEntityIdentity
         {
-            AuditManager.LogAdd<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity.IdentityID, null, null, entity, context.TransactionUID);
+            AuditManager.LogAdd<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
             return true;
         }
 
@@ -36,7 +36,7 @@ namespace Civic.Framework.WebApi
 
         public bool OnModifyAfter<T>(IEntityRequestContext context, IEntityInfo info, T before, T after) where T : class, IEntityIdentity
         {
-            AuditManager.LogModify<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, before.IdentityID, null, null, before, after, context.TransactionUID);
+            AuditManager.LogModify<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, before._key, null, null, before, after, context.TransactionUID);
             return true;
         }
 
@@ -47,7 +47,7 @@ namespace Civic.Framework.WebApi
 
         public bool OnRemoveAfter<T>(IEntityRequestContext context, IEntityInfo info, T entity) where T : class, IEntityIdentity
         {
-            AuditManager.LogRemove<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity.IdentityID, null, null, entity, context.TransactionUID);
+            AuditManager.LogRemove<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
             return true;
         }
 

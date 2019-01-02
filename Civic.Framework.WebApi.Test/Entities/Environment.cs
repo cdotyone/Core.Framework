@@ -29,7 +29,8 @@ namespace Civic.Framework.WebApi.Test.Entities
     	[DataMember(Name="name")]
         public string Name { get; set; }
     
-    	public string IdentityID 
+        [DataMember(Name = "_key")]
+    	public string _key 
         { 
     		get {
     			return ID.ToString();
@@ -64,8 +65,24 @@ namespace Civic.Framework.WebApi.Test.Entities
     		return Info;
     	}
     
-    	public void Load(IEntityRequestContext context) {
-    		_facade.GetEnvironment(context,ID);
+        public IEntityIdentity LoadByKey(IEntityRequestContext context, string key) {
+    		var parts = key.Split('|');
+    							
+    		ID = Int32.Parse(parts[0]);
+    
+    		return Load(context);
+    	}
+    
+        public void RemoveByKey(IEntityRequestContext context, string key) {
+    		LoadByKey(context, key).Remove(context);
+    	}
+    
+    	public IEnumerable<IEntityIdentity> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
+    		return _facade.GetPagedEnvironment(context, skip, ref count, retCount, filterBy, orderBy);
+    	}
+    
+    	public IEntityIdentity Load(IEntityRequestContext context) {
+    		return _facade.GetEnvironment(context,ID);
     	}
     
     	public void Save(IEntityRequestContext context) {
