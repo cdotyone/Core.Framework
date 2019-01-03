@@ -19,7 +19,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 }
 
 fileManager.StartNewFile("I" + edmxFileName + "Repository.cs", folderName:"Interfaces");
-WriteHeader(namespaceName);
+WriteHeader(namespaceName, "Civic.Framework.WebApi");
 
 BeginNamespace(namespaceName+".Interfaces", code);
 #>
@@ -31,7 +31,7 @@ EndNamespace(namespaceName);
 
 
 fileManager.StartNewFile("I" + edmxFileName + "Facade.cs", folderName:"Interfaces");
-WriteHeader(namespaceName);
+WriteHeader(namespaceName,"Civic.Framework.WebApi");
 
 BeginNamespace(namespaceName+".Interfaces", code);
 #>
@@ -46,7 +46,7 @@ EndNamespace(namespaceName);
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
 	fileManager.StartNewFile("IOperation" + entity.Name + ".cs", folderName:"Interfaces");
-	WriteHeader("System", "System.Collections.Generic", "System.Security.Claims", namespaceName + ".Entities"); 
+	WriteHeader("System", "System.Collections.Generic", "System.Security.Claims", "Civic.Framework.WebApi", namespaceName + ".Entities"); 
 #>
 using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 
@@ -89,7 +89,7 @@ public interface IOperation<#=entity.Name#>
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
 	fileManager.StartNewFile("IFacade" + entity.Name + ".cs", folderName:"Interfaces");
-	WriteHeader("System", "System.Collections.Generic", "System.Security.Claims", namespaceName + ".Entities"); 
+	WriteHeader("System", "System.Collections.Generic", "System.Security.Claims", "Civic.Framework.WebApi", namespaceName + ".Entities"); 
 #>
 using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 
