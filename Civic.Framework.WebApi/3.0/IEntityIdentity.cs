@@ -5,7 +5,7 @@ namespace Civic.Framework.WebApi
 {
     public interface IEntityIdentity
     {
-        string _key { get; }
+        string _key { get; set; }
 
         #pragma warning disable IDE1006 // Naming Styles
         // ReSharper disable InconsistentNaming

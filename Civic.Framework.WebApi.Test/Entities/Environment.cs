@@ -12,15 +12,14 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Civic.Core.Data;
-using Civic.Framework.WebApi;
 using Newtonsoft.Json;
-using Civic.Framework.WebApi.Test.Interfaces;
 
+using IExampleEnvironment = Civic.Framework.WebApi.Test.Interfaces.IEnvironment;
 namespace Civic.Framework.WebApi.Test.Entities
 {
+    
     [DataContract(Name="environment")]
-    public partial class Environment : IEntityIdentity
+    public partial class Environment : IExampleEnvironment
     {
     
     	[DataMember(Name="id")]
@@ -35,6 +34,11 @@ namespace Civic.Framework.WebApi.Test.Entities
     		get {
     			return ID.ToString();
     		}
+    		set {
+    			var keys = value.Split('|');
+    						
+    			ID = Int32.Parse(keys[0]);
+    		}
     	}
     
         [DataMember(Name = "_module")]
@@ -45,18 +49,19 @@ namespace Civic.Framework.WebApi.Test.Entities
         
         public static IEntityInfo Info = new EntityInfo
     	{
-            Module = "dbo",
-            Entity = "Environment",
-            Name = "dbo.Environment",
+            Module = "example",
+            Entity = "environment",
+            Name = "example.environment",
             Properties = new Dictionary<string, IEntityPropertyInfo>
             {
     			{"id", new EntityPropertyInfo { Name = "id", Type="int", IsKey=true }},
     			{"name", new EntityPropertyInfo { Name = "name", Type="string", IsNullable=true }},
+    
             }
         };
     
-    	private IFacadeEnvironment _facade;
-    	public Environment(IFacadeEnvironment facade)
+    	private IEntityBusinessFacade<IExampleEnvironment> _facade;
+    	public Environment(IEntityBusinessFacade<IExampleEnvironment> facade)
     	{
     		_facade = facade;
     	}
@@ -66,31 +71,29 @@ namespace Civic.Framework.WebApi.Test.Entities
     	}
     
         public IEntityIdentity LoadByKey(IEntityRequestContext context, string key) {
-    		var parts = key.Split('|');
-    							
-    		ID = Int32.Parse(parts[0]);
-    
+    		_key = key;
     		return Load(context);
     	}
     
         public void RemoveByKey(IEntityRequestContext context, string key) {
-    		LoadByKey(context, key).Remove(context);
+    		_key = key;
+    		Remove(context);
     	}
     
     	public IEnumerable<IEntityIdentity> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
-    		return _facade.GetPagedEnvironment(context, skip, ref count, retCount, filterBy, orderBy);
+    		return _facade.GetPaged(context, Info, skip, ref count, retCount, filterBy, orderBy);
     	}
     
     	public IEntityIdentity Load(IEntityRequestContext context) {
-    		return _facade.GetEnvironment(context,ID);
+    		return _facade.Get(context, this);
     	}
     
     	public void Save(IEntityRequestContext context) {
-    		_facade.SaveEnvironment(context, this);
+    		_facade.Save(context, this);
     	}
     
     	public void Remove(IEntityRequestContext context) {
-    		_facade.RemoveEnvironment(context,ID);
+    		_facade.Remove(context, this);
     	}
     }
 }

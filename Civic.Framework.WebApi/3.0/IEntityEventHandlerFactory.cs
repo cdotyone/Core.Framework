@@ -14,6 +14,6 @@ namespace Civic.Framework.WebApi
         bool OnGetBefore(IEntityRequestContext context, IEntityInfo info);
         bool OnGetAfter<T>(IEntityRequestContext context, IEntityInfo info, T entity) where T : class, IEntityIdentity;
         bool OnGetPagedBefore(IEntityRequestContext context, IEntityInfo info);
-        List<T> OnGetPagedAfter<T>(IEntityRequestContext context, IEntityInfo info, List<T> list) where T : class, IEntityIdentity;
+        IEnumerable<T> OnGetPagedAfter<T>(IEntityRequestContext context, IEntityInfo info, IEnumerable<T> list) where T : class, IEntityIdentity;
     }
 }

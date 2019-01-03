@@ -8,16 +8,16 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 fileManager.StartNewFile(edmxFileName + entity.Name+".cs", folderName:"Data");
 
-WriteHeader("System", "System.Collections.Generic", "System.Data", "System.Diagnostics", "System.Security.Claims" ,"Civic.Core.Data","Civic.Framework.WebApi","Civic.Framework.WebApi.Configuration", namespaceName +".Entities", namespaceName +".Interfaces");
+WriteHeader("System", "System.Collections.Generic", "System.Data", "System.Diagnostics", "System.Security.Claims", "SimpleInjector" ,"Civic.Core.Data","Civic.Framework.WebApi","Civic.Framework.WebApi.Configuration", namespaceName +".Entities", namespaceName +".Interfaces");
 
 #>
-using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
+using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + entity.Name#>;
 <#
 
 BeginNamespace(namespaceName + ".Data.SqlServer", code);
 
 #>
-public partial class <#=edmxFileName#>Repository
+public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFileName#><#=entity.Name#>>
 {
 <#
 	// Emit Entity Types
@@ -36,60 +36,63 @@ public partial class <#=edmxFileName#>Repository
 	}
 
 #>
-	public <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(IEntityRequestContext context, <# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#>)
+    Container _container;
+	private readonly IEntityCreateFactory _factory;
+
+    public <#=entity.Name#>Repository(Container container, IEntityCreateFactory factory)
+    {
+        _container = container;
+		_factory = factory;
+    }
+
+	public I<#=edmxFileName#><#=entity.Name#> Get(IEntityRequestContext context,  I<#=edmxFileName#><#=entity.Name#> entity)
 	{
 		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Get, null, null ,context)) {
 
 			Debug.Assert(database!=null);
 
-   			var retval = Container.GetInstance<<#=code.Escape(entity)#>Entity>();
+			var info = entity.GetInfo();
+
+		    if (!info.UseProcedureGet)
+		    {
+		        return SqlQuery.Get(_container, context.Who, entity, database);
+		    }
 
 			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Get"))
 			{
-		        var info = <#=code.Escape(entity)#>Entity.Info;
-		        if (!info.UseProcedureGet)
-		        {
-		            return SqlQuery.Get(Container, context.Who, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? "+\"|\"+" : " "))#><#=Core.GetMethodParameterName(key)+(keys[key]!="String" ? ".ToString()":"")#><#}#>, <#=code.Escape(entity)#>Entity.Info, database) as <#=code.Escape(entity)#>Entity;
-                }
-
 				<#
 				foreach(var key in keys.Keys)
 				{
-					#>command.AddInParameter("<#=Core.GetParameterName(key)#>", <#=Core.GetMethodParameterName(key)#>);
+					#>command.AddInParameter("<#=Core.GetParameterName(key)#>", entity.<#=key#>);
 				<#
 				}
 				#>
 
-				command.ExecuteReader(dataReader =>
-					{
-						if (SqlQuery.PopulateEntity(context, retval, dataReader))
-						{
-						<# foreach(var key in keys.Keys) { #>
-	retval.<#=code.Escape(key)#> = <#=Core.GetMethodParameterName(key)#>;
-						<# } #>
-						}
-						else retval = null;
-					});
+    			command.ExecuteReader(dataReader =>
+				{
+				    if(!SqlQuery.PopulateEntity(context, entity, dataReader)) {
+						entity = null;
+					}
+   				});
 			}
-			return retval;
+			return entity;
 		}
 	}
 
-	public List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+	public IEnumerable<I<#=edmxFileName#><#=entity.Name#>> GetPaged(IEntityRequestContext context, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy)
 	{ 
 		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Get, null, null ,context)) {
 
 			Debug.Assert(database!=null);
 
-			var list = new List<<#=code.Escape(entity)#>Entity>();
+			var list = new List<I<#=edmxFileName#><#=entity.Name#>>();
 
-		    var info = <#=code.Escape(entity)#>Entity.Info;
 		    if (!info.UseProcedureGet)
 		    {
-		        var entityList = SqlQuery.GetPaged(Container, context.Who, <#=code.Escape(entity)#>Entity.Info, skip, ref count, retCount, filterBy, orderBy, database);
+		        var entityList = SqlQuery.GetPaged<I<#=edmxFileName#><#=entity.Name#>>(_container, context.Who, info, skip, ref count, retCount, filterBy, orderBy, database);
 		        foreach (var entity in entityList)
 		        {
-		            list.Add(entity as <#=code.Escape(entity)#>Entity);
+		            list.Add(entity as I<#=edmxFileName#><#=entity.Name#>);
 		        }
 
 		        return list;
@@ -105,11 +108,11 @@ public partial class <#=edmxFileName#>Repository
 			
 				command.ExecuteReader(dataReader =>
 					{
-   						var item = Container.GetInstance<<#=code.Escape(entity)#>Entity>();
+                        I<#=edmxFileName#><#=entity.Name#> item = _factory.CreateNew(info) as I<#=edmxFileName#><#=entity.Name#>;
 						while(SqlQuery.PopulateEntity(context, item, dataReader))
 						{
 							list.Add(item);
-   							item = Container.GetInstance<<#=code.Escape(entity)#>Entity>();
+	                        item = _factory.CreateNew(info) as I<#=edmxFileName#><#=entity.Name#>;
 						} 
 					});
 
@@ -119,7 +122,7 @@ public partial class <#=edmxFileName#>Repository
 		}
 	}
 
-	public void Add<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity)
+	public void Add(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#>  entity)
 	{ 
 		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Add, entity, null ,context)) {
 
@@ -133,7 +136,7 @@ public partial class <#=edmxFileName#>Repository
 		}
 	}
 
-	public void Modify<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity before, <#=code.Escape(entity)#>Entity after)
+	public void Modify(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#>  before, I<#=edmxFileName#><#=entity.Name#>  after)
 	{ 
 		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Modify, before, after, context)) {
 			Debug.Assert(database!=null);
@@ -146,7 +149,7 @@ public partial class <#=edmxFileName#>Repository
 		}
 	}
 
-	public void Remove<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity )
+	public void Remove(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#>  entity )
 	{
 		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Remove, entity, null, context)) {
 
@@ -160,7 +163,7 @@ public partial class <#=edmxFileName#>Repository
 		}
 	}
 
-	static void build<#=code.Escape(entity)#>CommandParameters(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity, IDBCommand command, bool addRecord )
+	static void build<#=code.Escape(entity)#>CommandParameters(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#> entity, IDBCommand command, bool addRecord )
 	{ 
         Debug.Assert(command!=null);
 <#
@@ -203,42 +206,9 @@ EndNamespace(namespaceName);
 
 }
 
-
-fileManager.StartNewFile(edmxFileName + "Repository.cs", folderName:"Data");
-
-WriteHeader("System.Security.Claims","SimpleInjector","Civic.Core.Data", namespaceName +".Interfaces");
-
-BeginNamespace(namespaceName + ".Data.SqlServer", code);
-
-#>
-public partial class <#=edmxFileName#>Repository : I<#=edmxFileName#>Repository
-{
-	Container _container;
-
-	public <#=edmxFileName#>Repository( Container container ) {
-		_container = container;
-	}
-
-	public Container Container {
-		get {
-			return _container;
-		}
-	}
-}
-<#
-EndNamespace(namespaceName);
-
-//if (!typeMapper.VerifyCaseInsensitiveTypeUniqueness(typeMapper.GetAllGlobalItems(itemCollection), inputFile))
-//{
-//    return "";
-//}
-
-#>
-<#
-
 fileManager.StartNewFile(edmxFileName + "RepositoryPackage.cs", folderName:"Data");
 
-WriteHeader("SimpleInjector.Packaging","SimpleInjector",namespaceName+".Interfaces");
+WriteHeader("SimpleInjector.Packaging","SimpleInjector");
 #>
 
 <#
@@ -249,7 +219,10 @@ public class <#=edmxFileName#>RepositoryPackage : IPackage
 {
     public void RegisterServices(Container container)
     {
-		container.Register<I<#=edmxFileName#>Repository, <#=edmxFileName#>Repository>(Lifestyle.Singleton);
+<#foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{#>
+		container.Register<IEntityRepository<<#=namespaceName+".Interfaces."#>I<#=entity.Name#>>, <#=entity.Name#>Repository>(Lifestyle.Singleton);
+<#}#>
     }
 }
 

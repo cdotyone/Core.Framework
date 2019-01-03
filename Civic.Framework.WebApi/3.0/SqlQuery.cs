@@ -54,17 +54,17 @@ namespace Civic.Framework.WebApi
             return connection;
         }
 
-        public static IEntityIdentity Get(Container container, ClaimsPrincipal who, string entityID, IEntityInfo info, IDBConnection database)
+        public static T Get<T>(Container container, ClaimsPrincipal who, T item, IDBConnection database) where T : class,IEntityIdentity
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(SqlQuery), "Get"))
             {
+                var info = item.GetInfo();
+                var entityID = item._key;
 
                 if (!AuthorizationHelper.CanView(who, info)) throw new UnauthorizedAccessException();
 
                 try
                 {
-                    IEntityIdentity item = null;
-
                     var view = $"[{info.Module}].[VW_{info.Entity}]";
 
                     var keyValues = entityID.Split('|').ToList();
@@ -92,17 +92,16 @@ namespace Civic.Framework.WebApi
                         }
 
                         var entity = new Entity();
-                        var factory =container.GetInstance<IEntityCreateFactory>();
 
                         command.ExecuteReader(dataReader =>
                         {
-                            while (PopulateEntity(entity, dataReader, info.Properties, true))
+                            if (PopulateEntity(entity, dataReader, info.Properties, true))
                             {
                                 var json = JsonConvert.SerializeObject(entity);
-                                item = factory.CreateNew(info);
                                 JsonConvert.PopulateObject(json, item);
                                 entity = new Entity();
                             }
+                            else item = null;
                         });
                     }
 
@@ -117,7 +116,7 @@ namespace Civic.Framework.WebApi
             return null;
         }
 
-        public static List<IEntityIdentity> GetPaged(Container container, ClaimsPrincipal who, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database)
+        public static IEnumerable<T> GetPaged<T>(Container container, ClaimsPrincipal who, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database) where T : class,IEntityIdentity
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(SqlQuery), "GetPaged"))
             {
@@ -126,7 +125,7 @@ namespace Civic.Framework.WebApi
                 try
                 {
                     var view = $"[{info.Module}].[VW_{info.Entity}]";
-                    List<IEntityIdentity> list = new List<IEntityIdentity>();
+                    List<T> list = new List<T>();
 
                     using (var command = database.CreateStoredProcCommand("civic", "usp_EntityGetByFilter"))
                     {
@@ -153,7 +152,7 @@ namespace Civic.Framework.WebApi
                             while (PopulateEntity(entity, dataReader, info.Properties, true))
                             {
                                 var json = JsonConvert.SerializeObject(entity);
-                                var item = factory.CreateNew(info);
+                                T item = factory.CreateNew(info) as T;
                                 JsonConvert.PopulateObject(json,item);
                                 list.Add(item);
                             }

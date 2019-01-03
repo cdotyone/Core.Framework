@@ -14,65 +14,70 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Security.Claims;
+using SimpleInjector;
 using Civic.Core.Data;
 using Civic.Framework.WebApi;
 using Civic.Framework.WebApi.Configuration;
 using Civic.Framework.WebApi.Test.Entities;
 using Civic.Framework.WebApi.Test.Interfaces;
 
-using Entity2Entity = Civic.Framework.WebApi.Test.Entities.Entity2;
+using IExampleEntity2 = Civic.Framework.WebApi.Test.Interfaces.IEntity2;
 namespace Civic.Framework.WebApi.Test.Data.SqlServer
 {
-    public partial class ExampleRepository
+    public partial class Entity2Repository : IEntityRepository<IExampleEntity2>
     {
-    	public Entity2Entity GetEntity2(IEntityRequestContext context,  Int32 someID, String ff)
+        Container _container;
+    	private readonly IEntityCreateFactory _factory;
+    
+        public Entity2Repository(Container container, IEntityCreateFactory factory)
+        {
+            _container = container;
+    		_factory = factory;
+        }
+    
+    	public IExampleEntity2 Get(IEntityRequestContext context,  IExampleEntity2 entity)
     	{
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null, null ,context)) {
     
     			Debug.Assert(database!=null);
     
-       			var retval = Container.GetInstance<Entity2Entity>();
+    			var info = entity.GetInfo();
+    
+    		    if (!info.UseProcedureGet)
+    		    {
+    		        return SqlQuery.Get(_container, context.Who, entity, database);
+    		    }
     
     			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity2Get"))
     			{
-    		        var info = Entity2Entity.Info;
-    		        if (!info.UseProcedureGet)
-    		        {
-    		            return SqlQuery.Get(Container, context.Who,  someID.ToString()+"|"+ff, Entity2Entity.Info, database) as Entity2Entity;
-                    }
-    
-    				command.AddInParameter("@someID", someID);
-    				command.AddInParameter("@ff", ff);
+    				command.AddInParameter("@someID", entity.SomeID);
+    				command.AddInParameter("@ff", entity.ff);
     				
-    				command.ExecuteReader(dataReader =>
-    					{
-    						if (SqlQuery.PopulateEntity(context, retval, dataReader))
-    						{
-    							retval.SomeID = someID;
-    							retval.ff = ff;
-    												}
-    						else retval = null;
-    					});
+        			command.ExecuteReader(dataReader =>
+    				{
+    				    if(!SqlQuery.PopulateEntity(context, entity, dataReader)) {
+    						entity = null;
+    					}
+       				});
     			}
-    			return retval;
+    			return entity;
     		}
     	}
     
-    	public List<Entity2Entity> GetPagedEntity2(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+    	public IEnumerable<IExampleEntity2> GetPaged(IEntityRequestContext context, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy)
     	{ 
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null, null ,context)) {
     
     			Debug.Assert(database!=null);
     
-    			var list = new List<Entity2Entity>();
+    			var list = new List<IExampleEntity2>();
     
-    		    var info = Entity2Entity.Info;
     		    if (!info.UseProcedureGet)
     		    {
-    		        var entityList = SqlQuery.GetPaged(Container, context.Who, Entity2Entity.Info, skip, ref count, retCount, filterBy, orderBy, database);
+    		        var entityList = SqlQuery.GetPaged<IExampleEntity2>(_container, context.Who, info, skip, ref count, retCount, filterBy, orderBy, database);
     		        foreach (var entity in entityList)
     		        {
-    		            list.Add(entity as Entity2Entity);
+    		            list.Add(entity as IExampleEntity2);
     		        }
     
     		        return list;
@@ -88,11 +93,11 @@ namespace Civic.Framework.WebApi.Test.Data.SqlServer
     			
     				command.ExecuteReader(dataReader =>
     					{
-       						var item = Container.GetInstance<Entity2Entity>();
+                            IExampleEntity2 item = _factory.CreateNew(info) as IExampleEntity2;
     						while(SqlQuery.PopulateEntity(context, item, dataReader))
     						{
     							list.Add(item);
-       							item = Container.GetInstance<Entity2Entity>();
+    	                        item = _factory.CreateNew(info) as IExampleEntity2;
     						} 
     					});
     
@@ -102,7 +107,7 @@ namespace Civic.Framework.WebApi.Test.Data.SqlServer
     		}
     	}
     
-    	public void AddEntity2(IEntityRequestContext context, Entity2Entity entity)
+    	public void Add(IEntityRequestContext context, IExampleEntity2  entity)
     	{ 
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Add, entity, null ,context)) {
     
@@ -116,7 +121,7 @@ namespace Civic.Framework.WebApi.Test.Data.SqlServer
     		}
     	}
     
-    	public void ModifyEntity2(IEntityRequestContext context, Entity2Entity before, Entity2Entity after)
+    	public void Modify(IEntityRequestContext context, IExampleEntity2  before, IExampleEntity2  after)
     	{ 
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, before, after, context)) {
     			Debug.Assert(database!=null);
@@ -129,7 +134,7 @@ namespace Civic.Framework.WebApi.Test.Data.SqlServer
     		}
     	}
     
-    	public void RemoveEntity2(IEntityRequestContext context, Entity2Entity entity )
+    	public void Remove(IEntityRequestContext context, IExampleEntity2  entity )
     	{
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Remove, entity, null, context)) {
     
@@ -143,7 +148,7 @@ namespace Civic.Framework.WebApi.Test.Data.SqlServer
     		}
     	}
     
-    	static void buildEntity2CommandParameters(IEntityRequestContext context, Entity2Entity entity, IDBCommand command, bool addRecord )
+    	static void buildEntity2CommandParameters(IEntityRequestContext context, IExampleEntity2 entity, IDBCommand command, bool addRecord )
     	{ 
             Debug.Assert(command!=null);
        		if(addRecord) command.AddParameter("@someid", ParameterDirection.InputOutput,  entity.SomeID);

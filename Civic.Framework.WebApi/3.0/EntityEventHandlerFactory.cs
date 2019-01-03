@@ -405,7 +405,7 @@ namespace Civic.Framework.WebApi
             return retValue;
         }
 
-        public List<T> OnGetPagedAfter<T>(IEntityRequestContext context, IEntityInfo info, List<T> list) where T : class, IEntityIdentity
+        public IEnumerable<T> OnGetPagedAfter<T>(IEntityRequestContext context, IEntityInfo info, IEnumerable<T> list) where T : class, IEntityIdentity
         {
             var handlers = _producers[EntityEventType.GetPagedAfter];
             var allTypes = handlers.ContainsKey(AllClasses);

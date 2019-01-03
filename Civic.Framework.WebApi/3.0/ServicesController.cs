@@ -20,7 +20,7 @@ namespace Civic.Framework.WebApi
             _factory = factory;
         }
 
-        [Route("{module}/{version}/{entityName}")]
+        [Route("{module}/{version}/{entity}")]
         public IQueryMetadata Get(string module, string version, string entity)
         {
             var item = _factory.CreateNew(module, entity);
@@ -36,7 +36,7 @@ namespace Civic.Framework.WebApi
             return new QueryMetadata<object>(result, resultLimit);
         }
 
-        [Route("{module}/{version}/{entityName}/{key}")]
+        [Route("{module}/{version}/{entity}/{key}")]
         public IQueryMetadata Get(string dbCode, string module, string version, string entity, string key)
         {
             var item = _factory.CreateNew(module, entity);
@@ -47,15 +47,40 @@ namespace Civic.Framework.WebApi
             return new QueryMetadata<object>(result, 1);
         }
 
-        [Route("{module}/{version}/{entityName}/{key}")]
+        [Route("{module}/{version}/{entity}/{key}")]
         [HttpDelete]
-        public void Remove(string dbCode, string module, string version, string entity, string key)
+        public void Remove(string module, string version, string entity, string key)
         {
             var item = _factory.CreateNew(module, entity);
 
             var context = new EntityRequestContext { Who = User as ClaimsPrincipal };
 
             item.RemoveByKey(context, key);
+        }
+
+
+        [Route("{module}/{version}/{entity}")]
+        [HttpPost]
+        public QueryMetadata<IEntityIdentity> Post(string module, string version, string entity, [FromBody]JObject value)
+        {
+            var item = _factory.CreateNew(module, entity);
+
+            JsonConvert.PopulateObject(value.ToString(),item);
+            var context = new EntityRequestContext { Who = User as ClaimsPrincipal };
+            item.Save(context);
+
+            return new QueryMetadata<IEntityIdentity>(new [] {item}, 1);
+        }
+
+        [Route("{module}/{version}/{entity}/{key}")]
+        public void Put(string module, string version, string entity, string key, [FromBody]JObject value)
+        {
+            var item = _factory.CreateNew(module, entity);
+
+            item._key = key;
+            JsonConvert.PopulateObject(value.ToString(), item);
+            var context = new EntityRequestContext { Who = User as ClaimsPrincipal };
+            item.Save(context);
         }
 
         [HttpPost]

@@ -66,7 +66,7 @@ namespace Civic.Framework.WebApi
             throw new NotImplementedException();
         }
 
-        public List<T> OnGetPagedAfter<T>(IEntityRequestContext context, IEntityInfo info, List<T> list) where T : class, IEntityIdentity
+        public IEnumerable<T> OnGetPagedAfter<T>(IEntityRequestContext context, IEntityInfo info, IEnumerable<T> list) where T : class, IEntityIdentity
         {
             throw new NotImplementedException();
         }

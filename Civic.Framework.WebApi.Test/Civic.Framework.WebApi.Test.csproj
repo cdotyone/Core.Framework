@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Controllers\" />
     <Folder Include="Security\" />
   </ItemGroup>
   <ItemGroup>
@@ -140,40 +141,22 @@
   <ItemGroup>
     <Compile Include="App_Start\CivicWebApi.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Business\Example.Entity1.cs">
+    <Compile Include="Business\Entity1Facade.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Business\Example.Entity2.cs">
+    <Compile Include="Business\Entity2Facade.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Business\Example.Entity3.cs">
+    <Compile Include="Business\Entity3Facade.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Business\Example.Environment.cs">
+    <Compile Include="Business\EnvironmentFacade.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Business\Example.InstallationEnvironment.cs">
+    <Compile Include="Business\ExampleFacadePackage.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Business\Example.Package.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Business\ExampleBusinessFacade.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Controllers\ExampleEntity1Controller.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Controllers\ExampleEntity2Controller.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Controllers\ExampleEntity3Controller.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Controllers\ExampleEnvironmentController.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Controllers\ExampleInstallationEnvironmentController.cs">
+    <Compile Include="Business\InstallationEnvironmentFacade.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Data\ExampleEntity1.cs">
@@ -189,9 +172,6 @@
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Data\ExampleInstallationEnvironment.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Data\ExampleRepository.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Data\ExampleRepositoryPackage.cs">
@@ -215,40 +195,19 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IExampleFacade.cs">
+    <Compile Include="Interfaces\IEntity1.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IExampleRepository.cs">
+    <Compile Include="Interfaces\IEntity2.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IFacadeEntity1.cs">
+    <Compile Include="Interfaces\IEntity3.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IFacadeEntity2.cs">
+    <Compile Include="Interfaces\IEnvironment.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IFacadeEntity3.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Interfaces\IFacadeEnvironment.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Interfaces\IFacadeInstallationEnvironment.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Interfaces\IOperationEntity1.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Interfaces\IOperationEntity2.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Interfaces\IOperationEntity3.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Interfaces\IOperationEnvironment.cs">
-      <DependentUpon>Example.txt4</DependentUpon>
-    </Compile>
-    <Compile Include="Interfaces\IOperationInstallationEnvironment.cs">
+    <Compile Include="Interfaces\IInstallationEnvironment.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Models\Example.cs">
@@ -278,11 +237,10 @@
     <Content Include="libman.json" />
     <Content Include="Data\Example.txt4" />
     <Content Include="Example.txt4" />
-    <Content Include="Business\Example.txt4" />
-    <Content Include="Controllers\Example.txt4" />
     <Content Include="Entities\Example.txt4" />
-    <Content Include="Interfaces\Example.txt4" />
     <Content Include="SQL\Example.txt4" />
+    <Content Include="Interfaces\Example.txt4" />
+    <Content Include="Business\Example.txt4" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

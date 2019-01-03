@@ -2,32 +2,30 @@
 
 string businessPath = new FileInfo(Host.TemplateFile).DirectoryName.Replace("\\Models","\\Business");
 
-fileManager.StartNewFile(edmxFileName + ".Package.cs", folderName:"Business");
+fileManager.StartNewFile(edmxFileName + "FacadePackage.cs", folderName:"Business");
 
-WriteHeader("SimpleInjector.Packaging","SimpleInjector", namespaceName + ".Entities", namespaceName + ".Interfaces");
+WriteHeader("SimpleInjector.Packaging","SimpleInjector");
 #>
 
 <#
 BeginNamespace(namespaceName+".Business", code);
 #>
 
-public class <#=edmxFileName#>Package : IPackage
+public class <#=edmxFileName#>FacadePackage : IPackage
 {
     public void RegisterServices(Container container)
     {
-		container.Register<I<#=edmxFileName#>Facade, <#=edmxFileName#>BusinessFacade>(Lifestyle.Singleton);
-
 		var factory = new EntityCreateFactory(container);
 
 <#		foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 		{
-#>		factory.Register<<#=entity.Name#>>(<#=entity.Name#>.Info);
+#>		factory.Register<<#=namespaceName + ".Entities."#><#=entity.Name#>>(<#=namespaceName + ".Entities."#><#=entity.Name#>.Info);
 <#
 		}
 
 		foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 		{
-#>		container.Register<IFacade<#=entity.Name#>, <#=edmxFileName#>BusinessFacade>(Lifestyle.Singleton);
+#>		container.Register<IEntityBusinessFacade<<#=namespaceName + ".Interfaces."#>I<#=entity.Name#>>, <#=entity.Name#>Facade>(Lifestyle.Singleton);
 <#
 		}
 #>
@@ -43,17 +41,16 @@ EndNamespace(namespaceName);
 // Emit Entity Types
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
-	fileManager.StartNewFile(edmxFileName + "."+entity.Name+".cs", folderName:"Business");
+	fileManager.StartNewFile(entity.Name+"Facade.cs", folderName:"Business");
 
-	WriteHeader("System", "System.Security.Claims", "System.Collections.Generic", "Civic.Core.Security", "Civic.Core.Logging");
+	WriteHeader("System", "System.Security.Claims", "System.Collections.Generic", "Civic.Core.Logging",namespaceName +".Interfaces");
 	#>
-using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 
+using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + entity.Name#>;
 <# BeginNamespace(namespaceName+".Business", code);#>
 
-public partial class <#=edmxFileName#>BusinessFacade
+public partial class <#=entity.Name#>Facade : IEntityBusinessFacade<I<#=edmxFileName#><#=entity.Name#>>
 {
-
 <#
 
 	var lowerName = entity.Name.ToLower();
@@ -70,188 +67,165 @@ public partial class <#=edmxFileName#>BusinessFacade
 	}
 
 #>
-	public <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(IEntityRequestContext context, <# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#>) 
-	{
-        using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>BusinessFacade), "Get<#=code.Escape(entity)#>")) {
+        private readonly IEntityRepository<I<#=edmxFileName#><#=entity.Name#>> _repository;
+        private readonly IEntityEventHandlerFactory _handlers;
+		private readonly IEntityCreateFactory _factory;
 
-			try {	
-				if (!_handlers.OnGetBefore(context, <#=code.Escape(entity)#>Entity.Info))
-					return null;
+        public <#=entity.Name#>Facade(IEntityRepository<I<#=edmxFileName#><#=entity.Name#>> repository, IEntityCreateFactory factory, IEntityEventHandlerFactory handlers)
+        {
+            _repository = repository;
+            _handlers = handlers;
+            _factory = factory;
+        }
 
-				var entity = _respository.Get<#=code.Escape(entity)#>(context, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " "))#><#=Core.GetMethodParameterName(key)#><#}#>);
-				
-				if (!_handlers.OnGetAfter(context, <#=code.Escape(entity)#>Entity.Info, entity))
-					return null;
+        public I<#=edmxFileName#><#=entity.Name#> Get(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#> entity) 
+    	{
+            using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=entity.Name#>Facade), "Get")) {
+    
+			    var info = entity.GetInfo();
 
-				return entity;
-			}
-			catch (Exception ex)
-			{
-				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-			}
+    			try {	
+    				if (!_handlers.OnGetBefore(context, info))
+    					return null;
+    
+					entity = _repository.Get(context, entity);
 
-		}
-
-		return null;
-	}
-	
-	public List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) 
-	{
-        using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>BusinessFacade), "GetPaged<#=code.Escape(entity)#>")) {
-
-			try {
-				if (!_handlers.OnGetPagedBefore(context, <#=code.Escape(entity)#>Entity.Info))
-					return null;
-
-				var list = _respository.GetPaged<#=entity.Name#>(context, skip, ref count, retCount, filterBy, orderBy);
-
-				list = _handlers.OnGetPagedAfter<<#=code.Escape(entity)#>Entity>(context, <#=code.Escape(entity)#>Entity.Info, list);
-
-				return list;
-			}
-			catch (Exception ex)
-			{
-				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-			}
-
-		}
-
-		return null;
-	}
-
-	public void Save<#=code.Escape(entity)#>(IEntityRequestContext context, <#=code.Escape(entity)#>Entity entity) 
-	{
-        using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>BusinessFacade), "Save<#=code.Escape(entity)#>")) {
-    		var first = context.Operations.Count == 0;
-
-			try {
-    			var before = _respository.Get<#=code.Escape(entity)#>(context, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + "entity."+ key)#><#}#>);
-
-			    if (before == null)
-			    {
-					if (!_handlers.OnAddBefore(context, <#=code.Escape(entity)#>Entity.Info, entity))
-						return;
-<#
-					foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
-					{
-						if(ef.IsKey(edmProperty)) { 
-							if(code.Escape(edmProperty.TypeUsage.EdmType).ToLower()=="string" && edmProperty.Name.ToLower().EndsWith("uid")) { 
-						#> 
-					entity.<#=code.Escape(edmProperty.Name)#> = entity.<#=code.Escape(edmProperty.Name)#>.InsureUID(); 
-<#
-							}
-						}
-					}
-#>
-
-                    _respository.Add<#=code.Escape(entity)#>(context, entity);
-
-					if (!_handlers.OnAddAfter(context, <#=code.Escape(entity)#>Entity.Info, entity))
-						return;
-                }
-			    else
-			    {
-					if (!_handlers.OnModifyBefore(context, <#=code.Escape(entity)#>Entity.Info, before, entity))
-						return;
-
-			        _respository.Modify<#=code.Escape(entity)#>(context, before, entity);
-
-					if (!_handlers.OnModifyAfter(context, <#=code.Escape(entity)#>Entity.Info, before, entity))
-						return;
-                }
+    				if (!_handlers.OnGetAfter(context, info, entity))
+    					return null;
+    
+    				return entity;
+    			}
+    			catch (Exception ex)
+    			{
+    				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+    			}
+    
     		}
-            catch (Exception ex)
-            {
-                context.Rollback();
-                if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-            }
-            finally
-            {
-                if (first)
-                {
-                    context.Commit();
-                }
-            }
+    
+    		return null;
     	}
-	}
+    	
+    	public IEnumerable<I<#=edmxFileName#><#=entity.Name#>> GetPaged(IEntityRequestContext context, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy) 
+    	{
+            using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=entity.Name#>Facade), "GetPaged")) {
+    
+    			try {
+    				if (!_handlers.OnGetPagedBefore(context, info))
+    					return null;
+    
+    				var list = _repository.GetPaged(context, info, skip, ref count, retCount, filterBy, orderBy);
+    
+    				list = _handlers.OnGetPagedAfter(context, info, list);
+    
+    				return list;
+    			}
+    			catch (Exception ex)
+    			{
+    				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+    			}
+    
+    		}
+    
+    		return null;
+    	}
+    
+    	public void Save(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#> entity) 
+    	{
+            using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=entity.Name#>Facade), "Save")) {
+        		var first = context.Operations.Count == 0;
+    
+    			try {
+        			var before = _repository.Get(context, entity);
+    
+    			    if (before == null)
+    			    {
+    					if (!_handlers.OnAddBefore(context, entity.GetInfo(), entity))
+					        throw new Exception("OnAddBefore handler rejected");
 
-	public void Remove<#=code.Escape(entity)#>(IEntityRequestContext context, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> ) 
-	{
-        using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>BusinessFacade), "Remove<#=code.Escape(entity)#>")) {
-            var first = context.Operations.Count == 0;
+                        _repository.Add(context, entity);
+    
+    					if (!_handlers.OnAddAfter(context, entity.GetInfo(), entity))
+			                throw new Exception("OnAddAfter handler rejected");
+                    }
+                    else
+    			    {
+    					if (!_handlers.OnModifyBefore(context, entity.GetInfo(), before, entity))
+					        throw new Exception("OnModifyBefore handler rejected");
 
-			try {
-				var before = _respository.Get<#=code.Escape(entity)#>(context, <# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>);
-
-				if (!_handlers.OnRemoveBefore(context, <#=code.Escape(entity)#>Entity.Info, before))
-					return;
-
-				_respository.Remove<#=code.Escape(entity)#>(context, before);
-
-				if (!_handlers.OnRemoveAfter(context, <#=code.Escape(entity)#>Entity.Info, before))
-					return;
-			}
-            catch (Exception ex)
-            {
-                context.Rollback();
-                if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
-            }
-            finally
-            {
-                if (first)
-                {
-                    context.Commit();
+                        _repository.Modify(context, before, entity);
+    
+    					if (!_handlers.OnModifyAfter(context, entity.GetInfo(), before, entity))
+			                throw new Exception("OnModifyAfter handler rejected");
+                    }
                 }
-            }
+                catch (Exception ex)
+                {
+                    context.Rollback();
+                    if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+                }
+                finally
+                {
+                    if (first)
+                    {
+                        context.Commit();
+                    }
+                }
+        	}
+    	}
+    
+    	public void Remove(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#> entity ) 
+    	{
+            using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=entity.Name#>Facade), "Remove")) {
+                var first = context.Operations.Count == 0;
+    
+				var info = entity.GetInfo();
 
-		}
-	}
+    			try {
+    				var before = _repository.Get(context, entity);
+    
+    				if (!_handlers.OnRemoveBefore(context, info, before))
+				        throw new Exception("OnRemoveBefore handler rejected");
 
-	public List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
-		return GetPaged<#=code.Escape(entity)#>(new EntityRequestContext {Who = who}, skip, ref count, retCount, filterBy, orderBy);
-	}
+                    _repository.Remove(context, before);
+    
+    				if (!_handlers.OnRemoveAfter(context, info, before))
+			            throw new Exception("OnRemoveAfter handler rejected");
+    			}
+                catch (Exception ex)
+                {
+                    context.Rollback();
+                    if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+                }
+                finally
+                {
+                    if (first)
+                    {
+                        context.Commit();
+                    }
+                }
+    
+    		}
+    	}
 
-	public <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(ClaimsPrincipal who<# foreach(var key in keys.Keys) { #>, <#=keys[key]#> <#=Core.GetMethodParameterName(key)#><#}#> ) {
-		return Get<#=code.Escape(entity)#>(new EntityRequestContext {Who = who}<# foreach(var key in keys.Keys) { #>, <#=Core.GetMethodParameterName(key)#><#}#>);
-	}
-
-	public void Save<#=code.Escape(entity)#>(ClaimsPrincipal who, <#=code.Escape(entity)#>Entity entity) {
-		Save<#=code.Escape(entity)#>(new EntityRequestContext {Who = who}, entity);
-	}
-
-	public void Remove<#=code.Escape(entity)#>(ClaimsPrincipal who<# foreach(var key in keys.Keys) { #>, <#=keys[key]#> <#=Core.GetMethodParameterName(key)#><#}#> ) {
-		Remove<#=code.Escape(entity)#>(new EntityRequestContext {Who = who}<# foreach(var key in keys.Keys) { #>, <#=Core.GetMethodParameterName(key)#><#}#>);
-	}
-
+        public IEnumerable<I<#=edmxFileName#><#=entity.Name#>> GetPaged(ClaimsPrincipal who, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+        {
+            return GetPaged(new EntityRequestContext { Who = who }, info, skip, ref count, retCount, filterBy, orderBy);
+        }
+    
+    	public I<#=edmxFileName#><#=entity.Name#> Get(ClaimsPrincipal who, I<#=edmxFileName#><#=entity.Name#> entity) {
+    		return Get(new EntityRequestContext {Who = who}, entity);
+    	}
+    
+    	public void Save(ClaimsPrincipal who, I<#=edmxFileName#><#=entity.Name#> entity) {
+    		Save(new EntityRequestContext {Who = who}, entity);
+    	}
+    
+    	public void Remove(ClaimsPrincipal who, I<#=edmxFileName#><#=entity.Name#> entity ) {
+    		Remove(new EntityRequestContext {Who = who}, entity);
+    	}
 }
 <#
 	EndNamespace(namespaceName);
 
 }
-
-if (!typeMapper.VerifyCaseInsensitiveTypeUniqueness(typeMapper.GetAllGlobalItems(itemCollection), inputFile))
-{
-    return "";
-}
-
-
-fileManager.StartNewFile(edmxFileName + "BusinessFacade.cs", folderName:"Business");
-
-WriteHeader(namespaceName+".Interfaces");
-
-BeginNamespace(namespaceName+".Business", code);#>
-
-public partial class <#=edmxFileName#>BusinessFacade : I<#=edmxFileName#>Facade
-{
-	private readonly IExampleRepository _respository;
-    private readonly IEntityEventHandlerFactory _handlers;
-
-	public <#=edmxFileName#>BusinessFacade(IExampleRepository respository, IEntityEventHandlerFactory handlers) 
-	{
-		_respository = respository;
-        _handlers = handlers;
-	}
-}
-<#
-	EndNamespace(namespaceName);
 #>

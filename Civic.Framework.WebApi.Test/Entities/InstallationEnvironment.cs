@@ -12,15 +12,14 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Civic.Core.Data;
-using Civic.Framework.WebApi;
 using Newtonsoft.Json;
-using Civic.Framework.WebApi.Test.Interfaces;
 
+using IExampleInstallationEnvironment = Civic.Framework.WebApi.Test.Interfaces.IInstallationEnvironment;
 namespace Civic.Framework.WebApi.Test.Entities
 {
+    
     [DataContract(Name="installationEnvironment")]
-    public partial class InstallationEnvironment : IEntityIdentity
+    public partial class InstallationEnvironment : IExampleInstallationEnvironment
     {
     
     	[DataMember(Name="environmentCode")]
@@ -44,6 +43,11 @@ namespace Civic.Framework.WebApi.Test.Entities
     		get {
     			return EnvironmentCode.ToString();
     		}
+    		set {
+    			var keys = value.Split('|');
+    		
+    			EnvironmentCode = keys[0];
+    		}
     	}
     
         [DataMember(Name = "_module")]
@@ -54,9 +58,9 @@ namespace Civic.Framework.WebApi.Test.Entities
         
         public static IEntityInfo Info = new EntityInfo
     	{
-            Module = "dbo",
-            Entity = "InstallationEnvironment",
-            Name = "dbo.InstallationEnvironment",
+            Module = "example",
+            Entity = "installationEnvironment",
+            Name = "example.installationEnvironment",
             Properties = new Dictionary<string, IEntityPropertyInfo>
             {
     			{"environmentCode", new EntityPropertyInfo { Name = "environmentCode", Type="string", IsKey=true }},
@@ -64,11 +68,12 @@ namespace Civic.Framework.WebApi.Test.Entities
     			{"description", new EntityPropertyInfo { Name = "description", Type="string", IsNullable=true }},
     			{"isVisible", new EntityPropertyInfo { Name = "isVisible", Type="string" }},
     			{"modified", new EntityPropertyInfo { Name = "modified", Type="DateTime" }},
+    
             }
         };
     
-    	private IFacadeInstallationEnvironment _facade;
-    	public InstallationEnvironment(IFacadeInstallationEnvironment facade)
+    	private IEntityBusinessFacade<IExampleInstallationEnvironment> _facade;
+    	public InstallationEnvironment(IEntityBusinessFacade<IExampleInstallationEnvironment> facade)
     	{
     		_facade = facade;
     	}
@@ -78,31 +83,29 @@ namespace Civic.Framework.WebApi.Test.Entities
     	}
     
         public IEntityIdentity LoadByKey(IEntityRequestContext context, string key) {
-    		var parts = key.Split('|');
-    			
-    		EnvironmentCode = parts[0];
-    
+    		_key = key;
     		return Load(context);
     	}
     
         public void RemoveByKey(IEntityRequestContext context, string key) {
-    		LoadByKey(context, key).Remove(context);
+    		_key = key;
+    		Remove(context);
     	}
     
     	public IEnumerable<IEntityIdentity> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
-    		return _facade.GetPagedInstallationEnvironment(context, skip, ref count, retCount, filterBy, orderBy);
+    		return _facade.GetPaged(context, Info, skip, ref count, retCount, filterBy, orderBy);
     	}
     
     	public IEntityIdentity Load(IEntityRequestContext context) {
-    		return _facade.GetInstallationEnvironment(context,EnvironmentCode);
+    		return _facade.Get(context, this);
     	}
     
     	public void Save(IEntityRequestContext context) {
-    		_facade.SaveInstallationEnvironment(context, this);
+    		_facade.Save(context, this);
     	}
     
     	public void Remove(IEntityRequestContext context) {
-    		_facade.RemoveInstallationEnvironment(context,EnvironmentCode);
+    		_facade.Remove(context, this);
     	}
     }
 }

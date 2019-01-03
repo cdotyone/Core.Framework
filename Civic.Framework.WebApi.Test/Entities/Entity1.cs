@@ -12,15 +12,14 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Civic.Core.Data;
-using Civic.Framework.WebApi;
 using Newtonsoft.Json;
-using Civic.Framework.WebApi.Test.Interfaces;
 
+using IExampleEntity1 = Civic.Framework.WebApi.Test.Interfaces.IEntity1;
 namespace Civic.Framework.WebApi.Test.Entities
 {
+    
     [DataContract(Name="entity1")]
-    public partial class Entity1 : IEntityIdentity
+    public partial class Entity1 : IExampleEntity1
     {
     
     	[DataMember(Name="name")]
@@ -47,6 +46,11 @@ namespace Civic.Framework.WebApi.Test.Entities
     		get {
     			return Name.ToString();
     		}
+    		set {
+    			var keys = value.Split('|');
+    		
+    			Name = keys[0];
+    		}
     	}
     
         [DataMember(Name = "_module")]
@@ -57,9 +61,9 @@ namespace Civic.Framework.WebApi.Test.Entities
         
         public static IEntityInfo Info = new EntityInfo
     	{
-            Module = "dbo",
-            Entity = "Entity1",
-            Name = "dbo.Entity1",
+            Module = "example",
+            Entity = "entity1",
+            Name = "example.entity1",
             Properties = new Dictionary<string, IEntityPropertyInfo>
             {
     			{"name", new EntityPropertyInfo { Name = "name", Type="string", IsKey=true }},
@@ -68,11 +72,12 @@ namespace Civic.Framework.WebApi.Test.Entities
     			{"dte2", new EntityPropertyInfo { Name = "dte2", Type="DateTime>", IsNullable=true }},
     			{"dble1", new EntityPropertyInfo { Name = "dble1", Type="double" }},
     			{"dec1", new EntityPropertyInfo { Name = "dec1", Type="double" }},
+    
             }
         };
     
-    	private IFacadeEntity1 _facade;
-    	public Entity1(IFacadeEntity1 facade)
+    	private IEntityBusinessFacade<IExampleEntity1> _facade;
+    	public Entity1(IEntityBusinessFacade<IExampleEntity1> facade)
     	{
     		_facade = facade;
     	}
@@ -82,31 +87,29 @@ namespace Civic.Framework.WebApi.Test.Entities
     	}
     
         public IEntityIdentity LoadByKey(IEntityRequestContext context, string key) {
-    		var parts = key.Split('|');
-    			
-    		Name = parts[0];
-    
+    		_key = key;
     		return Load(context);
     	}
     
         public void RemoveByKey(IEntityRequestContext context, string key) {
-    		LoadByKey(context, key).Remove(context);
+    		_key = key;
+    		Remove(context);
     	}
     
     	public IEnumerable<IEntityIdentity> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
-    		return _facade.GetPagedEntity1(context, skip, ref count, retCount, filterBy, orderBy);
+    		return _facade.GetPaged(context, Info, skip, ref count, retCount, filterBy, orderBy);
     	}
     
     	public IEntityIdentity Load(IEntityRequestContext context) {
-    		return _facade.GetEntity1(context,Name);
+    		return _facade.Get(context, this);
     	}
     
     	public void Save(IEntityRequestContext context) {
-    		_facade.SaveEntity1(context, this);
+    		_facade.Save(context, this);
     	}
     
     	public void Remove(IEntityRequestContext context) {
-    		_facade.RemoveEntity1(context,Name);
+    		_facade.Remove(context, this);
     	}
     }
 }

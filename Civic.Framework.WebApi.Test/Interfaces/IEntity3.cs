@@ -9,21 +9,25 @@
 
 #pragma warning disable 1591 // this is to supress no xml comments in public members warnings 
 
+using System;
+using System.Collections.Generic;
+using Civic.Framework.WebApi;
+using Newtonsoft.Json;
 using Civic.Framework.WebApi.Test.Interfaces;
 
-namespace Civic.Framework.WebApi.Test.Business
+namespace Civic.Framework.WebApi.Test.Interfaces
 {
-    
-    public partial class ExampleBusinessFacade : IExampleFacade
+    public interface IEntity3 : IEntityIdentity
     {
-    	private readonly IExampleRepository _respository;
-        private readonly IEntityEventHandlerFactory _handlers;
     
-    	public ExampleBusinessFacade(IExampleRepository respository, IEntityEventHandlerFactory handlers) 
-    	{
-    		_respository = respository;
-            _handlers = handlers;
-    	}
+        string SomeUID { get; set; }
+    
+        long SomeID { get; set; }
+    
+        System.DateTime Modified { get; set; }
+    
+        Nullable<System.DateTime> OtherDate { get; set; }
+    
     }
 }
 

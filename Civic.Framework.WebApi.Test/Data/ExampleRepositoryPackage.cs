@@ -11,7 +11,6 @@
 
 using SimpleInjector.Packaging;
 using SimpleInjector;
-using Civic.Framework.WebApi.Test.Interfaces;
 
 
 namespace Civic.Framework.WebApi.Test.Data.SqlServer
@@ -21,7 +20,11 @@ namespace Civic.Framework.WebApi.Test.Data.SqlServer
     {
         public void RegisterServices(Container container)
         {
-    		container.Register<IExampleRepository, ExampleRepository>(Lifestyle.Singleton);
+    		container.Register<IEntityRepository<Civic.Framework.WebApi.Test.Interfaces.IEntity1>, Entity1Repository>(Lifestyle.Singleton);
+    		container.Register<IEntityRepository<Civic.Framework.WebApi.Test.Interfaces.IEntity2>, Entity2Repository>(Lifestyle.Singleton);
+    		container.Register<IEntityRepository<Civic.Framework.WebApi.Test.Interfaces.IEntity3>, Entity3Repository>(Lifestyle.Singleton);
+    		container.Register<IEntityRepository<Civic.Framework.WebApi.Test.Interfaces.IEnvironment>, EnvironmentRepository>(Lifestyle.Singleton);
+    		container.Register<IEntityRepository<Civic.Framework.WebApi.Test.Interfaces.IInstallationEnvironment>, InstallationEnvironmentRepository>(Lifestyle.Singleton);
         }
     }
     
