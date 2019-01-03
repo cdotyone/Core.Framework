@@ -6,18 +6,18 @@
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
 
-fileManager.StartNewFile(edmxFileName + "SqlRepository."+entity.Name+".cs", folderName:"Data");
+fileManager.StartNewFile(edmxFileName + entity.Name+".cs", folderName:"Data");
 
-WriteHeader("System", "System.Collections.Generic", "System.Data", "System.Diagnostics", "System.Security.Claims" ,"Civic.Core.Data","Civic.Framework.WebApi.Configuration", namespaceName +".Entities", namespaceName +".Interfaces");
+WriteHeader("System", "System.Collections.Generic", "System.Data", "System.Diagnostics", "System.Security.Claims" ,"Civic.Core.Data","Civic.Framework.WebApi","Civic.Framework.WebApi.Configuration", namespaceName +".Entities", namespaceName +".Interfaces");
 
 #>
 using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 <#
 
-BeginNamespace(namespaceName + ".Data", code);
+BeginNamespace(namespaceName + ".Data.SqlServer", code);
 
 #>
-public partial class <#=edmxFileName#>SqlRepository
+public partial class <#=edmxFileName#>Repository
 {
 <#
 	// Emit Entity Types
@@ -204,18 +204,18 @@ EndNamespace(namespaceName);
 }
 
 
-fileManager.StartNewFile(edmxFileName + "SqlRepository.cs", folderName:"Data");
+fileManager.StartNewFile(edmxFileName + "Repository.cs", folderName:"Data");
 
 WriteHeader("System.Security.Claims","SimpleInjector","Civic.Core.Data", namespaceName +".Interfaces");
 
-BeginNamespace(namespaceName + ".Data", code);
+BeginNamespace(namespaceName + ".Data.SqlServer", code);
 
 #>
-public partial class <#=edmxFileName#>SqlRepository : I<#=edmxFileName#>Repository
+public partial class <#=edmxFileName#>Repository : I<#=edmxFileName#>Repository
 {
 	Container _container;
 
-	public <#=edmxFileName#>SqlRepository( Container container ) {
+	public <#=edmxFileName#>Repository( Container container ) {
 		_container = container;
 	}
 
@@ -236,20 +236,20 @@ EndNamespace(namespaceName);
 #>
 <#
 
-fileManager.StartNewFile(edmxFileName + "SqlRepositoryPackage.cs", folderName:"Data");
+fileManager.StartNewFile(edmxFileName + "RepositoryPackage.cs", folderName:"Data");
 
 WriteHeader("SimpleInjector.Packaging","SimpleInjector",namespaceName+".Interfaces");
 #>
 
 <#
-BeginNamespace(namespaceName+".Data", code);
+BeginNamespace(namespaceName+".Data.SqlServer", code);
 #>
 
-public class <#=edmxFileName#>SqlRepositoryPackage : IPackage
+public class <#=edmxFileName#>RepositoryPackage : IPackage
 {
     public void RegisterServices(Container container)
     {
-		container.Register<I<#=edmxFileName#>Repository, <#=edmxFileName#>SqlRepository>(Lifestyle.Singleton);
+		container.Register<I<#=edmxFileName#>Repository, <#=edmxFileName#>Repository>(Lifestyle.Singleton);
     }
 }
 

@@ -14,14 +14,14 @@ using SimpleInjector;
 using Civic.Framework.WebApi.Test.Interfaces;
 
 
-namespace Civic.Framework.WebApi.Test.Data
+namespace Civic.Framework.WebApi.Test.Data.SqlServer
 {
     
-    public class ExampleSqlRepositoryPackage : IPackage
+    public class ExampleRepositoryPackage : IPackage
     {
         public void RegisterServices(Container container)
         {
-    		container.Register<IExampleRepository, ExampleSqlRepository>(Lifestyle.Singleton);
+    		container.Register<IExampleRepository, ExampleRepository>(Lifestyle.Singleton);
         }
     }
     

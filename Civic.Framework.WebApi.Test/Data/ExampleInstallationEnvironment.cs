@@ -15,14 +15,15 @@ using System.Data;
 using System.Diagnostics;
 using System.Security.Claims;
 using Civic.Core.Data;
+using Civic.Framework.WebApi;
 using Civic.Framework.WebApi.Configuration;
 using Civic.Framework.WebApi.Test.Entities;
 using Civic.Framework.WebApi.Test.Interfaces;
 
 using InstallationEnvironmentEntity = Civic.Framework.WebApi.Test.Entities.InstallationEnvironment;
-namespace Civic.Framework.WebApi.Test.Data
+namespace Civic.Framework.WebApi.Test.Data.SqlServer
 {
-    public partial class ExampleSqlRepository
+    public partial class ExampleRepository
     {
     	public InstallationEnvironmentEntity GetInstallationEnvironment(IEntityRequestContext context,  String environmentCode)
     	{

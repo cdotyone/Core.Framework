@@ -15,40 +15,39 @@ using System.Data;
 using System.Diagnostics;
 using System.Security.Claims;
 using Civic.Core.Data;
+using Civic.Framework.WebApi;
 using Civic.Framework.WebApi.Configuration;
 using Civic.Framework.WebApi.Test.Entities;
 using Civic.Framework.WebApi.Test.Interfaces;
 
-using Entity2Entity = Civic.Framework.WebApi.Test.Entities.Entity2;
-namespace Civic.Framework.WebApi.Test.Data
+using EnvironmentEntity = Civic.Framework.WebApi.Test.Entities.Environment;
+namespace Civic.Framework.WebApi.Test.Data.SqlServer
 {
-    public partial class ExampleSqlRepository
+    public partial class ExampleRepository
     {
-    	public Entity2Entity GetEntity2(IEntityRequestContext context,  Int32 someID, String ff)
+    	public EnvironmentEntity GetEnvironment(IEntityRequestContext context,  Int32 id)
     	{
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null, null ,context)) {
     
     			Debug.Assert(database!=null);
     
-       			var retval = Container.GetInstance<Entity2Entity>();
+       			var retval = Container.GetInstance<EnvironmentEntity>();
     
-    			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity2Get"))
+    			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentGet"))
     			{
-    		        var info = Entity2Entity.Info;
+    		        var info = EnvironmentEntity.Info;
     		        if (!info.UseProcedureGet)
     		        {
-    		            return SqlQuery.Get(Container, context.Who,  someID.ToString()+"|"+ff, Entity2Entity.Info, database) as Entity2Entity;
+    		            return SqlQuery.Get(Container, context.Who,  id.ToString(), EnvironmentEntity.Info, database) as EnvironmentEntity;
                     }
     
-    				command.AddInParameter("@someID", someID);
-    				command.AddInParameter("@ff", ff);
+    				command.AddInParameter("@id", id);
     				
     				command.ExecuteReader(dataReader =>
     					{
     						if (SqlQuery.PopulateEntity(context, retval, dataReader))
     						{
-    							retval.SomeID = someID;
-    							retval.ff = ff;
+    							retval.ID = id;
     												}
     						else retval = null;
     					});
@@ -57,27 +56,27 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	public List<Entity2Entity> GetPagedEntity2(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+    	public List<EnvironmentEntity> GetPagedEnvironment(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
     	{ 
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null, null ,context)) {
     
     			Debug.Assert(database!=null);
     
-    			var list = new List<Entity2Entity>();
+    			var list = new List<EnvironmentEntity>();
     
-    		    var info = Entity2Entity.Info;
+    		    var info = EnvironmentEntity.Info;
     		    if (!info.UseProcedureGet)
     		    {
-    		        var entityList = SqlQuery.GetPaged(Container, context.Who, Entity2Entity.Info, skip, ref count, retCount, filterBy, orderBy, database);
+    		        var entityList = SqlQuery.GetPaged(Container, context.Who, EnvironmentEntity.Info, skip, ref count, retCount, filterBy, orderBy, database);
     		        foreach (var entity in entityList)
     		        {
-    		            list.Add(entity as Entity2Entity);
+    		            list.Add(entity as EnvironmentEntity);
     		        }
     
     		        return list;
     		    }
     
-    			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity2GetFiltered"))
+    			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentGetFiltered"))
     			{
     				command.AddInParameter("@skip", skip);			
     				command.AddInParameter("@retcount", retCount);
@@ -87,11 +86,11 @@ namespace Civic.Framework.WebApi.Test.Data
     			
     				command.ExecuteReader(dataReader =>
     					{
-       						var item = Container.GetInstance<Entity2Entity>();
+       						var item = Container.GetInstance<EnvironmentEntity>();
     						while(SqlQuery.PopulateEntity(context, item, dataReader))
     						{
     							list.Add(item);
-       							item = Container.GetInstance<Entity2Entity>();
+       							item = Container.GetInstance<EnvironmentEntity>();
     						} 
     					});
     
@@ -101,55 +100,53 @@ namespace Civic.Framework.WebApi.Test.Data
     		}
     	}
     
-    	public void AddEntity2(IEntityRequestContext context, Entity2Entity entity)
+    	public void AddEnvironment(IEntityRequestContext context, EnvironmentEntity entity)
     	{ 
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Add, entity, null ,context)) {
     
     			Debug.Assert(database!=null);
     
-    			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity2Add"))
+    			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentAdd"))
     			{
-    				buildEntity2CommandParameters(context, entity, command, true );
+    				buildEnvironmentCommandParameters(context, entity, command, true );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void ModifyEntity2(IEntityRequestContext context, Entity2Entity before, Entity2Entity after)
+    	public void ModifyEnvironment(IEntityRequestContext context, EnvironmentEntity before, EnvironmentEntity after)
     	{ 
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, before, after, context)) {
     			Debug.Assert(database!=null);
     
-    			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity2Modify"))
+    			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentModify"))
     			{
-    				buildEntity2CommandParameters(context, before, command, false );
+    				buildEnvironmentCommandParameters(context, before, command, false );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void RemoveEntity2(IEntityRequestContext context, Entity2Entity entity )
+    	public void RemoveEnvironment(IEntityRequestContext context, EnvironmentEntity entity )
     	{
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Remove, entity, null, context)) {
     
     			Debug.Assert(database!=null);
     
-    			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity2Remove"))
+    			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentRemove"))
     			{
-    				buildEntity2CommandParameters(context, entity, command, false );
+    				buildEnvironmentCommandParameters(context, entity, command, false );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	static void buildEntity2CommandParameters(IEntityRequestContext context, Entity2Entity entity, IDBCommand command, bool addRecord )
+    	static void buildEnvironmentCommandParameters(IEntityRequestContext context, EnvironmentEntity entity, IDBCommand command, bool addRecord )
     	{ 
             Debug.Assert(command!=null);
-       		if(addRecord) command.AddParameter("@someid", ParameterDirection.InputOutput,  entity.SomeID);
-    		else command.AddInParameter("@someid", entity.SomeID);
-       		if(addRecord) command.AddParameter("@ff", ParameterDirection.InputOutput,  T4Config.CheckUpperCase("dbo","entity2","ff",entity.ff));
-    		else command.AddInParameter("@ff", T4Config.CheckUpperCase("dbo","entity2","ff",entity.ff));
-    		command.AddInParameter("@otherdate", entity.OtherDate.ToDB());
+       		if(addRecord) command.AddParameter("@id", ParameterDirection.InputOutput,  entity.ID);
+    		else command.AddInParameter("@id", entity.ID);
+    		command.AddInParameter("@name", T4Config.CheckUpperCase("dbo","environment","name",entity.Name, false));
     	}
     }
 }

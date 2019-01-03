@@ -176,25 +176,25 @@
     <Compile Include="Controllers\ExampleInstallationEnvironmentController.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleSqlRepository.cs">
+    <Compile Include="Data\ExampleEntity1.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleSqlRepository.Entity1.cs">
+    <Compile Include="Data\ExampleEntity2.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleSqlRepository.Entity2.cs">
+    <Compile Include="Data\ExampleEntity3.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleSqlRepository.Entity3.cs">
+    <Compile Include="Data\ExampleEnvironment.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleSqlRepository.Environment.cs">
+    <Compile Include="Data\ExampleInstallationEnvironment.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleSqlRepository.InstallationEnvironment.cs">
+    <Compile Include="Data\ExampleRepository.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleSqlRepositoryPackage.cs">
+    <Compile Include="Data\ExampleRepositoryPackage.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Entities\Entity1.cs">
