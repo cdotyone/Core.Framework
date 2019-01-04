@@ -291,7 +291,7 @@ namespace Civic.Framework.WebApi
             return retValue;
         }
 
-        public bool OnGetBefore(IEntityRequestContext context, IEntityInfo info)
+        public bool OnGetBefore<T>(IEntityRequestContext context, IEntityInfo info, T entity) where T : class, IEntityIdentity
         {
             var retValue = true;
 
@@ -308,7 +308,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[AllClasses])
                 {
-                    if (!handler.OnGetBefore(context, info))
+                    if (!handler.OnGetBefore(context, info, entity))
                     {
                         retValue = false;
                     }
@@ -319,7 +319,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[info.Name])
                 {
-                    if (!handler.OnGetBefore(context, info))
+                    if (!handler.OnGetBefore(context, info, entity))
                     {
                         retValue = false;
                     }

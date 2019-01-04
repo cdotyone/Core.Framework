@@ -131,6 +131,7 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="AuthorizationHelper.cs" />
+    <Compile Include="Business\EnvironmentFacade.cs" />
     <Compile Include="EntityHandlers\AuditLogHandler.cs" />
     <Compile Include="EntityHandlers\BasicAuthorizationHandler.cs" />
     <Compile Include="Repository\IEntityRepository.cs" />

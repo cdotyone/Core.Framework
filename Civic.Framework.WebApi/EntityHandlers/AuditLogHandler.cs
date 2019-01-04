@@ -51,7 +51,7 @@ namespace Civic.Framework.WebApi
             return true;
         }
 
-        public bool OnGetBefore(IEntityRequestContext context, IEntityInfo info)
+        public bool OnGetBefore<T>(IEntityRequestContext context, IEntityInfo info, T entity)
         {
             throw new NotImplementedException();
         }

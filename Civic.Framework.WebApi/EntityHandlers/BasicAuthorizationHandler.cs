@@ -61,7 +61,7 @@ namespace Civic.Framework.WebApi
             throw new NotImplementedException();
         }
 
-        public bool OnGetBefore(IEntityRequestContext context, IEntityInfo info)
+        public bool OnGetBefore<T>(IEntityRequestContext context, IEntityInfo info, T entity)
         {
             if (!AuthorizationHelper.CanView(context.Who, info))
             {
