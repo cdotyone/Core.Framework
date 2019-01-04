@@ -208,7 +208,7 @@ EndNamespace(namespaceName);
 
 fileManager.StartNewFile(edmxFileName + "RepositoryPackage.cs", folderName:"Data");
 
-WriteHeader("SimpleInjector.Packaging","SimpleInjector");
+WriteHeader("SimpleInjector.Packaging","SimpleInjector","Civic.Framework.WebApi");
 #>
 
 <#
