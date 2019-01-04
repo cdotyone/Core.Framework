@@ -20,7 +20,7 @@ using IExampleEntity3 = Civic.Framework.WebApi.Test.Interfaces.IEntity3;
 namespace Civic.Framework.WebApi.Test.Business
 {
 
-    public partial class Entity3Facade : EntityBusinessFacade<IExampleEntity3>
+    public partial class Entity3Facade : EntityBusinessFacade<IExampleEntity3>, IEntity3Facade
     {
     
             public Entity3Facade(Container container, IEntityRepository<IExampleEntity3> repository, IEntityEventHandlerFactory handlers) : base(container, repository, handlers)

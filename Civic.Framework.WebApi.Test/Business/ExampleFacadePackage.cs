@@ -30,11 +30,11 @@ namespace Civic.Framework.WebApi.Test.Business
     		factory.Register<Civic.Framework.WebApi.Test.Entities.Environment>(Civic.Framework.WebApi.Test.Entities.Environment.Info);
     		factory.Register<Civic.Framework.WebApi.Test.Entities.InstallationEnvironment>(Civic.Framework.WebApi.Test.Entities.InstallationEnvironment.Info);
     		container.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity1Facade, Entity1Facade>(Lifestyle.Singleton);
-		container.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity2Facade, Entity2Facade>(Lifestyle.Singleton);
-		container.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity3Facade, Entity3Facade>(Lifestyle.Singleton);
-		container.Register<Civic.Framework.WebApi.Test.Interfaces.IEnvironmentFacade, EnvironmentFacade>(Lifestyle.Singleton);
-		container.Register<Civic.Framework.WebApi.Test.Interfaces.IInstallationEnvironmentFacade, InstallationEnvironmentFacade>(Lifestyle.Singleton);
-
+    		container.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity2Facade, Entity2Facade>(Lifestyle.Singleton);
+    		container.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity3Facade, Entity3Facade>(Lifestyle.Singleton);
+    		container.Register<Civic.Framework.WebApi.Test.Interfaces.IEnvironmentFacade, EnvironmentFacade>(Lifestyle.Singleton);
+    		container.Register<Civic.Framework.WebApi.Test.Interfaces.IInstallationEnvironmentFacade, InstallationEnvironmentFacade>(Lifestyle.Singleton);
+    
         }
     }
     

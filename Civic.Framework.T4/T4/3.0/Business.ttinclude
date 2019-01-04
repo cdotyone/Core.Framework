@@ -49,7 +49,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + entity.Name#>;
 <# BeginNamespace(namespaceName+".Business", code);#>
 
-public partial class <#=entity.Name#>Facade : EntityBusinessFacade<I<#=edmxFileName#><#=entity.Name#>>
+public partial class <#=entity.Name#>Facade : EntityBusinessFacade<I<#=edmxFileName#><#=entity.Name#>>, I<#=entity.Name#>Facade
 {
 
         public <#=entity.Name#>Facade(Container container, IEntityRepository<I<#=edmxFileName#><#=entity.Name#>> repository, IEntityEventHandlerFactory handlers) : base(container, repository, handlers)

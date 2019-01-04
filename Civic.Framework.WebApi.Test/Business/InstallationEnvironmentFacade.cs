@@ -20,7 +20,7 @@ using IExampleInstallationEnvironment = Civic.Framework.WebApi.Test.Interfaces.I
 namespace Civic.Framework.WebApi.Test.Business
 {
 
-    public partial class InstallationEnvironmentFacade : EntityBusinessFacade<IExampleInstallationEnvironment>
+    public partial class InstallationEnvironmentFacade : EntityBusinessFacade<IExampleInstallationEnvironment>, IInstallationEnvironmentFacade
     {
     
             public InstallationEnvironmentFacade(Container container, IEntityRepository<IExampleInstallationEnvironment> repository, IEntityEventHandlerFactory handlers) : base(container, repository, handlers)
