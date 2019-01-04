@@ -138,7 +138,7 @@
       <LastGenOutput>Example.cs</LastGenOutput>
     </None>
     <Compile Include="..\References\VersionInfo.cs">
-      <Link>VersionInfo.cs</Link>
+      <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Content Include="T4\3.0\Business.ttinclude" />
   </ItemGroup>

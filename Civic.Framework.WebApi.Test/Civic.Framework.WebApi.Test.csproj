@@ -139,7 +139,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\CivicWebApi.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Business\Entity1Facade.cs">
       <DependentUpon>Example.txt4</DependentUpon>

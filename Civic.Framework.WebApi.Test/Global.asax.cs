@@ -9,7 +9,7 @@ namespace Civic.Framework.WebApi.Test
         protected void Application_Start(object sender, EventArgs e)
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            GlobalConfiguration.Configure(CivicWebApi.Register);
+            ApiActivator.Initialize(GlobalConfiguration.Configuration);
         }
     }
 }
