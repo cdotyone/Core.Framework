@@ -194,19 +194,34 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IEntity1.cs">
+    <Compile Include="Interfaces.Business\IEntity1Facade.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IEntity2.cs">
+    <Compile Include="Interfaces.Business\IEntity2Facade.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IEntity3.cs">
+    <Compile Include="Interfaces.Business\IEntity3Facade.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IEnvironment.cs">
+    <Compile Include="Interfaces.Business\IEnvironmentFacade.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IInstallationEnvironment.cs">
+    <Compile Include="Interfaces.Business\IInstallationEnvironmentFacade.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces.Entities\IEntity1.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces.Entities\IEntity2.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces.Entities\IEntity3.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces.Entities\IEnvironment.cs">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces.Entities\IInstallationEnvironment.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Models\Example.cs">
@@ -238,8 +253,9 @@
     <Content Include="Example.txt4" />
     <Content Include="Entities\Example.txt4" />
     <Content Include="SQL\Example.txt4" />
-    <Content Include="Interfaces\Example.txt4" />
+    <Content Include="Interfaces.Entities\Example.txt4" />
     <Content Include="Business\Example.txt4" />
+    <Content Include="Interfaces.Business\Example.txt4" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

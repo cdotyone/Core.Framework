@@ -2,22 +2,76 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
+
+
 
 // Generated helper templates
 // Civic.Framework.WebApi.Test\Example.txt4
-// Civic.Framework.WebApi.Test\Interfaces\Example.txt4
+// Civic.Framework.WebApi.Test\Interfaces.Business\Example.txt4
+// Civic.Framework.WebApi.Test\Interfaces.Entities\Example.txt4
 // Civic.Framework.WebApi.Test\Business\Example.txt4
 // Civic.Framework.WebApi.Test\Entities\Example.txt4
 // Civic.Framework.WebApi.Test\Data\Example.txt4
 // Civic.Framework.WebApi.Test\SQL\Example.txt4
 // Generated items
 // Civic.Framework.WebApi.Test\Example.edmx.xml
-// Civic.Framework.WebApi.Test\Interfaces\IInstallationEnvironment.cs
-// Civic.Framework.WebApi.Test\Interfaces\IEnvironment.cs
-// Civic.Framework.WebApi.Test\Interfaces\IEntity3.cs
-// Civic.Framework.WebApi.Test\Interfaces\IEntity2.cs
-// Civic.Framework.WebApi.Test\Interfaces\IEntity1.cs
+// Civic.Framework.WebApi.Test\Interfaces.Business\IInstallationEnvironmentFacade.cs
+// Civic.Framework.WebApi.Test\Interfaces.Business\IEnvironmentFacade.cs
+// Civic.Framework.WebApi.Test\Interfaces.Business\IEntity3Facade.cs
+// Civic.Framework.WebApi.Test\Interfaces.Business\IEntity2Facade.cs
+// Civic.Framework.WebApi.Test\Interfaces.Business\IEntity1Facade.cs
+// Civic.Framework.WebApi.Test\Interfaces.Entities\IInstallationEnvironment.cs
+// Civic.Framework.WebApi.Test\Interfaces.Entities\IEnvironment.cs
+// Civic.Framework.WebApi.Test\Interfaces.Entities\IEntity3.cs
+// Civic.Framework.WebApi.Test\Interfaces.Entities\IEntity2.cs
+// Civic.Framework.WebApi.Test\Interfaces.Entities\IEntity1.cs
 // Civic.Framework.WebApi.Test\Business\InstallationEnvironmentFacade.cs
 // Civic.Framework.WebApi.Test\Business\EnvironmentFacade.cs
 // Civic.Framework.WebApi.Test\Business\Entity3Facade.cs

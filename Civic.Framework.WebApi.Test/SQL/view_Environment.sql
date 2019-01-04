@@ -1,4 +1,5 @@
-﻿IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[VW_ENVIRONMENT]') AND OBJECTPROPERTY(object_id, N'IsView') = 1)
+﻿
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[VW_ENVIRONMENT]') AND OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[VW_ENVIRONMENT]
 GO
 SET ANSI_NULLS ON
@@ -10,7 +11,9 @@ AS
 
 	SELECT	
 		-- t4-columns begin
+
 		 [e].[ID]
+
 		,[e].[Name]
 		-- t4-columns end
 	FROM [dbo].[Environment] [e]

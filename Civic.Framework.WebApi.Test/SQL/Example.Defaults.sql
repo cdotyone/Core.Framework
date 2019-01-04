@@ -1,4 +1,5 @@
 ﻿
+
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_GetDate]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
 DROP DEFAULT [civic].[udf_GetDate]
 GO
@@ -40,8 +41,12 @@ CREATE DEFAULT [civic].[udf_Zero]
 AS 0
 GO
 -- t4-defaults begin
+
 EXECUTE sp_bindefault N'civic.udf_GetDate', N'[dbo].[Entity2].[Modified]';
+
 EXECUTE sp_bindefault N'civic.udf_GetDate', N'[dbo].[Entity3].[Modified]';
+
 EXECUTE sp_bindefault N'civic.udf_GetDate', N'[dbo].[InstallationEnvironment].[Modified]';
+
 -- t4-defaults end
 GO

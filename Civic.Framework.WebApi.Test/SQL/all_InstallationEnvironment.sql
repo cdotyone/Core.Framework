@@ -1,4 +1,5 @@
-﻿IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_InstallationEnvironmentGet]') AND type in (N'P', N'PC'))
+﻿
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_InstallationEnvironmentGet]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_InstallationEnvironmentGet]
 GO
 SET ANSI_NULLS ON
@@ -6,26 +7,36 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_InstallationEnvironmentGet]
+
 	  @environmentCode [varchar](20)
+
 AS
 BEGIN
 	SET NOCOUNT ON
 
 	SELECT	
 		-- t4-columns begin
+
 		 [ie].[EnvironmentCode]
+
 		,[ie].[Name]
+
 		,[ie].[Description]
+
 		,[ie].[IsVisible]
+
 		,[ie].[Modified]
 		-- t4-columns end
 	FROM [dbo].[InstallationEnvironment] [ie]
 	WHERE	
 		-- t4-where begin
+
 	    [ie].[EnvironmentCode] = @environmentCode
+
 		-- t4-where end
 END
 GO
+
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_InstallationEnvironmentGetFiltered]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_InstallationEnvironmentGetFiltered]
 GO
@@ -46,10 +57,15 @@ BEGIN
 	DECLARE @select nvarchar(max)
     SET @select = 'SELECT	
 		-- t4-columns begin
+
 		 [ie].[EnvironmentCode]
+
 		,[ie].[Name]
+
 		,[ie].[Description]
+
 		,[ie].[IsVisible]
+
 		,[ie].[Modified]
 		-- t4-columns end
     FROM [dbo].[InstallationEnvironment] [ie]'
@@ -63,6 +79,7 @@ BEGIN
 			,@retcount = @retcount 
 END
 GO
+
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_InstallationEnvironmentAdd]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_InstallationEnvironmentAdd]
 GO
@@ -71,38 +88,62 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_InstallationEnvironmentAdd]
+
 -- t4-params begin
+
 	  @environmentCode [varchar](20) out
+
 	, @name [nvarchar](100)
+
 	, @description [nvarchar](max)
+
 	, @isVisible [varchar](1)
+
 -- t4-params end
+
 AS
 BEGIN
 	SET NOCOUNT ON
 
 	INSERT INTO [dbo].[InstallationEnvironment](
+
 -- t4-columns begin
+
 		 [EnvironmentCode]
+
 		,[Name]
+
 		,[Description]
+
 		,[IsVisible]
+
 		,[Modified]
+
 -- t4-columns end
 	) VALUES (
 
+
 -- t4-values begin
+
 		 @environmentCode
+
 		,@name
+
 		,@description
+
 		,@isVisible
+
 		,[civic].udf_getSysDate()
+
 -- t4-values end
+
 	)
+
 
 
 END
 GO
+
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_InstallationEnvironmentModify]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_InstallationEnvironmentModify]
 GO
@@ -111,29 +152,42 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_InstallationEnvironmentModify]
+
 	  @environmentCode [varchar](20)
+
 	, @name [nvarchar](100)
+
 	, @description [nvarchar](max)
+
 	, @isVisible [varchar](1)
+
 AS
 BEGIN
 	SET NOCOUNT ON
 
 	UPDATE [ie] SET 
 		-- t4-columns begin
+
 		 [EnvironmentCode] = @environmentCode
+
 		,[Name] = @name
+
 		,[Description] = @description
+
 		,[IsVisible] = @isVisible
+
 		,[Modified] = [civic].udf_getSysDate()
 		-- t4-columns end
 	FROM [dbo].[InstallationEnvironment] [ie]
 	WHERE	
 		-- t4-where begin
+
 	    [ie].[EnvironmentCode] = @environmentCode
+
 		-- t4-where end
 END
 GO
+
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_InstallationEnvironmentRemove]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_InstallationEnvironmentRemove]
 GO
@@ -142,7 +196,9 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_InstallationEnvironmentRemove]
+
 	  @environmentCode [varchar](20)
+
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -150,7 +206,9 @@ BEGIN
 	DELETE FROM [dbo].[InstallationEnvironment]
 	WHERE	
 		-- t4-where begin
+
 	    [EnvironmentCode] = @environmentCode
+
 		-- t4-where end
 END
 GO

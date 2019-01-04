@@ -1,4 +1,5 @@
-﻿IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity2Get]') AND type in (N'P', N'PC'))
+﻿
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity2Get]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_Entity2Get]
 GO
 SET ANSI_NULLS ON
@@ -6,28 +7,40 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity2Get]
+
 	  @someID [int]
+
 	, @ff [nvarchar](max)
+
 AS
 BEGIN
 	SET NOCOUNT ON
 
 	SELECT	
 		-- t4-columns begin
+
 		 [e2].[SomeID]
+
 		,[e2].[ff]
+
 		,[e2].[Modified]
+
 		,[e2].[OtherDate]
+
 		,[e2].[OID]
 		-- t4-columns end
 	FROM [dbo].[Entity2] [e2]
 	WHERE	
 		-- t4-where begin
+
 	    [e2].[SomeID] = @someID
+
 	AND [e2].[ff] = @ff
+
 		-- t4-where end
 END
 GO
+
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity2GetFiltered]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_Entity2GetFiltered]
 GO
@@ -48,10 +61,15 @@ BEGIN
 	DECLARE @select nvarchar(max)
     SET @select = 'SELECT	
 		-- t4-columns begin
+
 		 [e2].[SomeID]
+
 		,[e2].[ff]
+
 		,[e2].[Modified]
+
 		,[e2].[OtherDate]
+
 		,[e2].[OID]
 		-- t4-columns end
     FROM [dbo].[Entity2] [e2]'
@@ -65,6 +83,7 @@ BEGIN
 			,@retcount = @retcount 
 END
 GO
+
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity2Add]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_Entity2Add]
 GO
@@ -73,36 +92,58 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity2Add]
+
 -- t4-params begin
+
 	  @someID [int] out
+
 	, @ff [nvarchar](max) out
+
 	, @otherDate [datetime]
+
 	, @oID [nvarchar](max)
+
 -- t4-params end
+
 AS
 BEGIN
 	SET NOCOUNT ON
 
 	INSERT INTO [dbo].[Entity2](
+
 -- t4-columns begin
+
 		 [ff]
+
 		,[Modified]
+
 		,[OtherDate]
+
 		,[OID]
+
 -- t4-columns end
 	) VALUES (
 
+
 -- t4-values begin
+
 		 @ff
+
 		,[civic].udf_getSysDate()
+
 		,@otherDate
+
 		,@oID
+
 -- t4-values end
+
 	)
 
 SET @someID = SCOPE_IDENTITY()
+
 END
 GO
+
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity2Modify]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_Entity2Modify]
 GO
@@ -111,29 +152,42 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity2Modify]
+
 	  @someID [int]
+
 	, @ff [nvarchar](max)
+
 	, @otherDate [datetime]
+
 	, @oID [nvarchar](max)
+
 AS
 BEGIN
 	SET NOCOUNT ON
 
 	UPDATE [e2] SET 
 		-- t4-columns begin
+
 		 [ff] = @ff
+
 		,[Modified] = [civic].udf_getSysDate()
+
 		,[OtherDate] = @otherDate
+
 		,[OID] = @oID
 		-- t4-columns end
 	FROM [dbo].[Entity2] [e2]
 	WHERE	
 		-- t4-where begin
+
 	    [e2].[SomeID] = @someID
+
 	AND [e2].[ff] = @ff
+
 		-- t4-where end
 END
 GO
+
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_Entity2Remove]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_Entity2Remove]
 GO
@@ -142,8 +196,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity2Remove]
+
 	  @someID [int]
+
 	, @ff [nvarchar](max)
+
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -151,8 +208,11 @@ BEGIN
 	DELETE FROM [dbo].[Entity2]
 	WHERE	
 		-- t4-where begin
+
 	    [SomeID] = @someID
+
 	AND [ff] = @ff
+
 		-- t4-where end
 END
 GO
