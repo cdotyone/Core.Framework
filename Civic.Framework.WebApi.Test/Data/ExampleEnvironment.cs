@@ -32,11 +32,13 @@ public partial class EnvironmentRepository : IEntityRepository<IExampleEnvironme
 
     Container _container;
 	private readonly IEntityCreateFactory _factory;
+    private readonly IEntityInfo _info;
 
     public EnvironmentRepository(Container container, IEntityCreateFactory factory)
     {
         _container = container;
 		_factory = factory;
+        _info = _container.GetInstance<IExampleEnvironment>().GetInfo();
     }
 
 	public IExampleEnvironment Get(IEntityRequestContext context,  IExampleEnvironment entity)
@@ -68,7 +70,7 @@ public partial class EnvironmentRepository : IEntityRepository<IExampleEnvironme
 		}
 	}
 
-	public IEnumerable<IExampleEnvironment> GetPaged(IEntityRequestContext context, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+	public IEnumerable<IExampleEnvironment> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
 	{ 
 		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null, null ,context)) {
 
@@ -76,9 +78,9 @@ public partial class EnvironmentRepository : IEntityRepository<IExampleEnvironme
 
 			var list = new List<IExampleEnvironment>();
 
-		    if (!info.UseProcedureGet)
+		    if (!_info.UseProcedureGet)
 		    {
-		        var entityList = SqlQuery.GetPaged<IExampleEnvironment>(_container, context.Who, info, skip, ref count, retCount, filterBy, orderBy, database);
+		        var entityList = SqlQuery.GetPaged<IExampleEnvironment>(_container, context.Who, _info, skip, ref count, retCount, filterBy, orderBy, database);
 		        foreach (var entity in entityList)
 		        {
 		            list.Add(entity as IExampleEnvironment);
@@ -97,11 +99,11 @@ public partial class EnvironmentRepository : IEntityRepository<IExampleEnvironme
 			
 				command.ExecuteReader(dataReader =>
 					{
-                        IExampleEnvironment item = _factory.CreateNew(info) as IExampleEnvironment;
+                        var item = _container.GetInstance<IExampleEnvironment>();
 						while(SqlQuery.PopulateEntity(context, item, dataReader))
 						{
 							list.Add(item);
-	                        item = _factory.CreateNew(info) as IExampleEnvironment;
+	                        item = _container.GetInstance<IExampleEnvironment>();
 						} 
 					});
 

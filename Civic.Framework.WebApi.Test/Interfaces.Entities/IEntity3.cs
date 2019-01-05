@@ -27,9 +27,9 @@ public interface IEntity3 : IEntityIdentity
 
     long SomeID { get; set; }
 
-    System.DateTime Modified { get; set; }
+    DateTime Modified { get; set; }
 
-    Nullable<System.DateTime> OtherDate { get; set; }
+    DateTime? OtherDate { get; set; }
 
 
 }

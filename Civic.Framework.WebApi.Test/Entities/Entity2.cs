@@ -37,17 +37,17 @@ public partial class Entity2 : IExampleEntity2
 
 
 	[DataMember(Name="modified")]
-    public System.DateTime Modified { get; set; }
+    public DateTime Modified { get; set; }
 
 
 	[DataMember(Name="otherDate")]
-    public Nullable<System.DateTime> OtherDate { get; set; }
+    public DateTime? OtherDate { get; set; }
 
 
 	[DataMember(Name="oid")]
 
 	[JsonIgnore]
-    public string OID { get; set; }
+    public int? OID { get; set; }
 
 
 	[DataMember(Name="OUID")]
@@ -88,7 +88,7 @@ public partial class Entity2 : IExampleEntity2
 			{"modified", new EntityPropertyInfo { Name = "modified", Type="DateTime" }},
 			{"otherDate", new EntityPropertyInfo { Name = "otherDate", Type="DateTime>", IsNullable=true }},
 
-			{"oid", new EntityPropertyInfo { Name = "oid", Type="string" }},
+			{"oid", new EntityPropertyInfo { Name = "oid", Type="Nullable<int>", IsNullable=true }},
 
 			{"ouid", new EntityPropertyInfo { Name = "ouid", Type="string" }},
 
@@ -117,7 +117,7 @@ public partial class Entity2 : IExampleEntity2
 	}
 
 	public IEnumerable<IEntityIdentity> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
-		return _facade.GetPaged(context, Info, skip, ref count, retCount, filterBy, orderBy);
+		return _facade.GetPaged(context, skip, ref count, retCount, filterBy, orderBy);
 	}
 
 	public IEntityIdentity Load(IEntityRequestContext context) {

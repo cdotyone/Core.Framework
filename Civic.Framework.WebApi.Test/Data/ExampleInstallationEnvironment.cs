@@ -32,11 +32,13 @@ public partial class InstallationEnvironmentRepository : IEntityRepository<IExam
 
     Container _container;
 	private readonly IEntityCreateFactory _factory;
+    private readonly IEntityInfo _info;
 
     public InstallationEnvironmentRepository(Container container, IEntityCreateFactory factory)
     {
         _container = container;
 		_factory = factory;
+        _info = _container.GetInstance<IExampleInstallationEnvironment>().GetInfo();
     }
 
 	public IExampleInstallationEnvironment Get(IEntityRequestContext context,  IExampleInstallationEnvironment entity)
@@ -68,7 +70,7 @@ public partial class InstallationEnvironmentRepository : IEntityRepository<IExam
 		}
 	}
 
-	public IEnumerable<IExampleInstallationEnvironment> GetPaged(IEntityRequestContext context, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+	public IEnumerable<IExampleInstallationEnvironment> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
 	{ 
 		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null, null ,context)) {
 
@@ -76,9 +78,9 @@ public partial class InstallationEnvironmentRepository : IEntityRepository<IExam
 
 			var list = new List<IExampleInstallationEnvironment>();
 
-		    if (!info.UseProcedureGet)
+		    if (!_info.UseProcedureGet)
 		    {
-		        var entityList = SqlQuery.GetPaged<IExampleInstallationEnvironment>(_container, context.Who, info, skip, ref count, retCount, filterBy, orderBy, database);
+		        var entityList = SqlQuery.GetPaged<IExampleInstallationEnvironment>(_container, context.Who, _info, skip, ref count, retCount, filterBy, orderBy, database);
 		        foreach (var entity in entityList)
 		        {
 		            list.Add(entity as IExampleInstallationEnvironment);
@@ -97,11 +99,11 @@ public partial class InstallationEnvironmentRepository : IEntityRepository<IExam
 			
 				command.ExecuteReader(dataReader =>
 					{
-                        IExampleInstallationEnvironment item = _factory.CreateNew(info) as IExampleInstallationEnvironment;
+                        var item = _container.GetInstance<IExampleInstallationEnvironment>();
 						while(SqlQuery.PopulateEntity(context, item, dataReader))
 						{
 							list.Add(item);
-	                        item = _factory.CreateNew(info) as IExampleInstallationEnvironment;
+	                        item = _container.GetInstance<IExampleInstallationEnvironment>();
 						} 
 					});
 

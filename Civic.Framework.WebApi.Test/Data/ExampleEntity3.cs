@@ -32,11 +32,13 @@ public partial class Entity3Repository : IEntityRepository<IExampleEntity3>
 
     Container _container;
 	private readonly IEntityCreateFactory _factory;
+    private readonly IEntityInfo _info;
 
     public Entity3Repository(Container container, IEntityCreateFactory factory)
     {
         _container = container;
 		_factory = factory;
+        _info = _container.GetInstance<IExampleEntity3>().GetInfo();
     }
 
 	public IExampleEntity3 Get(IEntityRequestContext context,  IExampleEntity3 entity)
@@ -68,7 +70,7 @@ public partial class Entity3Repository : IEntityRepository<IExampleEntity3>
 		}
 	}
 
-	public IEnumerable<IExampleEntity3> GetPaged(IEntityRequestContext context, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+	public IEnumerable<IExampleEntity3> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
 	{ 
 		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null, null ,context)) {
 
@@ -76,9 +78,9 @@ public partial class Entity3Repository : IEntityRepository<IExampleEntity3>
 
 			var list = new List<IExampleEntity3>();
 
-		    if (!info.UseProcedureGet)
+		    if (!_info.UseProcedureGet)
 		    {
-		        var entityList = SqlQuery.GetPaged<IExampleEntity3>(_container, context.Who, info, skip, ref count, retCount, filterBy, orderBy, database);
+		        var entityList = SqlQuery.GetPaged<IExampleEntity3>(_container, context.Who, _info, skip, ref count, retCount, filterBy, orderBy, database);
 		        foreach (var entity in entityList)
 		        {
 		            list.Add(entity as IExampleEntity3);
@@ -97,11 +99,11 @@ public partial class Entity3Repository : IEntityRepository<IExampleEntity3>
 			
 				command.ExecuteReader(dataReader =>
 					{
-                        IExampleEntity3 item = _factory.CreateNew(info) as IExampleEntity3;
+                        var item = _container.GetInstance<IExampleEntity3>();
 						while(SqlQuery.PopulateEntity(context, item, dataReader))
 						{
 							list.Add(item);
-	                        item = _factory.CreateNew(info) as IExampleEntity3;
+	                        item = _container.GetInstance<IExampleEntity3>();
 						} 
 					});
 

@@ -37,11 +37,11 @@ public partial class Entity1 : IExampleEntity1
 
 
 	[DataMember(Name="dte")]
-    public System.DateTime Dte { get; set; }
+    public DateTime Dte { get; set; }
 
 
 	[DataMember(Name="dte2")]
-    public Nullable<System.DateTime> Dte2 { get; set; }
+    public DateTime? Dte2 { get; set; }
 
 
 	[DataMember(Name="dble1")]
@@ -112,7 +112,7 @@ public partial class Entity1 : IExampleEntity1
 	}
 
 	public IEnumerable<IEntityIdentity> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
-		return _facade.GetPaged(context, Info, skip, ref count, retCount, filterBy, orderBy);
+		return _facade.GetPaged(context, skip, ref count, retCount, filterBy, orderBy);
 	}
 
 	public IEntityIdentity Load(IEntityRequestContext context) {

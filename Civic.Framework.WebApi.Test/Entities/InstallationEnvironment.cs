@@ -45,7 +45,7 @@ public partial class InstallationEnvironment : IExampleInstallationEnvironment
 
 
 	[DataMember(Name="modified")]
-    public System.DateTime Modified { get; set; }
+    public DateTime Modified { get; set; }
 
 
     [DataMember(Name = "_key")]
@@ -107,7 +107,7 @@ public partial class InstallationEnvironment : IExampleInstallationEnvironment
 	}
 
 	public IEnumerable<IEntityIdentity> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
-		return _facade.GetPaged(context, Info, skip, ref count, retCount, filterBy, orderBy);
+		return _facade.GetPaged(context, skip, ref count, retCount, filterBy, orderBy);
 	}
 
 	public IEntityIdentity Load(IEntityRequestContext context) {

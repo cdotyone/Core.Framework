@@ -27,11 +27,11 @@ public interface IEntity2 : IEntityIdentity
 
     string ff { get; set; }
 
-    System.DateTime Modified { get; set; }
+    DateTime Modified { get; set; }
 
-    Nullable<System.DateTime> OtherDate { get; set; }
+    DateTime? OtherDate { get; set; }
 
-    string OID { get; set; }
+    int? OID { get; set; }
 
 
 	string OUID { get; set; }

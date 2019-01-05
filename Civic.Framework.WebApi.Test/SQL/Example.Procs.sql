@@ -354,7 +354,7 @@ CREATE PROCEDURE [dbo].[usp_Entity2Add]
 
 	, @otherDate [datetime]
 
-	, @oID [nvarchar](max)
+	, @oID [int]
 
 -- t4-params end
 
@@ -412,7 +412,7 @@ CREATE PROCEDURE [dbo].[usp_Entity2Modify]
 
 	, @otherDate [datetime]
 
-	, @oID [nvarchar](max)
+	, @oID [int]
 
 AS
 BEGIN

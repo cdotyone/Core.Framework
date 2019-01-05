@@ -27,9 +27,9 @@ public interface IEntity1 : IEntityIdentity
 
     int EnvironmentID { get; set; }
 
-    System.DateTime Dte { get; set; }
+    DateTime Dte { get; set; }
 
-    Nullable<System.DateTime> Dte2 { get; set; }
+    DateTime? Dte2 { get; set; }
 
     double Dble1 { get; set; }
 

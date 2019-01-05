@@ -31,7 +31,7 @@ public interface IInstallationEnvironment : IEntityIdentity
 
     string IsVisible { get; set; }
 
-    System.DateTime Modified { get; set; }
+    DateTime Modified { get; set; }
 
 
 }

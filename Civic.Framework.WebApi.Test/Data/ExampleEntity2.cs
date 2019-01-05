@@ -32,11 +32,13 @@ public partial class Entity2Repository : IEntityRepository<IExampleEntity2>
 
     Container _container;
 	private readonly IEntityCreateFactory _factory;
+    private readonly IEntityInfo _info;
 
     public Entity2Repository(Container container, IEntityCreateFactory factory)
     {
         _container = container;
 		_factory = factory;
+        _info = _container.GetInstance<IExampleEntity2>().GetInfo();
     }
 
 	public IExampleEntity2 Get(IEntityRequestContext context,  IExampleEntity2 entity)
@@ -69,7 +71,7 @@ public partial class Entity2Repository : IEntityRepository<IExampleEntity2>
 		}
 	}
 
-	public IEnumerable<IExampleEntity2> GetPaged(IEntityRequestContext context, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+	public IEnumerable<IExampleEntity2> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
 	{ 
 		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null, null ,context)) {
 
@@ -77,9 +79,9 @@ public partial class Entity2Repository : IEntityRepository<IExampleEntity2>
 
 			var list = new List<IExampleEntity2>();
 
-		    if (!info.UseProcedureGet)
+		    if (!_info.UseProcedureGet)
 		    {
-		        var entityList = SqlQuery.GetPaged<IExampleEntity2>(_container, context.Who, info, skip, ref count, retCount, filterBy, orderBy, database);
+		        var entityList = SqlQuery.GetPaged<IExampleEntity2>(_container, context.Who, _info, skip, ref count, retCount, filterBy, orderBy, database);
 		        foreach (var entity in entityList)
 		        {
 		            list.Add(entity as IExampleEntity2);
@@ -98,11 +100,11 @@ public partial class Entity2Repository : IEntityRepository<IExampleEntity2>
 			
 				command.ExecuteReader(dataReader =>
 					{
-                        IExampleEntity2 item = _factory.CreateNew(info) as IExampleEntity2;
+                        var item = _container.GetInstance<IExampleEntity2>();
 						while(SqlQuery.PopulateEntity(context, item, dataReader))
 						{
 							list.Add(item);
-	                        item = _factory.CreateNew(info) as IExampleEntity2;
+	                        item = _container.GetInstance<IExampleEntity2>();
 						} 
 					});
 
@@ -164,6 +166,8 @@ public partial class Entity2Repository : IEntityRepository<IExampleEntity2>
 		else command.AddInParameter("@ff", T4Config.CheckUpperCase("dbo","entity2","ff",entity.ff));
 
 		command.AddInParameter("@otherdate", entity.OtherDate.ToDB());
+
+		command.AddInParameter("@oid", entity.OID);
 
 	}
 }
