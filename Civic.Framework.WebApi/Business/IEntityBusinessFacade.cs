@@ -6,7 +6,7 @@ namespace Civic.Framework.WebApi
 {
     public interface IEntityBusinessFacade<T> where T : IEntityIdentity
     {
-        IEnumerable<T> GetPaged(IEntityRequestContext context, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy);
+        IEnumerable<T> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy);
 
         T Get(IEntityRequestContext context, string key);
 
@@ -16,7 +16,7 @@ namespace Civic.Framework.WebApi
 
         void Remove(IEntityRequestContext context, T entity);
 
-        IEnumerable<T> GetPaged(ClaimsPrincipal who, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy);
+        IEnumerable<T> GetPaged(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy);
 
         T Get(ClaimsPrincipal who, string key);
 

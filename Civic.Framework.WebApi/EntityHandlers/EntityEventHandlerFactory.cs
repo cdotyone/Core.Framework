@@ -62,10 +62,11 @@ namespace Civic.Framework.WebApi
             }
         }
 
-        public bool OnAddBefore<T>(IEntityRequestContext context, IEntityInfo info, T entity) where T : class, IEntityIdentity
+        public bool OnAddBefore<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity
         {
             var retValue = true;
 
+            var info = entity.GetInfo();
             var handlers = _producers[EntityEventType.AddBefore];
             var allTypes = handlers.ContainsKey(AllClasses);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -79,7 +80,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[AllClasses])
                 {
-                    if (!handler.OnAddBefore(context, info, entity))
+                    if (!handler.OnAddBefore(context, entity))
                     {
                         retValue = false;
                     }
@@ -90,7 +91,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[info.Name])
                 {
-                    if (!handler.OnAddBefore(context, info, entity))
+                    if (!handler.OnAddBefore(context, entity))
                     {
                         retValue = false;
                     }
@@ -100,10 +101,11 @@ namespace Civic.Framework.WebApi
             return retValue;
         }
 
-        public bool OnAddAfter<T>(IEntityRequestContext context, IEntityInfo info, T entity) where T : class, IEntityIdentity 
+        public bool OnAddAfter<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity 
         {
             var retValue = true;
 
+            var info = entity.GetInfo();
             var handlers = _producers[EntityEventType.AddAfter];
             var allTypes = handlers.ContainsKey(AllClasses);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -117,7 +119,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[info.Name])
                 {
-                    if (!handler.OnAddAfter(context, info, entity))
+                    if (!handler.OnAddAfter(context, entity))
                     {
                         retValue = false;
                     }
@@ -128,7 +130,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[AllClasses])
                 {
-                    if (!handler.OnAddAfter(context, info, entity))
+                    if (!handler.OnAddAfter(context, entity))
                     {
                         retValue = false;
                     }
@@ -138,10 +140,11 @@ namespace Civic.Framework.WebApi
             return retValue;
         }
 
-        public bool OnModifyBefore<T>(IEntityRequestContext context, IEntityInfo info, T before, T after) where T : class, IEntityIdentity
+        public bool OnModifyBefore<T>(IEntityRequestContext context, T before, T after) where T : class, IEntityIdentity
         {
             var retValue = true;
 
+            var info = before.GetInfo();
             var handlers = _producers[EntityEventType.ModifyBefore];
             var allTypes = handlers.ContainsKey(AllClasses);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -155,7 +158,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[AllClasses])
                 {
-                    if (!handler.OnModifyBefore(context, info, before, after))
+                    if (!handler.OnModifyBefore(context, before, after))
                     {
                         retValue = false;
                     }
@@ -166,7 +169,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[info.Name])
                 {
-                    if (!handler.OnModifyBefore(context, info, before, after))
+                    if (!handler.OnModifyBefore(context, before, after))
                     {
                         retValue = false;
                     }
@@ -177,10 +180,11 @@ namespace Civic.Framework.WebApi
             return retValue;
         }
 
-        public bool OnModifyAfter<T>(IEntityRequestContext context, IEntityInfo info, T before, T after) where T : class, IEntityIdentity 
+        public bool OnModifyAfter<T>(IEntityRequestContext context, T before, T after) where T : class, IEntityIdentity 
         {
             var retValue = true;
 
+            var info = before.GetInfo();
             var handlers = _producers[EntityEventType.ModifyAfter];
             var allTypes = handlers.ContainsKey(AllClasses);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -194,7 +198,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[info.Name])
                 {
-                    if (!handler.OnModifyAfter(context, info, before, after ))
+                    if (!handler.OnModifyAfter(context, before, after ))
                     {
                         retValue = false;
                     }
@@ -205,7 +209,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[AllClasses])
                 {
-                    if (!handler.OnModifyAfter(context, info, before, after))
+                    if (!handler.OnModifyAfter(context, before, after))
                     {
                         retValue = false;
                     }
@@ -215,10 +219,11 @@ namespace Civic.Framework.WebApi
             return retValue;
         }
 
-        public bool OnRemoveBefore<T>(IEntityRequestContext context, IEntityInfo info, T entity) where T : class, IEntityIdentity 
+        public bool OnRemoveBefore<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity 
         {
             var retValue = true;
 
+            var info = entity.GetInfo();
             var handlers = _producers[EntityEventType.RemoveBefore];
             var allTypes = handlers.ContainsKey(AllClasses);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -232,7 +237,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[AllClasses])
                 {
-                    if (!handler.OnRemoveBefore(context, info, entity))
+                    if (!handler.OnRemoveBefore(context, entity))
                     {
                         retValue = false;
                     }
@@ -243,7 +248,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[info.Name])
                 {
-                    if (!handler.OnRemoveBefore(context, info, entity))
+                    if (!handler.OnRemoveBefore(context, entity))
                     {
                         retValue = false;
                     }
@@ -253,10 +258,11 @@ namespace Civic.Framework.WebApi
             return retValue;
         }
 
-        public bool OnRemoveAfter<T>(IEntityRequestContext context, IEntityInfo info, T entity) where T : class, IEntityIdentity
+        public bool OnRemoveAfter<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity
         {
             var retValue = true;
 
+            var info = entity.GetInfo();
             var handlers = _producers[EntityEventType.RemoveAfter];
             var allTypes = handlers.ContainsKey(AllClasses);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -270,7 +276,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[info.Name])
                 {
-                    if (!handler.OnRemoveAfter(context, info, entity))
+                    if (!handler.OnRemoveAfter(context, entity))
                     {
                         retValue = false;
                     }
@@ -281,7 +287,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[AllClasses])
                 {
-                    if (!handler.OnRemoveAfter(context, info, entity))
+                    if (!handler.OnRemoveAfter(context, entity))
                     {
                         retValue = false;
                     }
@@ -291,10 +297,11 @@ namespace Civic.Framework.WebApi
             return retValue;
         }
 
-        public bool OnGetBefore<T>(IEntityRequestContext context, IEntityInfo info, T entity) where T : class, IEntityIdentity
+        public bool OnGetBefore<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity
         {
             var retValue = true;
 
+            var info = entity.GetInfo();
             var handlers = _producers[EntityEventType.GetBefore];
             var allTypes = handlers.ContainsKey(AllClasses);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -308,7 +315,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[AllClasses])
                 {
-                    if (!handler.OnGetBefore(context, info, entity))
+                    if (!handler.OnGetBefore(context, entity))
                     {
                         retValue = false;
                     }
@@ -319,7 +326,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[info.Name])
                 {
-                    if (!handler.OnGetBefore(context, info, entity))
+                    if (!handler.OnGetBefore(context, entity))
                     {
                         retValue = false;
                     }
@@ -329,10 +336,11 @@ namespace Civic.Framework.WebApi
             return retValue;
         }
 
-        public bool OnGetAfter<T>(IEntityRequestContext context, IEntityInfo info, T entity) where T : class, IEntityIdentity
+        public bool OnGetAfter<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity
         {
             var retValue = true;
 
+            var info = entity.GetInfo();
             var handlers = _producers[EntityEventType.GetAfter];
             var allTypes = handlers.ContainsKey(AllClasses);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -346,7 +354,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[info.Name])
                 {
-                    if (!handler.OnGetAfter(context, info, entity))
+                    if (!handler.OnGetAfter(context, entity))
                     {
                         retValue = false;
                     }
@@ -357,7 +365,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[AllClasses])
                 {
-                    if (!handler.OnGetAfter(context, info, entity))
+                    if (!handler.OnGetAfter(context, entity))
                     {
                         retValue = false;
                     }
@@ -367,10 +375,11 @@ namespace Civic.Framework.WebApi
             return retValue;
         }
 
-        public bool OnGetPagedBefore(IEntityRequestContext context, IEntityInfo info)
+        public bool OnGetPagedBefore<T>(IEntityRequestContext context) where T : class, IEntityIdentity
         {
             var retValue = true;
 
+            var info = _container.GetInstance<T>().GetInfo();
             var handlers = _producers[EntityEventType.GetPagedBefore];
             var allTypes = handlers.ContainsKey(AllClasses);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -384,7 +393,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[AllClasses])
                 {
-                    if (!handler.OnGetPagedBefore(context, info))
+                    if (!handler.OnGetPagedBefore<T>(context))
                     {
                         retValue = false;
                     }
@@ -395,7 +404,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[info.Name])
                 {
-                    if (!handler.OnGetPagedBefore(context, info))
+                    if (!handler.OnGetPagedBefore<T>(context))
                     {
                         retValue = false;
                     }
@@ -405,8 +414,9 @@ namespace Civic.Framework.WebApi
             return retValue;
         }
 
-        public IEnumerable<T> OnGetPagedAfter<T>(IEntityRequestContext context, IEntityInfo info, IEnumerable<T> list) where T : class, IEntityIdentity
+        public IEnumerable<T> OnGetPagedAfter<T>(IEntityRequestContext context, IEnumerable<T> list) where T : class, IEntityIdentity
         {
+            var info = _container.GetInstance<T>().GetInfo();
             var handlers = _producers[EntityEventType.GetPagedAfter];
             var allTypes = handlers.ContainsKey(AllClasses);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -420,7 +430,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[info.Name])
                 {
-                    list = handler.OnGetPagedAfter(context, info, list);
+                    list = handler.OnGetPagedAfter(context, list);
                     if (list == null) return null;
                 }
             }
@@ -429,7 +439,7 @@ namespace Civic.Framework.WebApi
             {
                 foreach (var handler in handlers[AllClasses])
                 {
-                    list = handler.OnGetPagedAfter(context, info, list);
+                    list = handler.OnGetPagedAfter(context, list);
                     if (list == null) return null;
                 }
             }

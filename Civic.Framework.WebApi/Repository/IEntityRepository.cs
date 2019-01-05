@@ -5,7 +5,7 @@ namespace Civic.Framework.WebApi
     
     public interface IEntityRepository<T> where T : IEntityIdentity
     {
-        IEnumerable<T> GetPaged(IEntityRequestContext context, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy );
+        IEnumerable<T> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy );
     
     	T Get(IEntityRequestContext context, T entity);
     

@@ -38,11 +38,13 @@ public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFile
 #>
     Container _container;
 	private readonly IEntityCreateFactory _factory;
+    private readonly IEntityInfo _info;
 
     public <#=entity.Name#>Repository(Container container, IEntityCreateFactory factory)
     {
         _container = container;
 		_factory = factory;
+        _info = _container.GetInstance<I<#=edmxFileName#><#=entity.Name#>>().GetInfo();
     }
 
 	public I<#=edmxFileName#><#=entity.Name#> Get(IEntityRequestContext context,  I<#=edmxFileName#><#=entity.Name#> entity)
@@ -79,7 +81,7 @@ public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFile
 		}
 	}
 
-	public IEnumerable<I<#=edmxFileName#><#=entity.Name#>> GetPaged(IEntityRequestContext context, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+	public IEnumerable<I<#=edmxFileName#><#=entity.Name#>> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
 	{ 
 		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Get, null, null ,context)) {
 
@@ -87,9 +89,9 @@ public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFile
 
 			var list = new List<I<#=edmxFileName#><#=entity.Name#>>();
 
-		    if (!info.UseProcedureGet)
+		    if (!_info.UseProcedureGet)
 		    {
-		        var entityList = SqlQuery.GetPaged<I<#=edmxFileName#><#=entity.Name#>>(_container, context.Who, info, skip, ref count, retCount, filterBy, orderBy, database);
+		        var entityList = SqlQuery.GetPaged<I<#=edmxFileName#><#=entity.Name#>>(_container, context.Who, _info, skip, ref count, retCount, filterBy, orderBy, database);
 		        foreach (var entity in entityList)
 		        {
 		            list.Add(entity as I<#=edmxFileName#><#=entity.Name#>);
@@ -108,11 +110,11 @@ public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFile
 			
 				command.ExecuteReader(dataReader =>
 					{
-                        I<#=edmxFileName#><#=entity.Name#> item = _factory.CreateNew(info) as I<#=edmxFileName#><#=entity.Name#>;
+                        var item = _container.GetInstance<I<#=edmxFileName#><#=entity.Name#>>();
 						while(SqlQuery.PopulateEntity(context, item, dataReader))
 						{
 							list.Add(item);
-	                        item = _factory.CreateNew(info) as I<#=edmxFileName#><#=entity.Name#>;
+	                        item = _container.GetInstance<I<#=edmxFileName#><#=entity.Name#>>();
 						} 
 					});
 

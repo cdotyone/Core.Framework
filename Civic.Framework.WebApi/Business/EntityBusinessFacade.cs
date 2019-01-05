@@ -32,16 +32,14 @@ namespace Civic.Framework.WebApi
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(EntityBusinessFacade<T>), "Get"))
             {
 
-                var info = entity.GetInfo();
-
                 try
                 {
-                    if (!_handlers.OnGetBefore(context, info, entity))
+                    if (!_handlers.OnGetBefore(context, entity))
                         return null;
 
                     entity = _repository.Get(context, entity);
 
-                    if (!_handlers.OnGetAfter(context, info, entity))
+                    if (!_handlers.OnGetAfter(context, entity))
                         return null;
 
                     return entity;
@@ -56,20 +54,19 @@ namespace Civic.Framework.WebApi
             return null;
         }
 
-        public virtual IEnumerable<T> GetPaged(IEntityRequestContext context, IEntityInfo info, int skip, ref int count,
-            bool retCount, string filterBy, string orderBy)
+        public virtual IEnumerable<T> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(EntityBusinessFacade<T>), "GetPaged"))
             {
 
                 try
                 {
-                    if (!_handlers.OnGetPagedBefore(context, info))
+                    if (!_handlers.OnGetPagedBefore<T>(context))
                         return null;
 
-                    var list = _repository.GetPaged(context, info, skip, ref count, retCount, filterBy, orderBy);
+                    var list = _repository.GetPaged(context, skip, ref count, retCount, filterBy, orderBy);
 
-                    list = _handlers.OnGetPagedAfter(context, info, list);
+                    list = _handlers.OnGetPagedAfter(context, list);
 
                     return list;
                 }
@@ -95,22 +92,22 @@ namespace Civic.Framework.WebApi
 
                     if (before == null)
                     {
-                        if (!_handlers.OnAddBefore(context, entity.GetInfo(), entity))
+                        if (!_handlers.OnAddBefore(context, entity))
                             throw new Exception("OnAddBefore handler rejected");
 
                         _repository.Add(context, entity);
 
-                        if (!_handlers.OnAddAfter(context, entity.GetInfo(), entity))
+                        if (!_handlers.OnAddAfter(context, entity))
                             throw new Exception("OnAddAfter handler rejected");
                     }
                     else
                     {
-                        if (!_handlers.OnModifyBefore(context, entity.GetInfo(), before, entity))
+                        if (!_handlers.OnModifyBefore(context, before, entity))
                             throw new Exception("OnModifyBefore handler rejected");
 
                         _repository.Modify(context, before, entity);
 
-                        if (!_handlers.OnModifyAfter(context, entity.GetInfo(), before, entity))
+                        if (!_handlers.OnModifyAfter(context, before, entity))
                             throw new Exception("OnModifyAfter handler rejected");
                     }
                 }
@@ -135,18 +132,16 @@ namespace Civic.Framework.WebApi
             {
                 var first = context.Operations.Count == 0;
 
-                var info = entity.GetInfo();
-
                 try
                 {
                     var before = _repository.Get(context, entity);
 
-                    if (!_handlers.OnRemoveBefore(context, info, before))
+                    if (!_handlers.OnRemoveBefore(context, before))
                         throw new Exception("OnRemoveBefore handler rejected");
 
                     _repository.Remove(context, before);
 
-                    if (!_handlers.OnRemoveAfter(context, info, before))
+                    if (!_handlers.OnRemoveAfter(context, before))
                         throw new Exception("OnRemoveAfter handler rejected");
                 }
                 catch (Exception ex)
@@ -165,10 +160,10 @@ namespace Civic.Framework.WebApi
             }
         }
 
-        public virtual IEnumerable<T> GetPaged(ClaimsPrincipal who, IEntityInfo info, int skip, ref int count,
+        public virtual IEnumerable<T> GetPaged(ClaimsPrincipal who, int skip, ref int count,
             bool retCount, string filterBy, string orderBy)
         {
-            return GetPaged(new EntityRequestContext {Who = who}, info, skip, ref count, retCount, filterBy, orderBy);
+            return GetPaged(new EntityRequestContext {Who = who}, skip, ref count, retCount, filterBy, orderBy);
         }
 
         public T Get(ClaimsPrincipal who, string key)
