@@ -85,7 +85,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Civic.Core.Audit">
-      <Version>1.26.5</Version>
+      <Version>1.26.6</Version>
     </PackageReference>
     <PackageReference Include="Civic.Core.Caching" Version="1.26.3" />
     <PackageReference Include="Civic.Core.Configuration" Version="1.26.1" />
