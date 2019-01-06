@@ -131,6 +131,8 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="AuthorizationHelper.cs" />
+    <Compile Include="Business\AnonymousPrincipal.cs" />
+    <Compile Include="Business\AnonymousRequestContext.cs" />
     <Compile Include="Business\EntityBusinessFacade.cs" />
     <Compile Include="EntityHandlers\AuditLogHandler.cs" />
     <Compile Include="EntityHandlers\BasicAuthorizationHandler.cs" />
@@ -142,7 +144,7 @@
     <Compile Include="EntityHandlers\EntityEventHandlerFactory.cs" />
     <Compile Include="Entity\EntityEventType.cs" />
     <Compile Include="Repository\SqlOperation.cs" />
-    <Compile Include="Entity\EntityRequestContext.cs" />
+    <Compile Include="Business\EntityRequestContext.cs" />
     <Compile Include="EntityHandlers\IEntityEventHandlerFactory.cs" />
     <Compile Include="EntityHandlers\IEntityEventHandler.cs" />
     <Compile Include="Repository\EntityOperationType.cs" />
