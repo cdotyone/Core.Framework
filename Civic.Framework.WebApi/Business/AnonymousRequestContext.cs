@@ -48,6 +48,11 @@ namespace Civic.Framework.WebApi
             Who = new AnonymousPrincipal(type, value);
         }
 
+        public AnonymousRequestContext(string value)
+        {
+            Who = new AnonymousPrincipal(value);
+        }
+
         public AnonymousRequestContext(Claim claim)
         {
             Who = new AnonymousPrincipal(claim);

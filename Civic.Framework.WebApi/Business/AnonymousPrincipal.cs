@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Principal;
+using Civic.Core.Security;
 
 namespace Civic.Framework.WebApi
 {
@@ -19,6 +20,11 @@ namespace Civic.Framework.WebApi
         public AnonymousPrincipal(string type, string value)
         {
             AddClaim(type, value);
+        }
+
+        public AnonymousPrincipal(string value)
+        {
+            AddClaim(StandardClaimTypes.ROLE, value);
         }
 
         public AnonymousPrincipal(Claim claim)
