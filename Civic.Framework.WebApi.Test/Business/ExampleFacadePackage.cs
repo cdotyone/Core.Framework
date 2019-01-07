@@ -24,11 +24,11 @@ namespace Civic.Framework.WebApi.Test.Business
         {
     		var factory = new EntityCreateFactory(container);
     
-    		factory.Register<Civic.Framework.WebApi.Test.Entities.Entity1>(Civic.Framework.WebApi.Test.Entities.Entity1.Info);
-    		factory.Register<Civic.Framework.WebApi.Test.Entities.Entity2>(Civic.Framework.WebApi.Test.Entities.Entity2.Info);
-    		factory.Register<Civic.Framework.WebApi.Test.Entities.Entity3>(Civic.Framework.WebApi.Test.Entities.Entity3.Info);
-    		factory.Register<Civic.Framework.WebApi.Test.Entities.Environment>(Civic.Framework.WebApi.Test.Entities.Environment.Info);
-    		factory.Register<Civic.Framework.WebApi.Test.Entities.InstallationEnvironment>(Civic.Framework.WebApi.Test.Entities.InstallationEnvironment.Info);
+    		factory.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity1, Civic.Framework.WebApi.Test.Entities.Entity1>(Civic.Framework.WebApi.Test.Entities.Entity1.Info);
+    		factory.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity2, Civic.Framework.WebApi.Test.Entities.Entity2>(Civic.Framework.WebApi.Test.Entities.Entity2.Info);
+    		factory.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity3, Civic.Framework.WebApi.Test.Entities.Entity3>(Civic.Framework.WebApi.Test.Entities.Entity3.Info);
+    		factory.Register<Civic.Framework.WebApi.Test.Interfaces.IEnvironment, Civic.Framework.WebApi.Test.Entities.Environment>(Civic.Framework.WebApi.Test.Entities.Environment.Info);
+    		factory.Register<Civic.Framework.WebApi.Test.Interfaces.IInstallationEnvironment, Civic.Framework.WebApi.Test.Entities.InstallationEnvironment>(Civic.Framework.WebApi.Test.Entities.InstallationEnvironment.Info);
     		container.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity1Facade, Entity1Facade>(Lifestyle.Singleton);
     		container.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity2Facade, Entity2Facade>(Lifestyle.Singleton);
     		container.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity3Facade, Entity3Facade>(Lifestyle.Singleton);

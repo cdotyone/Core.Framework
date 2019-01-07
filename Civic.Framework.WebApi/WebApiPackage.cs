@@ -19,6 +19,9 @@ namespace Civic.Framework.WebApi
     {
         public void RegisterServices(Container container)
         {
+
+            container.ResolveUnregisteredType += (sender, e) =>
+
             container.Register<IEntityCreateFactory, EntityCreateFactory>(Lifestyle.Singleton);
             container.Register<IEntityEventHandlerFactory, EntityEventHandlerFactory>(Lifestyle.Singleton);
 
@@ -26,6 +29,8 @@ namespace Civic.Framework.WebApi
 
             factory.Register(new BasicAuthorizationHandler(container));
             factory.Register(new AuditLogHandler());
+
+
         }
     }
     

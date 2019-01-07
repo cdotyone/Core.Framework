@@ -139,6 +139,7 @@
     <Compile Include="EntityHandlers\NoModifyHandler.cs" />
     <Compile Include="EntityHandlers\ReadOnlyHandler.cs" />
     <Compile Include="EntityHandlers\WriteOnlyHandler.cs" />
+    <Compile Include="Entity\StubEntity.cs" />
     <Compile Include="Repository\IEntityRepository.cs" />
     <Compile Include="Services\ServicesController.cs" />
     <Compile Include="EntityHandlers\EntityEventHandlerFactory.cs" />

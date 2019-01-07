@@ -18,9 +18,10 @@ namespace Civic.Framework.WebApi
         IEntityIdentity IEntityCreateFactory.CreateNew(IEntityInfo info) => _producers[info.Name].GetInstance();
         IEntityIdentity IEntityCreateFactory.CreateNew(string module, string entity) => _producers[module+"."+entity].GetInstance();
 
-        public void Register<TImplementation>(IEntityInfo info, Lifestyle lifestyle = null)
-            where TImplementation : class, IEntityIdentity
+        public void Register<TService, TImplementation>(IEntityInfo info, Lifestyle lifestyle = null)
+            where TImplementation : class, IEntityIdentity, TService where TService : class
         {
+            _container.Register<TService, TImplementation>(Lifestyle.Transient);
             var producer = (lifestyle ?? _container.Options.DefaultLifestyle).CreateProducer<IEntityIdentity, TImplementation>(_container);
 
             _producers[info.Name] = producer;
