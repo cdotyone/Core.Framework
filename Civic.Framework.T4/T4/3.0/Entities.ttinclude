@@ -44,9 +44,14 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
 
         foreach (var edmProperty in simpleProperties)
         {
+
+			if(Core.MapUID.ContainsKey(edmProperty.Name)) {
+				if(Core.MapUID[edmProperty.Name].Schema==edmxFileName.ToLower() && Core.MapUID[edmProperty.Name].Table==entity.Name) continue;
+			}
 #>
 	[DataMember(Name="<#=Core.GetMapToName(edmProperty.Name)#>")]
 	<#=Core.GetMappedProperty(codeStringGenerator,edmProperty,"public ")#>
+
 <#
         }
     }

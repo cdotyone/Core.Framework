@@ -26,6 +26,9 @@ public interface I<#=entity.Name#> : IEntityIdentity
 
         foreach (var edmProperty in simpleProperties)
         {
+			if(Core.MapUID.ContainsKey(edmProperty.Name)) {
+				if(Core.MapUID[edmProperty.Name].Schema==edmxFileName.ToLower() && Core.MapUID[edmProperty.Name].Table==entity.Name) continue;
+			}
 
 #>	 <#=Core.GetMappedProperty(codeStringGenerator,edmProperty,"")#>
 <#      }
