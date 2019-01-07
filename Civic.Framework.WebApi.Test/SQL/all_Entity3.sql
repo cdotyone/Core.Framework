@@ -1,10 +1,8 @@
-﻿
-SET ANSI_NULLS ON
+﻿SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity3Get]
-
 	  @someUID [nvarchar](max)
 AS
 BEGIN
@@ -20,13 +18,10 @@ BEGIN
 	FROM [dbo].[Entity3] [e3]
 	WHERE	
 		-- t4-where begin
-
 	    [e3].[SomeUID] = @someUID
-
 		-- t4-where end
 END
 GO
-
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -60,47 +55,43 @@ BEGIN
 			,@retcount = @retcount 
 END
 GO
-
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity3Add]
-
 -- t4-params begin
 	  @someUID [nvarchar](max)
 	, @someID [bigint] out
 	, @otherDate [datetime]
 -- t4-params end
-
 AS
 BEGIN
 	SET NOCOUNT ON
 
 	INSERT INTO [dbo].[Entity3](
-
 -- t4-columns begin
 		 [SomeID]
 		,[Modified]
 		,[OtherDate]
 -- t4-columns end
 	) VALUES (
+
 -- t4-values begin
 		 @someID
 		,[civic].udf_getSysDate()
 		,@otherDate
 -- t4-values end
 	)
-	SET @someUID = SCOPE_IDENTITY()
+
+SET @someUID = SCOPE_IDENTITY()
 END
 GO
-
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity3Modify]
-
 	  @someUID [nvarchar](max)
 	, @someID [bigint]
 	, @otherDate [datetime]
@@ -121,13 +112,11 @@ BEGIN
 		-- t4-where end
 END
 GO
-
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity3Remove]
-
 	  @someUID [nvarchar](max)
 AS
 BEGIN

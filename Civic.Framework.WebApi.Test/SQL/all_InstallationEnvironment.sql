@@ -1,10 +1,8 @@
-﻿
-SET ANSI_NULLS ON
+﻿SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_InstallationEnvironmentGet]
-
 	  @environmentCode [varchar](20)
 AS
 BEGIN
@@ -21,13 +19,10 @@ BEGIN
 	FROM [dbo].[InstallationEnvironment] [ie]
 	WHERE	
 		-- t4-where begin
-
 	    [ie].[EnvironmentCode] = @environmentCode
-
 		-- t4-where end
 END
 GO
-
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -62,26 +57,22 @@ BEGIN
 			,@retcount = @retcount 
 END
 GO
-
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_InstallationEnvironmentAdd]
-
 -- t4-params begin
 	  @environmentCode [varchar](20) out
 	, @name [nvarchar](100)
 	, @description [nvarchar](max)
 	, @isVisible [varchar](1)
 -- t4-params end
-
 AS
 BEGIN
 	SET NOCOUNT ON
 
 	INSERT INTO [dbo].[InstallationEnvironment](
-
 -- t4-columns begin
 		 [EnvironmentCode]
 		,[Name]
@@ -90,6 +81,7 @@ BEGIN
 		,[Modified]
 -- t4-columns end
 	) VALUES (
+
 -- t4-values begin
 		 @environmentCode
 		,@name
@@ -98,15 +90,15 @@ BEGIN
 		,[civic].udf_getSysDate()
 -- t4-values end
 	)
+
+
 END
 GO
-
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_InstallationEnvironmentModify]
-
 	  @environmentCode [varchar](20)
 	, @name [nvarchar](100)
 	, @description [nvarchar](max)
@@ -130,13 +122,11 @@ BEGIN
 		-- t4-where end
 END
 GO
-
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_InstallationEnvironmentRemove]
-
 	  @environmentCode [varchar](20)
 AS
 BEGIN

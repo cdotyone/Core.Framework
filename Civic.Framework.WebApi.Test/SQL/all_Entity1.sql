@@ -1,10 +1,8 @@
-﻿
-SET ANSI_NULLS ON
+﻿SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity1Get]
-
 	  @name [nvarchar](max)
 AS
 BEGIN
@@ -22,13 +20,10 @@ BEGIN
 	FROM [dbo].[Entity1] [e1]
 	WHERE	
 		-- t4-where begin
-
 	    [e1].[Name] = @name
-
 		-- t4-where end
 END
 GO
-
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -64,13 +59,11 @@ BEGIN
 			,@retcount = @retcount 
 END
 GO
-
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity1Add]
-
 -- t4-params begin
 	  @name [nvarchar](max) out
 	, @environmentID [int]
@@ -79,13 +72,11 @@ CREATE PROCEDURE [dbo].[usp_Entity1Add]
 	, @dble1 [decimal](20,4)
 	, @dec1 [decimal](20,4)
 -- t4-params end
-
 AS
 BEGIN
 	SET NOCOUNT ON
 
 	INSERT INTO [dbo].[Entity1](
-
 -- t4-columns begin
 		 [Name]
 		,[EnvironmentID]
@@ -95,6 +86,7 @@ BEGIN
 		,[Dec1]
 -- t4-columns end
 	) VALUES (
+
 -- t4-values begin
 		 @name
 		,@environmentID
@@ -104,15 +96,15 @@ BEGIN
 		,@dec1
 -- t4-values end
 	)
+
+
 END
 GO
-
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity1Modify]
-
 	  @name [nvarchar](max)
 	, @environmentID [int]
 	, @dte [datetime]
@@ -139,13 +131,11 @@ BEGIN
 		-- t4-where end
 END
 GO
-
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity1Remove]
-
 	  @name [nvarchar](max)
 AS
 BEGIN

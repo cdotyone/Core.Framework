@@ -191,6 +191,7 @@
     <None Include="T4\2.0\WCF.ttinclude" />
     <None Include="T4\2.0\WebAPI.ttinclude" />
     <Content Include="T4\3.0\DBViews.ttinclude" />
+    <Content Include="T4\3.0\DBProcsAll.ttinclude" />
     <None Include="T4\3.0\GenerateTSQL.ttinclude" />
     <None Include="T4\3.0\TemplateFilemanager.CS.ttinclude" />
   </ItemGroup>
