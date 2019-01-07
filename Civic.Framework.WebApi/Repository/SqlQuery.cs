@@ -65,7 +65,7 @@ namespace Civic.Framework.WebApi
 
                 try
                 {
-                    var view = $"[{info.Module}].[VW_{info.Entity}]";
+                    var view = $"[{info.Module}].[VW_{info.Entity.ToUpperInvariant()}]";
 
                     var keyValues = entityID.Split('|').ToList();
 
