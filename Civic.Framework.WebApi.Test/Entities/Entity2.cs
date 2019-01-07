@@ -14,7 +14,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using SimpleInjector;
 using Civic.Framework.WebApi;
+using Civic.Framework.WebApi.Test.Interfaces;
 
 
 using IExampleEntity2 = Civic.Framework.WebApi.Test.Interfaces.IEntity2;
@@ -96,10 +98,10 @@ public partial class Entity2 : IExampleEntity2
         }
     };
 
-	private IEntityBusinessFacade<IExampleEntity2> _facade;
-	public Entity2(IEntityBusinessFacade<IExampleEntity2> facade)
+	private readonly Container _container;
+	public Entity2(Container container)
 	{
-		_facade = facade;
+	    _container = container;
 	}
 
 	public IEntityInfo GetInfo() {
@@ -117,19 +119,23 @@ public partial class Entity2 : IExampleEntity2
 	}
 
 	public IEnumerable<IEntityIdentity> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
-		return _facade.GetPaged(context, skip, ref count, retCount, filterBy, orderBy);
+	    var facade = _container.GetInstance<IEntity2Facade>();
+		return facade.GetPaged(context, skip, ref count, retCount, filterBy, orderBy);
 	}
 
 	public IEntityIdentity Load(IEntityRequestContext context) {
-		return _facade.Get(context, this);
+	    var facade = _container.GetInstance<IEntity2Facade>();
+		return facade.Get(context, this);
 	}
 
 	public void Save(IEntityRequestContext context) {
-		_facade.Save(context, this);
+	    var facade = _container.GetInstance<IEntity2Facade>();
+		facade.Save(context, this);
 	}
 
 	public void Remove(IEntityRequestContext context) {
-		_facade.Remove(context, this);
+	    var facade = _container.GetInstance<IEntity2Facade>();
+		facade.Remove(context, this);
 	}
 }
 
