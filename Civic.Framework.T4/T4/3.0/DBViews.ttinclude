@@ -23,10 +23,12 @@ CREATE VIEW [<#=apiSchemaName#>].[VW_<#=entityName#>]
 AS
 
 	SELECT	
-		-- t4-columns begin<#  i=0;
+		-- t4-columns begin
+<#  i=0;
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {		#>
-		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]<#
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
+<#
 		i++;
 	}
 #>
@@ -55,10 +57,12 @@ CREATE VIEW [<#=apiSchemaName#>].[VW_<#=entityName#>]
 AS
 
 	SELECT	
-		-- t4-columns begin<#  i=0;
+		-- t4-columns begin
+<#  i=0;
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {		#>
-		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]<#
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
+<#
 		i++;
 	}
 #>		
