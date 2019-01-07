@@ -6,41 +6,20 @@ fileManager.StartNewFile(edmxFileName+".Defaults.sql", folderName:"SQL");
 
 #>
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_GetDate]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [<#=apiGeneralSchemaName#>].[udf_GetDate]
-GO
-
 CREATE DEFAULT [<#=apiGeneralSchemaName#>].[udf_GetDate]
 AS GETUTCDATE()
-GO
-
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_Unknown]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [<#=apiGeneralSchemaName#>].[udf_Unknown]
 GO
 
 CREATE DEFAULT [<#=apiGeneralSchemaName#>].[udf_Unknown]
 AS 'UNK'
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_Yes]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [<#=apiGeneralSchemaName#>].[udf_Yes]
-GO
-
 CREATE DEFAULT [<#=apiGeneralSchemaName#>].[udf_Yes]
 AS 1
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_No]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [<#=apiGeneralSchemaName#>].[udf_No]
-GO
-
 CREATE DEFAULT [<#=apiGeneralSchemaName#>].[udf_No]
 AS 0
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_Zero]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
-DROP DEFAULT [<#=apiGeneralSchemaName#>].[udf_Zero]
 GO
 
 CREATE DEFAULT [<#=apiGeneralSchemaName#>].[udf_Zero]
@@ -113,9 +92,6 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GET") || entity.Documentation.LongDescription.Contains("ADD"))
 	   && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Get.sql", apiBundleSQLFiles, out userContent))  {	
 #>
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>Get]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Get]
-GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -126,8 +102,7 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Get]
     {
 		if(!ef.IsKey(edmProperty)) continue;
 	#>
-	<#=i>0 ? ", " + Core.GetParameterName(edmProperty.Name) : "  " + Core.GetParameterName(edmProperty.Name)#> <#=Core.GetParameterType(code,edmProperty) #>
-<#		i++;
+	<#=i>0 ? ", " + Core.GetParameterName(edmProperty.Name) : "  " + Core.GetParameterName(edmProperty.Name)#> <#=Core.GetParameterType(code,edmProperty) #><#		i++;
 	}
 #>
 AS
@@ -135,15 +110,14 @@ BEGIN
 	SET NOCOUNT ON
 
 	SELECT	
-		-- t4-columns begin
-<#  i=0;
+		-- t4-columns begin<#  i=0;
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {		#>
-		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
-<#
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]<#
 		i++;
 	}
-#>		-- t4-columns end
+#>
+		-- t4-columns end
 	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
 	WHERE	
 		-- t4-where begin
@@ -166,9 +140,6 @@ GO
 	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("PAGED"))
 	&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_" + entity.Name + "GetFiltered.sql", apiBundleSQLFiles, out userContent))  {	
 #>
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>GetFiltered]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetFiltered]
-GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -185,15 +156,14 @@ BEGIN
 
 	DECLARE @select nvarchar(max)
     SET @select = 'SELECT	
-		-- t4-columns begin
-<#  i=0;
+		-- t4-columns begin<#  i=0;
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {		#>
-		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
-<#
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]<#
 		i++;
 	}
-#>		-- t4-columns end
+#>
+		-- t4-columns end
     FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>'
 
 	EXEC [<#=apiGeneralSchemaName#>].[usp_ProcessFilter]
@@ -217,17 +187,13 @@ GO
 		if(!string.IsNullOrEmpty(userContent)) {#><#=userContent#><#}
 		else {
 #>
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]
-GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]<#}#>
 
--- t4-params begin
-<#
+-- t4-params begin<#
 
   i=0;
 	hasCreatedBy = false;
@@ -246,12 +212,10 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]<#}#>
 
 		if((ef.IsKey(edmProperty) && keyUID==null) || (keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name)) {
 #>
-	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #> out
-<#
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #> out<#
 		} else {
 #>
-	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
-<#
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #><#
 		} 		
 		i++;
 	}
@@ -268,16 +232,14 @@ BEGIN
 
 	INSERT INTO [<#=apiSchemaName#>].[<#=entity.Name#>](<# } #>
 
--- t4-columns begin
-<#	
+-- t4-columns begin<#	
 	i=0;
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {
 		parameterName = Core.GetParameterName(edmProperty.Name);
 		if(Core.IsIdentity(edmProperty)) continue;
 			#>
-		<#=(i>0 ? ",[" + edmProperty.ToString() : " [" + edmProperty.ToString())#>]
-<#
+		<#=(i>0 ? ",[" + edmProperty.ToString() : " [" + edmProperty.ToString())#>]<#
 		i++;
 	}
 #>
@@ -287,10 +249,7 @@ BEGIN
 	if(!string.IsNullOrEmpty(userContent)) {#><#=userContent#><#}
 	else {
 #>	) VALUES (
-<# } #>
-
--- t4-values begin
-<#  i=0;
+<# } #>-- t4-values begin<#  i=0;
 	string idName = null;
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {
@@ -300,19 +259,15 @@ BEGIN
 		if(parameterName.ToLower()=="@modified") parameterName = "["+apiGeneralSchemaName+"].udf_getSysDate()";
 		if(parameterName.ToLower()=="@created") parameterName = "["+apiGeneralSchemaName+"].udf_getSysDate()";
 #>
-		<#=(i>0 ? "," + parameterName : " " + parameterName)#>
-<#
+		<#=(i>0 ? "," + parameterName : " " + parameterName)#><#
 		i++;
 	}
 #>
--- t4-values end
-<#
+-- t4-values end<#
 	userContent = Core.GetUserContent(codeSections, "-- t4-values end", null);
 	if(!string.IsNullOrEmpty(userContent)) {#><#=userContent#><#} else {#>
-	)
-
-<#if(idName!=null) { #>SET <#=idName#> = SCOPE_IDENTITY()<#}#>
-
+	)<#if(idName!=null) { #>
+	SET <#=idName#> = SCOPE_IDENTITY()<#}#>
 END
 GO
 <#
@@ -323,9 +278,6 @@ GO
 	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("MODIFY"))
 	  && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Modify.sql", apiBundleSQLFiles, out userContent))  {	
 #>
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]
-GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -344,12 +296,10 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]
 
 		if(ef.IsKey(edmProperty)) {
 #>
-	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
-<#
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #><#
 		} else {
 #>
-	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
-<#
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #><#
 		}
 		i++;
 	}
@@ -359,8 +309,7 @@ BEGIN
 	SET NOCOUNT ON
 
 	UPDATE <#=tableAlias#> SET 
-		-- t4-columns begin
-<#  i=0;
+		-- t4-columns begin<#  i=0;
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {
 		parameterName = Core.GetParameterName(edmProperty.Name);
@@ -368,21 +317,19 @@ BEGIN
 		if(parameterName.ToLower()=="@createdby" || parameterName.ToLower()=="@created") continue;
 		if(parameterName.ToLower()=="@modified") parameterName = "["+apiGeneralSchemaName+"].udf_getSysDate()";
 			#>
-		<#=(i>0 ? ",[" + edmProperty.ToString() : " [" + edmProperty.ToString())#>] = <#=parameterName#>
-<#
+		<#=(i>0 ? ",[" + edmProperty.ToString() : " [" + edmProperty.ToString())#>] = <#=parameterName#><#
 		i++;
 	}
-#>		-- t4-columns end
+#>
+		-- t4-columns end
 	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
 	WHERE	
-		-- t4-where begin
-<#  i=0;
+		-- t4-where begin<#  i=0;
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {
 		if(!ef.IsKey(edmProperty)) continue;
 	#>
-	<#=(i>0 ? "AND " + tableAlias+".["+edmProperty.ToString() : "    " + tableAlias+".["+edmProperty.ToString())#>] = <#=Core.GetParameterName(edmProperty.Name)#>
-<#
+	<#=(i>0 ? "AND " + tableAlias+".["+edmProperty.ToString() : "    " + tableAlias+".["+edmProperty.ToString())#>] = <#=Core.GetParameterName(edmProperty.Name)#><#
 		i++;
 	}
 #>
@@ -396,9 +343,6 @@ GO
 	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("REMOVE"))
 	  && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Remove.sql", apiBundleSQLFiles, out userContent))  {	
 #>
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>Remove]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Remove]
-GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -409,8 +353,7 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Remove]
     {
 		if(!ef.IsKey(edmProperty)) continue;
 	#>
-	<#=i>0 ? ", " + Core.GetParameterName(edmProperty.Name) : "  " + Core.GetParameterName(edmProperty.Name)#> <#=Core.GetParameterType(code,edmProperty) #>
-<#	i++;
+	<#=i>0 ? ", " + Core.GetParameterName(edmProperty.Name) : "  " + Core.GetParameterName(edmProperty.Name)#> <#=Core.GetParameterType(code,edmProperty) #><#	i++;
 	}
 #>
 AS
@@ -419,14 +362,12 @@ BEGIN
 
 	DELETE FROM [<#=apiSchemaName#>].[<#=entity.Name#>]
 	WHERE	
-		-- t4-where begin
-<#  i=0;
+		-- t4-where begin<#  i=0;
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {
 		if(!ef.IsKey(edmProperty)) continue;
 	#>
-	<#=(i>0 ? "AND [" + edmProperty.ToString() : "    [" + edmProperty.ToString())#>] = <#=Core.GetParameterName(edmProperty.Name)#>
-<#
+	<#=(i>0 ? "AND [" + edmProperty.ToString() : "    [" + edmProperty.ToString())#>] = <#=Core.GetParameterName(edmProperty.Name)#><#
 		i++;
 	}
 #>
@@ -447,9 +388,6 @@ GO
 
 	NavigationProperty[] foreignKeys = entity.NavigationProperties.ToArray();
 #>
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]
-GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -475,7 +413,8 @@ BEGIN
 <#
 		i++;
 	}
-#>		-- t4-columns end
+#>
+		-- t4-columns end
 	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
 	WHERE	
 		-- t4-where begin
