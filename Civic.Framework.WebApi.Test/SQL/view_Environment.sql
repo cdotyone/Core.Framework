@@ -9,7 +9,10 @@ CREATE VIEW [dbo].[VW_ENVIRONMENT]
 AS
 
 	SELECT	
-		-- t4-columns begin		 [e].[ID]		,[e].[Name]		-- t4-columns end
+		-- t4-columns begin
+		 [e].[ID]
+		,[e].[Name]
+	
+		-- t4-columns end
 	FROM [dbo].[Environment] [e]
-
 GO

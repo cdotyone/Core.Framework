@@ -65,12 +65,12 @@ public class CodeStringGenerator
         _ef = ef;
     }
 
-    public string Property(EdmProperty edmProperty)
+    public string Property(EdmProperty edmProperty, string prefix = "public ")
     {
         return string.Format(
             CultureInfo.InvariantCulture,
-            "{0} {1} {2} {{ {3}get; {4}set; }}",
-            Accessibility.ForProperty(edmProperty),
+            "{0}{1} {2} {{ {3}get; {4}set; }}",
+            prefix,
             _typeMapper.GetTypeName(edmProperty.TypeUsage).ToString().Replace("System.","").Replace("Nullable<DateTime>","DateTime?").Replace("Nullable<int>","int?").Replace("Nullable<long>","long?").Replace("Nullable<double>","double?"),
             _code.Escape(edmProperty),
             _code.SpaceAfter(Accessibility.ForGetter(edmProperty)),
@@ -597,6 +597,8 @@ public static void ArgumentNotNull<T>(T arg, string name) where T : class
 
 public class Core {
 
+public static Dictionary<string,Mapped> MapUID { get; set; } = new Dictionary<string,Mapped>();
+
 public static string GetTableAlias(string str)
 {
     return Regex.Replace(str, "[^A-Z0-9]+", "", RegexOptions.Compiled).ToLower();
@@ -607,10 +609,33 @@ public static string ToLowerCamel(string str)
 	return str.Substring(0,1).ToLower()+str.Substring(1);
 }
 
+public static string GetMapToName(string str)
+{
+	if(MapUID.ContainsKey(str)) {
+		var name = MapUID[str].MapToName;
+		if(string.IsNullOrEmpty(name)) { 
+			name = ToLowerCamel(str);
+			MapUID[str].MapToName = name;
+		}
+		return name;
+	}
+	return str.Substring(0,1).ToLower()+str.Substring(1);
+}
+
+public static string GetMappedProperty(CodeStringGenerator code, EdmProperty edmProperty, string prefix) 
+{
+	var key=edmProperty.Name;
+	if(MapUID.ContainsKey(key)) {
+		return prefix+"string " + MapUID[key].MapTo+ " { get; set; }";
+	} 
+	return code.Property(edmProperty, prefix);
+}
+
 public static string GetParameterName(string name) 
 {
 	return "@" + (name.ToLower()=="id" ? "id" : name.Substring(0,1).ToLower() + name.Substring(1));
 }
+
 
 public static bool IsIdentity(EdmProperty edmProperty) 
 {
@@ -799,6 +824,15 @@ public static string GetMethodParameterName(string name)
 	return name.Substring(0,1).ToLower() + name.Substring(1);
 }
 
+}
+
+
+public class Mapped {
+	public string MapTo {get;set;}
+	public string MapToName {get;set;}
+	public string Join {get;set;} = "LEFT JOIN";
+	public string Schema {get;set;}
+	public string Table {get;set;}
 }
 
 #>

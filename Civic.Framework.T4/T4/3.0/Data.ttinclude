@@ -177,6 +177,12 @@ public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFile
 			var ptype=code.Escape(edmProperty.TypeUsage.EdmType).ToLower().Replace("@","");
 			
 			var pname = "entity."+code.Escape(edmProperty.Name);
+			var sname = "@"+code.Escape(edmProperty.Name.ToLower());
+			if(Core.MapUID.ContainsKey(edmProperty.Name)) {
+				pname = "entity."+Core.MapUID[edmProperty.Name].MapTo;
+				sname = "@"+Core.MapUID[edmProperty.Name].MapToName;
+			}
+
 			if(ptype=="string" && edmProperty.Nullable) pname = "T4Config.CheckUpperCase(\""+apiSchemaName.ToLower()+"\",\""+code.Escape(entity).ToLower()+"\",\""+code.Escape(edmProperty.Name).ToLower()+"\"," + pname + ", false)";
 			if(ptype=="string" && !edmProperty.Nullable) pname = "T4Config.CheckUpperCase(\""+apiSchemaName.ToLower()+"\",\""+code.Escape(entity).ToLower()+"\",\""+code.Escape(edmProperty.Name).ToLower()+"\"," + pname + ")";
 
@@ -197,7 +203,7 @@ public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFile
 
 		
 			#>
-		command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>);
+		command.AddInParameter("<#=sname#>", <#=pname#>);
 <#
 		}
 #>

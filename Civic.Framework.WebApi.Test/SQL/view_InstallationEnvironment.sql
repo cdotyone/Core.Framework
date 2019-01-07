@@ -9,7 +9,13 @@ CREATE VIEW [dbo].[VW_INSTALLATIONENVIRONMENT]
 AS
 
 	SELECT	
-		-- t4-columns begin		 [ie].[EnvironmentCode]		,[ie].[Name]		,[ie].[Description]		,[ie].[IsVisible]		,[ie].[Modified]		-- t4-columns end
+		-- t4-columns begin
+		 [ie].[EnvironmentCode]
+		,[ie].[Name]
+		,[ie].[Description]
+		,[ie].[IsVisible]
+		,[ie].[Modified]
+	
+		-- t4-columns end
 	FROM [dbo].[InstallationEnvironment] [ie]
-
 GO

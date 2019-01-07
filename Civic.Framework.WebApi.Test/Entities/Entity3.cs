@@ -26,18 +26,13 @@ namespace Civic.Framework.WebApi.Test.Entities
     {
     
     	[DataMember(Name="someUID")]
-        public string SomeUID { get; set; }
-    
+    	public string SomeUID { get; set; }
     	[DataMember(Name="someID")]
-    	[JsonIgnore]
-        public long SomeID { get; set; }
-    
+    	public long SomeID { get; set; }
     	[DataMember(Name="modified")]
-        public DateTime Modified { get; set; }
-    
+    	public DateTime Modified { get; set; }
     	[DataMember(Name="otherDate")]
-        public DateTime? OtherDate { get; set; }
-    
+    	public DateTime? OtherDate { get; set; }
         [DataMember(Name = "_key")]
     	public string _key 
         { 

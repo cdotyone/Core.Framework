@@ -9,7 +9,15 @@ CREATE VIEW [dbo].[VW_ENTITY2]
 AS
 
 	SELECT	
-		-- t4-columns begin		 [e2].[SomeID]		,[e2].[ff]		,[e2].[Modified]		,[e2].[OtherDate]		,[e2].[OID]		-- t4-columns end
+		-- t4-columns begin
+		 [e2].[SomeID]
+		,[e2].[ff]
+		,[e2].[Modified]
+		,[e2].[OtherDate]
+		,[e2].[OID]
+		,[ou].[OUID]
+	
+		-- t4-columns end
 	FROM [dbo].[Entity2] [e2]
-
+	LEFT JOIN [civic].[OrgUnit] as [ou] ON [e2].[OID] = [ou].[OID]
 GO

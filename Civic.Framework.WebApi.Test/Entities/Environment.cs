@@ -25,12 +25,10 @@ namespace Civic.Framework.WebApi.Test.Entities
     public partial class Environment : IExampleEnvironment
     {
     
-    	[DataMember(Name="id")]
-        public int ID { get; set; }
-    
+    	[DataMember(Name="iD")]
+    	public int ID { get; set; }
     	[DataMember(Name="name")]
-        public string Name { get; set; }
-    
+    	public string Name { get; set; }
         [DataMember(Name = "_key")]
     	public string _key 
         { 

@@ -25,16 +25,32 @@ AS
 	SELECT	
 		-- t4-columns begin
 <#  i=0;
+
+	var leftJoin = new List<string>();
+	var leftProp = new List<string>();
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
-    {		#>
+    {		
+
+		if(Core.MapUID.ContainsKey(edmProperty.ToString())) {
+			var mapped = Core.MapUID[edmProperty.ToString()];
+			var tableAlias2 = "[" + Core.GetTableAlias(mapped.Table) + "]";
+			leftProp.Add(tableAlias2+".["+mapped.MapTo+"]");
+			leftJoin.Add(mapped.Join + " ["+mapped.Schema+"].["+mapped.Table+"] as "+tableAlias2+" ON "+tableAlias+".["+edmProperty.ToString()+"] = "+tableAlias2+".["+edmProperty.ToString()+"]" );
+		}
+
+#>
 		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
 <#
 		i++;
 	}
-#>
+	foreach(var vprop in leftProp) {#>
+		,<#=vprop#>
+<#}#>	
 		-- t4-columns end
 	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
-
+<#	foreach(var join in leftJoin) {#>
+	<#=join#>
+<#}#>
 GO
 <#
 }
@@ -59,16 +75,32 @@ AS
 	SELECT	
 		-- t4-columns begin
 <#  i=0;
+
+	var leftJoin = new List<string>();
+	var leftProp = new List<string>();
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
-    {		#>
+    {		
+
+		if(Core.MapUID.ContainsKey(edmProperty.ToString())) {
+			var mapped = Core.MapUID[edmProperty.ToString()];
+			var tableAlias2 = "[" + Core.GetTableAlias(mapped.Table) + "]";
+			leftProp.Add(tableAlias2+".["+mapped.MapTo+"]");
+			leftJoin.Add(mapped.Join + " ["+mapped.Schema+"].["+mapped.Table+"] as "+tableAlias2+" ON "+tableAlias+".["+edmProperty.ToString()+"] = "+tableAlias2+".["+edmProperty.ToString()+"]" );
+		}
+
+#>
 		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
 <#
 		i++;
 	}
-#>		
+	foreach(var vprop in leftProp) {#>
+		,<#=vprop#>
+<#}#>	
 		-- t4-columns end
 	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
-
+<#	foreach(var join in leftJoin) {#>
+	<#=join#>
+<#}#>
 GO
 <#
 }

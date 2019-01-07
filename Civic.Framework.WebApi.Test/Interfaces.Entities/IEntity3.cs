@@ -19,15 +19,10 @@ namespace Civic.Framework.WebApi.Test.Interfaces
 {
     public interface IEntity3 : IEntityIdentity
     {
-    
-        string SomeUID { get; set; }
-    
-        long SomeID { get; set; }
-    
-        DateTime Modified { get; set; }
-    
-        DateTime? OtherDate { get; set; }
-    
+    	 string SomeUID { get; set; }
+    	 long SomeID { get; set; }
+    	 DateTime Modified { get; set; }
+    	 DateTime? OtherDate { get; set; }
     }
 }
 

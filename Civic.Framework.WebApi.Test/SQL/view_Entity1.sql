@@ -9,7 +9,14 @@ CREATE VIEW [dbo].[VW_ENTITY1]
 AS
 
 	SELECT	
-		-- t4-columns begin		 [e1].[Name]		,[e1].[EnvironmentID]		,[e1].[Dte]		,[e1].[Dte2]		,[e1].[Dble1]		,[e1].[Dec1]		-- t4-columns end
+		-- t4-columns begin
+		 [e1].[Name]
+		,[e1].[EnvironmentID]
+		,[e1].[Dte]
+		,[e1].[Dte2]
+		,[e1].[Dble1]
+		,[e1].[Dec1]
+	
+		-- t4-columns end
 	FROM [dbo].[Entity1] [e1]
-
 GO

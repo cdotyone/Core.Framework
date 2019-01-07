@@ -19,19 +19,12 @@ namespace Civic.Framework.WebApi.Test.Interfaces
 {
     public interface IEntity1 : IEntityIdentity
     {
-    
-        string Name { get; set; }
-    
-        int EnvironmentID { get; set; }
-    
-        DateTime Dte { get; set; }
-    
-        DateTime? Dte2 { get; set; }
-    
-        double Dble1 { get; set; }
-    
-        double Dec1 { get; set; }
-    
+    	 string Name { get; set; }
+    	 int EnvironmentID { get; set; }
+    	 DateTime Dte { get; set; }
+    	 DateTime? Dte2 { get; set; }
+    	 double Dble1 { get; set; }
+    	 double Dec1 { get; set; }
     }
 }
 

@@ -19,11 +19,8 @@ namespace Civic.Framework.WebApi.Test.Interfaces
 {
     public interface IEnvironment : IEntityIdentity
     {
-    
-        int ID { get; set; }
-    
-        string Name { get; set; }
-    
+    	 int ID { get; set; }
+    	 string Name { get; set; }
     }
 }
 

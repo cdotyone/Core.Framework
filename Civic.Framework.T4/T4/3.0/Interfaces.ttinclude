@@ -17,7 +17,6 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 #>
 public interface I<#=entity.Name#> : IEntityIdentity
 {
-
 <#
     var simpleProperties = typeMapper.GetSimpleProperties(entity);
     if (simpleProperties.Any())
@@ -28,15 +27,8 @@ public interface I<#=entity.Name#> : IEntityIdentity
         foreach (var edmProperty in simpleProperties)
         {
 
-#>    <#=codeStringGenerator.Property(edmProperty).Replace("public ","")#>
-
-<#
-	if(edmProperty.Name=="OID" && Core.ToLowerCamel(entity.Name)!="orgUnit") {#>
-	string OUID { get; set; }
-
-<#}
-
-        }
+#>	 <#=Core.GetMappedProperty(codeStringGenerator,edmProperty,"")#>
+<#      }
     }
 #>
 }

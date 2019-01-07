@@ -19,17 +19,11 @@ namespace Civic.Framework.WebApi.Test.Interfaces
 {
     public interface IInstallationEnvironment : IEntityIdentity
     {
-    
-        string EnvironmentCode { get; set; }
-    
-        string Name { get; set; }
-    
-        string Description { get; set; }
-    
-        string IsVisible { get; set; }
-    
-        DateTime Modified { get; set; }
-    
+    	 string EnvironmentCode { get; set; }
+    	 string Name { get; set; }
+    	 string Description { get; set; }
+    	 string IsVisible { get; set; }
+    	 DateTime Modified { get; set; }
     }
 }
 

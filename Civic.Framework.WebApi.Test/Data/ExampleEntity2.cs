@@ -157,7 +157,7 @@ namespace Civic.Framework.WebApi.Test.Data.SqlServer
        		if(addRecord) command.AddParameter("@ff", ParameterDirection.InputOutput,  T4Config.CheckUpperCase("dbo","entity2","ff",entity.ff));
     		else command.AddInParameter("@ff", T4Config.CheckUpperCase("dbo","entity2","ff",entity.ff));
     		command.AddInParameter("@otherdate", entity.OtherDate.ToDB());
-    		command.AddInParameter("@oid", entity.OID);
+    		command.AddInParameter("@ouid", entity.OUID);
     	}
     }
 }
