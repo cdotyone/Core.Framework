@@ -23,15 +23,14 @@ CREATE VIEW [<#=apiSchemaName#>].[VW_<#=entityName#>]
 AS
 
 	SELECT	
-		-- t4-columns begin
-<#  i=0;
+		-- t4-columns begin<#  i=0;
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {		#>
-		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
-<#
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]<#
 		i++;
 	}
-#>		-- t4-columns end
+#>
+		-- t4-columns end
 	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
 
 GO
@@ -48,9 +47,6 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	string entityName = entity.Name;
 	entityName=entityName.ToUpper();			
 #>
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[VW_<#=entityName#>]') AND OBJECTPROPERTY(object_id, N'IsView') = 1)
-DROP VIEW [<#=apiSchemaName#>].[VW_<#=entityName#>]
-GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -59,15 +55,14 @@ CREATE VIEW [<#=apiSchemaName#>].[VW_<#=entityName#>]
 AS
 
 	SELECT	
-		-- t4-columns begin
-<#  i=0;
+		-- t4-columns begin<#  i=0;
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {		#>
-		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
-<#
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]<#
 		i++;
 	}
-#>		-- t4-columns end
+#>		
+		-- t4-columns end
 	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
 
 GO
