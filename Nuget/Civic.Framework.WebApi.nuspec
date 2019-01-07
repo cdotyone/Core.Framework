@@ -12,7 +12,7 @@
     <summary>Civic.Framework.WebApi</summary>
     <dependencies>
       <group>
-        <dependency id="Civic.Core.Audit" version="[1.26.1,2.0.0)" xmlns="" />
+        <dependency id="Civic.Core.Audit" version="[1.26.6,2.0.0)" xmlns="" />
         <dependency id="Civic.Core.Caching" version="[1.26.3,2.0.0)" xmlns="" />
         <dependency id="Civic.Core.Configuration" version="[1.26.1,2.0.0)" xmlns="" />
         <dependency id="Civic.Core.Data" version="[1.27.3,2.0.0)" xmlns="" />
@@ -20,9 +20,6 @@
         <dependency id="Microsoft.AspNet.WebApi.Core" version="[5.2.7,6.0.0)" xmlns="" />
         <dependency id="Microsoft.Web.Infrastructure" version="[1.0.0.0,2.0.0.0)" xmlns="" />
         <dependency id="Newtonsoft.Json" version="[12.0.1,13.0.0)" xmlns="" />
-        <dependency id="SimpleInjector" version="[4.4.2,5.0.0)" xmlns="" />
-        <dependency id="SimpleInjector.Integration.WebApi" version="[4.4.2,5.0.0)" xmlns="" />
-        <dependency id="SimpleInjector.Packaging" version="[4.4.2,5.0.0)" xmlns="" />
         <dependency id="WebActivatorEx" version="[2.2.0,3.0.0)" xmlns="" />
       </group>
     </dependencies>
