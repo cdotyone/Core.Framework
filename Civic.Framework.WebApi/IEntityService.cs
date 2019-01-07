@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Civic.Core.Configuration;
 using Civic.Core.Data;
-using SimpleInjector;
 
 namespace Civic.Framework.WebApi
 {
