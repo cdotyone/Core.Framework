@@ -614,12 +614,12 @@ public static string GetMapToName(string str)
 	if(MapUID.ContainsKey(str)) {
 		var name = MapUID[str].MapToName;
 		if(string.IsNullOrEmpty(name)) { 
-			name = ToLowerCamel(str);
+			name = ToLowerCamel(MapUID[str].MapTo).Replace("iD","id").Replace("oID","oid").Replace("oUID","ouid").Replace("uID","uid");
 			MapUID[str].MapToName = name;
 		}
 		return name;
 	}
-	return str.Substring(0,1).ToLower()+str.Substring(1);
+	return str.Substring(0,1).ToLower()+str.Substring(1).Replace("iD","id").Replace("oID","oid").Replace("oUID","ouid").Replace("uID","uid");
 }
 
 public static string GetMappedProperty(CodeStringGenerator code, EdmProperty edmProperty, string prefix) 
@@ -834,5 +834,45 @@ public class Mapped {
 	public string Schema {get;set;}
 	public string Table {get;set;}
 }
+
+
+public class EntityInfo
+{
+    public string Module { get; set; }
+
+    public string Entity { get; set; }
+
+    public string Name { get; set; }
+
+    public bool UseProcedureGet { get; set; }
+
+    public bool UseProcedureGetPaged { get; set; }
+
+    public string RelatedModule { get; set; }
+
+    public string RelatedEntity { get; set; }
+
+    public string RelatedKeyName { get; set; }
+
+    public Dictionary<string, EntityPropertyInfo> Properties { get; set; }
+}
+
+public class EntityPropertyInfo
+{
+    public string Name { get; set; }
+
+    public bool IsNullable { get; set; }
+
+    public bool IsKey { get; set; }
+
+    public bool ForceUpperCase { get; set; }
+
+    public string Type { get; set; }
+
+    public int? MaxLength { get; set; }
+
+    public int MaxQuery { get; set; } = 100;
+}
+
 
 #>

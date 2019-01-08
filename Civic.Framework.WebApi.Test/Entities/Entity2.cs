@@ -27,14 +27,19 @@ namespace Civic.Framework.WebApi.Test.Entities
     
     	[DataMember(Name="someID")]
     	public int SomeID { get; set; }
+    
     	[DataMember(Name="ff")]
     	public string ff { get; set; }
+    
     	[DataMember(Name="modified")]
     	public DateTime Modified { get; set; }
+    
     	[DataMember(Name="otherDate")]
     	public DateTime? OtherDate { get; set; }
+    
     	[DataMember(Name="ouid")]
     	public string OUID { get; set; }
+    
         [DataMember(Name = "_key")]
     	public string _key 
         { 
@@ -65,8 +70,8 @@ namespace Civic.Framework.WebApi.Test.Entities
     			{"someID", new EntityPropertyInfo { Name = "someID", Type="int", IsKey=true }},
     			{"ff", new EntityPropertyInfo { Name = "ff", Type="string", IsKey=true }},
     			{"modified", new EntityPropertyInfo { Name = "modified", Type="DateTime" }},
-    			{"otherDate", new EntityPropertyInfo { Name = "otherDate", Type="DateTime>", IsNullable=true }},
-    			{"oid", new EntityPropertyInfo { Name = "oid", Type="Nullable<int>", IsNullable=true }},
+    			{"otherDate", new EntityPropertyInfo { Name = "otherDate", Type="DateTime", IsNullable=true }},
+    			{"oid", new EntityPropertyInfo { Name = "oid", Type="int", IsNullable=true }},
     			{"ouid", new EntityPropertyInfo { Name = "ouid", Type="string" }},
     
             }

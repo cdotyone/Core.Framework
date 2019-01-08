@@ -1,0 +1,61 @@
+﻿{
+	"example":{
+		"Entity1":{   
+			"module":"example",
+			"entity":"entity1",
+			"name":"example.entity1",
+			"properties": {
+					"Name":{"name":"name","type":"string", "isKey":"true"},
+					"EnvironmentID":{"name":"environmentID","type":"int"},
+					"Dte":{"name":"dte","type":"DateTime"},
+					"Dte2":{"name":"dte2","type":"DateTime", "isNullable":"true"},
+					"Dble1":{"name":"dble1","type":"double"},
+					"Dec1":{"name":"dec1","type":"double"}
+			}
+		},
+		"Entity2":{   
+			"module":"example",
+			"entity":"entity2",
+			"name":"example.entity2",
+			"properties": {
+					"SomeID":{"name":"someID","type":"int", "isKey":"true"},
+					"ff":{"name":"ff","type":"string", "isKey":"true"},
+					"Modified":{"name":"modified","type":"DateTime"},
+					"OtherDate":{"name":"otherDate","type":"DateTime", "isNullable":"true"},
+					"OID":{"name":"oid","type":"int", "isNullable":"true"}
+			}
+		},
+		"Entity3":{   
+			"module":"example",
+			"entity":"entity3",
+			"name":"example.entity3",
+			"properties": {
+					"SomeUID":{"name":"someUID","type":"string", "isKey":"true"},
+					"SomeID":{"name":"someID","type":"long"},
+					"Modified":{"name":"modified","type":"DateTime"},
+					"OtherDate":{"name":"otherDate","type":"DateTime", "isNullable":"true"}
+			}
+		},
+		"Environment":{   
+			"module":"example",
+			"entity":"environment",
+			"name":"example.environment",
+			"properties": {
+					"ID":{"name":"id","type":"int", "isKey":"true"},
+					"Name":{"name":"name","type":"string", "isNullable":"true"}
+			}
+		},
+		"InstallationEnvironment":{   
+			"module":"example",
+			"entity":"installationEnvironment",
+			"name":"example.installationEnvironment",
+			"properties": {
+					"EnvironmentCode":{"name":"environmentCode","type":"string", "isKey":"true"},
+					"Name":{"name":"name","type":"string"},
+					"Description":{"name":"description","type":"string", "isNullable":"true"},
+					"IsVisible":{"name":"isVisible","type":"string"},
+					"Modified":{"name":"modified","type":"DateTime"}
+			}
+		}	
+	}
+}

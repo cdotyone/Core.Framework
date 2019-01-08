@@ -27,14 +27,19 @@ namespace Civic.Framework.WebApi.Test.Entities
     
     	[DataMember(Name="environmentCode")]
     	public string EnvironmentCode { get; set; }
+    
     	[DataMember(Name="name")]
     	public string Name { get; set; }
+    
     	[DataMember(Name="description")]
     	public string Description { get; set; }
+    
     	[DataMember(Name="isVisible")]
     	public string IsVisible { get; set; }
+    
     	[DataMember(Name="modified")]
     	public DateTime Modified { get; set; }
+    
         [DataMember(Name = "_key")]
     	public string _key 
         { 

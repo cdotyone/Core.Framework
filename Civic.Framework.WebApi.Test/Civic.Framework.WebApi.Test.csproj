@@ -158,22 +158,22 @@
     <Compile Include="Business\InstallationEnvironmentFacade.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleEntity1.cs">
+    <Compile Include="Data\Entity1.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleEntity2.cs">
+    <Compile Include="Data\Entity2.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleEntity3.cs">
+    <Compile Include="Data\Entity3.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleEnvironment.cs">
+    <Compile Include="Data\Environment.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleInstallationEnvironment.cs">
+    <Compile Include="Data\InstallationEnvironment.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
-    <Compile Include="Data\ExampleRepositoryPackage.cs">
+    <Compile Include="Data\_RepositoryPackage.cs">
       <DependentUpon>Example.txt4</DependentUpon>
     </Compile>
     <Compile Include="Entities\Entity1.cs">
@@ -256,6 +256,9 @@
     <Content Include="Interfaces.Entities\Example.txt4" />
     <Content Include="Business\Example.txt4" />
     <Content Include="Interfaces.Business\Example.txt4" />
+    <Content Include="Entities\CivicConfig.json">
+      <DependentUpon>Example.txt4</DependentUpon>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

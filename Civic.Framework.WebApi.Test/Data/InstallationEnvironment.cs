@@ -20,23 +20,23 @@ using Civic.Framework.WebApi;
 using Civic.Framework.WebApi.Configuration;
 using Civic.Framework.WebApi.Test.Interfaces;
 
-using IExampleEnvironment = Civic.Framework.WebApi.Test.Interfaces.IEnvironment;
+using IExampleInstallationEnvironment = Civic.Framework.WebApi.Test.Interfaces.IInstallationEnvironment;
 namespace Civic.Framework.WebApi.Test.Data.SqlServer
 {
-    public partial class EnvironmentRepository : IEntityRepository<IExampleEnvironment>
+    public partial class InstallationEnvironmentRepository : IEntityRepository<IExampleInstallationEnvironment>
     {
         Container _container;
     	private readonly IEntityCreateFactory _factory;
         private readonly IEntityInfo _info;
     
-        public EnvironmentRepository(Container container, IEntityCreateFactory factory)
+        public InstallationEnvironmentRepository(Container container, IEntityCreateFactory factory)
         {
             _container = container;
     		_factory = factory;
-            _info = _container.GetInstance<IExampleEnvironment>().GetInfo();
+            _info = _container.GetInstance<IExampleInstallationEnvironment>().GetInfo();
         }
     
-    	public IExampleEnvironment Get(IEntityRequestContext context,  IExampleEnvironment entity)
+    	public IExampleInstallationEnvironment Get(IEntityRequestContext context,  IExampleInstallationEnvironment entity)
     	{
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null, null ,context)) {
     
@@ -49,10 +49,10 @@ namespace Civic.Framework.WebApi.Test.Data.SqlServer
     		        return SqlQuery.Get(_container, context.Who, entity, database);
     		    }
     
-    			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentGet"))
+    			using (var command = database.CreateStoredProcCommand("dbo","usp_InstallationEnvironmentGet"))
     			{
-    				command.AddInParameter("@id", entity.ID);
-    				
+    				buildCommand(context, entity, command, false );
+    
         			command.ExecuteReader(dataReader =>
     				{
     				    if(!SqlQuery.PopulateEntity(context, entity, dataReader)) {
@@ -64,26 +64,26 @@ namespace Civic.Framework.WebApi.Test.Data.SqlServer
     		}
     	}
     
-    	public IEnumerable<IExampleEnvironment> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+    	public IEnumerable<IExampleInstallationEnvironment> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
     	{ 
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null, null ,context)) {
     
     			Debug.Assert(database!=null);
     
-    			var list = new List<IExampleEnvironment>();
+    			var list = new List<IExampleInstallationEnvironment>();
     
     		    if (!_info.UseProcedureGet)
     		    {
-    		        var entityList = SqlQuery.GetPaged<IExampleEnvironment>(_container, context.Who, _info, skip, ref count, retCount, filterBy, orderBy, database);
+    		        var entityList = SqlQuery.GetPaged<IExampleInstallationEnvironment>(_container, context.Who, _info, skip, ref count, retCount, filterBy, orderBy, database);
     		        foreach (var entity in entityList)
     		        {
-    		            list.Add(entity as IExampleEnvironment);
+    		            list.Add(entity as IExampleInstallationEnvironment);
     		        }
     
     		        return list;
     		    }
     
-    			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentGetFiltered"))
+    			using (var command = database.CreateStoredProcCommand("dbo","usp_InstallationEnvironmentGetFiltered"))
     			{
     				command.AddInParameter("@skip", skip);			
     				command.AddInParameter("@retcount", retCount);
@@ -93,11 +93,11 @@ namespace Civic.Framework.WebApi.Test.Data.SqlServer
     			
     				command.ExecuteReader(dataReader =>
     					{
-                            var item = _container.GetInstance<IExampleEnvironment>();
+                            var item = _container.GetInstance<IExampleInstallationEnvironment>();
     						while(SqlQuery.PopulateEntity(context, item, dataReader))
     						{
     							list.Add(item);
-    	                        item = _container.GetInstance<IExampleEnvironment>();
+    	                        item = _container.GetInstance<IExampleInstallationEnvironment>();
     						} 
     					});
     
@@ -107,53 +107,54 @@ namespace Civic.Framework.WebApi.Test.Data.SqlServer
     		}
     	}
     
-    	public void Add(IEntityRequestContext context, IExampleEnvironment  entity)
+    	public void Add(IEntityRequestContext context, IExampleInstallationEnvironment  entity)
     	{ 
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Add, entity, null ,context)) {
     
     			Debug.Assert(database!=null);
     
-    			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentAdd"))
+    			using (var command = database.CreateStoredProcCommand("dbo","usp_InstallationEnvironmentAdd"))
     			{
-    				buildEnvironmentCommandParameters(context, entity, command, true );
+    				buildCommand(context, entity, command, true );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void Modify(IEntityRequestContext context, IExampleEnvironment  before, IExampleEnvironment  after)
+    	public void Modify(IEntityRequestContext context, IExampleInstallationEnvironment before, IExampleInstallationEnvironment after)
     	{ 
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, before, after, context)) {
     			Debug.Assert(database!=null);
     
-    			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentModify"))
+    			using (var command = database.CreateStoredProcCommand("dbo","usp_InstallationEnvironmentModify"))
     			{
-    				buildEnvironmentCommandParameters(context, before, command, false );
+    				buildCommand(context, after, command, false );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void Remove(IEntityRequestContext context, IExampleEnvironment  entity )
+    	public void Remove(IEntityRequestContext context, IExampleInstallationEnvironment  entity )
     	{
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Remove, entity, null, context)) {
     
     			Debug.Assert(database!=null);
     
-    			using (var command = database.CreateStoredProcCommand("dbo","usp_EnvironmentRemove"))
+    			using (var command = database.CreateStoredProcCommand("dbo","usp_InstallationEnvironmentRemove"))
     			{
-    				buildEnvironmentCommandParameters(context, entity, command, false );
+    				buildCommand(context, entity, command, false );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	static void buildEnvironmentCommandParameters(IEntityRequestContext context, IExampleEnvironment entity, IDBCommand command, bool addRecord )
+    	static void buildCommand(IEntityRequestContext context, IExampleInstallationEnvironment entity, IDBCommand command, bool addRecord )
     	{ 
             Debug.Assert(command!=null);
-       		if(addRecord) command.AddParameter("@id", ParameterDirection.InputOutput,  entity.ID);
-    		else command.AddInParameter("@id", entity.ID);
-    		command.AddInParameter("@name", T4Config.CheckUpperCase("dbo","environment","name",entity.Name, false));
+    		command.AddInParameter("@environmentcode", T4Config.CheckUpperCase("dbo","installationenvironment","environmentcode",entity.EnvironmentCode));
+    		command.AddInParameter("@name", T4Config.CheckUpperCase("dbo","installationenvironment","name",entity.Name));
+    		command.AddInParameter("@description", T4Config.CheckUpperCase("dbo","installationenvironment","description",entity.Description, false));
+    		command.AddInParameter("@isvisible", T4Config.CheckUpperCase("dbo","installationenvironment","isvisible",entity.IsVisible));
     	}
     }
 }

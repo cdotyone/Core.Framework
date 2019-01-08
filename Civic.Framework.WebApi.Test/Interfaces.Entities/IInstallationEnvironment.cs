@@ -27,8 +27,3 @@ namespace Civic.Framework.WebApi.Test.Interfaces
     }
 }
 
-
-
-
-
-

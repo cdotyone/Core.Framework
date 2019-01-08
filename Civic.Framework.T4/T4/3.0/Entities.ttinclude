@@ -45,6 +45,9 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
         foreach (var edmProperty in simpleProperties)
         {
 
+			if(matchID!=null && matchID.Name==edmProperty.Name) {
+				continue;
+			}
 			if(Core.MapUID.ContainsKey(edmProperty.Name)) {
 				if(Core.MapUID[edmProperty.Name].Schema==edmxFileName.ToLower() && Core.MapUID[edmProperty.Name].Table==entity.Name) continue;
 			}
@@ -64,9 +67,15 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
 <#
 
 		var keys = new List<string>();
+		var glist = new List<string>();
 		foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
 		{
 			if (ef.IsKey(edmProperty)) {
+
+				if(Core.MapUID.ContainsKey(edmProperty.Name)) {
+					glist.Add(Core.MapUID[edmProperty.Name].MapTo);
+				} else { glist.Add(edmProperty.Name); }
+
 				keys.Add(code.Escape(edmProperty.Name));
 			}
 		}
@@ -76,7 +85,7 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
 					return null;
 		<#			
 		} else {#>
-			return <#=string.Join(".ToString()+\"|\"+",keys)#>.ToString();
+			return <#=string.Join(".ToString()+\"|\"+",glist)#>.ToString();
 		<#
 		}
 #>}
@@ -89,7 +98,12 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
 				var name = Core.ToLowerCamel(edmProperty.Name).Replace("iD","id").Replace("oID","oid").Replace("oUID","ouid").Replace("uID","uid");
 				var key = keys[ll];
 				if(name!=key && edmProperty.Name!=key) continue;
+
 				var ptype=code.Escape(edmProperty.TypeUsage.EdmType).ToLower().Replace("@","");
+				if(Core.MapUID.ContainsKey(edmProperty.Name)) {
+					ptype="string";
+					key = Core.MapUID[edmProperty.Name].MapTo;
+				}
 			if(ptype=="int32" || ptype=="int" || ptype=="int64" || ptype=="long" || ptype=="float") {#>						
 			<#=key#> = <#=code.Escape(edmProperty.TypeUsage.EdmType).Replace("@","")#>.Parse(keys[<#=ll#>]);<#
 				} else if(ptype=="boolean") {#>						
@@ -134,7 +148,7 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
 
 	if((keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name) || edmProperty.Name=="OID" && Core.ToLowerCamel(entity.Name)!="orgUnit") {#>
 <#}
-#>			{"<#=name#>", new EntityPropertyInfo { Name = "<#=name#>", Type="<#=typeMapper.GetTypeName(edmProperty.TypeUsage).Replace("System.DateTime","DateTime").Replace("Nullable<DateTime","DateTime")#>"<#if(ef.IsNullable(edmProperty.TypeUsage)) {#>, IsNullable=true<#}#><#if(ef.IsKey(edmProperty)) {#>, IsKey=true<#}#> }},
+#>			{"<#=name#>", new EntityPropertyInfo { Name = "<#=name#>", Type="<#=typeMapper.GetTypeName(edmProperty.TypeUsage).Replace("System.DateTime","DateTime").Replace("Nullable<DateTime>","DateTime").Replace("Nullable<int>","int").Replace("Nullable<long>","long")#>"<#if(ef.IsNullable(edmProperty.TypeUsage)) {#>, IsNullable=true<#}#><#if(ef.IsKey(edmProperty)) {#>, IsKey=true<#}#> }},
 <#
 	if(edmProperty.Name=="OID" && Core.ToLowerCamel(entity.Name)!="orgUnit") {#>
 			{"ouid", new EntityPropertyInfo { Name = "ouid", Type="string" }},

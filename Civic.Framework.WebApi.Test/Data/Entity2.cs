@@ -20,23 +20,23 @@ using Civic.Framework.WebApi;
 using Civic.Framework.WebApi.Configuration;
 using Civic.Framework.WebApi.Test.Interfaces;
 
-using IExampleEntity1 = Civic.Framework.WebApi.Test.Interfaces.IEntity1;
+using IExampleEntity2 = Civic.Framework.WebApi.Test.Interfaces.IEntity2;
 namespace Civic.Framework.WebApi.Test.Data.SqlServer
 {
-    public partial class Entity1Repository : IEntityRepository<IExampleEntity1>
+    public partial class Entity2Repository : IEntityRepository<IExampleEntity2>
     {
         Container _container;
     	private readonly IEntityCreateFactory _factory;
         private readonly IEntityInfo _info;
     
-        public Entity1Repository(Container container, IEntityCreateFactory factory)
+        public Entity2Repository(Container container, IEntityCreateFactory factory)
         {
             _container = container;
     		_factory = factory;
-            _info = _container.GetInstance<IExampleEntity1>().GetInfo();
+            _info = _container.GetInstance<IExampleEntity2>().GetInfo();
         }
     
-    	public IExampleEntity1 Get(IEntityRequestContext context,  IExampleEntity1 entity)
+    	public IExampleEntity2 Get(IEntityRequestContext context,  IExampleEntity2 entity)
     	{
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null, null ,context)) {
     
@@ -49,10 +49,10 @@ namespace Civic.Framework.WebApi.Test.Data.SqlServer
     		        return SqlQuery.Get(_container, context.Who, entity, database);
     		    }
     
-    			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity1Get"))
+    			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity2Get"))
     			{
-    				command.AddInParameter("@name", entity.Name);
-    				
+    				buildCommand(context, entity, command, false );
+    
         			command.ExecuteReader(dataReader =>
     				{
     				    if(!SqlQuery.PopulateEntity(context, entity, dataReader)) {
@@ -64,26 +64,26 @@ namespace Civic.Framework.WebApi.Test.Data.SqlServer
     		}
     	}
     
-    	public IEnumerable<IExampleEntity1> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
+    	public IEnumerable<IExampleEntity2> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
     	{ 
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Get, null, null ,context)) {
     
     			Debug.Assert(database!=null);
     
-    			var list = new List<IExampleEntity1>();
+    			var list = new List<IExampleEntity2>();
     
     		    if (!_info.UseProcedureGet)
     		    {
-    		        var entityList = SqlQuery.GetPaged<IExampleEntity1>(_container, context.Who, _info, skip, ref count, retCount, filterBy, orderBy, database);
+    		        var entityList = SqlQuery.GetPaged<IExampleEntity2>(_container, context.Who, _info, skip, ref count, retCount, filterBy, orderBy, database);
     		        foreach (var entity in entityList)
     		        {
-    		            list.Add(entity as IExampleEntity1);
+    		            list.Add(entity as IExampleEntity2);
     		        }
     
     		        return list;
     		    }
     
-    			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity1GetFiltered"))
+    			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity2GetFiltered"))
     			{
     				command.AddInParameter("@skip", skip);			
     				command.AddInParameter("@retcount", retCount);
@@ -93,11 +93,11 @@ namespace Civic.Framework.WebApi.Test.Data.SqlServer
     			
     				command.ExecuteReader(dataReader =>
     					{
-                            var item = _container.GetInstance<IExampleEntity1>();
+                            var item = _container.GetInstance<IExampleEntity2>();
     						while(SqlQuery.PopulateEntity(context, item, dataReader))
     						{
     							list.Add(item);
-    	                        item = _container.GetInstance<IExampleEntity1>();
+    	                        item = _container.GetInstance<IExampleEntity2>();
     						} 
     					});
     
@@ -107,57 +107,54 @@ namespace Civic.Framework.WebApi.Test.Data.SqlServer
     		}
     	}
     
-    	public void Add(IEntityRequestContext context, IExampleEntity1  entity)
+    	public void Add(IEntityRequestContext context, IExampleEntity2  entity)
     	{ 
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Add, entity, null ,context)) {
     
     			Debug.Assert(database!=null);
     
-    			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity1Add"))
+    			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity2Add"))
     			{
-    				buildEntity1CommandParameters(context, entity, command, true );
+    				buildCommand(context, entity, command, true );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void Modify(IEntityRequestContext context, IExampleEntity1  before, IExampleEntity1  after)
+    	public void Modify(IEntityRequestContext context, IExampleEntity2 before, IExampleEntity2 after)
     	{ 
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Modify, before, after, context)) {
     			Debug.Assert(database!=null);
     
-    			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity1Modify"))
+    			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity2Modify"))
     			{
-    				buildEntity1CommandParameters(context, before, command, false );
+    				buildCommand(context, after, command, false );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	public void Remove(IEntityRequestContext context, IExampleEntity1  entity )
+    	public void Remove(IEntityRequestContext context, IExampleEntity2  entity )
     	{
     		using(var database = SqlQuery.GetConnection("Example", EntityOperationType.Remove, entity, null, context)) {
     
     			Debug.Assert(database!=null);
     
-    			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity1Remove"))
+    			using (var command = database.CreateStoredProcCommand("dbo","usp_Entity2Remove"))
     			{
-    				buildEntity1CommandParameters(context, entity, command, false );
+    				buildCommand(context, entity, command, false );
     				command.ExecuteNonQuery();
     			}
     		}
     	}
     
-    	static void buildEntity1CommandParameters(IEntityRequestContext context, IExampleEntity1 entity, IDBCommand command, bool addRecord )
+    	static void buildCommand(IEntityRequestContext context, IExampleEntity2 entity, IDBCommand command, bool addRecord )
     	{ 
             Debug.Assert(command!=null);
-       		if(addRecord) command.AddParameter("@name", ParameterDirection.InputOutput,  T4Config.CheckUpperCase("dbo","entity1","name",entity.Name));
-    		else command.AddInParameter("@name", T4Config.CheckUpperCase("dbo","entity1","name",entity.Name));
-    		command.AddInParameter("@environmentid", entity.EnvironmentID);
-    		command.AddInParameter("@dte", entity.Dte.ToDB());
-    		command.AddInParameter("@dte2", entity.Dte2.ToDB());
-    		command.AddInParameter("@dble1", entity.Dble1);
-    		command.AddInParameter("@dec1", entity.Dec1);
+    		command.AddInParameter("@someid", entity.SomeID);
+    		command.AddInParameter("@ff", T4Config.CheckUpperCase("dbo","entity2","ff",entity.ff));
+    		command.AddInParameter("@otherdate", entity.OtherDate.ToDB());
+    		command.AddInParameter("@ouid", entity.OUID);
     	}
     }
 }

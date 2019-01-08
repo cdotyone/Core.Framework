@@ -27,16 +27,22 @@ namespace Civic.Framework.WebApi.Test.Entities
     
     	[DataMember(Name="name")]
     	public string Name { get; set; }
+    
     	[DataMember(Name="environmentID")]
     	public int EnvironmentID { get; set; }
+    
     	[DataMember(Name="dte")]
     	public DateTime Dte { get; set; }
+    
     	[DataMember(Name="dte2")]
     	public DateTime? Dte2 { get; set; }
+    
     	[DataMember(Name="dble1")]
     	public double Dble1 { get; set; }
+    
     	[DataMember(Name="dec1")]
     	public double Dec1 { get; set; }
+    
         [DataMember(Name = "_key")]
     	public string _key 
         { 
@@ -66,7 +72,7 @@ namespace Civic.Framework.WebApi.Test.Entities
     			{"name", new EntityPropertyInfo { Name = "name", Type="string", IsKey=true }},
     			{"environmentID", new EntityPropertyInfo { Name = "environmentID", Type="int" }},
     			{"dte", new EntityPropertyInfo { Name = "dte", Type="DateTime" }},
-    			{"dte2", new EntityPropertyInfo { Name = "dte2", Type="DateTime>", IsNullable=true }},
+    			{"dte2", new EntityPropertyInfo { Name = "dte2", Type="DateTime", IsNullable=true }},
     			{"dble1", new EntityPropertyInfo { Name = "dble1", Type="double" }},
     			{"dec1", new EntityPropertyInfo { Name = "dec1", Type="double" }},
     

@@ -27,12 +27,13 @@ namespace Civic.Framework.WebApi.Test.Entities
     
     	[DataMember(Name="someUID")]
     	public string SomeUID { get; set; }
-    	[DataMember(Name="someID")]
-    	public long SomeID { get; set; }
+    
     	[DataMember(Name="modified")]
     	public DateTime Modified { get; set; }
+    
     	[DataMember(Name="otherDate")]
     	public DateTime? OtherDate { get; set; }
+    
         [DataMember(Name = "_key")]
     	public string _key 
         { 
@@ -62,7 +63,7 @@ namespace Civic.Framework.WebApi.Test.Entities
     			{"someUID", new EntityPropertyInfo { Name = "someUID", Type="string", IsKey=true }},
     			{"someID", new EntityPropertyInfo { Name = "someID", Type="long" }},
     			{"modified", new EntityPropertyInfo { Name = "modified", Type="DateTime" }},
-    			{"otherDate", new EntityPropertyInfo { Name = "otherDate", Type="DateTime>", IsNullable=true }},
+    			{"otherDate", new EntityPropertyInfo { Name = "otherDate", Type="DateTime", IsNullable=true }},
     
             }
         };

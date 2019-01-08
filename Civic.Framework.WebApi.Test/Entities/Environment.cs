@@ -27,8 +27,10 @@ namespace Civic.Framework.WebApi.Test.Entities
     
     	[DataMember(Name="iD")]
     	public int ID { get; set; }
+    
     	[DataMember(Name="name")]
     	public string Name { get; set; }
+    
         [DataMember(Name = "_key")]
     	public string _key 
         { 

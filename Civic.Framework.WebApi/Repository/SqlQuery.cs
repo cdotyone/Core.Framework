@@ -7,6 +7,7 @@ using System.Security.Claims;
 using Civic.Core.Data;
 using Civic.Core.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SimpleInjector;
 
 namespace Civic.Framework.WebApi
@@ -199,7 +200,7 @@ namespace Civic.Framework.WebApi
                     else type = dataReader.GetDataTypeName(i).ToLower();
                     if (stripLeadUnderscore) name = name.TrimStart(new[] { '_' });
 
-                    switch (dataReader.GetDataTypeName(i).ToLower())
+                    switch (type)
                     {
                         case "double":
                             entity.Properties.Add(name, dataReader.GetDouble(i));
@@ -235,6 +236,9 @@ namespace Civic.Framework.WebApi
 
                             switch (type)
                             {
+                                case "json":
+                                    entity.Properties.Add(name, JsonConvert.DeserializeObject<JObject>(value));
+                                    break;
                                 case "boolean":
                                     entity.Properties.Add(name, value == "1" || value.ToLower() == "true");
                                     break;

@@ -1,0 +1,42 @@
+﻿<#
+
+fileManager.StartNewFile("CivicConfig.json", folderName:"Entities");
+#>
+{
+	"<#=edmxFileName.ToLower()#>":{
+<#
+var hh = 0;
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{hh++;#><#if(hh>1){#>,
+<#}#>
+		"<#=entity.Name#>":{   
+			"module":"<#=Core.ToLowerCamel(edmxFileName)#>",
+			"entity":"<#=Core.ToLowerCamel(entity.Name)#>",
+			"name":"<#=Core.ToLowerCamel(edmxFileName)#>.<#=Core.ToLowerCamel(entity.Name)#>",
+			"properties": {
+<#
+    var simpleProperties = typeMapper.GetSimpleProperties(entity);
+    if (simpleProperties.Any())
+    {
+		var keyUID = simpleProperties.Where((sprop) => sprop.Name.ToLower().EndsWith("uid") && ef.IsKey(sprop)).FirstOrDefault();
+		var matchID = simpleProperties.Where((sprop) => keyUID!=null && sprop.Name.ToLower() == keyUID.Name.ToLower().Substring(0,keyUID.Name.Length-3)+"id").FirstOrDefault();
+		
+		var ii = 0;
+        foreach (var edmProperty in simpleProperties)
+        {
+
+			var name = Core.ToLowerCamel(edmProperty.Name).Replace("iD","id").Replace("oID","oid").Replace("oUID","ouid").Replace("uID","uid");
+
+ii++;#><#if(ii>1){#>,
+<#}#>					"<#=edmProperty.Name#>":{"name":"<#=name#>","type":"<#=typeMapper.GetTypeName(edmProperty.TypeUsage).Replace("System.DateTime","DateTime").Replace("Nullable<DateTime>","DateTime").Replace("Nullable<int>","int").Replace("Nullable<long>","long")#>"<#if(ef.IsNullable(edmProperty.TypeUsage)) {#>, "isNullable":"true"<#}#><#if(ef.IsKey(edmProperty)) {#>, "isKey":"true"<#}#>}<#
+		}
+	}
+#>
+
+			}
+		}<#
+	}
+#>
+	
+	}
+}

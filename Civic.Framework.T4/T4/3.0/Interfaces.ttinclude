@@ -26,6 +26,9 @@ public interface I<#=entity.Name#> : IEntityIdentity
 
         foreach (var edmProperty in simpleProperties)
         {
+			if(matchID!=null && matchID.Name==edmProperty.Name) {
+				continue;
+			}
 			if(Core.MapUID.ContainsKey(edmProperty.Name)) {
 				if(Core.MapUID[edmProperty.Name].Schema==edmxFileName.ToLower() && Core.MapUID[edmProperty.Name].Table==entity.Name) continue;
 			}
@@ -39,13 +42,6 @@ public interface I<#=entity.Name#> : IEntityIdentity
 	EndNamespace(namespaceName);
 }
 
-#>
-
-
-
-
-
-<#
 // Emit Entity Types
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {

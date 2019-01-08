@@ -6,7 +6,7 @@
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
 
-fileManager.StartNewFile(edmxFileName + entity.Name+".cs", folderName:"Data");
+fileManager.StartNewFile(entity.Name+".cs", folderName:"Data");
 
 WriteHeader("System", "System.Collections.Generic", "System.Data", "System.Diagnostics", "System.Security.Claims", "SimpleInjector" ,"Civic.Core.Data","Civic.Framework.WebApi","Civic.Framework.WebApi.Configuration", namespaceName +".Interfaces");
 
@@ -62,13 +62,7 @@ public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFile
 
 			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Get"))
 			{
-				<#
-				foreach(var key in keys.Keys)
-				{
-					#>command.AddInParameter("<#=Core.GetParameterName(key)#>", entity.<#=key#>);
-				<#
-				}
-				#>
+				buildCommand(context, entity, command, false );
 
     			command.ExecuteReader(dataReader =>
 				{
@@ -132,20 +126,20 @@ public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFile
 
 			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Add"))
 			{
-				build<#=code.Escape(entity)#>CommandParameters(context, entity, command, true );
+				buildCommand(context, entity, command, true );
 				command.ExecuteNonQuery();
 			}
 		}
 	}
 
-	public void Modify(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#>  before, I<#=edmxFileName#><#=entity.Name#>  after)
+	public void Modify(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#> before, I<#=edmxFileName#><#=entity.Name#> after)
 	{ 
 		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Modify, before, after, context)) {
 			Debug.Assert(database!=null);
 
 			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Modify"))
 			{
-				build<#=code.Escape(entity)#>CommandParameters(context, before, command, false );
+				buildCommand(context, after, command, false );
 				command.ExecuteNonQuery();
 			}
 		}
@@ -159,13 +153,13 @@ public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFile
 
 			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Remove"))
 			{
-				build<#=code.Escape(entity)#>CommandParameters(context, entity, command, false );
+				buildCommand(context, entity, command, false );
 				command.ExecuteNonQuery();
 			}
 		}
 	}
 
-	static void build<#=code.Escape(entity)#>CommandParameters(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#> entity, IDBCommand command, bool addRecord )
+	static void buildCommand(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#> entity, IDBCommand command, bool addRecord )
 	{ 
         Debug.Assert(command!=null);
 <#
@@ -178,9 +172,12 @@ public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFile
 			
 			var pname = "entity."+code.Escape(edmProperty.Name);
 			var sname = "@"+code.Escape(edmProperty.Name.ToLower());
+			if((matchID!=null && matchID.Name==edmProperty.Name) || edmProperty.Name=="ID") {
+				continue;
+			}
 			if(Core.MapUID.ContainsKey(edmProperty.Name)) {
 				pname = "entity."+Core.MapUID[edmProperty.Name].MapTo;
-				sname = "@"+Core.MapUID[edmProperty.Name].MapToName;
+				sname = "@"+Core.MapUID[edmProperty.Name].MapTo.ToLower();
 			}
 
 			if(ptype=="string" && edmProperty.Nullable) pname = "T4Config.CheckUpperCase(\""+apiSchemaName.ToLower()+"\",\""+code.Escape(entity).ToLower()+"\",\""+code.Escape(edmProperty.Name).ToLower()+"\"," + pname + ", false)";
@@ -190,8 +187,7 @@ public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFile
 			if(ptype=="string" && edmProperty.Name=="OID" && code.Escape(entity).ToLower()!="orgunit") continue;
 
 			if((ef.IsKey(edmProperty) && keyUID==null) || (keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name)) { #>
-   		if(addRecord) command.AddParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", ParameterDirection.InputOutput,  <#=pname#>);
-		else command.AddInParameter("@<#=code.Escape(edmProperty.Name.ToLower())#>", <#=pname#>);
+		command.AddInParameter("<#=sname#>", <#=pname#>);
 <#
 				continue;
 			} else {
@@ -214,7 +210,7 @@ EndNamespace(namespaceName);
 
 }
 
-fileManager.StartNewFile(edmxFileName + "RepositoryPackage.cs", folderName:"Data");
+fileManager.StartNewFile("_RepositoryPackage.cs", folderName:"Data");
 
 WriteHeader("SimpleInjector.Packaging","SimpleInjector","Civic.Framework.WebApi");
 #>
