@@ -28,8 +28,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\Framework.Core\bin\nuget-45\Framework.Core.Dll" target="lib\net45" />
-    <file src="..\Framework.Core\bin\nuget-45\Framework.Core.pdb" target="lib\net45" />
     <file src="..\Framework.Core\bin\nuget-46\Framework.Core.Dll" target="lib\net46" />
     <file src="..\Framework.Core\bin\nuget-46\Framework.Core.pdb" target="lib\net46" />
     <file src="..\Framework.Core\bin\nuget-47\Framework.Core.Dll" target="lib\net47" />

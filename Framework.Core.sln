@@ -23,7 +23,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{E091A1FA
 		Nuget\Framework.Core.nuspec = Nuget\Framework.Core.nuspec
 		Nuget\Framework.Core.T4.Example.nuspec = Nuget\Framework.Core.T4.Example.nuspec
 		Nuget\Framework.Core.T4.Model.nuspec = Nuget\Framework.Core.T4.Model.nuspec
-		Nuget\Framework.Core.WebHost.nuspec = Nuget\Framework.Core.WebHost.nuspec
 	EndProjectSection
 EndProject
 Global
