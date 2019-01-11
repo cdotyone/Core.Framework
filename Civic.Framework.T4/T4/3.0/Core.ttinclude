@@ -633,7 +633,7 @@ public static string GetMappedProperty(CodeStringGenerator code, EdmProperty edm
 
 public static string GetParameterName(string name) 
 {
-	return "@" + (name.ToLower()=="id" ? "id" : name.Substring(0,1).ToLower() + name.Substring(1));
+	return "@" + (name.ToLower()=="id" ? "id" : name.Substring(0,1).ToLower() + name.Substring(1)).Replace("iD","id").Replace("oID","oid").Replace("oUID","ouid").Replace("uID","uid");
 }
 
 

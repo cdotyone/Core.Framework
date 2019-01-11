@@ -39,7 +39,7 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]<#}#>
 		var parameterType = Core.GetParameterType(code,edmProperty);
 		if(Core.MapUID.ContainsKey(edmProperty.Name) && entity.Name!=Core.MapUID[edmProperty.Name].Table) {
 			parameterType = "[varchar](32)";
-			parameterName = "@"+Core.ToLowerCamel(Core.MapUID[edmProperty.Name].MapTo);
+			parameterName = Core.GetParameterName(Core.MapUID[edmProperty.Name].MapTo);
 		}		
 
 		if((ef.IsKey(edmProperty) && keyUID==null) || (keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name)) {
@@ -155,7 +155,7 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]
 		var parameterType = Core.GetParameterType(code,edmProperty);
 		if(Core.MapUID.ContainsKey(edmProperty.Name) && entity.Name!=Core.MapUID[edmProperty.Name].Table) {
 			parameterType = "[varchar](32)";
-			parameterName = "@"+Core.ToLowerCamel(Core.MapUID[edmProperty.Name].MapTo);
+			parameterName = Core.GetParameterName(Core.MapUID[edmProperty.Name].MapTo);
 		}		
 
 		if(ef.IsKey(edmProperty)) {
@@ -238,8 +238,15 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Remove]
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {
 		if(!ef.IsKey(edmProperty)) continue;
+
+		parameterName = Core.GetParameterName(edmProperty.Name);
+		var parameterType = Core.GetParameterType(code,edmProperty);
+		if(Core.MapUID.ContainsKey(edmProperty.Name) && entity.Name!=Core.MapUID[edmProperty.Name].Table) {
+			parameterType = "[varchar](32)";
+			parameterName = Core.GetParameterName(Core.MapUID[edmProperty.Name].MapTo);
+		}		
 	#>
-	<#=i>0 ? ", " + Core.GetParameterName(edmProperty.Name) : "  " + Core.GetParameterName(edmProperty.Name)#> <#=Core.GetParameterType(code,edmProperty) #>
+	<#=i>0 ? ", " + parameterName : "  " + parameterName#> <#=parameterType #>
 <#	i++;
 	}
 #>
