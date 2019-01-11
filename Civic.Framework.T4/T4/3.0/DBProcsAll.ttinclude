@@ -30,23 +30,25 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]<#}#>
 
 	var keyUID = entity.Properties.Where((sprop) => sprop.Name.ToLower().EndsWith("uid") && ef.IsKey(sprop)).FirstOrDefault();
 	var matchID = entity.Properties.Where((sprop) => keyUID!=null && sprop.Name.ToLower() == keyUID.Name.ToLower().Substring(0,keyUID.Name.Length-3)+"id").FirstOrDefault();
-
+	
 	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
     {
 		parameterName = Core.GetParameterName(edmProperty.Name);
 		if(parameterName.ToLower()=="@modified" || parameterName.ToLower()=="@created") continue;
-		if(hasCreatedBy && (parameterName.ToLower()=="@modifiedby" || parameterName.ToLower()=="@createdby") ) continue;
-		if(!hasCreatedBy && parameterName.ToLower()=="@modifiedby") parameterName = "@createdBy";
-		if(parameterName.ToLower()=="@createdby") hasCreatedBy = true;
-		
+
+		var parameterType = Core.GetParameterType(code,edmProperty);
+		if(Core.MapUID.ContainsKey(edmProperty.Name) && entity.Name!=Core.MapUID[edmProperty.Name].Table) {
+			parameterType = "[varchar](32)";
+			parameterName = "@"+Core.ToLowerCamel(Core.MapUID[edmProperty.Name].MapTo);
+		}		
 
 		if((ef.IsKey(edmProperty) && keyUID==null) || (keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name)) {
 #>
-	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #> out
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=parameterType #> out
 <#
 		} else {
 #>
-	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=parameterType #>
 <#
 		} 		
 		i++;
@@ -61,6 +63,23 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]<#}#>
 AS
 BEGIN
 	SET NOCOUNT ON
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		parameterName = Core.GetParameterName(edmProperty.Name);
+		if(parameterName.ToLower()=="@modified" || parameterName.ToLower()=="@created") continue;
+		var parameterType = Core.GetParameterType(code,edmProperty);
+		if(Core.MapUID.ContainsKey(edmProperty.Name) && entity.Name!=Core.MapUID[edmProperty.Name].Table) {
+			var mapped = Core.MapUID[edmProperty.Name];#>
+	DECLARE <#=parameterName#> <#=parameterType#>
+	SELECT <#=parameterName#> = [<#=edmProperty.Name#>]
+	FROM [<#=mapped.Schema#>].[<#=mapped.Table#>]
+	WHERE [<#=mapped.MapTo#>] = @<#=Core.ToLowerCamel(mapped.MapTo)#>
+<#
+		} 		
+	}
+#>
 
 	INSERT INTO [<#=apiSchemaName#>].[<#=entity.Name#>](<# } #>
 
@@ -95,6 +114,7 @@ BEGIN
 		if(parameterName.ToLower()=="@modifiedby") parameterName = "@createdby";
 		if(parameterName.ToLower()=="@modified") parameterName = "["+apiGeneralSchemaName+"].udf_getSysDate()";
 		if(parameterName.ToLower()=="@created") parameterName = "["+apiGeneralSchemaName+"].udf_getSysDate()";
+
 #>
 		<#=(i>0 ? "," + parameterName : " " + parameterName)#>
 <#
@@ -131,17 +151,20 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]
     {
 		parameterName = Core.GetParameterName(edmProperty.Name);
 		if(parameterName.ToLower()=="@modified" || parameterName.ToLower()=="@created") continue;
-		if(hasCreatedBy && (parameterName.ToLower()=="@createdby" || parameterName.ToLower()=="@createdby") ) continue;
-		if(!hasCreatedBy && parameterName.ToLower()=="@createdby") parameterName = "@modifiedBy";
-		if(parameterName.ToLower()=="@modifiedby") hasModifiedBy = true;
+
+		var parameterType = Core.GetParameterType(code,edmProperty);
+		if(Core.MapUID.ContainsKey(edmProperty.Name) && entity.Name!=Core.MapUID[edmProperty.Name].Table) {
+			parameterType = "[varchar](32)";
+			parameterName = "@"+Core.ToLowerCamel(Core.MapUID[edmProperty.Name].MapTo);
+		}		
 
 		if(ef.IsKey(edmProperty)) {
 #>
-	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=parameterType #>
 <#
 		} else {
 #>
-	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=parameterType #>
 <#
 		}
 		i++;
@@ -150,6 +173,23 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]
 AS
 BEGIN
 	SET NOCOUNT ON
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		parameterName = Core.GetParameterName(edmProperty.Name);
+		if(parameterName.ToLower()=="@modified" || parameterName.ToLower()=="@created") continue;
+		var parameterType = Core.GetParameterType(code,edmProperty);
+		if(Core.MapUID.ContainsKey(edmProperty.Name) && entity.Name!=Core.MapUID[edmProperty.Name].Table) {
+			var mapped = Core.MapUID[edmProperty.Name];#>
+	DECLARE <#=parameterName#> <#=parameterType#>
+	SELECT <#=parameterName#> = [<#=edmProperty.Name#>]
+	FROM [<#=mapped.Schema#>].[<#=mapped.Table#>]
+	WHERE [<#=mapped.MapTo#>] = @<#=Core.ToLowerCamel(mapped.MapTo)#>
+<#
+		} 		
+	}
+#>
 
 	UPDATE <#=tableAlias#> SET 
 		-- t4-columns begin

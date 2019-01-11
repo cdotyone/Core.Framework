@@ -86,9 +86,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 {
 	tableAlias = "[" + Core.GetTableAlias(entity.Name) + "]";
 	
-	if(apiBundleSQLFiles) {
-		fileManager.StartNewFile("all_"+entity.Name+".sql", folderName:"SQL");
-	}
+	fileManager.StartNewFile("get_"+entity.Name+".sql", folderName:"SQL");
 			
 	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GET") || entity.Documentation.LongDescription.Contains("ADD"))
 	   && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Get.sql", apiBundleSQLFiles, out userContent))  {	
@@ -195,6 +193,10 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+<#
+fileManager.EndBlock();
+fileManager.StartNewFile("all_"+entity.Name+".sql", folderName:"SQL");
+#>
 CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]<#}#>
 
 -- t4-params begin
@@ -210,18 +212,20 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]<#}#>
     {
 		parameterName = Core.GetParameterName(edmProperty.Name);
 		if(parameterName.ToLower()=="@modified" || parameterName.ToLower()=="@created") continue;
-		if(hasCreatedBy && (parameterName.ToLower()=="@modifiedby" || parameterName.ToLower()=="@createdby") ) continue;
-		if(!hasCreatedBy && parameterName.ToLower()=="@modifiedby") parameterName = "@createdBy";
-		if(parameterName.ToLower()=="@createdby") hasCreatedBy = true;
 		
+		var parameterType = Core.GetParameterType(code,edmProperty);
+		if(Core.MapUID.ContainsKey(edmProperty.Name) && entity.Name!=Core.MapUID[edmProperty.Name].Table) {
+			parameterType = "[varchar](32)";
+			parameterName = "@"+Core.ToLowerCamel(Core.MapUID[edmProperty.Name].MapTo);
+		}	
 
 		if((ef.IsKey(edmProperty) && keyUID==null) || (keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name)) {
 #>
-	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #> out
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=parameterType #> out
 <#
 		} else {
 #>
-	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=parameterType #>
 <#
 		} 		
 		i++;
@@ -236,6 +240,23 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]<#}#>
 AS
 BEGIN
 	SET NOCOUNT ON
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		parameterName = Core.GetParameterName(edmProperty.Name);
+		if(parameterName.ToLower()=="@modified" || parameterName.ToLower()=="@created") continue;
+		var parameterType = Core.GetParameterType(code,edmProperty);
+		if(Core.MapUID.ContainsKey(edmProperty.Name) && entity.Name!=Core.MapUID[edmProperty.Name].Table) {
+			var mapped = Core.MapUID[edmProperty.Name];#>
+	DECLARE <#=parameterName#> <#=parameterType#>
+	SELECT <#=parameterName#> = [<#=edmProperty.Name#>]
+	FROM [<#=mapped.Schema#>].[<#=mapped.Table#>]
+	WHERE [<#=mapped.MapTo#>] = @<#=Core.ToLowerCamel(mapped.MapTo)#>
+<#
+		} 		
+	}
+#>
 
 	INSERT INTO [<#=apiSchemaName#>].[<#=entity.Name#>](<# } #>
 
@@ -310,13 +331,19 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]
 		if(!hasCreatedBy && parameterName.ToLower()=="@createdby") parameterName = "@modifiedBy";
 		if(parameterName.ToLower()=="@modifiedby") hasModifiedBy = true;
 
+		var parameterType = Core.GetParameterType(code,edmProperty);
+		if(Core.MapUID.ContainsKey(edmProperty.Name) && entity.Name!=Core.MapUID[edmProperty.Name].Table) {
+			parameterType = "[varchar](32)";
+			parameterName = "@"+Core.ToLowerCamel(Core.MapUID[edmProperty.Name].MapTo);
+		}	
+
 		if(ef.IsKey(edmProperty)) {
 #>
-	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=parameterType #>
 <#
 		} else {
 #>
-	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=parameterType #>
 <#
 		}
 		i++;
@@ -325,6 +352,23 @@ CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]
 AS
 BEGIN
 	SET NOCOUNT ON
+
+<#
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+		{
+			parameterName = Core.GetParameterName(edmProperty.Name);
+			if(parameterName.ToLower()=="@modified" || parameterName.ToLower()=="@created") continue;
+			var parameterType = Core.GetParameterType(code,edmProperty);
+			if(Core.MapUID.ContainsKey(edmProperty.Name) && entity.Name!=Core.MapUID[edmProperty.Name].Table) {
+				var mapped = Core.MapUID[edmProperty.Name];#>
+		DECLARE <#=parameterName#> <#=parameterType#>
+		SELECT <#=parameterName#> = [<#=edmProperty.Name#>]
+		FROM [<#=mapped.Schema#>].[<#=mapped.Table#>]
+		WHERE [<#=mapped.MapTo#>] = @<#=Core.ToLowerCamel(mapped.MapTo)#>
+	<#
+			} 		
+		}
+#>
 
 	UPDATE <#=tableAlias#> SET 
 		-- t4-columns begin
@@ -457,6 +501,50 @@ GO
 			}
 		}
 	}
+
+tableAlias = "[" + Core.GetTableAlias(entity.Name) + "]";
+string entityName = entity.Name;
+entityName=entityName.ToUpper();
+
+#>
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW [<#=apiSchemaName#>].[VW_<#=entityName#>]
+AS
+
+	SELECT	
+		-- t4-columns begin
+<#  i=0;
+
+	var leftJoin = new List<string>();
+	var leftProp = new List<string>();
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {		
+		if(Core.MapUID.ContainsKey(edmProperty.ToString())) {
+			var mapped = Core.MapUID[edmProperty.ToString()];
+			var tableAlias2 = "[" + Core.GetTableAlias(mapped.Table) + "]";
+			leftProp.Add(tableAlias2+".["+mapped.MapTo+"]");
+			leftJoin.Add(mapped.Join + " ["+mapped.Schema+"].["+mapped.Table+"] as "+tableAlias2+" ON "+tableAlias+".["+edmProperty.ToString()+"] = "+tableAlias2+".["+edmProperty.ToString()+"]" );
+		}
+
+#>
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
+<#
+		i++;
+	}
+	foreach(var vprop in leftProp) {#>
+		,<#=vprop#>
+<#}#>	
+		-- t4-columns end
+	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
+<#	foreach(var join in leftJoin) {#>
+	<#=join#>
+<#}#>
+GO
+<#
+
 	fileManager.EndBlock();
 }
 
