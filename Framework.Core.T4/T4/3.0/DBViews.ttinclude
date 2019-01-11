@@ -1,0 +1,110 @@
+﻿<#
+
+// Emit Entity Types
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+	tableAlias = "[" + Core.GetTableAlias(entity.Name) + "]";
+	string entityName = entity.Name;
+	entityName=entityName.ToUpper();
+
+	if(apiBundleSQLFiles) {
+		fileManager.StartNewFile("view_"+entity.Name+".sql", folderName:"SQL");
+	}
+			
+#>
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[VW_<#=entityName#>]') AND OBJECTPROPERTY(object_id, N'IsView') = 1)
+DROP VIEW [<#=apiSchemaName#>].[VW_<#=entityName#>]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW [<#=apiSchemaName#>].[VW_<#=entityName#>]
+AS
+
+	SELECT	
+		-- t4-columns begin
+<#  i=0;
+
+	var leftJoin = new List<string>();
+	var leftProp = new List<string>();
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {		
+
+		if(Core.MapUID.ContainsKey(edmProperty.ToString())) {
+			var mapped = Core.MapUID[edmProperty.ToString()];
+			if(entity.Name==mapped.Table) continue;
+
+			var tableAlias2 = "[" + Core.GetTableAlias(mapped.Table) + "]";
+			leftProp.Add(tableAlias2+".["+mapped.MapTo+"]");
+			leftJoin.Add(mapped.Join + " ["+mapped.Schema+"].["+mapped.Table+"] as "+tableAlias2+" ON "+tableAlias+".["+edmProperty.ToString()+"] = "+tableAlias2+".["+edmProperty.ToString()+"]" );
+		}
+
+#>
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
+<#
+		i++;
+	}
+	foreach(var vprop in leftProp) {#>
+		,<#=vprop#>
+<#}#>	
+		-- t4-columns end
+	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
+<#	foreach(var join in leftJoin) {#>
+	<#=join#>
+<#}#>
+GO
+<#
+}
+#>
+<#
+fileManager.StartNewFile(edmxFileName+".Views.sql", folderName:"SQL");
+
+// Emit Entity Types
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+	tableAlias = "[" + Core.GetTableAlias(entity.Name) + "]";
+	string entityName = entity.Name;
+	entityName=entityName.ToUpper();			
+#>
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW [<#=apiSchemaName#>].[VW_<#=entityName#>]
+AS
+
+	SELECT	
+		-- t4-columns begin
+<#  i=0;
+
+	var leftJoin = new List<string>();
+	var leftProp = new List<string>();
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {		
+
+		if(Core.MapUID.ContainsKey(edmProperty.ToString())) {
+			var mapped = Core.MapUID[edmProperty.ToString()];
+			if(entity.Name==mapped.Table) continue;
+			var tableAlias2 = "[" + Core.GetTableAlias(mapped.Table) + "]";
+			leftProp.Add(tableAlias2+".["+mapped.MapTo+"]");
+			leftJoin.Add(mapped.Join + " ["+mapped.Schema+"].["+mapped.Table+"] as "+tableAlias2+" ON "+tableAlias+".["+edmProperty.ToString()+"] = "+tableAlias2+".["+edmProperty.ToString()+"]" );
+		}
+
+#>
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
+<#
+		i++;
+	}
+	foreach(var vprop in leftProp) {#>
+		,<#=vprop#>
+<#}#>	
+		-- t4-columns end
+	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
+<#	foreach(var join in leftJoin) {#>
+	<#=join#>
+<#}#>
+GO
+<#
+}
+#>

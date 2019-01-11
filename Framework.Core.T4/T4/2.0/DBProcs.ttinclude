@@ -1,0 +1,542 @@
+﻿<#
+string userContent;
+string[] codeSections;
+
+fileManager.StartNewFile(edmxFileName+".Defaults.sql", folderName:"SQL");
+
+#>
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_GetDate]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [<#=apiGeneralSchemaName#>].[udf_GetDate]
+GO
+
+CREATE DEFAULT [<#=apiGeneralSchemaName#>].[udf_GetDate]
+AS GETUTCDATE()
+GO
+
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_Unknown]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [<#=apiGeneralSchemaName#>].[udf_Unknown]
+GO
+
+CREATE DEFAULT [<#=apiGeneralSchemaName#>].[udf_Unknown]
+AS 'UNK'
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_Yes]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [<#=apiGeneralSchemaName#>].[udf_Yes]
+GO
+
+CREATE DEFAULT [<#=apiGeneralSchemaName#>].[udf_Yes]
+AS 1
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_No]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [<#=apiGeneralSchemaName#>].[udf_No]
+GO
+
+CREATE DEFAULT [<#=apiGeneralSchemaName#>].[udf_No]
+AS 0
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiGeneralSchemaName#>].[udf_Zero]') AND OBJECTPROPERTY(object_id, N'IsDefault') = 1)
+DROP DEFAULT [<#=apiGeneralSchemaName#>].[udf_Zero]
+GO
+
+CREATE DEFAULT [<#=apiGeneralSchemaName#>].[udf_Zero]
+AS 0
+GO
+-- t4-defaults begin
+<#
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+ 		if(code.Escape(edmProperty.TypeUsage.EdmType).ToLower()=="boolean") {
+
+		var boolyesno = "No";
+		try {
+			if(edmProperty.TypeUsage.Facets["DefaultValue"].Value.ToString().ToLower()=="true" || edmProperty.TypeUsage.Facets["DefaultValue"].Value.ToString().ToLower()=="1") {
+				boolyesno = "Yes";
+		}
+		} catch {
+		}
+#>
+EXECUTE sp_bindefault N'<#=apiGeneralSchemaName#>.udf_<#=boolyesno#>', N'[<#=apiGeneralSchemaName#>].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
+<#
+			continue;
+		}
+
+		if(edmProperty.Name.ToLower()!="created" 
+		&& edmProperty.Name.ToLower()!="modified"
+		&& edmProperty.Name.ToLower()!="createdby"
+		&& edmProperty.Name.ToLower()!="modifiedby"
+		) continue;
+
+		if(edmProperty.Name.ToLower()=="createdby" || edmProperty.Name.ToLower()=="modifiedby") {
+#>
+EXECUTE sp_bindefault N'<#=apiGeneralSchemaName#>.udf_Unknown', N'[<#=apiGeneralSchemaName#>].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
+<#
+		} else {
+
+		var notNullable = true;
+		try {
+			if(edmProperty.TypeUsage.Facets["Nullable"].Value.ToString().ToLower()=="true") {
+				notNullable = false;
+		}
+		} catch {
+		}
+
+			if(notNullable){
+#>
+EXECUTE sp_bindefault N'<#=apiGeneralSchemaName#>.udf_GetDate', N'[<#=apiSchemaName#>].[<#=entity.Name#>].[<#=edmProperty.Name#>]';
+<#
+			}
+		}
+	}
+}
+#>
+-- t4-defaults end
+GO
+<# fileManager.EndBlock(); #>
+<#
+
+// Emit Entity Types
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+	tableAlias = "[" + Core.GetTableAlias(entity.Name) + "]";
+	
+	if(apiBundleSQLFiles) {
+		fileManager.StartNewFile("all_"+entity.Name+".sql", folderName:"SQL");
+	}
+			
+	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GET") || entity.Documentation.LongDescription.Contains("ADD"))
+	   && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Get.sql", apiBundleSQLFiles, out userContent))  {	
+#>
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>Get]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Get]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Get]
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		if(!ef.IsKey(edmProperty)) continue;
+	#>
+	<#=i>0 ? ", " + Core.GetParameterName(edmProperty.Name) : "  " + Core.GetParameterName(edmProperty.Name)#> <#=Core.GetParameterType(code,edmProperty) #>
+<#		i++;
+	}
+#>
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	SELECT	
+		-- t4-columns begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {		#>
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
+<#
+		i++;
+	}
+#>		-- t4-columns end
+	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
+	WHERE	
+		-- t4-where begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		if(!ef.IsKey(edmProperty)) continue;
+	#>
+	<#=(i>0 ? "AND " + tableAlias+".["+edmProperty.ToString() : "    " + tableAlias+".["+edmProperty.ToString())#>] = <#=Core.GetParameterName(edmProperty.Name)#>
+<#
+		i++;
+	}
+#>
+		-- t4-where end
+END
+GO
+<#
+	}
+	
+	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("PAGED"))
+	&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_" + entity.Name + "GetFiltered.sql", apiBundleSQLFiles, out userContent))  {	
+#>
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>GetFiltered]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetFiltered]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetFiltered]
+     @skip int
+    ,@count int out
+	,@orderBy nvarchar(512)
+	,@filterBy nvarchar(512)
+	,@retcount bit = 0
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DECLARE @select nvarchar(max)
+    SET @select = 'SELECT	
+		-- t4-columns begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {		#>
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
+<#
+		i++;
+	}
+#>		-- t4-columns end
+    FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>'
+
+	EXEC [<#=apiGeneralSchemaName#>].[usp_ProcessFilter]
+		     @skip = @skip
+			,@select = @select
+			,@count = @count out
+			,@orderBy = @orderBy
+			,@filterBy = @filterBy
+			,@retcount = @retcount 
+END
+GO
+<#
+	}
+
+	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("ADD"))
+		&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Add.sql", apiBundleSQLFiles, out userContent))  {	
+
+		codeSections=Core.GetCodeSections(@"(-- t4-params begin|-- t4-params end|-- t4-columns begin|-- t4-columns end|-- t4-values begin|-- t4-values end)", userContent);
+
+		userContent = Core.GetUserContent(codeSections,null,"-- t4-params begin");
+		if(!string.IsNullOrEmpty(userContent)) {#><#=userContent#><#}
+		else {
+#>
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Add]<#}#>
+
+-- t4-params begin
+<#
+
+  i=0;
+	hasCreatedBy = false;
+
+	var keyUID = entity.Properties.Where((sprop) => sprop.Name.ToLower().EndsWith("uid") && ef.IsKey(sprop)).FirstOrDefault();
+	var matchID = entity.Properties.Where((sprop) => keyUID!=null && sprop.Name.ToLower() == keyUID.Name.ToLower().Substring(0,keyUID.Name.Length-3)+"id").FirstOrDefault();
+
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		parameterName = Core.GetParameterName(edmProperty.Name);
+		if(parameterName.ToLower()=="@modified" || parameterName.ToLower()=="@created") continue;
+		if(hasCreatedBy && (parameterName.ToLower()=="@modifiedby" || parameterName.ToLower()=="@createdby") ) continue;
+		if(!hasCreatedBy && parameterName.ToLower()=="@modifiedby") parameterName = "@createdBy";
+		if(parameterName.ToLower()=="@createdby") hasCreatedBy = true;
+		
+
+		if((ef.IsKey(edmProperty) && keyUID==null) || (keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name)) {
+#>
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #> out
+<#
+		} else {
+#>
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
+<#
+		} 		
+		i++;
+	}
+#>
+-- t4-params end
+<#
+	userContent = Core.GetUserContent(codeSections, "-- t4-params end", "-- t4-columns begin");
+	if(!string.IsNullOrEmpty(userContent)) {#><#=userContent#><#}
+	else {
+#>
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	INSERT INTO [<#=apiSchemaName#>].[<#=entity.Name#>](<# } #>
+
+-- t4-columns begin
+<#	
+	i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		parameterName = Core.GetParameterName(edmProperty.Name);
+		if(Core.IsIdentity(edmProperty)) continue;
+			#>
+		<#=(i>0 ? ",[" + edmProperty.ToString() : " [" + edmProperty.ToString())#>]
+<#
+		i++;
+	}
+#>
+-- t4-columns end
+<#
+	userContent = Core.GetUserContent(codeSections, "-- t4-columns end", "-- t4-values begin");
+	if(!string.IsNullOrEmpty(userContent)) {#><#=userContent#><#}
+	else {
+#>	) VALUES (
+<# } #>
+
+-- t4-values begin
+<#  i=0;
+	string idName = null;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		parameterName = Core.GetParameterName(edmProperty.Name);
+		if(Core.IsIdentity(edmProperty)) { idName=parameterName;  continue; }
+		if(parameterName.ToLower()=="@modifiedby") parameterName = "@createdby";
+		if(parameterName.ToLower()=="@modified") parameterName = "["+apiGeneralSchemaName+"].udf_getSysDate()";
+		if(parameterName.ToLower()=="@created") parameterName = "["+apiGeneralSchemaName+"].udf_getSysDate()";
+#>
+		<#=(i>0 ? "," + parameterName : " " + parameterName)#>
+<#
+		i++;
+	}
+#>
+-- t4-values end
+<#
+	userContent = Core.GetUserContent(codeSections, "-- t4-values end", null);
+	if(!string.IsNullOrEmpty(userContent)) {#><#=userContent#><#} else {#>
+	)
+
+<#if(idName!=null) { #>SET <#=idName#> = SCOPE_IDENTITY()<#}#>
+
+END
+GO
+<#
+		}
+	}
+
+
+	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("MODIFY"))
+	  && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Modify.sql", apiBundleSQLFiles, out userContent))  {	
+#>
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Modify]
+<#  i=0;
+	hasModifiedBy = false;
+
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		parameterName = Core.GetParameterName(edmProperty.Name);
+		if(parameterName.ToLower()=="@modified" || parameterName.ToLower()=="@created") continue;
+		if(hasCreatedBy && (parameterName.ToLower()=="@createdby" || parameterName.ToLower()=="@createdby") ) continue;
+		if(!hasCreatedBy && parameterName.ToLower()=="@createdby") parameterName = "@modifiedBy";
+		if(parameterName.ToLower()=="@modifiedby") hasModifiedBy = true;
+
+		if(ef.IsKey(edmProperty)) {
+#>
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
+<#
+		} else {
+#>
+	<#=i>0 ? ", " + parameterName : "  " + parameterName #> <#=Core.GetParameterType(code,edmProperty) #>
+<#
+		}
+		i++;
+	}
+#>
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	UPDATE <#=tableAlias#> SET 
+		-- t4-columns begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		parameterName = Core.GetParameterName(edmProperty.Name);
+		if(Core.IsIdentity(edmProperty)) continue;
+		if(parameterName.ToLower()=="@createdby" || parameterName.ToLower()=="@created") continue;
+		if(parameterName.ToLower()=="@modified") parameterName = "["+apiGeneralSchemaName+"].udf_getSysDate()";
+			#>
+		<#=(i>0 ? ",[" + edmProperty.ToString() : " [" + edmProperty.ToString())#>] = <#=parameterName#>
+<#
+		i++;
+	}
+#>		-- t4-columns end
+	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
+	WHERE	
+		-- t4-where begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		if(!ef.IsKey(edmProperty)) continue;
+	#>
+	<#=(i>0 ? "AND " + tableAlias+".["+edmProperty.ToString() : "    " + tableAlias+".["+edmProperty.ToString())#>] = <#=Core.GetParameterName(edmProperty.Name)#>
+<#
+		i++;
+	}
+#>
+		-- t4-where end
+END
+GO
+<#
+	}
+
+
+	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("REMOVE"))
+	  && Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+entity.Name + "Remove.sql", apiBundleSQLFiles, out userContent))  {	
+#>
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>Remove]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Remove]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>Remove]
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		if(!ef.IsKey(edmProperty)) continue;
+	#>
+	<#=i>0 ? ", " + Core.GetParameterName(edmProperty.Name) : "  " + Core.GetParameterName(edmProperty.Name)#> <#=Core.GetParameterType(code,edmProperty) #>
+<#	i++;
+	}
+#>
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DELETE FROM [<#=apiSchemaName#>].[<#=entity.Name#>]
+	WHERE	
+		-- t4-where begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+		if(!ef.IsKey(edmProperty)) continue;
+	#>
+	<#=(i>0 ? "AND [" + edmProperty.ToString() : "    [" + edmProperty.ToString())#>] = <#=Core.GetParameterName(edmProperty.Name)#>
+<#
+		i++;
+	}
+#>
+		-- t4-where end
+END
+GO
+<#
+	}
+
+    foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
+    {
+		continue;
+        if (navProperty.FromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many) {
+
+		var toEntity = navProperty.ToEndMember.GetEntityType();
+	if((entity.Documentation==null || string.IsNullOrEmpty(entity.Documentation.LongDescription) || entity.Documentation.LongDescription.Contains("GETBY"))
+		&& Core.CustomSQLCheck(fileManager, Host.TemplateFile, "usp_"+ entity.Name + "GetBy" + toEntity.Name + ".sql", apiBundleSQLFiles, out userContent))  {	
+
+	NavigationProperty[] foreignKeys = entity.NavigationProperties.ToArray();
+#>
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[<#=apiSchemaName#>].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [<#=apiSchemaName#>].[usp_<#=entity.Name#>GetBy<#=toEntity.Name#>]
+<#  i=0;
+	foreach (EdmProperty edmProperty in toEntity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == toEntity))
+    {
+		if(!ef.IsKey(edmProperty)) continue;
+	#>
+<#	}
+#>
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	SELECT	
+		-- t4-columns begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {		#>
+		<#=(i>0 ? "," + tableAlias+".["+edmProperty.ToString() : " " + tableAlias+".["+edmProperty.ToString())#>]
+<#
+		i++;
+	}
+#>		-- t4-columns end
+	FROM [<#=apiSchemaName#>].[<#=entity.Name#>] <#=tableAlias#>
+	WHERE	
+		-- t4-where begin
+<#  i=0;
+	foreach (EdmProperty edmProperty in toEntity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == toEntity))
+    {
+		if(!ef.IsKey(edmProperty)) continue;
+	#>
+<#
+		i++;
+	}
+#>
+		-- t4-where end
+END
+GO
+<#
+			}
+		}
+	}
+	fileManager.EndBlock();
+}
+
+#>
+<#+
+public static string ImportData(string filename,string apiGeneralSchemaName) {
+	if(!File.Exists(filename)) return "";
+	var import = new XmlDocument();
+	import.Load(filename);
+	var nodes = import.SelectNodes("//import");
+
+	var sb = new StringBuilder();
+
+	foreach(XmlNode node in nodes) {
+		if(node.Attributes["into"]==null) continue;
+		var tableName = node.Attributes["into"].Value;
+		var schemaName = apiGeneralSchemaName;
+		if(node.Attributes["schema"]!=null)
+			schemaName = node.Attributes["schema"].Value;
+
+		foreach(XmlNode row in node.ChildNodes) {
+			sb.Append("INSERT INTO ["+schemaName+"].[" + tableName);
+			sb.Append("](");
+			var i=0;
+
+			foreach(XmlNode column in row.ChildNodes) {	
+				sb.Append(i==0 ? "[" + column.Name : ",[" + column.Name );
+				sb.Append("]");
+				i++; 
+			}
+			sb.Append(") VALUES (");
+		
+			i=0;
+			foreach(XmlNode column in row.ChildNodes) {	
+				sb.Append(i==0 ? "'"+column.InnerText.Replace("'","''") : ",'" + column.InnerText.Replace("'","''") ) ;
+				sb.Append("'");
+				i++; 
+			}
+			sb.AppendLine(");");
+		}
+	}
+
+	return sb.ToString()+"\r\nGO";
+}
+#>
