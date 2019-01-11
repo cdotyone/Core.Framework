@@ -1,2 +1,2 @@
-Civic.T4  -  Full Stack Generation
+Framework.Core 3 -  Full Stack Generation
 ====

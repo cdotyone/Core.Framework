@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core.OData
 {
 	public class EntityRoute
 	{

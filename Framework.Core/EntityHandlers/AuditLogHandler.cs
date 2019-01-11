@@ -4,7 +4,7 @@ using System.Security.Claims;
 using Civic.Core.Audit;
 using Civic.Core.Security;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public class AuditLogHandler : IEntityEventHandler
     {

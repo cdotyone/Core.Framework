@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public interface IEntityIdentity
     {

@@ -1,6 +1,6 @@
 ﻿using Civic.Core.Data;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public class SqlOperation : IEntityOperation
     {

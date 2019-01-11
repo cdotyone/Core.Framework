@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using Civic.Core.Security;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public class AnonymousPrincipal : ClaimsPrincipal
     {

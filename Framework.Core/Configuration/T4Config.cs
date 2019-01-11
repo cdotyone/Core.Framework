@@ -2,7 +2,7 @@
 using System.Configuration;
 using Civic.Core.Configuration;
 
-namespace Civic.Framework.WebApi.Configuration
+namespace Framework.Core.Configuration
 {
     public class T4Config : Section
     {

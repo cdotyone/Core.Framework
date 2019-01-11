@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public interface IEntityBusinessFacade<T> where T : IEntityIdentity
     {

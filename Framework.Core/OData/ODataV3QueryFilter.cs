@@ -3,7 +3,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core.OData
 {
     public class ODataV3QueryFilter : IFilterProvider
     {

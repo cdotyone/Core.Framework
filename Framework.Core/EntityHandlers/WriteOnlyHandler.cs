@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public class WriteOnlyHandler : IEntityEventHandler
     {

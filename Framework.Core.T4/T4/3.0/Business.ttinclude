@@ -43,7 +43,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 {
 	fileManager.StartNewFile(entity.Name+"Facade.cs", folderName:"Business");
 
-	WriteHeader("SimpleInjector", "Civic.Framework.WebApi",namespaceName +".Interfaces");
+	WriteHeader("SimpleInjector", "Framework.Core",namespaceName +".Interfaces");
 	#>
 
 using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + entity.Name#>;

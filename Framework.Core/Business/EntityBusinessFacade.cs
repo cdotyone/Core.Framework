@@ -4,7 +4,7 @@ using System.Security.Claims;
 using Civic.Core.Logging;
 using SimpleInjector;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public class EntityBusinessFacade<T> : IEntityBusinessFacade<T> where T : class, IEntityIdentity
     {

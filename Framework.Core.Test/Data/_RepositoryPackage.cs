@@ -11,23 +11,31 @@
 
 using SimpleInjector.Packaging;
 using SimpleInjector;
-using Civic.Framework.WebApi;
+using Framework.Core;
 
 
-namespace Civic.Framework.WebApi.Test.Data.SqlServer
+
+namespace Framework.Core.Test.Data.SqlServer
 {
     
-    public class ExampleRepositoryPackage : IPackage
+
+public class ExampleRepositoryPackage : IPackage
+{
+    public void RegisterServices(Container container)
     {
-        public void RegisterServices(Container container)
-        {
-    		container.Register<IEntityRepository<Civic.Framework.WebApi.Test.Interfaces.IEntity1>, Entity1Repository>(Lifestyle.Singleton);
-    		container.Register<IEntityRepository<Civic.Framework.WebApi.Test.Interfaces.IEntity2>, Entity2Repository>(Lifestyle.Singleton);
-    		container.Register<IEntityRepository<Civic.Framework.WebApi.Test.Interfaces.IEntity3>, Entity3Repository>(Lifestyle.Singleton);
-    		container.Register<IEntityRepository<Civic.Framework.WebApi.Test.Interfaces.IEnvironment>, EnvironmentRepository>(Lifestyle.Singleton);
-    		container.Register<IEntityRepository<Civic.Framework.WebApi.Test.Interfaces.IInstallationEnvironment>, InstallationEnvironmentRepository>(Lifestyle.Singleton);
-        }
+
+		container.Register<IEntityRepository<Framework.Core.Test.Interfaces.IEntity1>, Entity1Repository>(Lifestyle.Singleton);
+
+		container.Register<IEntityRepository<Framework.Core.Test.Interfaces.IEntity2>, Entity2Repository>(Lifestyle.Singleton);
+
+		container.Register<IEntityRepository<Framework.Core.Test.Interfaces.IEntity3>, Entity3Repository>(Lifestyle.Singleton);
+
+		container.Register<IEntityRepository<Framework.Core.Test.Interfaces.IEnvironment>, EnvironmentRepository>(Lifestyle.Singleton);
+
+		container.Register<IEntityRepository<Framework.Core.Test.Interfaces.IInstallationEnvironment>, InstallationEnvironmentRepository>(Lifestyle.Singleton);
+
     }
-    
+}
+
 }
 

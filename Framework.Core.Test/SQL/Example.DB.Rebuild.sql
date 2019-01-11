@@ -1,4 +1,5 @@
 ﻿
+
 IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_CreateDynamicVals]'))
 DROP FUNCTION [civic].[udf_CreateDynamicVals]
 GO
@@ -1105,7 +1106,8 @@ BEGIN
 END
 GO
 
-	INSERT INTO [dbo].[Environments]([Name]) VALUES ('Dev');
+	
+INSERT INTO [dbo].[Environments]([Name]) VALUES ('Dev');
 INSERT INTO [dbo].[Environments]([Name]) VALUES ('QA');
 INSERT INTO [dbo].[Environments]([Name]) VALUES ('Load');
 INSERT INTO [dbo].[Environments]([Name]) VALUES ('Stage');

@@ -4,7 +4,7 @@ using Civic.Core.Audit;
 using Civic.Core.Security;
 using SimpleInjector;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public class BasicAuthorizationHandler : IEntityEventHandler
     {

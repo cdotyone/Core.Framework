@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Civic.Framework.WebApi.OData
+namespace Framework.Core.OData.Parse
 {
     public class Parser
     {

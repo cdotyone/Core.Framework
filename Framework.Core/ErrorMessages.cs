@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     internal class ErrorMessages
     {

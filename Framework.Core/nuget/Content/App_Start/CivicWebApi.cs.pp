@@ -12,7 +12,7 @@ namespace $rootnamespace$.App_Start {
     {
         public static void PreStart()
         {
-            Civic.Framework.WebApi.WebActivator.LoadControllers();
+            Framework.Core.WebActivator.LoadControllers();
         }
     }
 }

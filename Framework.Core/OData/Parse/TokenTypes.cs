@@ -1,4 +1,4 @@
-﻿namespace Civic.Framework.WebApi.OData
+﻿namespace Framework.Core.OData.Parse
 {
     public enum TokenTypes
     {

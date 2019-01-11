@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 
-namespace Civic.Framework.WebApi.Test
+namespace Framework.Core.Test
 {
     public static class WebApiConfig
     {

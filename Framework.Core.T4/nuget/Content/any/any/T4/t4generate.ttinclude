@@ -1,15 +1,15 @@
-﻿<#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model-SAAS\0.0.0.0\T4\3.0\TemplateFilemanager.CS.ttinclude" #>
-<#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model-SAAS\0.0.0.0\T4\3.0\Core.ttinclude"#>
+﻿<#@ include file="%USERPROFILE%\.nuget\packages\Framework.Core.T4.Model\0.0.0.0\T4\3.0\TemplateFilemanager.CS.ttinclude" #>
+<#@ include file="%USERPROFILE%\.nuget\packages\Framework.Core.T4.Model\0.0.0.0\T4\3.0\Core.ttinclude"#>
 /*
-<#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model-SAAS\0.0.0.0\T4\3.0\DBProcs.ttinclude"#>
-<#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model-SAAS\0.0.0.0\T4\3.0\DBProcsAll.ttinclude"#>
-<#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model-SAAS\0.0.0.0\T4\3.0\DBViews.ttinclude"#>
-<#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model-SAAS\0.0.0.0\T4\3.0\DB.ttinclude"#>
-<#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model-SAAS\0.0.0.0\T4\3.0\Data.ttinclude"#>
-<#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model-SAAS\0.0.0.0\T4\3.0\Entities.ttinclude"#>
-<#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model-SAAS\0.0.0.0\T4\3.0\Business.ttinclude"#>
-<#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model-SAAS\0.0.0.0\T4\3.0\Interfaces.ttinclude"#>
-<#@ include file="%USERPROFILE%\.nuget\packages\Civic.Framework.T4.Model-SAAS\0.0.0.0\T4\3.0\Config.ttinclude"#>
+<#@ include file="%USERPROFILE%\.nuget\packages\Framework.Core.T4.Model\0.0.0.0\T4\3.0\DBProcs.ttinclude"#>
+<#@ include file="%USERPROFILE%\.nuget\packages\Framework.Core.T4.Model\0.0.0.0\T4\3.0\DBProcsAll.ttinclude"#>
+<#@ include file="%USERPROFILE%\.nuget\packages\Framework.Core.T4.Model\0.0.0.0\T4\3.0\DBViews.ttinclude"#>
+<#@ include file="%USERPROFILE%\.nuget\packages\Framework.Core.T4.Model\0.0.0.0\T4\3.0\DB.ttinclude"#>
+<#@ include file="%USERPROFILE%\.nuget\packages\Framework.Core.T4.Model\0.0.0.0\T4\3.0\Data.ttinclude"#>
+<#@ include file="%USERPROFILE%\.nuget\packages\Framework.Core.T4.Model\0.0.0.0\T4\3.0\Entities.ttinclude"#>
+<#@ include file="%USERPROFILE%\.nuget\packages\Framework.Core.T4.Model\0.0.0.0\T4\3.0\Business.ttinclude"#>
+<#@ include file="%USERPROFILE%\.nuget\packages\Framework.Core.T4.Model\0.0.0.0\T4\3.0\Interfaces.ttinclude"#>
+<#@ include file="%USERPROFILE%\.nuget\packages\Framework.Core.T4.Model\0.0.0.0\T4\3.0\Config.ttinclude"#>
 <#
 EmbedEdmx(Host.TemplateFile.ToString(), fileManager);
 fileManager.Process();

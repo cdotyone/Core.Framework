@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public interface IEntityEventHandlerFactory
     {

@@ -7,7 +7,7 @@ using System.Net.Http.Formatting;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core.OData
 {
     public class ODataV3EdmxFormatter : XmlMediaTypeFormatter
     {

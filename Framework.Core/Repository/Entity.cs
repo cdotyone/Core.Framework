@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Civic.Framework.DynamicEntity.Api.Entities;
 using Newtonsoft.Json;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
 	[JsonConverter(typeof (EntityConverter))]
 	public class Entity

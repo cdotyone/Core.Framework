@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Civic.Framework.WebApi.OData
+namespace Framework.Core.OData.Parse
 {
     public class ParametersExpression : CriteriaExpression {
 

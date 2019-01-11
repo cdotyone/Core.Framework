@@ -12,7 +12,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		continue;
 
     fileManager.StartNewFile(edmxFileName + entity.Name + "Controller.cs", folderName:"Controllers");
-	WriteHeader("System","System.Collections","System.Collections.Generic","System.Security.Claims","System.Globalization","System.Runtime.Serialization","System.Web.Http", namespaceName + ".Services",namespaceName + ".Entities", "Civic.Framework.WebApi", entity.Name + "Entity = " + namespaceName +".Entities." + entity.Name );
+	WriteHeader("System","System.Collections","System.Collections.Generic","System.Security.Claims","System.Globalization","System.Runtime.Serialization","System.Web.Http", namespaceName + ".Services",namespaceName + ".Entities", "Framework.Core", entity.Name + "Entity = " + namespaceName +".Entities." + entity.Name );
     BeginNamespace(namespaceName+".Controllers", code);
 	
 	var lowerName = entity.Name.ToLower();
@@ -44,7 +44,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	public QueryMetadata<<#=entity.Name#>Entity> Get()
 	{
 		ODataV3QueryOptions options = this.GetOptions();
-		var maxrows = Civic.Framework.WebApi.Configuration.T4Config.GetMaxRows("<#=apiSchemaName.ToLower()#>","<#=entity.Name.ToLower()#>");
+		var maxrows = Framework.Core.Configuration.T4Config.GetMaxRows("<#=apiSchemaName.ToLower()#>","<#=entity.Name.ToLower()#>");
 		var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
 		string orderby = options.ProcessOrderByOptions();
 		var result = _service.GetPaged<#=entity.Name#>(options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);

@@ -3,7 +3,7 @@ using System.Net.Http.Formatting;
 using System.Web.Http;
 using System.Web.Http.Filters;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core.OData
 {
     public static class ODataV3FormatterExtensions
     {

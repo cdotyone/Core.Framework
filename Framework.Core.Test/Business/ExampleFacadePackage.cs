@@ -13,29 +13,33 @@ using SimpleInjector.Packaging;
 using SimpleInjector;
 
 
-namespace Civic.Framework.WebApi.Test.Business
+
+namespace Framework.Core.Test.Business
 {
     
-    public class ExampleFacadePackage : IPackage
+
+public class ExampleFacadePackage : IPackage
+{
+    public void RegisterServices(Container container)
     {
-        public void RegisterServices(Container container)
-        {
-    		var factory = new EntityCreateFactory(container);
-    
-    		factory.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity1, Civic.Framework.WebApi.Test.Entities.Entity1>(Civic.Framework.WebApi.Test.Entities.Entity1.Info);
-    		factory.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity2, Civic.Framework.WebApi.Test.Entities.Entity2>(Civic.Framework.WebApi.Test.Entities.Entity2.Info);
-    		factory.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity3, Civic.Framework.WebApi.Test.Entities.Entity3>(Civic.Framework.WebApi.Test.Entities.Entity3.Info);
-    		factory.Register<Civic.Framework.WebApi.Test.Interfaces.IEnvironment, Civic.Framework.WebApi.Test.Entities.Environment>(Civic.Framework.WebApi.Test.Entities.Environment.Info);
-    		factory.Register<Civic.Framework.WebApi.Test.Interfaces.IInstallationEnvironment, Civic.Framework.WebApi.Test.Entities.InstallationEnvironment>(Civic.Framework.WebApi.Test.Entities.InstallationEnvironment.Info);
-    		container.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity1Facade, Entity1Facade>(Lifestyle.Singleton);
-    		container.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity2Facade, Entity2Facade>(Lifestyle.Singleton);
-    		container.Register<Civic.Framework.WebApi.Test.Interfaces.IEntity3Facade, Entity3Facade>(Lifestyle.Singleton);
-    		container.Register<Civic.Framework.WebApi.Test.Interfaces.IEnvironmentFacade, EnvironmentFacade>(Lifestyle.Singleton);
-    		container.Register<Civic.Framework.WebApi.Test.Interfaces.IInstallationEnvironmentFacade, InstallationEnvironmentFacade>(Lifestyle.Singleton);
-    
-        }
+		var factory = new EntityCreateFactory(container);
+
+		factory.Register<Framework.Core.Test.Interfaces.IEntity1, Framework.Core.Test.Entities.Entity1>(Framework.Core.Test.Entities.Entity1.Info);
+		factory.Register<Framework.Core.Test.Interfaces.IEntity2, Framework.Core.Test.Entities.Entity2>(Framework.Core.Test.Entities.Entity2.Info);
+		factory.Register<Framework.Core.Test.Interfaces.IEntity3, Framework.Core.Test.Entities.Entity3>(Framework.Core.Test.Entities.Entity3.Info);
+		factory.Register<Framework.Core.Test.Interfaces.IEnvironment, Framework.Core.Test.Entities.Environment>(Framework.Core.Test.Entities.Environment.Info);
+		factory.Register<Framework.Core.Test.Interfaces.IInstallationEnvironment, Framework.Core.Test.Entities.InstallationEnvironment>(Framework.Core.Test.Entities.InstallationEnvironment.Info);
+		container.Register<Framework.Core.Test.Interfaces.IEntity1Facade, Entity1Facade>(Lifestyle.Singleton);
+		container.Register<Framework.Core.Test.Interfaces.IEntity2Facade, Entity2Facade>(Lifestyle.Singleton);
+		container.Register<Framework.Core.Test.Interfaces.IEntity3Facade, Entity3Facade>(Lifestyle.Singleton);
+		container.Register<Framework.Core.Test.Interfaces.IEnvironmentFacade, EnvironmentFacade>(Lifestyle.Singleton);
+		container.Register<Framework.Core.Test.Interfaces.IInstallationEnvironmentFacade, InstallationEnvironmentFacade>(Lifestyle.Singleton);
+
+
     }
-    
 }
+
+}
+
 
 

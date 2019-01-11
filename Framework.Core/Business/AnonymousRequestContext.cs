@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public class AnonymousRequestContext : IEntityRequestContext
     {

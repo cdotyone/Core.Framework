@@ -11,17 +11,19 @@
 
 using System;
 using System.Collections.Generic;
-using Civic.Framework.WebApi;
+using Framework.Core;
 using Newtonsoft.Json;
-using Civic.Framework.WebApi.Test.Interfaces;
+using Framework.Core.Test.Interfaces;
 
-namespace Civic.Framework.WebApi.Test.Interfaces
+namespace Framework.Core.Test.Interfaces
 {
-    public interface IEntity3 : IEntityIdentity
-    {
-    	 string SomeUID { get; set; }
-    	 DateTime Modified { get; set; }
-    	 DateTime? OtherDate { get; set; }
-    }
+    
+public interface IEntity3 : IEntityIdentity
+{
+	 string SomeUID { get; set; }
+	 DateTime Modified { get; set; }
+	 DateTime? OtherDate { get; set; }
+
+}
 }
 

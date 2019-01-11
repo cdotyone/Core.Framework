@@ -6,11 +6,12 @@ using System.Linq;
 using System.Security.Claims;
 using Civic.Core.Data;
 using Civic.Core.Logging;
+using Framework.Core.OData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SimpleInjector;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public class SqlQuery
     {

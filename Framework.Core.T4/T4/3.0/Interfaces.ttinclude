@@ -10,7 +10,7 @@ if (!typeMapper.VerifyCaseInsensitiveTypeUniqueness(typeMapper.GetAllGlobalItems
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
     fileManager.StartNewFile("I"+entity.Name + ".cs", folderName:"Interfaces.Entities");
-	WriteHeader("System","System.Collections.Generic","Civic.Framework.WebApi", "Newtonsoft.Json",namespaceName + ".Interfaces");
+	WriteHeader("System","System.Collections.Generic","Framework.Core", "Newtonsoft.Json",namespaceName + ".Interfaces");
 
     BeginNamespace(namespaceName + ".Interfaces", code);
 
@@ -47,7 +47,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 {
 	fileManager.StartNewFile("I"+entity.Name+"Facade.cs", folderName:"Interfaces.Business");
 
-	WriteHeader("Civic.Framework.WebApi");
+	WriteHeader("Framework.Core");
 	#>
 
 using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + entity.Name#>;

@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 using SimpleInjector.Packaging;
 using SimpleInjector;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public class WebApiPackage : IPackage
     {

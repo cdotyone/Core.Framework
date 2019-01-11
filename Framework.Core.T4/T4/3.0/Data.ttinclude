@@ -8,7 +8,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 fileManager.StartNewFile(entity.Name+".cs", folderName:"Data");
 
-WriteHeader("System", "System.Collections.Generic", "System.Data", "System.Diagnostics", "System.Security.Claims", "SimpleInjector" ,"Civic.Core.Data","Civic.Framework.WebApi","Civic.Framework.WebApi.Configuration", namespaceName +".Interfaces");
+WriteHeader("System", "System.Collections.Generic", "System.Data", "System.Diagnostics", "System.Security.Claims", "SimpleInjector" ,"Civic.Core.Data","Framework.Core","Framework.Core.Configuration", namespaceName +".Interfaces");
 
 #>
 using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + entity.Name#>;
@@ -212,7 +212,7 @@ EndNamespace(namespaceName);
 
 fileManager.StartNewFile("_RepositoryPackage.cs", folderName:"Data");
 
-WriteHeader("SimpleInjector.Packaging","SimpleInjector","Civic.Framework.WebApi");
+WriteHeader("SimpleInjector.Packaging","SimpleInjector","Framework.Core");
 #>
 
 <#

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace Civic.Framework.WebApi.OData
+namespace Framework.Core.OData.Parse
 {
     internal class TokenInfo {
 

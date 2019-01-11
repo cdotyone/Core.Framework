@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     [Flags]
     public enum EntityEventType

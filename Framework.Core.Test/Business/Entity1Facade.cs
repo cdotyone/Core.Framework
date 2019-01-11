@@ -10,21 +10,23 @@
 #pragma warning disable 1591 // this is to supress no xml comments in public members warnings 
 
 using SimpleInjector;
-using Civic.Framework.WebApi;
-using Civic.Framework.WebApi.Test.Interfaces;
+using Framework.Core;
+using Framework.Core.Test.Interfaces;
 
 
-using IExampleEntity1 = Civic.Framework.WebApi.Test.Interfaces.IEntity1;
-namespace Civic.Framework.WebApi.Test.Business
+
+using IExampleEntity1 = Framework.Core.Test.Interfaces.IEntity1;
+namespace Framework.Core.Test.Business
 {
     
-    public partial class Entity1Facade : EntityBusinessFacade<IExampleEntity1>, IEntity1Facade
-    {
-    
-            public Entity1Facade(Container container, IEntityRepository<IExampleEntity1> repository, IEntityEventHandlerFactory handlers) : base(container, repository, handlers)
-            {
-            }
-    
-    }
+
+public partial class Entity1Facade : EntityBusinessFacade<IExampleEntity1>, IEntity1Facade
+{
+
+        public Entity1Facade(Container container, IEntityRepository<IExampleEntity1> repository, IEntityEventHandlerFactory handlers) : base(container, repository, handlers)
+        {
+        }
+
+}
 }
 

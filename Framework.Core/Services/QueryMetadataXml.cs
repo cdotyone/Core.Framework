@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     [Serializable]
     [DataContract(Name="data")]

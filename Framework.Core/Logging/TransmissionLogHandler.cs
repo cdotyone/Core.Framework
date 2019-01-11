@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Civic.Core.Logging;
 using Newtonsoft.Json;
 
-namespace Civic.Framework.WebApi.Logging
+namespace Framework.Core.Logging
 {
     public class TransmissionLogHandler : DelegatingHandler
     {

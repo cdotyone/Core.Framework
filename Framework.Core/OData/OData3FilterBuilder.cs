@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using Civic.Core.Data;
-using Civic.Framework.WebApi.OData;
+using Framework.Core.OData.Parse;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core.OData
 {
     public static class OData3FilterBuilder
     {

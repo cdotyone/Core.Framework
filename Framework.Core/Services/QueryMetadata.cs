@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using Framework.Core.OData;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public class QueryMetadata<T> : IQueryMetadata, IEnumerable<T> where T : class
     {

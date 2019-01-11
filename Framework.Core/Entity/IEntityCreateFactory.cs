@@ -1,4 +1,4 @@
-﻿namespace Civic.Framework.WebApi
+﻿namespace Framework.Core
 {
     public interface IEntityCreateFactory
     {

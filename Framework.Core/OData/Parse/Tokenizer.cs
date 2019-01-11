@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Civic.Framework.WebApi.OData
+namespace Framework.Core.OData.Parse
 {
     public class Tokenizer
     {

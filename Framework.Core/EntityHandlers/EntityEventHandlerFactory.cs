@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using SimpleInjector;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public class EntityEventHandlerFactory : IEntityEventHandlerFactory
     {

@@ -6,12 +6,13 @@ using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Civic.Core.Logging;
-using Civic.Framework.WebApi.Logging;
+using Framework.Core.Logging;
+using Framework.Core.OData;
 using SimpleInjector;
 using SimpleInjector.Integration.WebApi;
 using SimpleInjector.Lifestyles;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public class ApiActivator
     {

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>Civic.Framework.WebApi-SAAS</id>
+    <id>Framework.Core</id>
     <version>$version$</version>
     <title />
     <authors>Chris Doty</authors>
@@ -9,7 +9,7 @@
     <iconUrl>http://nuget.civic.com/content/core.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>WebApi Service Backend Generation - Framework Dll</description>
-    <summary>Civic.Framework.WebApi</summary>
+    <summary>Framework.Core</summary>
     <dependencies>
       <group>
         <dependency id="Civic.Core.Audit" version="[1.26.6,2.0.0)" xmlns="" />
@@ -28,11 +28,11 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\Civic.Framework.WebApi\bin\nuget-45\Civic.Framework.WebApi.Dll" target="lib\net45" />
-    <file src="..\Civic.Framework.WebApi\bin\nuget-45\Civic.Framework.WebApi.pdb" target="lib\net45" />
-    <file src="..\Civic.Framework.WebApi\bin\nuget-46\Civic.Framework.WebApi.Dll" target="lib\net46" />
-    <file src="..\Civic.Framework.WebApi\bin\nuget-46\Civic.Framework.WebApi.pdb" target="lib\net46" />
-    <file src="..\Civic.Framework.WebApi\bin\nuget-47\Civic.Framework.WebApi.Dll" target="lib\net47" />
-    <file src="..\Civic.Framework.WebApi\bin\nuget-47\Civic.Framework.WebApi.pdb" target="lib\net47" />
+    <file src="..\Framework.Core\bin\nuget-45\Framework.Core.Dll" target="lib\net45" />
+    <file src="..\Framework.Core\bin\nuget-45\Framework.Core.pdb" target="lib\net45" />
+    <file src="..\Framework.Core\bin\nuget-46\Framework.Core.Dll" target="lib\net46" />
+    <file src="..\Framework.Core\bin\nuget-46\Framework.Core.pdb" target="lib\net46" />
+    <file src="..\Framework.Core\bin\nuget-47\Framework.Core.Dll" target="lib\net47" />
+    <file src="..\Framework.Core\bin\nuget-47\Framework.Core.pdb" target="lib\net47" />
   </files>
 </package>

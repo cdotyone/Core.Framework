@@ -1,7 +1,7 @@
 ﻿using System;
-using Civic.Framework.WebApi.Configuration;
+using Framework.Core.Configuration;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public static class Extensions
     {

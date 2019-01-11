@@ -96,11 +96,16 @@ CREATE PROCEDURE [dbo].[usp_Entity2Add]
 	  @someID [int] out
 	, @ff [nvarchar](max) out
 	, @otherDate [datetime]
-	, @oID [int]
+	, @ouid [varchar](32)
 -- t4-params end
 AS
 BEGIN
 	SET NOCOUNT ON
+
+	DECLARE @oid [int]
+	SELECT @oid = [OID]
+	FROM [civic].[OrgUnit]
+	WHERE [OUID] = @ouid
 
 	INSERT INTO [dbo].[Entity2](
 -- t4-columns begin
@@ -115,7 +120,7 @@ BEGIN
 		 @ff
 		,[civic].udf_getSysDate()
 		,@otherDate
-		,@oID
+		,@oid
 -- t4-values end
 	)
 
@@ -130,17 +135,22 @@ CREATE PROCEDURE [dbo].[usp_Entity2Modify]
 	  @someID [int]
 	, @ff [nvarchar](max)
 	, @otherDate [datetime]
-	, @oID [int]
+	, @ouid [varchar](32)
 AS
 BEGIN
 	SET NOCOUNT ON
+
+	DECLARE @oid [int]
+	SELECT @oid = [OID]
+	FROM [civic].[OrgUnit]
+	WHERE [OUID] = @ouid
 
 	UPDATE [e2] SET 
 		-- t4-columns begin
 		 [ff] = @ff
 		,[Modified] = [civic].udf_getSysDate()
 		,[OtherDate] = @otherDate
-		,[OID] = @oID
+		,[OID] = @oid
 		-- t4-columns end
 	FROM [dbo].[Entity2] [e2]
 	WHERE	
@@ -176,7 +186,6 @@ GO
 CREATE PROCEDURE [dbo].[usp_Entity3Add]
 -- t4-params begin
 	  @someUID [nvarchar](max)
-	, @someID [bigint] out
 	, @otherDate [datetime]
 -- t4-params end
 AS
@@ -185,15 +194,13 @@ BEGIN
 
 	INSERT INTO [dbo].[Entity3](
 -- t4-columns begin
-		 [SomeID]
-		,[Modified]
+		 [Modified]
 		,[OtherDate]
 -- t4-columns end
 	) VALUES (
 
 -- t4-values begin
-		 @someID
-		,[civic].udf_getSysDate()
+		 [civic].udf_getSysDate()
 		,@otherDate
 -- t4-values end
 	)
@@ -207,7 +214,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_Entity3Modify]
 	  @someUID [nvarchar](max)
-	, @someID [bigint]
 	, @otherDate [datetime]
 AS
 BEGIN
@@ -215,8 +221,7 @@ BEGIN
 
 	UPDATE [e3] SET 
 		-- t4-columns begin
-		 [SomeID] = @someID
-		,[Modified] = [civic].udf_getSysDate()
+		 [Modified] = [civic].udf_getSysDate()
 		,[OtherDate] = @otherDate
 		-- t4-columns end
 	FROM [dbo].[Entity3] [e3]
@@ -249,8 +254,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_EnvironmentAdd]
 -- t4-params begin
-	  @id [int] out
-	, @name [nvarchar](max)
+	  @name [nvarchar](max)
 -- t4-params end
 AS
 BEGIN
@@ -267,7 +271,7 @@ BEGIN
 -- t4-values end
 	)
 
-SET @id = SCOPE_IDENTITY()
+
 END
 GO
 SET ANSI_NULLS ON
@@ -275,8 +279,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_EnvironmentModify]
-	  @id [int]
-	, @name [nvarchar](max)
+	  @name [nvarchar](max)
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -297,7 +300,6 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[usp_EnvironmentRemove]
-	  @id [int]
 AS
 BEGIN
 	SET NOCOUNT ON

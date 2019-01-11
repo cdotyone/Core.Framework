@@ -11,16 +11,18 @@
 
 using System;
 using System.Collections.Generic;
-using Civic.Framework.WebApi;
+using Framework.Core;
 using Newtonsoft.Json;
-using Civic.Framework.WebApi.Test.Interfaces;
+using Framework.Core.Test.Interfaces;
 
-namespace Civic.Framework.WebApi.Test.Interfaces
+namespace Framework.Core.Test.Interfaces
 {
-    public interface IEnvironment : IEntityIdentity
-    {
-    	 int ID { get; set; }
-    	 string Name { get; set; }
-    }
+    
+public interface IEnvironment : IEntityIdentity
+{
+	 int ID { get; set; }
+	 string Name { get; set; }
+
+}
 }
 

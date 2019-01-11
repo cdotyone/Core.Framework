@@ -1,8 +1,7 @@
 ﻿using System;
-using Civic.Framework.WebApi;
 using Newtonsoft.Json;
 
-namespace Civic.Framework.DynamicEntity.Api.Entities
+namespace Framework.Core
 {
 	public class EntityConverter : JsonConverter
 	{

@@ -4,11 +4,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Web.Http;
 using Civic.Core.Logging;
-using Civic.Framework.WebApi.Configuration;
+using Framework.Core.Configuration;
+using Framework.Core.OData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     [RoutePrefix("api/services")]
     public class ServicesController : ApiController

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Civic.Framework.WebApi
+namespace Framework.Core
 {
     public enum EntityOperationType
     {

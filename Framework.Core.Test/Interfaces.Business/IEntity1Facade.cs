@@ -9,16 +9,18 @@
 
 #pragma warning disable 1591 // this is to supress no xml comments in public members warnings 
 
-using Civic.Framework.WebApi;
+using Framework.Core;
 
 
-using IExampleEntity1 = Civic.Framework.WebApi.Test.Interfaces.IEntity1;
 
-namespace Civic.Framework.WebApi.Test.Interfaces
+using IExampleEntity1 = Framework.Core.Test.Interfaces.IEntity1;
+
+namespace Framework.Core.Test.Interfaces
 {
     
-    public interface IEntity1Facade : IEntityBusinessFacade<IExampleEntity1>
-    {
-    }
+
+public interface IEntity1Facade : IEntityBusinessFacade<IExampleEntity1>
+{
+}
 }
 

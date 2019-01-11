@@ -1,5 +1,7 @@
-﻿{
+﻿
+{
 	"example":{
+
 		"Entity1":{   
 			"module":"example",
 			"entity":"entity1",
@@ -11,8 +13,10 @@
 					"Dte2":{"name":"dte2","type":"DateTime", "isNullable":"true"},
 					"Dble1":{"name":"dble1","type":"double"},
 					"Dec1":{"name":"dec1","type":"double"}
+
 			}
 		},
+
 		"Entity2":{   
 			"module":"example",
 			"entity":"entity2",
@@ -23,8 +27,10 @@
 					"Modified":{"name":"modified","type":"DateTime"},
 					"OtherDate":{"name":"otherDate","type":"DateTime", "isNullable":"true"},
 					"OID":{"name":"oid","type":"int", "isNullable":"true"}
+
 			}
 		},
+
 		"Entity3":{   
 			"module":"example",
 			"entity":"entity3",
@@ -34,8 +40,10 @@
 					"SomeID":{"name":"someID","type":"long"},
 					"Modified":{"name":"modified","type":"DateTime"},
 					"OtherDate":{"name":"otherDate","type":"DateTime", "isNullable":"true"}
+
 			}
 		},
+
 		"Environment":{   
 			"module":"example",
 			"entity":"environment",
@@ -43,8 +51,10 @@
 			"properties": {
 					"ID":{"name":"id","type":"int", "isKey":"true"},
 					"Name":{"name":"name","type":"string", "isNullable":"true"}
+
 			}
 		},
+
 		"InstallationEnvironment":{   
 			"module":"example",
 			"entity":"installationEnvironment",
@@ -55,7 +65,9 @@
 					"Description":{"name":"description","type":"string", "isNullable":"true"},
 					"IsVisible":{"name":"isVisible","type":"string"},
 					"Modified":{"name":"modified","type":"DateTime"}
+
 			}
-		}	
+		}
+	
 	}
 }

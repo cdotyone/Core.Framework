@@ -7,8 +7,8 @@
     <ProjectGuid>{78D4826E-E6FC-4961-900B-9373B3C4B481}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Civic.Framework.WebApi</RootNamespace>
-    <AssemblyName>Civic.Framework.WebApi</AssemblyName>
+    <RootNamespace>Framework.Core.T4</RootNamespace>
+    <AssemblyName>Framework.Core.T4</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
     </SccProjectName>
