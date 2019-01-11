@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>SAAS.Core.Framework</id>
+    <version>$version$</version>
+    <title />
+    <authors>Chris Doty</authors>
+    <owners />
+    <iconUrl>http://nuget.civic.com/content/core.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>WebApi Service Backend Generation - Framework Dll</description>
+    <summary>SAAS.Core.Framework</summary>
+    <dependencies>
+      <group>
+        <dependency id="Civic.Core.Audit" version="[1.26.6,2.0.0)" xmlns="" />
+        <dependency id="Civic.Core.Caching" version="[1.26.3,2.0.0)" xmlns="" />
+        <dependency id="Civic.Core.Configuration" version="[1.26.1,2.0.0)" xmlns="" />
+        <dependency id="Civic.Core.Data" version="[1.27.3,2.0.0)" xmlns="" />
+        <dependency id="Civic.Core.Logging" version="[1.27.6,2.0.0)" xmlns="" />
+        <dependency id="Microsoft.AspNet.WebApi.Core" version="[5.2.7,6.0.0)" xmlns="" />
+        <dependency id="Microsoft.AspNet.WebApi.WebHost" version="[5.2.7,6.0.0)" xmlns="" />
+        <dependency id="Microsoft.Web.Infrastructure" version="[1.0.0.0,2.0.0.0)" xmlns="" />
+        <dependency id="Newtonsoft.Json" version="[12.0.1,13.0.0)" xmlns="" />
+        <dependency id="SimpleInjector" version="[4.4.3,5.0.0)" xmlns="" />
+        <dependency id="SimpleInjector.Integration.WebApi" version="[4.4.3,5.0.0)" xmlns="" />
+        <dependency id="SimpleInjector.Packaging" version="[4.4.3,5.0.0)" xmlns="" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\SAAS.Core.Framework\bin\nuget-46\SAAS.Core.Framework.Dll" target="lib\net46" />
+    <file src="..\SAAS.Core.Framework\bin\nuget-46\SAAS.Core.Framework.pdb" target="lib\net46" />
+    <file src="..\SAAS.Core.Framework\bin\nuget-47\SAAS.Core.Framework.Dll" target="lib\net47" />
+    <file src="..\SAAS.Core.Framework\bin\nuget-47\SAAS.Core.Framework.pdb" target="lib\net47" />
+  </files>
+</package>

@@ -1,0 +1,259 @@
+﻿<#
+
+string servicesPath = new FileInfo(Host.TemplateFile).DirectoryName.Replace("\\Models","\\Services");
+
+fileManager.StartNewFile(edmxFileName + "Services.cs", folderName:"Services");
+
+WriteHeader("System", "System.ServiceModel.Activation", "System.Collections.Generic", "System.Security.Claims","System.ServiceModel","SimpleInjector", "Civic.Core.Audit","Civic.Core.Configuration", "Civic.Core.Data", "Civic.Core.Logging","SAAS.Core.Framework", namespaceName + ".Entities", namespaceName + ".Interfaces");
+#>
+
+<#
+BeginNamespace(namespaceName+".Services", code);
+#>
+
+
+[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+public partial class <#=edmxFileName#>Service : I<#=edmxFileName#>Service, IEntityService
+{
+	private readonly I<#=edmxFileName#>Repository _respository;
+	public <#=edmxFileName#>Service(I<#=edmxFileName#>Repository respository) {
+		_respository = respository;
+	}
+
+    private ClaimsPrincipal _who = null;
+    public ClaimsPrincipal Who
+    {
+        get { return _who == null && OperationContext.Current != null ? OperationContext.Current.ClaimsPrincipal : _who; }
+        set { _who = value; }
+    }
+
+	public INamedElement Configuration { get; set; }
+
+    public string ModuleName { get { return "<#=edmxFileName.ToLower()#>"; } }
+        
+	public List<string> EntitiesProvided { 
+		get {
+	<#
+		var entitiesProvided = new List<string>();
+		foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+		{
+			entitiesProvided.Add(Core.ToLowerCamel(entity.Name));
+		}
+		var entitiesList = String.Join("\",\n\t\t\t\t\t\"",entitiesProvided);
+	#>
+		return new List<string> { 
+				"<#=entitiesList#>"
+			}; 
+		}
+    }
+
+	public IEntity Create(string name)
+	{
+		switch(name) {
+		<#
+		foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+		{#>
+	case "<#=Core.ToLowerCamel(entity.Name)#>":
+			case "<#=entity.Name#>":
+				return new <#=namespaceName + ".Entities." + entity.Name#>();
+		<#}#>
+		};
+
+		return null;
+    }
+
+    public static <#=edmxFileName#>Service Create()
+    {
+        var container = new Container();
+        return container.GetInstance<<#=edmxFileName#>Service>();
+    }
+}
+
+<#
+EndNamespace(namespaceName);
+
+fileManager.StartNewFile(edmxFileName + "ServicesPackage.cs", folderName:"Services");
+
+WriteHeader("SimpleInjector.Packaging","SimpleInjector");
+#>
+
+<#
+BeginNamespace(namespaceName+".Services", code);
+#>
+
+public class <#=edmxFileName#>ServicesPackage : IPackage
+{
+    public void RegisterServices(Container container)
+    {
+		container.Register<I<#=edmxFileName#>, <#=edmxFileName#>Service>(Lifestyle.Scoped);
+    }
+}
+
+<#
+EndNamespace(namespaceName);
+#>
+
+<#
+// Emit Entity Types
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+	fileManager.StartNewFile(edmxFileName + "."+entity.Name+".cs", folderName:"Services");
+
+	WriteHeader("System", "System.ServiceModel.Activation", "System.Collections.Generic", "Civic.Core.Security", "Civic.Core.Audit", "Civic.Core.Logging", "SAAS.Core.Framework", namespaceName + ".Entities");
+	#>
+using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
+
+<# BeginNamespace(namespaceName+".Services", code);#>
+
+public partial class <#=edmxFileName#>Service
+	{
+<#
+
+	var lowerName = entity.Name.ToLower();
+	var keys = new Dictionary<string,string>();
+	var keyType="";
+	var keyName="";
+    foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    {
+        if (ef.IsKey(edmProperty)) {
+			keyName = edmProperty.Name;
+			keys[keyName] = code.Escape(edmProperty.TypeUsage.EdmType);
+			keyType = code.Escape(edmProperty.TypeUsage.EdmType);
+		}
+	}
+
+#>
+	public <#=code.Escape(entity)#>Entity Get<#=code.Escape(entity)#>(<# var jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#>) 
+	{
+        using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Get<#=code.Escape(entity)#>By<#=code.Escape(keyName)#>")) {
+
+            if (!AuthorizationHelper.CanView("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
+
+			try {		
+                using (var database = Connection) {
+					return Data.<#=edmxFileName#>Data.Get<#=code.Escape(entity)#>(<# foreach(var key in keys.Keys) { #><#=Core.GetMethodParameterName(key)#>, <#}#>database);
+				}
+			}
+			catch (Exception ex)
+			{
+				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+			}
+
+		}
+
+		return null;
+	}
+	
+	public List<<#=code.Escape(entity)#>Entity> GetPaged<#=code.Escape(entity)#>(int skip, ref int count, bool retCount, string filterBy, string orderBy) 
+	{
+        using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "GetPaged<#=code.Escape(entity)#>")) {
+
+            if (!AuthorizationHelper.CanView("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
+
+			try {
+                using (var database = Connection) {
+					return Data.<#=edmxFileName#>Data.GetPaged<#=entity.Name#>(skip, ref count, retCount, filterBy, orderBy, database);
+				}
+			}
+			catch (Exception ex)
+			{
+				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+			}
+
+		}
+
+		return null;
+	}
+	
+	public <#=((keyType=="Int32" || keyType=="int") && keyName=="Id"?"int":"void")#> Add<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>) 
+	{
+        using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Add<#=code.Escape(entity)#>")) {
+
+            if (!AuthorizationHelper.CanAdd("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
+
+			try {
+                using(var db = Connection) {
+	                var logid = AuditManager.LogAdd(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", <# foreach(var key in keys.Keys) { #><#=code.Escape(lowerName)#>.<#=key#>.ToString()+<#}#>"", <#=code.Escape(lowerName)#>);
+			<#
+			if((keyType=="Int32" || keyType=="int") && keyName=="Id") {#>
+					var retval = Data.<#=edmxFileName#>Data.Add<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>, db);
+					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid, retval);<#
+			} else {
+	#> 		Data.<#=edmxFileName#>Data.Add<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>, db);
+					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);<#
+			} #>
+
+
+			<#
+			if((keyType=="Int32" || keyType=="int") && keyName=="Id") {#>
+				return retval;
+<#			} #>
+	}
+			} 
+			catch (Exception ex)
+			{
+				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+			}
+
+		}<#
+		if((keyType=="Int32" || keyType=="int") && keyName=="Id") {
+#>
+
+		return -1;
+<#
+		}
+#>
+
+	}
+
+	public void Modify<#=code.Escape(entity)#>(<#=code.Escape(entity)#>Entity <#=code.Escape(lowerName)#>) 
+	{
+        using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Modify<#=code.Escape(entity)#>")) {
+
+            if (!AuthorizationHelper.CanModify("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
+
+			try {
+                using(var db = Connection) {
+					var before = Data.<#=edmxFileName#>Data.Get<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + code.Escape(lowerName) + "."+ key)#><#}#>, db);
+					var logid = AuditManager.LogModify(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", <# foreach(var key in keys.Keys) { #>before.<#=key#>.ToString()+<#}#>"", before, <#=code.Escape(lowerName)#>);
+					Data.<#=edmxFileName#>Data.Modify<#=code.Escape(entity)#>(<#=code.Escape(lowerName)#>, db);
+					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);
+				}
+			}
+			catch (Exception ex)
+			{
+				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+			}
+
+		}
+	}
+
+	public void Remove<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + keys[key])#> <#=Core.GetMethodParameterName(key)#><#}#> ) 
+	{
+        using(Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(<#=edmxFileName#>Service), "Remove<#=code.Escape(entity)#>")) {
+
+            if (!AuthorizationHelper.CanRemove("<#=apiSchemaName#>", "<#=lowerName#>")) throw new NotImplementedException();
+
+			try {
+				using(var db = Connection) {
+					var before = Data.<#=edmxFileName#>Data.Get<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>, db);
+					var logid = AuditManager.LogRemove(IdentityManager.Username, IdentityManager.ClientMachine, "<#=apiSchemaName#>", "<#=apiSchemaName#>", <# foreach(var key in keys.Keys) { #>before.<#=key#>.ToString()+<#}#>"", before);
+					Data.<#=edmxFileName#>Data.Remove<#=code.Escape(entity)#>(<# jj=0; foreach(var key in keys.Keys) { jj++; #><#=((jj>1 ? ", " : " ") + Core.GetMethodParameterName(key))#><#}#>, db);
+					AuditManager.MarkSuccessFul("<#=apiSchemaName#>", logid);
+				}
+			}
+			catch (Exception ex)
+			{
+				if (Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex)) throw;
+			}
+
+		}
+	}
+}
+<#
+	EndNamespace(namespaceName);
+#>
+<#
+}
+
+#>

@@ -1,0 +1,64 @@
+﻿<#
+
+string businessPath = new FileInfo(Host.TemplateFile).DirectoryName.Replace("\\Models","\\Business");
+
+fileManager.StartNewFile(edmxFileName + "FacadePackage.cs", folderName:"Business");
+
+WriteHeader("SimpleInjector.Packaging","SimpleInjector");
+#>
+
+<#
+BeginNamespace(namespaceName+".Business", code);
+#>
+
+public class <#=edmxFileName#>FacadePackage : IPackage
+{
+    public void RegisterServices(Container container)
+    {
+		var factory = new EntityCreateFactory(container);
+
+<#		foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+		{
+#>		factory.Register<<#=namespaceName + ".Interfaces."#>I<#=entity.Name#>, <#=namespaceName + ".Entities."#><#=entity.Name#>>(<#=namespaceName + ".Entities."#><#=entity.Name#>.Info);
+<#
+		}
+
+		foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+		{
+#>		container.Register<<#=namespaceName + ".Interfaces."#>I<#=entity.Name#>Facade, <#=entity.Name#>Facade>(Lifestyle.Singleton);
+<#
+		}
+#>
+
+    }
+}
+
+<#
+EndNamespace(namespaceName);
+#>
+
+<#
+// Emit Entity Types
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+	fileManager.StartNewFile(entity.Name+"Facade.cs", folderName:"Business");
+
+	WriteHeader("SimpleInjector", "SAAS.Core.Framework",namespaceName +".Interfaces");
+	#>
+
+using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + entity.Name#>;
+<# BeginNamespace(namespaceName+".Business", code);#>
+
+public partial class <#=entity.Name#>Facade : EntityBusinessFacade<I<#=edmxFileName#><#=entity.Name#>>, I<#=entity.Name#>Facade
+{
+
+        public <#=entity.Name#>Facade(Container container, IEntityRepository<I<#=edmxFileName#><#=entity.Name#>> repository, IEntityEventHandlerFactory handlers) : base(container, repository, handlers)
+        {
+        }
+
+}
+<#
+	EndNamespace(namespaceName);
+
+}
+#>

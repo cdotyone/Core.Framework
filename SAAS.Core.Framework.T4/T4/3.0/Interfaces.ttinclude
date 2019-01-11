@@ -1,0 +1,64 @@
+﻿<#
+
+string interfacesPath = new FileInfo(Host.TemplateFile).DirectoryName.Replace("\\Models","\\Interfaces");
+
+if (!typeMapper.VerifyCaseInsensitiveTypeUniqueness(typeMapper.GetAllGlobalItems(itemCollection), inputFile))
+{
+    return "";
+}
+
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+    fileManager.StartNewFile("I"+entity.Name + ".cs", folderName:"Interfaces.Entities");
+	WriteHeader("System","System.Collections.Generic","SAAS.Core.Framework", "Newtonsoft.Json",namespaceName + ".Interfaces");
+
+    BeginNamespace(namespaceName + ".Interfaces", code);
+
+#>
+public interface I<#=entity.Name#> : IEntityIdentity
+{
+<#
+    var simpleProperties = typeMapper.GetSimpleProperties(entity);
+    if (simpleProperties.Any())
+    {
+		var keyUID = simpleProperties.Where((sprop) => sprop.Name.ToLower().EndsWith("uid") && ef.IsKey(sprop)).FirstOrDefault();
+		var matchID = simpleProperties.Where((sprop) => keyUID!=null && sprop.Name.ToLower() == keyUID.Name.ToLower().Substring(0,keyUID.Name.Length-3)+"id").FirstOrDefault();
+
+        foreach (var edmProperty in simpleProperties)
+        {
+			if(matchID!=null && matchID.Name==edmProperty.Name) {
+				continue;
+			}
+			if(Core.MapUID.ContainsKey(edmProperty.Name)) {
+				if(Core.MapUID[edmProperty.Name].Schema==edmxFileName.ToLower() && Core.MapUID[edmProperty.Name].Table==entity.Name) continue;
+			}
+
+#>	 <#=Core.GetMappedProperty(codeStringGenerator,edmProperty,"")#>
+<#      }
+    }
+#>
+}
+<#
+	EndNamespace(namespaceName);
+}
+
+// Emit Entity Types
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+	fileManager.StartNewFile("I"+entity.Name+"Facade.cs", folderName:"Interfaces.Business");
+
+	WriteHeader("SAAS.Core.Framework");
+	#>
+
+using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + entity.Name#>;
+
+<# BeginNamespace(namespaceName+".Interfaces", code);#>
+
+public interface I<#=entity.Name#>Facade : IEntityBusinessFacade<I<#=edmxFileName#><#=entity.Name#>>
+{
+}
+<#
+	EndNamespace(namespaceName);
+
+}
+#>
