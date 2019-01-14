@@ -10,18 +10,17 @@
     <RootNamespace>SAAS.Core.Framework</RootNamespace>
     <AssemblyName>SAAS.Core.Framework</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>portable</DebugType>
+    <ci>true</ci>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,7 +54,6 @@
     <OutputPath>bin\Nuget-46\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -66,7 +64,6 @@
     <OutputPath>bin\Nuget-47\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -74,17 +71,22 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Civic.Core.Audit">
-      <Version>1.26.6</Version>
+      <Version>1.26.7</Version>
     </PackageReference>
-    <PackageReference Include="Civic.Core.Caching" Version="1.26.3" />
-    <PackageReference Include="Civic.Core.Configuration" Version="1.26.1" />
-    <PackageReference Include="Civic.Core.Data" Version="1.27.3" />
-    <PackageReference Include="Civic.Core.Logging" Version="1.27.6" />
+    <PackageReference Include="Civic.Core.Caching" Version="1.26.5" />
+    <PackageReference Include="Civic.Core.Configuration" Version="1.26.7" />
+    <PackageReference Include="Civic.Core.Data" Version="1.27.4" />
+    <PackageReference Include="Civic.Core.Logging" Version="1.27.8" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Core">
       <Version>5.2.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNet.WebApi.WebHost">
       <Version>5.2.7</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitLab">
+      <Version>1.0.0-beta2-18618-05</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Web.Infrastructure" Version="1.0.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
