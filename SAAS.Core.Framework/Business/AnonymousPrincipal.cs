@@ -38,6 +38,14 @@ namespace SAAS.Core.Framework
             get { return _identities; }
         }
 
+        public override IIdentity Identity
+        {
+            get
+            {
+                return _identities[0];
+            }
+        }
+
         private readonly List<Claim> _claims = new List<Claim>();
         public override IEnumerable<Claim> Claims
         {
