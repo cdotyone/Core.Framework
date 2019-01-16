@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 
 namespace SAAS.Core.Framework
 {
-    [RoutePrefix("api/services")]
+    //[RoutePrefix("api/services")]
     public class ServicesController : ApiController
     {
         private readonly IEntityCreateFactory _factory;
@@ -21,8 +21,9 @@ namespace SAAS.Core.Framework
             _factory = factory;
         }
 
-        [Route("{module}/{version}/{entity}", Order = 1)]
-        public IQueryMetadata Get(string module, string version, string entity)
+        //[Route("{module}/{version}/{entity}")]
+        [ActionName("DefaultGetPaged")]
+        public IQueryMetadata GetPaged(string module, string version, string entity)
         {
             var item = _factory.CreateNew(module, entity);
 
@@ -37,8 +38,9 @@ namespace SAAS.Core.Framework
             return new QueryMetadata<object>(result, resultLimit);
         }
 
-        [Route("{module}/{version}/{entity}/{key}", Order = 1)]
-        public IQueryMetadata Get(string dbCode, string module, string version, string entity, string key)
+        //[Route("{module}/{version}/{entity}/{key}")]
+        [ActionName("DefaultGet")]
+        public IQueryMetadata Get(string module, string version, string entity, string key)
         {
             var item = _factory.CreateNew(module, entity);
 
@@ -48,8 +50,8 @@ namespace SAAS.Core.Framework
             return new QueryMetadata<object>(result, 1);
         }
 
-        [Route("{module}/{version}/{entity}/{key}", Order = 1)]
-        [HttpDelete]
+        //[Route("{module}/{version}/{entity}/{key}")]
+        [ActionName("DefaultDelete")]
         public void Remove(string module, string version, string entity, string key)
         {
             var item = _factory.CreateNew(module, entity);
@@ -60,8 +62,8 @@ namespace SAAS.Core.Framework
         }
 
 
-        [Route("{module}/{version}/{entity}", Order = 1)]
-        [HttpPost]
+        //[Route("{module}/{version}/{entity}")]
+        [ActionName("DefaultPost")]
         public QueryMetadata<IEntityIdentity> Post(string module, string version, string entity, [FromBody]JObject value)
         {
             var item = _factory.CreateNew(module, entity);
@@ -73,7 +75,8 @@ namespace SAAS.Core.Framework
             return new QueryMetadata<IEntityIdentity>(new [] {item}, 1);
         }
 
-        [Route("{module}/{version}/{entity}/{key}", Order = 1)]
+        //[Route("{module}/{version}/{entity}/{key}")]
+        [ActionName("DefaultPut")]
         public void Put(string module, string version, string entity, string key, [FromBody]JObject value)
         {
             var item = _factory.CreateNew(module, entity);
@@ -84,8 +87,7 @@ namespace SAAS.Core.Framework
             item.Save(context);
         }
 
-        [HttpPost]
-        [Route(Order = 1)]
+        [ActionName("DefaultPostBulk")]
         public IQueryMetadata PostBulk([FromBody]List<JObject> list)
         {
             var result = new List<object>();

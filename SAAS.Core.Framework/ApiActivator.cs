@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
+using System.Web.Http.Routing;
 using Civic.Core.Logging;
 using SAAS.Core.Framework.Logging;
 using SAAS.Core.Framework.OData;
@@ -39,6 +40,44 @@ namespace SAAS.Core.Framework
 
             configuration.Services.Replace(typeof(IHttpControllerSelector), versionSelector);
             configuration.EnableODataV3Support();
+
+            configuration.Routes.MapHttpRoute(
+                name: "DefaultGetPaged",
+                routeTemplate: "api/{module}/{version}/{entity}",
+                constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Get) },
+                defaults: new {  controller="Services", action = "GetPaged" }
+            );
+            configuration.Routes.MapHttpRoute(
+                name: "DefaultGet",
+                routeTemplate: "api/{module}/{version}/{entity}/{key}",
+                constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Get) },
+                defaults: new { controller = "Services", action = "Get" }
+            );
+            configuration.Routes.MapHttpRoute(
+                name: "DefaultDelete",
+                routeTemplate: "api/{module}/{version}/{entity}/{key}",
+                constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Delete) },
+                defaults: new { controller = "Services", action = "Remove" }
+            );
+            configuration.Routes.MapHttpRoute(
+                name: "DefaultPut",
+                routeTemplate: "api/{module}/{version}/{entity}/{key}",
+                constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Put) },
+                defaults: new { controller = "Services", action = "Put" }
+            );
+            configuration.Routes.MapHttpRoute(
+                name: "DefaultPost",
+                routeTemplate: "api/{module}/{version}/{entity}",
+                constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Post) },
+                defaults: new { controller = "Services", action = "Post" }
+            );
+            configuration.Routes.MapHttpRoute(
+                name: "DefaultPostBulk",
+                routeTemplate: "api/services",
+                constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Post) },
+                defaults: new { controller = "Services", action = "PostBulk" }
+            );
+
 
             if (Civic.Core.Logging.Configuration.LoggingConfig.Current.Transmission)
             {
