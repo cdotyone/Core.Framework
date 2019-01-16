@@ -19,6 +19,11 @@ namespace SAAS.Core.Framework
             _handlers = handlers;
         }
 
+        public Container Container
+        {
+            get { return _container; }
+        }
+
         public virtual T Get(IEntityRequestContext context, string key)
         {
             var entity = _container.GetInstance<T>();
