@@ -21,7 +21,7 @@ namespace SAAS.Core.Framework
             _factory = factory;
         }
 
-        [Route("{module}/{version}/{entity}")]
+        [Route("{module}/{version}/{entity}", Order = 1)]
         public IQueryMetadata Get(string module, string version, string entity)
         {
             var item = _factory.CreateNew(module, entity);
@@ -37,7 +37,7 @@ namespace SAAS.Core.Framework
             return new QueryMetadata<object>(result, resultLimit);
         }
 
-        [Route("{module}/{version}/{entity}/{key}")]
+        [Route("{module}/{version}/{entity}/{key}", Order = 1)]
         public IQueryMetadata Get(string dbCode, string module, string version, string entity, string key)
         {
             var item = _factory.CreateNew(module, entity);
@@ -48,7 +48,7 @@ namespace SAAS.Core.Framework
             return new QueryMetadata<object>(result, 1);
         }
 
-        [Route("{module}/{version}/{entity}/{key}")]
+        [Route("{module}/{version}/{entity}/{key}", Order = 1)]
         [HttpDelete]
         public void Remove(string module, string version, string entity, string key)
         {
@@ -60,7 +60,7 @@ namespace SAAS.Core.Framework
         }
 
 
-        [Route("{module}/{version}/{entity}")]
+        [Route("{module}/{version}/{entity}", Order = 1)]
         [HttpPost]
         public QueryMetadata<IEntityIdentity> Post(string module, string version, string entity, [FromBody]JObject value)
         {
@@ -73,7 +73,7 @@ namespace SAAS.Core.Framework
             return new QueryMetadata<IEntityIdentity>(new [] {item}, 1);
         }
 
-        [Route("{module}/{version}/{entity}/{key}")]
+        [Route("{module}/{version}/{entity}/{key}", Order = 1)]
         public void Put(string module, string version, string entity, string key, [FromBody]JObject value)
         {
             var item = _factory.CreateNew(module, entity);
@@ -85,6 +85,7 @@ namespace SAAS.Core.Framework
         }
 
         [HttpPost]
+        [Route(Order = 1)]
         public IQueryMetadata PostBulk([FromBody]List<JObject> list)
         {
             var result = new List<object>();
