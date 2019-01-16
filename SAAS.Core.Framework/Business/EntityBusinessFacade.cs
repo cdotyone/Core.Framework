@@ -39,12 +39,12 @@ namespace SAAS.Core.Framework
 
                 try
                 {
-                    if (!_handlers.OnGetBefore(context, entity))
+                    if (!context.IgnoreHandlers.HasFlag(EntityEventType.GetBefore) && !_handlers.OnGetBefore(context, entity))
                         return null;
 
                     entity = _repository.Get(context, entity);
 
-                    if (!_handlers.OnGetAfter(context, entity))
+                    if (!context.IgnoreHandlers.HasFlag(EntityEventType.GetAfter) && !_handlers.OnGetAfter(context, entity))
                         return null;
 
                     return entity;
@@ -66,12 +66,13 @@ namespace SAAS.Core.Framework
 
                 try
                 {
-                    if (!_handlers.OnGetPagedBefore<T>(context))
+                    if (!context.IgnoreHandlers.HasFlag(EntityEventType.GetPagedBefore) && !_handlers.OnGetPagedBefore<T>(context))
                         return null;
 
                     var list = _repository.GetPaged(context, skip, ref count, retCount, filterBy, orderBy);
 
-                    list = _handlers.OnGetPagedAfter(context, list);
+                    if (!context.IgnoreHandlers.HasFlag(EntityEventType.GetPagedAfter))
+                        list = _handlers.OnGetPagedAfter(context, list);
 
                     return list;
                 }
@@ -97,22 +98,22 @@ namespace SAAS.Core.Framework
 
                     if (before == null)
                     {
-                        if (!_handlers.OnAddBefore(context, entity))
+                        if (!context.IgnoreHandlers.HasFlag(EntityEventType.AddBefore) && !_handlers.OnAddBefore(context, entity))
                             throw new Exception("OnAddBefore handler rejected");
 
                         _repository.Add(context, entity);
 
-                        if (!_handlers.OnAddAfter(context, entity))
+                        if (!context.IgnoreHandlers.HasFlag(EntityEventType.AddAfter) && !_handlers.OnAddAfter(context, entity))
                             throw new Exception("OnAddAfter handler rejected");
                     }
                     else
                     {
-                        if (!_handlers.OnModifyBefore(context, before, entity))
+                        if (!context.IgnoreHandlers.HasFlag(EntityEventType.ModifyBefore) && !_handlers.OnModifyBefore(context, before, entity))
                             throw new Exception("OnModifyBefore handler rejected");
 
                         _repository.Modify(context, before, entity);
 
-                        if (!_handlers.OnModifyAfter(context, before, entity))
+                        if (!context.IgnoreHandlers.HasFlag(EntityEventType.ModifyAfter) && !_handlers.OnModifyAfter(context, before, entity))
                             throw new Exception("OnModifyAfter handler rejected");
                     }
                 }
@@ -141,12 +142,12 @@ namespace SAAS.Core.Framework
                 {
                     var before = _repository.Get(context, entity);
 
-                    if (!_handlers.OnRemoveBefore(context, before))
+                    if (!context.IgnoreHandlers.HasFlag(EntityEventType.RemoveBefore) && !_handlers.OnRemoveBefore(context, before))
                         throw new Exception("OnRemoveBefore handler rejected");
 
                     _repository.Remove(context, before);
 
-                    if (!_handlers.OnRemoveAfter(context, before))
+                    if (!context.IgnoreHandlers.HasFlag(EntityEventType.RemoveAfter) && !_handlers.OnRemoveAfter(context, before))
                         throw new Exception("OnRemoveAfter handler rejected");
                 }
                 catch (Exception ex)
@@ -198,6 +199,43 @@ namespace SAAS.Core.Framework
         public virtual void Remove(ClaimsPrincipal who, T entity)
         {
             Remove(new EntityRequestContext {Who = who}, entity);
+        }
+
+
+
+
+        public virtual IEnumerable<T> GetPaged(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy, EntityEventType ignoreHandlers)
+        {
+            return GetPaged(new EntityRequestContext { Who = who, IgnoreHandlers = ignoreHandlers }, skip, ref count, retCount, filterBy, orderBy);
+        }
+        
+        public T Get(ClaimsPrincipal who, string key, EntityEventType ignoreHandlers)
+        {
+            var entity = _container.GetInstance<T>();
+            entity._key = key;
+            return Get(new EntityRequestContext { Who = who, IgnoreHandlers = ignoreHandlers }, entity);
+        }
+
+        public virtual T Get(ClaimsPrincipal who, T entity, EntityEventType ignoreHandlers)
+        {
+            return Get(new EntityRequestContext { Who = who, IgnoreHandlers = ignoreHandlers }, entity);
+        }
+
+        public virtual void Save(ClaimsPrincipal who, T entity, EntityEventType ignoreHandlers)
+        {
+            Save(new EntityRequestContext { Who = who, IgnoreHandlers = ignoreHandlers }, entity);
+        }
+
+        public void Remove(ClaimsPrincipal who, string key, EntityEventType ignoreHandlers)
+        {
+            var entity = _container.GetInstance<T>();
+            entity._key = key;
+            Remove(new EntityRequestContext { Who = who, IgnoreHandlers = ignoreHandlers }, entity);
+        }
+
+        public virtual void Remove(ClaimsPrincipal who, T entity, EntityEventType ignoreHandlers)
+        {
+            Remove(new EntityRequestContext { Who = who, IgnoreHandlers = ignoreHandlers }, entity);
         }
     }
 }

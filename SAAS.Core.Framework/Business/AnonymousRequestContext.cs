@@ -11,6 +11,8 @@ namespace SAAS.Core.Framework
 
         public string TransactionUID { get; set; } = string.Empty.InsureUID();
 
+        public EntityEventType IgnoreHandlers { get; set; }
+
         public List<IEntityOperation> Operations
         {
             get { return _operations ?? (_operations = new List<IEntityOperation>()); }

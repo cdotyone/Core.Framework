@@ -9,6 +9,8 @@ namespace SAAS.Core.Framework
 
         string TransactionUID { get; set; }
 
+        EntityEventType IgnoreHandlers { get; set; }
+
         List<IEntityOperation> Operations { get; }
 
         void Commit();
