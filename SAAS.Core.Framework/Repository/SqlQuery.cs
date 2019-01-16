@@ -141,7 +141,7 @@ namespace SAAS.Core.Framework
                         command.AddInParameter("@skip", skip);
                         command.AddInParameter("@retCount", retCount);
                         if (!string.IsNullOrEmpty(where)) command.AddInParameter("@where", where);
-                        command.AddInParameter("@orderBy", orderBy.Replace(", ",",").Replace(" ", "_"));
+                        if (!string.IsNullOrEmpty(orderBy)) command.AddInParameter("@orderBy", orderBy.Replace(", ",",").Replace(" ", "_"));
                         command.AddParameter("@count", ParameterDirection.InputOutput, count);
                         command.AddOutParameter("@debug", "");
 

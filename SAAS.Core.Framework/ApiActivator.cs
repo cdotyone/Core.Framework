@@ -45,37 +45,37 @@ namespace SAAS.Core.Framework
                 name: "DefaultGetPaged",
                 routeTemplate: "api/{module}/{version}/{entity}",
                 constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Get) },
-                defaults: new {  controller="Services", action = "GetPaged" }
+                defaults: new {  controller="Services", action = "DefaultGetPaged" }
             );
             configuration.Routes.MapHttpRoute(
                 name: "DefaultGet",
                 routeTemplate: "api/{module}/{version}/{entity}/{key}",
                 constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Get) },
-                defaults: new { controller = "Services", action = "Get" }
+                defaults: new { controller = "Services", action = "DefaultGet" }
             );
             configuration.Routes.MapHttpRoute(
                 name: "DefaultDelete",
                 routeTemplate: "api/{module}/{version}/{entity}/{key}",
                 constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Delete) },
-                defaults: new { controller = "Services", action = "Remove" }
+                defaults: new { controller = "Services", action = "DefaultDelete" }
             );
             configuration.Routes.MapHttpRoute(
                 name: "DefaultPut",
                 routeTemplate: "api/{module}/{version}/{entity}/{key}",
                 constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Put) },
-                defaults: new { controller = "Services", action = "Put" }
+                defaults: new { controller = "Services", action = "DefaultPut" }
             );
             configuration.Routes.MapHttpRoute(
                 name: "DefaultPost",
                 routeTemplate: "api/{module}/{version}/{entity}",
                 constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Post) },
-                defaults: new { controller = "Services", action = "Post" }
+                defaults: new { controller = "Services", action = "DefaultPost" }
             );
             configuration.Routes.MapHttpRoute(
                 name: "DefaultPostBulk",
                 routeTemplate: "api/services",
                 constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Post) },
-                defaults: new { controller = "Services", action = "PostBulk" }
+                defaults: new { controller = "Services", action = "DefaultPostBulk" }
             );
 
 
