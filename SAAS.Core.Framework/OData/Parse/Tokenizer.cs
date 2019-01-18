@@ -20,7 +20,7 @@ namespace SAAS.Core.Framework.OData.Parse
             add(@"or\s", TokenTypes.OrOperator);
             add(@"and\s", TokenTypes.AndOperator);
             add(@"\s*,\s*", TokenTypes.Separator);
-            add(@"(eq|neq|gt|ge|lt|le|like|in|nin)", TokenTypes.FieldOperator);
+            add(@"(eq|ne|gt|ge|lt|le|like|in|nin)", TokenTypes.FieldOperator);
             add(@"'.+?[']", TokenTypes.String);
             add(@"(-?[0-9]+(\.[0-9]+)?|true|false)", TokenTypes.Value);
         }

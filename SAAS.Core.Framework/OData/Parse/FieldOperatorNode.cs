@@ -25,7 +25,7 @@ namespace SAAS.Core.Framework.OData.Parse
                 {
                     case "eq":
                         return FieldOperator.Equal;
-                    case "neq":
+                    case "ne":
                         return FieldOperator.NotEqual;
                     case "gt":
                         return FieldOperator.GreaterThan;
