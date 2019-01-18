@@ -66,6 +66,8 @@ namespace SAAS.Core.Framework
 
                 try
                 {
+                    if (count < 0) count = 5000;
+
                     if (!context.IgnoreHandlers.HasFlag(EntityEventType.GetPagedBefore) && !_handlers.OnGetPagedBefore<T>(context))
                         return null;
 
