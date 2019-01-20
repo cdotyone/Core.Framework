@@ -17,8 +17,9 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
 BeginNamespace(namespaceName + ".Data.SqlServer", code);
 
 #>
-public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFileName#><#=entity.Name#>>
-{
+
+	public partial class <#=entity.Name#>Repository : SqlRepository<I<#=edmxFileName#><#=entity.Name#>>
+	{
 <#
 	// Emit Entity Types
 
@@ -36,132 +37,14 @@ public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFile
 	}
 
 #>
-    Container _container;
-	private readonly IEntityCreateFactory _factory;
-    private readonly IEntityInfo _info;
-
-    public <#=entity.Name#>Repository(Container container, IEntityCreateFactory factory)
-    {
-        _container = container;
-		_factory = factory;
-        _info = _container.GetInstance<I<#=edmxFileName#><#=entity.Name#>>().GetInfo();
-    }
-
-	public I<#=edmxFileName#><#=entity.Name#> Get(IEntityRequestContext context,  I<#=edmxFileName#><#=entity.Name#> entity)
-	{
-		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Get, null, null ,context)) {
-
-			Debug.Assert(database!=null);
-
-			var info = entity.GetInfo();
-
-		    if (!info.UseProcedureGet)
-		    {
-		        return SqlQuery.Get(_container, context.Who, entity, database);
-		    }
-
-			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Get"))
-			{
-				buildCommand(context, entity, command, false );
-
-    			command.ExecuteReader(dataReader =>
-				{
-				    if(!SqlQuery.PopulateEntity(context, entity, dataReader)) {
-						entity = null;
-					}
-   				});
-			}
-			return entity;
+		public <#=entity.Name#>Repository(Container container) : base(container)
+		{
 		}
-	}
 
-	public IEnumerable<I<#=edmxFileName#><#=entity.Name#>> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy)
-	{ 
-		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Get, null, null ,context)) {
+		public override void BuildCommand(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#> entity, IDBCommand command, bool addRecord )
+		{ 
+			Debug.Assert(command!=null);
 
-			Debug.Assert(database!=null);
-
-			var list = new List<I<#=edmxFileName#><#=entity.Name#>>();
-
-		    if (!_info.UseProcedureGet)
-		    {
-		        var entityList = SqlQuery.GetPaged<I<#=edmxFileName#><#=entity.Name#>>(_container, context.Who, _info, skip, ref count, retCount, filterBy, orderBy, database);
-		        foreach (var entity in entityList)
-		        {
-		            list.Add(entity as I<#=edmxFileName#><#=entity.Name#>);
-		        }
-
-		        return list;
-		    }
-
-			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=entity.Name#>GetFiltered"))
-			{
-				command.AddInParameter("@skip", skip);			
-				command.AddInParameter("@retcount", retCount);
-				if(!string.IsNullOrEmpty(filterBy)) command.AddInParameter("@filterBy", filterBy);
-				command.AddInParameter("@orderBy", orderBy);
-    			command.AddParameter("@count", ParameterDirection.InputOutput, count);
-			
-				command.ExecuteReader(dataReader =>
-					{
-                        var item = _container.GetInstance<I<#=edmxFileName#><#=entity.Name#>>();
-						while(SqlQuery.PopulateEntity(context, item, dataReader))
-						{
-							list.Add(item);
-	                        item = _container.GetInstance<I<#=edmxFileName#><#=entity.Name#>>();
-						} 
-					});
-
-				if (retCount) count = int.Parse(command.GetOutParameter("@count").Value.ToString());
-			}
-			return list;
-		}
-	}
-
-	public void Add(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#>  entity)
-	{ 
-		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Add, entity, null ,context)) {
-
-			Debug.Assert(database!=null);
-
-			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Add"))
-			{
-				buildCommand(context, entity, command, true );
-				command.ExecuteNonQuery();
-			}
-		}
-	}
-
-	public void Modify(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#> before, I<#=edmxFileName#><#=entity.Name#> after)
-	{ 
-		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Modify, before, after, context)) {
-			Debug.Assert(database!=null);
-
-			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Modify"))
-			{
-				buildCommand(context, after, command, false );
-				command.ExecuteNonQuery();
-			}
-		}
-	}
-
-	public void Remove(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#>  entity )
-	{
-		using(var database = SqlQuery.GetConnection("<#=edmxFileName#>", EntityOperationType.Remove, entity, null, context)) {
-
-			Debug.Assert(database!=null);
-
-			using (var command = database.CreateStoredProcCommand("<#=apiSchemaName#>","usp_<#=code.Escape(entity)#>Remove"))
-			{
-				buildCommand(context, entity, command, false );
-				command.ExecuteNonQuery();
-			}
-		}
-	}
-
-	static void buildCommand(IEntityRequestContext context, I<#=edmxFileName#><#=entity.Name#> entity, IDBCommand command, bool addRecord )
-	{ 
-        Debug.Assert(command!=null);
 <#
 		var keyUID = entity.Properties.Where((sprop) => sprop.Name.ToLower().EndsWith("uid") && ef.IsKey(sprop)).FirstOrDefault();
 		var matchID = entity.Properties.Where((sprop) => keyUID!=null && sprop.Name.ToLower() == keyUID.Name.ToLower().Substring(0,keyUID.Name.Length-3)+"id").FirstOrDefault();
@@ -186,8 +69,8 @@ public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFile
 			if(ptype=="string" && edmProperty.Name.EndsWith("UID")) pname = "entity."+code.Escape(edmProperty.Name)+".ToUpper()";
 			if(ptype=="string" && edmProperty.Name=="OID" && code.Escape(entity).ToLower()!="orgunit") continue;
 
-			if((ef.IsKey(edmProperty) && keyUID==null) || (keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name)) { #>
-		command.AddInParameter("<#=sname#>", <#=pname#>);
+			if((ef.IsKey(edmProperty) && keyUID==null) || (keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name)) { 
+#>			command.AddInParameter("<#=sname#>", <#=pname#>);
 <#
 				continue;
 			} else {
@@ -198,13 +81,12 @@ public partial class <#=entity.Name#>Repository : IEntityRepository<I<#=edmxFile
 			}
 
 		
-			#>
-		command.AddInParameter("<#=sname#>", <#=pname#>);
+			#>			command.AddInParameter("<#=sname#>", <#=pname#>);
 <#
 		}
 #>
+		}
 	}
-}
 <#
 EndNamespace(namespaceName);
 
