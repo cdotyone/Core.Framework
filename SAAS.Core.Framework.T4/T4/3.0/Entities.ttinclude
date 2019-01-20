@@ -51,8 +51,7 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
 			if(Core.MapUID.ContainsKey(edmProperty.Name)) {
 				if(Core.MapUID[edmProperty.Name].Schema==edmxFileName.ToLower() && Core.MapUID[edmProperty.Name].Table==entity.Name) continue;
 			}
-#>
-	[DataMember(Name="<#=Core.GetMapToName(edmProperty.Name)#>")]
+#>	[DataMember(Name="<#=Core.GetMapToName(edmProperty.Name)#>")]
 	<#=Core.GetMappedProperty(codeStringGenerator,edmProperty,"public ")#>
 
 <#
@@ -127,6 +126,9 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
     [DataMember(Name = "_entity")]
     public string _entity { get { return Info.Entity; } }
     
+	[JsonIgnore]
+    public Dictionary<string,object> _extra { get; set; }
+
     public static IEntityInfo Info = new EntityInfo
 	{
         Module = "<#=Core.ToLowerCamel(edmxFileName)#>",
@@ -146,20 +148,22 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
 
 		var name = Core.ToLowerCamel(edmProperty.Name).Replace("iD","id").Replace("oID","oid").Replace("oUID","ouid").Replace("uID","uid");
 
-	if((keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name) || edmProperty.Name=="OID" && Core.ToLowerCamel(entity.Name)!="orgUnit") {#>
+		if(matchID!=null && matchID.Name==edmProperty.Name) {
+			continue;
+		}
+
+		if(Core.MapUID.ContainsKey(edmProperty.Name) && Core.MapUID[edmProperty.Name].Table!=entity.Name) { 
+
+#>			{"<#=Core.MapUID[edmProperty.Name].MapTo#>", new EntityPropertyInfo { Name = "<#=Core.MapUID[edmProperty.Name].MapTo#>", Type="string" }},
+<#			continue;
+		}
+		if((keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name)) {#>
 <#}
-#>			{"<#=name#>", new EntityPropertyInfo { Name = "<#=name#>", Type="<#=typeMapper.GetTypeName(edmProperty.TypeUsage).Replace("System.DateTime","DateTime").Replace("Nullable<DateTime>","DateTime").Replace("Nullable<int>","int").Replace("Nullable<long>","long")#>"<#if(ef.IsNullable(edmProperty.TypeUsage)) {#>, IsNullable=true<#}#><#if(ef.IsKey(edmProperty)) {#>, IsKey=true<#}#> }},
+#>			{"<#=edmProperty.Name#>", new EntityPropertyInfo { Name = "<#=name#>", Type="<#=typeMapper.GetTypeName(edmProperty.TypeUsage).Replace("System.DateTime","DateTime").Replace("Nullable<DateTime>","DateTime").Replace("Nullable<int>","int").Replace("Nullable<long>","long")#>"<#if(ef.IsNullable(edmProperty.TypeUsage)) {#>, IsNullable=true<#}#><#if(ef.IsKey(edmProperty)) {#>, IsKey=true<#}#> }},
 <#
-	if(edmProperty.Name=="OID" && Core.ToLowerCamel(entity.Name)!="orgUnit") {#>
-			{"ouid", new EntityPropertyInfo { Name = "ouid", Type="string" }},
-<#}
-
-        }
-    }
-
-#>
-
-        }
+	    }
+	}
+#>        }
     };
 
 	private readonly Container _container;

@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Security.Claims;
 using Civic.Core.Data;
 using Civic.Core.Logging;
 using SAAS.Core.Framework.OData;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SimpleInjector;
 
 namespace SAAS.Core.Framework
@@ -56,20 +53,15 @@ namespace SAAS.Core.Framework
             return connection;
         }
 
-        public static T Get<T>(Container container, ClaimsPrincipal who, T item, IDBConnection database) where T : class,IEntityIdentity
+        public static T Get<T>(Container container, IEntityRequestContext context, IEntityInfo info, string primaryKey, IDBConnection database) where T : class,IEntityIdentity
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(SqlQuery), "Get"))
             {
-                var info = item.GetInfo();
-                var entityID = item._key;
-
-                if (!AuthorizationHelper.CanView(who, info)) throw new UnauthorizedAccessException();
-
                 try
                 {
                     var view = $"[{info.Module}].[VW_{info.Entity.ToUpperInvariant()}]";
 
-                    var keyValues = entityID.Split('|').ToList();
+                    var keyValues = primaryKey.Split('|').ToList();
 
                     var keys = new List<string>();
                     var parameters = new List<DbParameter>();
@@ -95,19 +87,17 @@ namespace SAAS.Core.Framework
 
                         var entity = new Entity();
 
+                        var factory = container.GetInstance<IEntityCreateFactory>();
+                        T item = factory.CreateNew(info) as T;
+
                         command.ExecuteReader(dataReader =>
                         {
-                            if (PopulateEntity(entity, dataReader, info.Properties, true))
-                            {
-                                var json = JsonConvert.SerializeObject(entity);
-                                JsonConvert.PopulateObject(json, item);
-                                entity = new Entity();
-                            }
-                            else item = null;
+                            if (!PopulateEntity(item, info, dataReader, true))
+                                item = null;
                         });
-                    }
 
-                    return item;
+                        return item;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -118,11 +108,11 @@ namespace SAAS.Core.Framework
             return null;
         }
 
-        public static IEnumerable<T> GetPaged<T>(Container container, ClaimsPrincipal who, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database) where T : class,IEntityIdentity
+        public static IEnumerable<T> GetPaged<T>(Container container, IEntityRequestContext context, IEntityInfo info, int skip, ref int count, bool retCount, string filterBy, string orderBy, IDBConnection database) where T : class,IEntityIdentity
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(SqlQuery), "GetPaged"))
             {
-                if (!AuthorizationHelper.CanView(who, info)) throw new UnauthorizedAccessException();
+                if (!AuthorizationHelper.CanView(context.Who, info)) throw new UnauthorizedAccessException();
 
                 try
                 {
@@ -150,13 +140,12 @@ namespace SAAS.Core.Framework
                         var factory = container.GetInstance<IEntityCreateFactory>();
 
                         command.ExecuteReader(dataReader =>
-                        {                            
-                            while (PopulateEntity(entity, dataReader, info.Properties, true))
+                        {
+                            T item = factory.CreateNew(info) as T;
+                            while (PopulateEntity(item, info, dataReader, true))
                             {
-                                var json = JsonConvert.SerializeObject(entity);
-                                T item = factory.CreateNew(info) as T;
-                                JsonConvert.PopulateObject(json,item);
                                 list.Add(item);
+                                item = factory.CreateNew(info) as T;
                             }
                         });
 
@@ -177,11 +166,21 @@ namespace SAAS.Core.Framework
             return null;
         }
 
-        public static bool PopulateEntity(Entity entity, IDataReader dataReader, Dictionary<string, IEntityPropertyInfo> propertyNames, bool stripLeadUnderscore)
+        public static bool PopulateEntity<T>(T entity, IDataReader dataReader, bool stripLeadUnderscore) where T : class, IEntityIdentity
+        {
+            var info = EntityCreateFactory.GetInfo(entity);
+            return PopulateEntity(entity, info, dataReader, stripLeadUnderscore);
+        }
+
+        public static bool PopulateEntity<T>(T entity, IEntityInfo info, IDataReader dataReader, bool stripLeadUnderscore) where T : class, IEntityIdentity
         {
             if (dataReader == null || !dataReader.Read()) return false;
 
-            entity.Properties = new Dictionary<string, object>();
+            var extra = entity._extra ?? new Dictionary<string, object>();
+
+            PropertyMapper.Map<T>(info);
+
+            var propertyNames = info.Properties;
 
             for (int i = 0, l = dataReader.FieldCount; i < l; i++)
             {
@@ -192,82 +191,74 @@ namespace SAAS.Core.Framework
                 {
                     var name = dataReader.GetName(i);
                     string type;
+
+                    IEntityPropertyInfo property = null;
+
                     if (propertyNames.ContainsKey(name))
                     {
-                        IEntityPropertyInfo property = propertyNames[name];
+                        property = propertyNames[name];
                         name = property.Name;
                         type = property.Type.ToLower();
                     }
                     else type = dataReader.GetDataTypeName(i).ToLower();
                     if (stripLeadUnderscore) name = name.TrimStart(new[] { '_' });
 
+                    object value;
                     switch (type)
                     {
                         case "double":
-                            entity.Properties.Add(name, dataReader.GetDouble(i));
+                            value = dataReader.GetDouble(i);
                             break;
+                        case "float":
+                            value = dataReader.GetFloat(i);
+                            break;
+                        case "guid":
                         case "uniqueidentifier":
-                            entity.Properties.Add(name, Guid.Parse(dataReader.GetString(i)));
+                            value = Guid.Parse(dataReader.GetString(i));
                             break;
                         case "money":
                         case "decimal":
-                            entity.Properties.Add(name, dataReader.GetDecimal(i));
+                            value = dataReader.GetDecimal(i);
                             break;
                         case "time":
                         case "date":
                         case "smalldatetime":
                         case "datetime":
                         case "datetime2":
-                            entity.Properties.Add(name, dataReader.GetDateTime(i).FromDB());
+                            value = dataReader.GetDateTime(i);
                             break;
                         case "smallint":
-                            entity.Properties.Add(name, dataReader.GetInt16(i));
+                            value = dataReader.GetInt16(i);
+                            break;
+                        case "short":
+                        case "int16":
+                            value = dataReader.GetInt16(i);
                             break;
                         case "int":
-                            entity.Properties.Add(name, dataReader.GetInt32(i));
+                        case "int32":
+                            value = dataReader.GetInt32(i);
                             break;
                         case "bigint":
-                            entity.Properties.Add(name, dataReader.GetInt64(i));
+                        case "int64":
+                            value = dataReader.GetInt64(i);
                             break;
                         case "bit":
-                            entity.Properties.Add(name, dataReader.GetBoolean(i));
+                            value = dataReader.GetBoolean(i);
                             break;
                         default:
-                            var value = dataReader.GetValue(i).ToString();
-
-                            switch (type)
-                            {
-                                case "json":
-                                    entity.Properties.Add(name, JsonConvert.DeserializeObject<JObject>(value));
-                                    break;
-                                case "boolean":
-                                    entity.Properties.Add(name, value == "1" || value.ToLower() == "true");
-                                    break;
-                                case "smallint":
-                                    entity.Properties.Add(name, Int16.Parse(value));
-                                    break;
-                                case "money":
-                                    entity.Properties.Add(name, decimal.Parse(value));
-                                    break;
-                                case "float":
-                                case "decimal":
-                                    entity.Properties.Add(name, float.Parse(value));
-                                    break;
-                                case "int":
-                                    entity.Properties.Add(name, Int32.Parse(value));
-                                    break;
-                                case "bigint":
-                                    entity.Properties.Add(name, Int64.Parse(value));
-                                    break;
-                                case "datetime":
-                                    entity.Properties.Add(name, DateTime.Parse(value).FromDB());
-                                    break;
-                                default:
-                                    entity.Properties.Add(name, value);
-                                    break;
-                            }
+                            value = dataReader.GetValue(i).ToString();
                             break;
                     }
+
+                    if (property!=null)
+                    {
+                        if (property.Set != null)
+                        {
+                            property.Set.DynamicInvoke(entity, value);
+                        }
+                        else extra[name] = value;
+                    } else extra[name] = value;
+
                 }
                 catch (Exception ex)
                 {
@@ -279,7 +270,7 @@ namespace SAAS.Core.Framework
             return true;
         }
 
-        public static bool PopulateEntity<T>(IEntityRequestContext context, T item, IDataReader dataReader)  where T : class, IEntityIdentity
+/*        public static bool PopulateEntity<T>(IEntityRequestContext context, T item, IDataReader dataReader)  where T : class, IEntityIdentity
         {
             if (dataReader == null || !dataReader.Read()) return false;
 
@@ -291,6 +282,6 @@ namespace SAAS.Core.Framework
             JsonConvert.PopulateObject(json, item);
 
             return true;
-        }
+        }*/
     }
 }

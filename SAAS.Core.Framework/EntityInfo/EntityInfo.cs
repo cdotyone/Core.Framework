@@ -2,6 +2,7 @@
 
 namespace SAAS.Core.Framework
 {
+    /// <inheritdoc />
     public class EntityInfo : IEntityInfo
     {
         public string Module { get; set; }
@@ -21,5 +22,7 @@ namespace SAAS.Core.Framework
         public string RelatedKeyName { get; set; }
 
         public Dictionary<string, IEntityPropertyInfo> Properties { get; set; }
+
+        public bool Mapped { get; set; }
     }
 }

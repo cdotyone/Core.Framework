@@ -11,7 +11,10 @@ namespace SAAS.Core.Framework
         // ReSharper disable InconsistentNaming
         string _module { get; }
 
-        string _entity { get;  }
+        string _entity { get; }
+
+        Dictionary<string,object> _extra { get; set; }
+
         // ReSharper enable once InconsistentNaming
         #pragma warning restore IDE1006 // Naming Styles
 

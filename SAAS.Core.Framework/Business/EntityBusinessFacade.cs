@@ -239,6 +239,7 @@ namespace SAAS.Core.Framework
         {
             Remove(new EntityRequestContext { Who = who, IgnoreHandlers = ignoreHandlers }, entity);
         }
+
     }
 }
 

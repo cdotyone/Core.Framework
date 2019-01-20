@@ -28,4 +28,5 @@ namespace SAAS.Core.Framework
 
         void Remove(ClaimsPrincipal who, T entity);
     }
+
 }
