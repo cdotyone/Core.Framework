@@ -90,6 +90,7 @@
       <DependentUpon>Example.txt4</DependentUpon>
     </EmbeddedResource>
     <Content Include="Global.asax" />
+    <Content Include="Interfaces.Entities\Example.txt4" />
     <Content Include="Models\Example.edmx.sql" />
     <Content Include="Models\Example.SeedData.xml" />
     <Content Include="SQL\all_Entity1.sql">
@@ -268,7 +269,6 @@
     <Content Include="Example.txt4" />
     <Content Include="Entities\Example.txt4" />
     <Content Include="SQL\Example.txt4" />
-    <Content Include="Interfaces.Entities\Example.txt4" />
     <Content Include="Business\Example.txt4" />
     <Content Include="Interfaces.Business\Example.txt4" />
     <Content Include="Entities\CivicConfig.json">

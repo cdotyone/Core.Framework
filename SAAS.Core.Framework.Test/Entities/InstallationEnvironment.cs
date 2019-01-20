@@ -27,22 +27,17 @@ namespace SAAS.Core.Framework.Test.Entities
 public partial class InstallationEnvironment : IExampleInstallationEnvironment
 {
 
-
 	[DataMember(Name="environmentCode")]
 	public string EnvironmentCode { get; set; }
-
 
 	[DataMember(Name="name")]
 	public string Name { get; set; }
 
-
 	[DataMember(Name="description")]
 	public string Description { get; set; }
 
-
 	[DataMember(Name="isVisible")]
 	public string IsVisible { get; set; }
-
 
 	[DataMember(Name="modified")]
 	public DateTime Modified { get; set; }
@@ -69,6 +64,9 @@ public partial class InstallationEnvironment : IExampleInstallationEnvironment
     [DataMember(Name = "_entity")]
     public string _entity { get { return Info.Entity; } }
     
+	[JsonIgnore]
+    public Dictionary<string,object> _extra { get; set; }
+
     public static IEntityInfo Info = new EntityInfo
 	{
         Module = "example",
@@ -76,13 +74,11 @@ public partial class InstallationEnvironment : IExampleInstallationEnvironment
         Name = "example.installationEnvironment",
         Properties = new Dictionary<string, IEntityPropertyInfo>
         {
-			{"environmentCode", new EntityPropertyInfo { Name = "environmentCode", Type="string", IsKey=true }},
-			{"name", new EntityPropertyInfo { Name = "name", Type="string" }},
-			{"description", new EntityPropertyInfo { Name = "description", Type="string", IsNullable=true }},
-			{"isVisible", new EntityPropertyInfo { Name = "isVisible", Type="string" }},
-			{"modified", new EntityPropertyInfo { Name = "modified", Type="DateTime" }},
-
-
+			{"EnvironmentCode", new EntityPropertyInfo { Name = "environmentCode", Type="string", IsKey=true }},
+			{"Name", new EntityPropertyInfo { Name = "name", Type="string" }},
+			{"Description", new EntityPropertyInfo { Name = "description", Type="string", IsNullable=true }},
+			{"IsVisible", new EntityPropertyInfo { Name = "isVisible", Type="string" }},
+			{"Modified", new EntityPropertyInfo { Name = "modified", Type="DateTime" }},
         }
     };
 

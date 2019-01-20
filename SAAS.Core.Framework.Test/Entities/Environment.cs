@@ -27,10 +27,8 @@ namespace SAAS.Core.Framework.Test.Entities
 public partial class Environment : IExampleEnvironment
 {
 
-
 	[DataMember(Name="iD")]
 	public int ID { get; set; }
-
 
 	[DataMember(Name="name")]
 	public string Name { get; set; }
@@ -57,6 +55,9 @@ public partial class Environment : IExampleEnvironment
     [DataMember(Name = "_entity")]
     public string _entity { get { return Info.Entity; } }
     
+	[JsonIgnore]
+    public Dictionary<string,object> _extra { get; set; }
+
     public static IEntityInfo Info = new EntityInfo
 	{
         Module = "example",
@@ -64,10 +65,8 @@ public partial class Environment : IExampleEnvironment
         Name = "example.environment",
         Properties = new Dictionary<string, IEntityPropertyInfo>
         {
-			{"id", new EntityPropertyInfo { Name = "id", Type="int", IsKey=true }},
-			{"name", new EntityPropertyInfo { Name = "name", Type="string", IsNullable=true }},
-
-
+			{"ID", new EntityPropertyInfo { Name = "id", Type="int", IsKey=true }},
+			{"Name", new EntityPropertyInfo { Name = "name", Type="string", IsNullable=true }},
         }
     };
 

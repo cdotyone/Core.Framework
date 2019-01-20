@@ -27,14 +27,11 @@ namespace SAAS.Core.Framework.Test.Entities
 public partial class Entity3 : IExampleEntity3
 {
 
-
 	[DataMember(Name="someUID")]
 	public string SomeUID { get; set; }
 
-
 	[DataMember(Name="modified")]
 	public DateTime Modified { get; set; }
-
 
 	[DataMember(Name="otherDate")]
 	public DateTime? OtherDate { get; set; }
@@ -61,6 +58,9 @@ public partial class Entity3 : IExampleEntity3
     [DataMember(Name = "_entity")]
     public string _entity { get { return Info.Entity; } }
     
+	[JsonIgnore]
+    public Dictionary<string,object> _extra { get; set; }
+
     public static IEntityInfo Info = new EntityInfo
 	{
         Module = "example",
@@ -68,13 +68,9 @@ public partial class Entity3 : IExampleEntity3
         Name = "example.entity3",
         Properties = new Dictionary<string, IEntityPropertyInfo>
         {
-			{"someUID", new EntityPropertyInfo { Name = "someUID", Type="string", IsKey=true }},
-
-			{"someID", new EntityPropertyInfo { Name = "someID", Type="long" }},
-			{"modified", new EntityPropertyInfo { Name = "modified", Type="DateTime" }},
-			{"otherDate", new EntityPropertyInfo { Name = "otherDate", Type="DateTime", IsNullable=true }},
-
-
+			{"SomeUID", new EntityPropertyInfo { Name = "someUID", Type="string", IsKey=true }},
+			{"Modified", new EntityPropertyInfo { Name = "modified", Type="DateTime" }},
+			{"OtherDate", new EntityPropertyInfo { Name = "otherDate", Type="DateTime", IsNullable=true }},
         }
     };
 

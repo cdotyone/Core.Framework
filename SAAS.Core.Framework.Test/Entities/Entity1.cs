@@ -27,26 +27,20 @@ namespace SAAS.Core.Framework.Test.Entities
 public partial class Entity1 : IExampleEntity1
 {
 
-
 	[DataMember(Name="name")]
 	public string Name { get; set; }
-
 
 	[DataMember(Name="environmentID")]
 	public int EnvironmentID { get; set; }
 
-
 	[DataMember(Name="dte")]
 	public DateTime Dte { get; set; }
-
 
 	[DataMember(Name="dte2")]
 	public DateTime? Dte2 { get; set; }
 
-
 	[DataMember(Name="dble1")]
 	public double Dble1 { get; set; }
-
 
 	[DataMember(Name="dec1")]
 	public double Dec1 { get; set; }
@@ -73,6 +67,9 @@ public partial class Entity1 : IExampleEntity1
     [DataMember(Name = "_entity")]
     public string _entity { get { return Info.Entity; } }
     
+	[JsonIgnore]
+    public Dictionary<string,object> _extra { get; set; }
+
     public static IEntityInfo Info = new EntityInfo
 	{
         Module = "example",
@@ -80,14 +77,12 @@ public partial class Entity1 : IExampleEntity1
         Name = "example.entity1",
         Properties = new Dictionary<string, IEntityPropertyInfo>
         {
-			{"name", new EntityPropertyInfo { Name = "name", Type="string", IsKey=true }},
-			{"environmentID", new EntityPropertyInfo { Name = "environmentID", Type="int" }},
-			{"dte", new EntityPropertyInfo { Name = "dte", Type="DateTime" }},
-			{"dte2", new EntityPropertyInfo { Name = "dte2", Type="DateTime", IsNullable=true }},
-			{"dble1", new EntityPropertyInfo { Name = "dble1", Type="double" }},
-			{"dec1", new EntityPropertyInfo { Name = "dec1", Type="double" }},
-
-
+			{"Name", new EntityPropertyInfo { Name = "name", Type="string", IsKey=true }},
+			{"EnvironmentID", new EntityPropertyInfo { Name = "environmentID", Type="int" }},
+			{"Dte", new EntityPropertyInfo { Name = "dte", Type="DateTime" }},
+			{"Dte2", new EntityPropertyInfo { Name = "dte2", Type="DateTime", IsNullable=true }},
+			{"Dble1", new EntityPropertyInfo { Name = "dble1", Type="double" }},
+			{"Dec1", new EntityPropertyInfo { Name = "dec1", Type="double" }},
         }
     };
 

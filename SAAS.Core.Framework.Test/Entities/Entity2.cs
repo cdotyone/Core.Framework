@@ -27,22 +27,17 @@ namespace SAAS.Core.Framework.Test.Entities
 public partial class Entity2 : IExampleEntity2
 {
 
-
 	[DataMember(Name="someID")]
 	public int SomeID { get; set; }
-
 
 	[DataMember(Name="ff")]
 	public string ff { get; set; }
 
-
 	[DataMember(Name="modified")]
 	public DateTime Modified { get; set; }
 
-
 	[DataMember(Name="otherDate")]
 	public DateTime? OtherDate { get; set; }
-
 
 	[DataMember(Name="ouid")]
 	public string OUID { get; set; }
@@ -70,6 +65,9 @@ public partial class Entity2 : IExampleEntity2
     [DataMember(Name = "_entity")]
     public string _entity { get { return Info.Entity; } }
     
+	[JsonIgnore]
+    public Dictionary<string,object> _extra { get; set; }
+
     public static IEntityInfo Info = new EntityInfo
 	{
         Module = "example",
@@ -77,16 +75,11 @@ public partial class Entity2 : IExampleEntity2
         Name = "example.entity2",
         Properties = new Dictionary<string, IEntityPropertyInfo>
         {
-			{"someID", new EntityPropertyInfo { Name = "someID", Type="int", IsKey=true }},
+			{"SomeID", new EntityPropertyInfo { Name = "someID", Type="int", IsKey=true }},
 			{"ff", new EntityPropertyInfo { Name = "ff", Type="string", IsKey=true }},
-			{"modified", new EntityPropertyInfo { Name = "modified", Type="DateTime" }},
-			{"otherDate", new EntityPropertyInfo { Name = "otherDate", Type="DateTime", IsNullable=true }},
-
-			{"oid", new EntityPropertyInfo { Name = "oid", Type="int", IsNullable=true }},
-
-			{"ouid", new EntityPropertyInfo { Name = "ouid", Type="string" }},
-
-
+			{"Modified", new EntityPropertyInfo { Name = "modified", Type="DateTime" }},
+			{"OtherDate", new EntityPropertyInfo { Name = "otherDate", Type="DateTime", IsNullable=true }},
+			{"OUID", new EntityPropertyInfo { Name = "OUID", Type="string" }},
         }
     };
 
