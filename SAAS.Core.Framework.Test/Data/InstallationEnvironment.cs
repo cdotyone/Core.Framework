@@ -20,11 +20,11 @@ using SAAS.Core.Framework;
 using SAAS.Core.Framework.Configuration;
 using SAAS.Core.Framework.Test.Interfaces;
 
-using IExampleInstallationEnvironment = SAAS.Core.Framework.Test.Interfaces.IInstallationEnvironment;
+using ExampleInstallationEnvironment = SAAS.Core.Framework.Test.Entities.InstallationEnvironment;
 
 namespace SAAS.Core.Framework.Test.Data.SqlServer
 {
-    public partial class InstallationEnvironmentRepository : SqlRepository<IExampleInstallationEnvironment>
+    public partial class InstallationEnvironmentRepository : SqlRepository<ExampleInstallationEnvironment>,IEntityRepository<ExampleInstallationEnvironment>
 	{
 		public InstallationEnvironmentRepository(Container container) : base(container)
 		{

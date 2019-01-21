@@ -11,6 +11,8 @@ namespace SAAS.Core.Framework
 
         EntityEventType IgnoreHandlers { get; set; }
 
+        string Expand { get; set; }
+
         List<IEntityOperation> Operations { get; }
 
         void Commit();

@@ -11,22 +11,17 @@
 
 using SimpleInjector;
 using SAAS.Core.Framework;
-using SAAS.Core.Framework.Test.Interfaces;
 
+using ExampleEnvironment = SAAS.Core.Framework.Test.Entities.Environment;
 
-
-using IExampleEnvironment = SAAS.Core.Framework.Test.Interfaces.IEnvironment;
 namespace SAAS.Core.Framework.Test.Business
 {
     
-
-public partial class EnvironmentFacade : EntityBusinessFacade<IExampleEnvironment>, IEnvironmentFacade
-{
-
-        public EnvironmentFacade(Container container, IEntityRepository<IExampleEnvironment> repository, IEntityEventHandlerFactory handlers) : base(container, repository, handlers)
+	public partial class EnvironmentFacade : EntityBusinessFacade<ExampleEnvironment>
+	{
+        public EnvironmentFacade(Container container, IEntityRepository<ExampleEnvironment> repository, IEntityEventHandlerFactory handlers) : base(container, repository, handlers)
         {
         }
-
-}
+	}
 }
 

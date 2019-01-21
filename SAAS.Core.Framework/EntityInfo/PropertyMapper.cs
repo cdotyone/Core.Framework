@@ -10,13 +10,17 @@ namespace SAAS.Core.Framework
 
             var properties = info.Properties;
 
-            foreach (var property in typeof(IEntityIdentity).GetProperties())
+            foreach (var property in typeof(T).GetProperties())
             {
                 var setterType = typeof(Action<,>).MakeGenericType( typeof(T), property.PropertyType);
-                var setter = Delegate.CreateDelegate(setterType, null, property.GetSetMethod());
+                Delegate setter = null;
+                if(property.SetMethod!=null)
+                    setter = Delegate.CreateDelegate(setterType, null, property.GetSetMethod());
 
                 var getterType = typeof(Func<,>).MakeGenericType(typeof(T), property.PropertyType);
-                var getter = Delegate.CreateDelegate(getterType, null, property.GetGetMethod());
+                Delegate getter = null;
+                if(property.GetMethod!=null)
+                    getter = Delegate.CreateDelegate(getterType, null, property.GetGetMethod());
 
                 foreach (var propertyInfo in properties)
                 {

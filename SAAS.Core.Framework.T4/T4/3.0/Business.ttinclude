@@ -19,13 +19,13 @@ public class <#=edmxFileName#>FacadePackage : IPackage
 
 <#		foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 		{
-#>		factory.Register<<#=namespaceName + ".Interfaces."#>I<#=entity.Name#>, <#=namespaceName + ".Entities."#><#=entity.Name#>>(<#=namespaceName + ".Entities."#><#=entity.Name#>.Info);
+#>		factory.Register<<#=namespaceName + ".Entities."#><#=entity.Name#>>(<#=namespaceName + ".Entities."#><#=entity.Name#>.Info);
 <#
 		}
 
 		foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 		{
-#>		container.Register<<#=namespaceName + ".Interfaces."#>I<#=entity.Name#>Facade, <#=entity.Name#>Facade>(Lifestyle.Singleton);
+#>		container.Register<IEntityBusinessFacade<<#=entity.Name#>>, <#=entity.Name#>Facade>(Lifestyle.Singleton);
 <#
 		}
 #>
@@ -43,20 +43,16 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 {
 	fileManager.StartNewFile(entity.Name+"Facade.cs", folderName:"Business");
 
-	WriteHeader("SimpleInjector", "SAAS.Core.Framework",namespaceName +".Interfaces");
-	#>
+	WriteHeader("SimpleInjector", "SAAS.Core.Framework");
+	#>using <#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Entities." + entity.Name#>;
 
-using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + entity.Name#>;
 <# BeginNamespace(namespaceName+".Business", code);#>
-
-public partial class <#=entity.Name#>Facade : EntityBusinessFacade<I<#=edmxFileName#><#=entity.Name#>>, I<#=entity.Name#>Facade
-{
-
-        public <#=entity.Name#>Facade(Container container, IEntityRepository<I<#=edmxFileName#><#=entity.Name#>> repository, IEntityEventHandlerFactory handlers) : base(container, repository, handlers)
+	public partial class <#=entity.Name#>Facade : EntityBusinessFacade<<#=edmxFileName#><#=entity.Name#>>,IEntityBusinessFacade<<#=edmxFileName#><#=entity.Name#>>
+	{
+        public <#=entity.Name#>Facade(Container container, IEntityRepository<<#=edmxFileName#><#=entity.Name#>> repository, IEntityEventHandlerFactory handlers) : base(container, repository, handlers)
         {
         }
-
-}
+	}
 <#
 	EndNamespace(namespaceName);
 

@@ -14,6 +14,8 @@ namespace SAAS.Core.Framework
 
         public EntityEventType IgnoreHandlers { get; set; }
 
+        public string Expand { get; set; }
+
         public List<IEntityOperation> Operations
         {
             get { return _operations ?? (_operations = new List<IEntityOperation>()); }

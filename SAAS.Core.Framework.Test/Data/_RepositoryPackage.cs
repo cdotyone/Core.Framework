@@ -12,8 +12,7 @@
 using SimpleInjector.Packaging;
 using SimpleInjector;
 using SAAS.Core.Framework;
-
-
+using SAAS.Core.Framework.Test.Entities;
 
 namespace SAAS.Core.Framework.Test.Data.SqlServer
 {
@@ -24,15 +23,15 @@ public class ExampleRepositoryPackage : IPackage
     public void RegisterServices(Container container)
     {
 
-		container.Register<IEntityRepository<SAAS.Core.Framework.Test.Interfaces.IEntity1>, Entity1Repository>(Lifestyle.Singleton);
+		container.Register<IEntityRepository<Entity1>, Entity1Repository>(Lifestyle.Singleton);
 
-		container.Register<IEntityRepository<SAAS.Core.Framework.Test.Interfaces.IEntity2>, Entity2Repository>(Lifestyle.Singleton);
+		container.Register<IEntityRepository<Entity2>, Entity2Repository>(Lifestyle.Singleton);
 
-		container.Register<IEntityRepository<SAAS.Core.Framework.Test.Interfaces.IEntity3>, Entity3Repository>(Lifestyle.Singleton);
+		container.Register<IEntityRepository<Entity3>, Entity3Repository>(Lifestyle.Singleton);
 
-		container.Register<IEntityRepository<SAAS.Core.Framework.Test.Interfaces.IEnvironment>, EnvironmentRepository>(Lifestyle.Singleton);
+		container.Register<IEntityRepository<Environment>, EnvironmentRepository>(Lifestyle.Singleton);
 
-		container.Register<IEntityRepository<SAAS.Core.Framework.Test.Interfaces.IInstallationEnvironment>, InstallationEnvironmentRepository>(Lifestyle.Singleton);
+		container.Register<IEntityRepository<InstallationEnvironment>, InstallationEnvironmentRepository>(Lifestyle.Singleton);
 
     }
 }

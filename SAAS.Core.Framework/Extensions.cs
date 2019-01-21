@@ -51,7 +51,7 @@ namespace SAAS.Core.Framework
         {
             object value = from;
 
-            switch (nameof(type))
+            switch (type.Name)
             {
                 case nameof(Int16):
                     value = Int16.Parse(from);

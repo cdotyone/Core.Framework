@@ -13,13 +13,13 @@ using SAAS.Core.Framework;
 
 
 
-using IExampleEnvironment = SAAS.Core.Framework.Test.Interfaces.IEnvironment;
+using ExampleEnvironment = SAAS.Core.Framework.Test.Entities.Environment;
 
 namespace SAAS.Core.Framework.Test.Interfaces
 {
     
 
-public interface IEnvironmentFacade : IEntityBusinessFacade<IExampleEnvironment>
+public interface IEnvironmentFacade : IEntityBusinessFacade<ExampleEnvironment>
 {
 }
 }

@@ -24,16 +24,11 @@ public class ExampleFacadePackage : IPackage
     {
 		var factory = new EntityCreateFactory(container);
 
-		factory.Register<SAAS.Core.Framework.Test.Interfaces.IEntity1, SAAS.Core.Framework.Test.Entities.Entity1>(SAAS.Core.Framework.Test.Entities.Entity1.Info);
-		factory.Register<SAAS.Core.Framework.Test.Interfaces.IEntity2, SAAS.Core.Framework.Test.Entities.Entity2>(SAAS.Core.Framework.Test.Entities.Entity2.Info);
-		factory.Register<SAAS.Core.Framework.Test.Interfaces.IEntity3, SAAS.Core.Framework.Test.Entities.Entity3>(SAAS.Core.Framework.Test.Entities.Entity3.Info);
-		factory.Register<SAAS.Core.Framework.Test.Interfaces.IEnvironment, SAAS.Core.Framework.Test.Entities.Environment>(SAAS.Core.Framework.Test.Entities.Environment.Info);
-		factory.Register<SAAS.Core.Framework.Test.Interfaces.IInstallationEnvironment, SAAS.Core.Framework.Test.Entities.InstallationEnvironment>(SAAS.Core.Framework.Test.Entities.InstallationEnvironment.Info);
-		container.Register<SAAS.Core.Framework.Test.Interfaces.IEntity1Facade, Entity1Facade>(Lifestyle.Singleton);
-		container.Register<SAAS.Core.Framework.Test.Interfaces.IEntity2Facade, Entity2Facade>(Lifestyle.Singleton);
-		container.Register<SAAS.Core.Framework.Test.Interfaces.IEntity3Facade, Entity3Facade>(Lifestyle.Singleton);
-		container.Register<SAAS.Core.Framework.Test.Interfaces.IEnvironmentFacade, EnvironmentFacade>(Lifestyle.Singleton);
-		container.Register<SAAS.Core.Framework.Test.Interfaces.IInstallationEnvironmentFacade, InstallationEnvironmentFacade>(Lifestyle.Singleton);
+		factory.Register<SAAS.Core.Framework.Test.Entities.Entity1>(SAAS.Core.Framework.Test.Entities.Entity1.Info);
+		factory.Register<SAAS.Core.Framework.Test.Entities.Entity2>(SAAS.Core.Framework.Test.Entities.Entity2.Info);
+		factory.Register<SAAS.Core.Framework.Test.Entities.Entity3>(SAAS.Core.Framework.Test.Entities.Entity3.Info);
+		factory.Register<SAAS.Core.Framework.Test.Entities.Environment>(SAAS.Core.Framework.Test.Entities.Environment.Info);
+		factory.Register<SAAS.Core.Framework.Test.Entities.InstallationEnvironment>(SAAS.Core.Framework.Test.Entities.InstallationEnvironment.Info);
 
 
     }

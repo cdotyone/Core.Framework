@@ -17,111 +17,104 @@ using SimpleInjector;
 using SAAS.Core.Framework;
 using SAAS.Core.Framework.Test.Interfaces;
 
-
-using IExampleEntity2 = SAAS.Core.Framework.Test.Interfaces.IEntity2;
 namespace SAAS.Core.Framework.Test.Entities
 {
-    
+    [DataContract(Name="entity2")]
+	public partial class Entity2 : IEntityIdentity
+	{
 
-[DataContract(Name="entity2")]
-public partial class Entity2 : IExampleEntity2
-{
+		[DataMember(Name="someID")]
+		public int SomeID { get; set; }
 
-	[DataMember(Name="someID")]
-	public int SomeID { get; set; }
+		[DataMember(Name="ff")]
+		public string ff { get; set; }
 
-	[DataMember(Name="ff")]
-	public string ff { get; set; }
+		[DataMember(Name="modified")]
+		public DateTime Modified { get; set; }
 
-	[DataMember(Name="modified")]
-	public DateTime Modified { get; set; }
+		[DataMember(Name="otherDate")]
+		public DateTime? OtherDate { get; set; }
 
-	[DataMember(Name="otherDate")]
-	public DateTime? OtherDate { get; set; }
+		[DataMember(Name="ouid")]
+		public string OUID { get; set; }
 
-	[DataMember(Name="ouid")]
-	public string OUID { get; set; }
-
-
-    [DataMember(Name = "_key")]
-	public string _key 
-    { 
-		get {
-
-			return SomeID.ToString()+"|"+ff.ToString();
-		}
-		set {
-			var keys = value.Split('|');
+		[DataMember(Name = "_key")]
+		public string _key 
+		{ 
+			get {
+				return SomeID.ToString()+"|"+ff.ToString();
+			}
+			set {
+				var keys = value.Split('|');
 						
-			SomeID = Int32.Parse(keys[0]);		
-			ff = keys[1];
+				SomeID = Int32.Parse(keys[0]);		
+				ff = keys[1];
+			}
+		}
 
+		[DataMember(Name = "_module")]
+		public string _module { get { return Info.Module; } }
+    
+		[DataMember(Name = "_entity")]
+		public string _entity { get { return Info.Entity; } }
+    
+		[JsonIgnore]
+		public Dictionary<string,object> _extra { get; set; }
+
+		public static IEntityInfo Info = new EntityInfo
+		{
+			Module = "example",
+			Entity = "entity2",
+			Name = "example.entity2",
+			Properties = new Dictionary<string, IEntityPropertyInfo>
+			{
+				{"SomeID", new EntityPropertyInfo { Name = "someID", Type="int", IsKey=true }},
+				{"ff", new EntityPropertyInfo { Name = "ff", Type="string", IsKey=true }},
+				{"Modified", new EntityPropertyInfo { Name = "modified", Type="DateTime" }},
+				{"OtherDate", new EntityPropertyInfo { Name = "otherDate", Type="DateTime", IsNullable=true }},
+				{"OUID", new EntityPropertyInfo { Name = "OUID", Type="string" }},
+        }
+		};
+
+		private readonly Container _container;
+		public Entity2(Container container)
+		{
+			_container = container;
+		}
+
+		public IEntityInfo GetInfo() {
+			return Info;
+		}
+
+		public IEntityIdentity LoadByKey(IEntityRequestContext context, string key) {
+			_key = key;
+			return Load(context);
+		}
+
+		public void RemoveByKey(IEntityRequestContext context, string key) {
+			_key = key;
+			Remove(context);
+		}
+
+		public IEnumerable<IEntityIdentity> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
+			var facade = _container.GetInstance<IEntity2Facade>();
+			return facade.GetPaged(context, skip, ref count, retCount, filterBy, orderBy);
+		}
+
+		public IEntityIdentity Load(IEntityRequestContext context) {
+			var facade = _container.GetInstance<IEntity2Facade>();
+			return facade.Get(context, this);
+		}
+
+		public void Save(IEntityRequestContext context) {
+			var facade = _container.GetInstance<IEntity2Facade>();
+			facade.Save(context, this);
+		}
+
+		public void Remove(IEntityRequestContext context) {
+			var facade = _container.GetInstance<IEntity2Facade>();
+			facade.Remove(context, this);
 		}
 	}
-
-    [DataMember(Name = "_module")]
-    public string _module { get { return Info.Module; } }
-    
-    [DataMember(Name = "_entity")]
-    public string _entity { get { return Info.Entity; } }
-    
-	[JsonIgnore]
-    public Dictionary<string,object> _extra { get; set; }
-
-    public static IEntityInfo Info = new EntityInfo
-	{
-        Module = "example",
-        Entity = "entity2",
-        Name = "example.entity2",
-        Properties = new Dictionary<string, IEntityPropertyInfo>
-        {
-			{"SomeID", new EntityPropertyInfo { Name = "someID", Type="int", IsKey=true }},
-			{"ff", new EntityPropertyInfo { Name = "ff", Type="string", IsKey=true }},
-			{"Modified", new EntityPropertyInfo { Name = "modified", Type="DateTime" }},
-			{"OtherDate", new EntityPropertyInfo { Name = "otherDate", Type="DateTime", IsNullable=true }},
-			{"OUID", new EntityPropertyInfo { Name = "OUID", Type="string" }},
-        }
-    };
-
-	private readonly Container _container;
-	public Entity2(Container container)
-	{
-	    _container = container;
-	}
-
-	public IEntityInfo GetInfo() {
-		return Info;
-	}
-
-    public IEntityIdentity LoadByKey(IEntityRequestContext context, string key) {
-		_key = key;
-		return Load(context);
-	}
-
-    public void RemoveByKey(IEntityRequestContext context, string key) {
-		_key = key;
-		Remove(context);
-	}
-
-	public IEnumerable<IEntityIdentity> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
-	    var facade = _container.GetInstance<IEntity2Facade>();
-		return facade.GetPaged(context, skip, ref count, retCount, filterBy, orderBy);
-	}
-
-	public IEntityIdentity Load(IEntityRequestContext context) {
-	    var facade = _container.GetInstance<IEntity2Facade>();
-		return facade.Get(context, this);
-	}
-
-	public void Save(IEntityRequestContext context) {
-	    var facade = _container.GetInstance<IEntity2Facade>();
-		facade.Save(context, this);
-	}
-
-	public void Remove(IEntityRequestContext context) {
-	    var facade = _container.GetInstance<IEntity2Facade>();
-		facade.Remove(context, this);
-	}
-}
 }
 

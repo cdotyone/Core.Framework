@@ -19,7 +19,7 @@ namespace SAAS.Core.Framework
 
         public static IEntityInfo GetInfo<T>(T entity)
         {
-            return _info[nameof(entity)];
+            return _info[typeof(T).Name];
         }
 
         public static IEntityInfo GetInfo(string name)
@@ -30,12 +30,14 @@ namespace SAAS.Core.Framework
         IEntityIdentity IEntityCreateFactory.CreateNew(IEntityInfo info) => _producers[info.Name].GetInstance();
         IEntityIdentity IEntityCreateFactory.CreateNew(string module, string entity) => _producers[module+"."+entity].GetInstance();
 
-        public void Register<TService, TImplementation>(IEntityInfo info, Lifestyle lifestyle = null) where TImplementation : class, IEntityIdentity, TService where TService : class
+        public void Register<TImplementation>(IEntityInfo info, Lifestyle lifestyle = null) where TImplementation : class, IEntityIdentity
         {
-            _container.Register<TService, TImplementation>(Lifestyle.Transient);
+            //_container.Register<TService, TImplementation>(Lifestyle.Transient);
             var producer = (lifestyle ?? _container.Options.DefaultLifestyle).CreateProducer<IEntityIdentity, TImplementation>(_container);
+            
+            PropertyMapper.Map<TImplementation>(info);
 
-            _info[nameof(TImplementation)] = info;
+            _info[typeof(TImplementation).Name] = info;
             _producers[info.Name] = producer;
         }
     }

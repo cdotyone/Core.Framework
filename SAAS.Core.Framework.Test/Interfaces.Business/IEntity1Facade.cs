@@ -13,13 +13,13 @@ using SAAS.Core.Framework;
 
 
 
-using IExampleEntity1 = SAAS.Core.Framework.Test.Interfaces.IEntity1;
+using ExampleEntity1 = SAAS.Core.Framework.Test.Entities.Entity1;
 
 namespace SAAS.Core.Framework.Test.Interfaces
 {
     
 
-public interface IEntity1Facade : IEntityBusinessFacade<IExampleEntity1>
+public interface IEntity1Facade : IEntityBusinessFacade<ExampleEntity1>
 {
 }
 }

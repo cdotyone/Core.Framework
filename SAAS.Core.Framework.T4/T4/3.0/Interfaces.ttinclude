@@ -50,11 +50,11 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	WriteHeader("SAAS.Core.Framework");
 	#>
 
-using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + entity.Name#>;
+using <#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Entities." + entity.Name#>;
 
 <# BeginNamespace(namespaceName+".Interfaces", code);#>
 
-public interface I<#=entity.Name#>Facade : IEntityBusinessFacade<I<#=edmxFileName#><#=entity.Name#>>
+public interface I<#=entity.Name#>Facade : IEntityBusinessFacade<<#=edmxFileName#><#=entity.Name#>>
 {
 }
 <#

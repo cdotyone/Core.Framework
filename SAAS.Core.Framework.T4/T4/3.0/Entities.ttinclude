@@ -4,16 +4,12 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 {
     fileManager.StartNewFile(entity.Name + ".cs", folderName:"Entities");
 	WriteHeader("System","System.Collections.Generic","System.Runtime.Serialization", "Newtonsoft.Json","SimpleInjector","SAAS.Core.Framework",namespaceName +".Interfaces");
-#>
-using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + entity.Name#>;
-<#
+
     BeginNamespace(namespaceName + ".Entities", code);
 
-#>
-
-[DataContract(Name="<#=Core.ToLowerCamel(entity.Name)#>")]
-<#=codeStringGenerator.EntityClassOpening(entity)#> : I<#=edmxFileName#><#=entity.Name#>
-{
+#>[DataContract(Name="<#=Core.ToLowerCamel(entity.Name)#>")]
+	<#=codeStringGenerator.EntityClassOpening(entity)#> : IEntityIdentity
+	{
 
 <#
     var propertiesWithDefaultValues = typeMapper.GetPropertiesWithDefaultValues(entity);
@@ -21,8 +17,8 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
     if (propertiesWithDefaultValues.Any())
     {
 #>
-    public <#=code.Escape(entity)#>()
-    {
+		public <#=code.Escape(entity)#>()
+		{
 <#
         foreach (var edmProperty in propertiesWithDefaultValues)
         {
@@ -31,8 +27,7 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
 <#
         }
 #>
-    }
-
+		}
 <#
     }
 
@@ -51,18 +46,17 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
 			if(Core.MapUID.ContainsKey(edmProperty.Name)) {
 				if(Core.MapUID[edmProperty.Name].Schema==edmxFileName.ToLower() && Core.MapUID[edmProperty.Name].Table==entity.Name) continue;
 			}
-#>	[DataMember(Name="<#=Core.GetMapToName(edmProperty.Name)#>")]
-	<#=Core.GetMappedProperty(codeStringGenerator,edmProperty,"public ")#>
+#>		[DataMember(Name="<#=Core.GetMapToName(edmProperty.Name)#>")]
+		<#=Core.GetMappedProperty(codeStringGenerator,edmProperty,"public ")#>
 
 <#
         }
     }
 
-#>
-    [DataMember(Name = "_key")]
-	public string _key 
-    { 
-		get {
+#>		[DataMember(Name = "_key")]
+		public string _key 
+		{ 
+			get {
 <#
 
 		var keys = new List<string>();
@@ -80,16 +74,14 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
 		}
 
 		if(keys.Count==0) {
-		#>
-					return null;
+		#>		return null;
 		<#			
-		} else {#>
-			return <#=string.Join(".ToString()+\"|\"+",glist)#>.ToString();
+		} else {#>				return <#=string.Join(".ToString()+\"|\"+",glist)#>.ToString();
 		<#
 		}
-#>}
-		set {
-			var keys = value.Split('|');
+#>	}
+			set {
+				var keys = value.Split('|');
 <#
 		for(var ll=0;ll<keys.Count;ll++) {
 			foreach (var edmProperty in simpleProperties)
@@ -104,38 +96,37 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
 					key = Core.MapUID[edmProperty.Name].MapTo;
 				}
 			if(ptype=="int32" || ptype=="int" || ptype=="int64" || ptype=="long" || ptype=="float") {#>						
-			<#=key#> = <#=code.Escape(edmProperty.TypeUsage.EdmType).Replace("@","")#>.Parse(keys[<#=ll#>]);<#
+				<#=key#> = <#=code.Escape(edmProperty.TypeUsage.EdmType).Replace("@","")#>.Parse(keys[<#=ll#>]);<#
 				} else if(ptype=="boolean") {#>						
-			<#=key#> = boolean.Parse(keys[<#=ll#>]);<#
+				<#=key#> = boolean.Parse(keys[<#=ll#>]);<#
 				} else if(ptype=="decimal" || ptype=="double") {#>						
-			<#=key#> = double.Parse(keys[<#=ll#>]);<#
+				<#=key#> = double.Parse(keys[<#=ll#>]);<#
 				} else if(ptype=="datetime") {#>					
-			<#=key#> = DateTime.Parse(parts[<#=ll#>]);<#
+				<#=key#> = DateTime.Parse(parts[<#=ll#>]);<#
 				} else {#>		
-			<#=key#> = keys[<#=ll#>];<#
+				<#=key#> = keys[<#=ll#>];<#
 				}
 			}
 		}#>
-
+			}
 		}
-	}
 
-    [DataMember(Name = "_module")]
-    public string _module { get { return Info.Module; } }
+		[DataMember(Name = "_module")]
+		public string _module { get { return Info.Module; } }
     
-    [DataMember(Name = "_entity")]
-    public string _entity { get { return Info.Entity; } }
+		[DataMember(Name = "_entity")]
+		public string _entity { get { return Info.Entity; } }
     
-	[JsonIgnore]
-    public Dictionary<string,object> _extra { get; set; }
+		[JsonIgnore]
+		public Dictionary<string,object> _extra { get; set; }
 
-    public static IEntityInfo Info = new EntityInfo
-	{
-        Module = "<#=Core.ToLowerCamel(edmxFileName)#>",
-        Entity = "<#=Core.ToLowerCamel(entity.Name)#>",
-        Name = "<#=Core.ToLowerCamel(edmxFileName)#>.<#=Core.ToLowerCamel(entity.Name)#>",
-        Properties = new Dictionary<string, IEntityPropertyInfo>
-        {
+		public static IEntityInfo Info = new EntityInfo
+		{
+			Module = "<#=Core.ToLowerCamel(edmxFileName)#>",
+			Entity = "<#=Core.ToLowerCamel(entity.Name)#>",
+			Name = "<#=Core.ToLowerCamel(edmxFileName)#>.<#=Core.ToLowerCamel(entity.Name)#>",
+			Properties = new Dictionary<string, IEntityPropertyInfo>
+			{
 <#
     simpleProperties = typeMapper.GetSimpleProperties(entity);
     if (simpleProperties.Any())
@@ -154,58 +145,57 @@ using I<#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Interfaces.I" + e
 
 		if(Core.MapUID.ContainsKey(edmProperty.Name) && Core.MapUID[edmProperty.Name].Table!=entity.Name) { 
 
-#>			{"<#=Core.MapUID[edmProperty.Name].MapTo#>", new EntityPropertyInfo { Name = "<#=Core.MapUID[edmProperty.Name].MapTo#>", Type="string" }},
+#>				{"<#=Core.MapUID[edmProperty.Name].MapTo#>", new EntityPropertyInfo { Name = "<#=Core.MapUID[edmProperty.Name].MapTo#>", Type="string" }},
 <#			continue;
 		}
 		if((keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name)) {#>
 <#}
-#>			{"<#=edmProperty.Name#>", new EntityPropertyInfo { Name = "<#=name#>", Type="<#=typeMapper.GetTypeName(edmProperty.TypeUsage).Replace("System.DateTime","DateTime").Replace("Nullable<DateTime>","DateTime").Replace("Nullable<int>","int").Replace("Nullable<long>","long")#>"<#if(ef.IsNullable(edmProperty.TypeUsage)) {#>, IsNullable=true<#}#><#if(ef.IsKey(edmProperty)) {#>, IsKey=true<#}#> }},
+#>				{"<#=edmProperty.Name#>", new EntityPropertyInfo { Name = "<#=name#>", Type="<#=typeMapper.GetTypeName(edmProperty.TypeUsage).Replace("System.DateTime","DateTime").Replace("Nullable<DateTime>","DateTime").Replace("Nullable<int>","int").Replace("Nullable<long>","long")#>"<#if(ef.IsNullable(edmProperty.TypeUsage)) {#>, IsNullable=true<#}#><#if(ef.IsKey(edmProperty)) {#>, IsKey=true<#}#> }},
 <#
 	    }
-	}
-#>        }
-    };
+	}#>        }
+		};
 
-	private readonly Container _container;
-	public <#=entity.Name#>(Container container)
-	{
-	    _container = container;
-	}
+		private readonly Container _container;
+		public <#=entity.Name#>(Container container)
+		{
+			_container = container;
+		}
 
-	public IEntityInfo GetInfo() {
-		return Info;
-	}
+		public IEntityInfo GetInfo() {
+			return Info;
+		}
 
-    public IEntityIdentity LoadByKey(IEntityRequestContext context, string key) {
-		_key = key;
-		return Load(context);
-	}
+		public IEntityIdentity LoadByKey(IEntityRequestContext context, string key) {
+			_key = key;
+			return Load(context);
+		}
 
-    public void RemoveByKey(IEntityRequestContext context, string key) {
-		_key = key;
-		Remove(context);
-	}
+		public void RemoveByKey(IEntityRequestContext context, string key) {
+			_key = key;
+			Remove(context);
+		}
 
-	public IEnumerable<IEntityIdentity> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
-	    var facade = _container.GetInstance<I<#=entity.Name#>Facade>();
-		return facade.GetPaged(context, skip, ref count, retCount, filterBy, orderBy);
-	}
+		public IEnumerable<IEntityIdentity> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
+			var facade = _container.GetInstance<IEntityBusinessFacade<<#=entity.Name#>>>();
+			return facade.GetPaged(context, skip, ref count, retCount, filterBy, orderBy);
+		}
 
-	public IEntityIdentity Load(IEntityRequestContext context) {
-	    var facade = _container.GetInstance<I<#=entity.Name#>Facade>();
-		return facade.Get(context, this);
-	}
+		public IEntityIdentity Load(IEntityRequestContext context) {
+			var facade = _container.GetInstance<IEntityBusinessFacade<<#=entity.Name#>>>();
+			return facade.Get(context, this);
+		}
 
-	public void Save(IEntityRequestContext context) {
-	    var facade = _container.GetInstance<I<#=entity.Name#>Facade>();
-		facade.Save(context, this);
-	}
+		public void Save(IEntityRequestContext context) {
+			var facade = _container.GetInstance<IEntityBusinessFacade<<#=entity.Name#>>>();
+			facade.Save(context, this);
+		}
 
-	public void Remove(IEntityRequestContext context) {
-	    var facade = _container.GetInstance<I<#=entity.Name#>Facade>();
-		facade.Remove(context, this);
+		public void Remove(IEntityRequestContext context) {
+			var facade = _container.GetInstance<IEntityBusinessFacade<<#=entity.Name#>>>();
+			facade.Remove(context, this);
+		}
 	}
-}
 <#
     EndNamespace(namespaceName + ".Entities");
 }

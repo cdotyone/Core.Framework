@@ -20,11 +20,11 @@ using SAAS.Core.Framework;
 using SAAS.Core.Framework.Configuration;
 using SAAS.Core.Framework.Test.Interfaces;
 
-using IExampleEntity2 = SAAS.Core.Framework.Test.Interfaces.IEntity2;
+using ExampleEntity2 = SAAS.Core.Framework.Test.Entities.Entity2;
 
 namespace SAAS.Core.Framework.Test.Data.SqlServer
 {
-    public partial class Entity2Repository : SqlRepository<IExampleEntity2>
+    public partial class Entity2Repository : SqlRepository<ExampleEntity2>,IEntityRepository<ExampleEntity2>
 	{
 		public Entity2Repository(Container container) : base(container)
 		{
