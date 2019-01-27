@@ -619,7 +619,7 @@ public static string GetMapToName(string str)
 		}
 		return name;
 	}
-	return str.Substring(0,1).ToLower()+str.Substring(1).Replace("iD","id").Replace("oID","oid").Replace("oUID","ouid").Replace("uID","uid");
+	return (str.Substring(0,1).ToLower()+str.Substring(1)).Replace("iD","id").Replace("oID","oid").Replace("oUID","ouid").Replace("uID","uid");
 }
 
 public static string GetMappedProperty(CodeStringGenerator code, EdmProperty edmProperty, string prefix) 
