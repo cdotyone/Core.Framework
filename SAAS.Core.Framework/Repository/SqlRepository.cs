@@ -26,7 +26,7 @@ namespace SAAS.Core.Framework
             {
                 Debug.Assert(database != null);
 
-                return SqlQuery.Get<T>(_container, context, entity.GetInfo(), entity._key, database);
+                return SqlQuery.Get<T>(_container, context, PropertyMapper.GetInfo(entity), entity._key, database);
             }
         }
 
@@ -99,7 +99,7 @@ namespace SAAS.Core.Framework
             Debug.Assert(command != null);
 
             var properties = _info.Properties;
-            PropertyMapper.Map<T>(_info);
+            //PropertyMapper.Map<T>(_info);
 
             foreach (var property in properties)
             {

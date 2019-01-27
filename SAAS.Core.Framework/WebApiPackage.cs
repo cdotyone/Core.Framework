@@ -19,16 +19,12 @@ namespace SAAS.Core.Framework
     {
         public void RegisterServices(Container container)
         {
-
             container.Register<IEntityCreateFactory, EntityCreateFactory>(Lifestyle.Singleton);
             container.Register<IEntityEventHandlerFactory, EntityEventHandlerFactory>(Lifestyle.Singleton);
 
-            var factory = new EntityEventHandlerFactory(container);
-
-            factory.Register(new BasicAuthorizationHandler(container));
+            var factory = new EntityEventHandlerFactory();
+            factory.Register(new BasicAuthorizationHandler());
             factory.Register(new AuditLogHandler());
-
-
         }
     }
     

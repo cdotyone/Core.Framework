@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using Civic.Core.Audit;
 using Civic.Core.Security;
 
@@ -25,8 +24,8 @@ namespace SAAS.Core.Framework
 
         public bool OnAddAfter<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity
         {
-            var info = entity.GetInfo();
-            AuditManager.LogAdd<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
+            var info = PropertyMapper.GetInfo(entity);
+            AuditManager.LogAdd(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
             return true;
         }
 
@@ -37,8 +36,8 @@ namespace SAAS.Core.Framework
 
         public bool OnModifyAfter<T>(IEntityRequestContext context, T before, T after) where T : class, IEntityIdentity
         {
-            var info = before.GetInfo();
-            AuditManager.LogModify<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, before._key, null, null, before, after, context.TransactionUID);
+            var info = PropertyMapper.GetInfo(before);
+            AuditManager.LogModify(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, before._key, null, null, before, after, context.TransactionUID);
             return true;
         }
 
@@ -49,8 +48,8 @@ namespace SAAS.Core.Framework
 
         public bool OnRemoveAfter<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity
         {
-            var info = entity.GetInfo();
-            AuditManager.LogRemove<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
+            var info = PropertyMapper.GetInfo(entity);
+            AuditManager.LogRemove(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
             return true;
         }
 

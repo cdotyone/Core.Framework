@@ -2,19 +2,11 @@
 using System.Collections.Generic;
 using Civic.Core.Audit;
 using Civic.Core.Security;
-using SimpleInjector;
 
 namespace SAAS.Core.Framework
 {
     public class BasicAuthorizationHandler : IEntityEventHandler
     {
-        private Container _container;
-
-        public BasicAuthorizationHandler(Container container)
-        {
-            this._container = container;
-        }
-
         public EntityEventType Handlers
         {
             get
@@ -26,10 +18,10 @@ namespace SAAS.Core.Framework
 
         public bool OnAddBefore<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity
         {
-            var info = entity.GetInfo();
+            var info = PropertyMapper.GetInfo(entity);
             if (!AuthorizationHelper.CanAdd(context.Who, info))
             {
-                AuditManager.LogAccess<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
+                AuditManager.LogAccess(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
                 throw new UnauthorizedAccessException();
             }
             return true;
@@ -42,10 +34,10 @@ namespace SAAS.Core.Framework
 
         public bool OnModifyBefore<T>(IEntityRequestContext context, T before, T after) where T : class, IEntityIdentity
         {
-            var info = before.GetInfo();
+            var info = PropertyMapper.GetInfo(before);
             if (!AuthorizationHelper.CanModify(context.Who, info))
             {
-                AuditManager.LogAccess<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, before._key, null, null, before, context.TransactionUID);
+                AuditManager.LogAccess(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, before._key, null, null, before, context.TransactionUID);
                 throw new UnauthorizedAccessException();
             }
             return true;
@@ -58,10 +50,10 @@ namespace SAAS.Core.Framework
 
         public bool OnRemoveBefore<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity
         {
-            var info = entity.GetInfo();
+            var info = PropertyMapper.GetInfo(entity);
             if (!AuthorizationHelper.CanRemove(context.Who, info))
             {
-                AuditManager.LogAccess<T>(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
+                AuditManager.LogAccess(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
                 throw new UnauthorizedAccessException();
             }
             return true;
@@ -74,7 +66,7 @@ namespace SAAS.Core.Framework
 
         public bool OnGetBefore<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity
         {
-            var info = entity.GetInfo();
+            var info = PropertyMapper.GetInfo(entity);
             if (!AuthorizationHelper.CanView(context.Who, info))
             {
                 AuditManager.LogChange(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, info.Entity, null, null, null, "ACC", null, null, context.TransactionUID);
@@ -90,7 +82,7 @@ namespace SAAS.Core.Framework
 
         public bool OnGetPagedBefore<T>(IEntityRequestContext context) where T : class, IEntityIdentity
         {
-            var info = _container.GetInstance<T>().GetInfo();
+            var info = PropertyMapper.GetInfo(typeof(T));
             if (!AuthorizationHelper.CanView(context.Who, info))
             {
                 AuditManager.LogChange(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, info.Entity, null, null, null, "ACC", null, null, context.TransactionUID);

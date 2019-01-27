@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using SimpleInjector;
 
 namespace SAAS.Core.Framework
 {
     public class EntityEventHandlerFactory : IEntityEventHandlerFactory
     {
-        readonly Container _container;
-        private const string AllClasses = "*";
+        private const string ALL_CLASSES = "*";
 
         private static readonly ConcurrentDictionary<EntityEventType,ConcurrentDictionary<string,ConcurrentBag<IEntityEventHandler>>> _producers = 
             new ConcurrentDictionary<EntityEventType, ConcurrentDictionary<string, ConcurrentBag<IEntityEventHandler>>>();
             
-        public EntityEventHandlerFactory(Container container)
+        public EntityEventHandlerFactory()
         {
-            _container = container;
-
             foreach (EntityEventType val in Enum.GetValues(typeof(EntityEventType)))
             {
                 _producers[val] = new ConcurrentDictionary<string, ConcurrentBag<IEntityEventHandler>>(StringComparer.OrdinalIgnoreCase);
@@ -26,8 +22,6 @@ namespace SAAS.Core.Framework
         public void Register<THandler>(IEntityInfo info, THandler producerInstance)
             where THandler : class, IEntityEventHandler
         {
-            var producer = (Lifestyle.Singleton).CreateProducer<IEntityEventHandler, THandler>(_container);
-
             var handlers = producerInstance.Handlers;
 
             foreach (EntityEventType val in Enum.GetValues(typeof(EntityEventType)))
@@ -43,10 +37,8 @@ namespace SAAS.Core.Framework
             }
         }
 
-        public void Register<THandler>(THandler producerInstance)
-            where THandler : class, IEntityEventHandler
+        public void Register<THandler>(THandler producerInstance) where THandler : class, IEntityEventHandler
         {
-            var producer = (Lifestyle.Singleton).CreateProducer<IEntityEventHandler, THandler>(_container);
             var handlers = producerInstance.Handlers;
 
             foreach (EntityEventType val in Enum.GetValues(typeof(EntityEventType)))
@@ -54,10 +46,10 @@ namespace SAAS.Core.Framework
                 if (handlers.HasFlag(val))
                 {
                     var dict = _producers[val];
-                    if (!dict.ContainsKey(AllClasses))
-                        dict[AllClasses] = new ConcurrentBag<IEntityEventHandler>();
+                    if (!dict.ContainsKey(ALL_CLASSES))
+                        dict[ALL_CLASSES] = new ConcurrentBag<IEntityEventHandler>();
 
-                    dict[AllClasses].Add(producerInstance);
+                    dict[ALL_CLASSES].Add(producerInstance);
                 }
             }
         }
@@ -66,9 +58,9 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = entity.GetInfo();
+            var info = PropertyMapper.GetInfo(entity);
             var handlers = _producers[EntityEventType.AddBefore];
-            var allTypes = handlers.ContainsKey(AllClasses);
+            var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
 
             if (!allTypes && !targetTypes)
@@ -78,7 +70,7 @@ namespace SAAS.Core.Framework
 
             if (allTypes)
             {
-                foreach (var handler in handlers[AllClasses])
+                foreach (var handler in handlers[ALL_CLASSES])
                 {
                     if (!handler.OnAddBefore(context, entity))
                     {
@@ -105,9 +97,9 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = entity.GetInfo();
+            var info = PropertyMapper.GetInfo(entity);
             var handlers = _producers[EntityEventType.AddAfter];
-            var allTypes = handlers.ContainsKey(AllClasses);
+            var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
 
             if (!allTypes && !targetTypes)
@@ -128,7 +120,7 @@ namespace SAAS.Core.Framework
 
             if (allTypes)
             {
-                foreach (var handler in handlers[AllClasses])
+                foreach (var handler in handlers[ALL_CLASSES])
                 {
                     if (!handler.OnAddAfter(context, entity))
                     {
@@ -144,9 +136,9 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = before.GetInfo();
+            var info = PropertyMapper.GetInfo(before);
             var handlers = _producers[EntityEventType.ModifyBefore];
-            var allTypes = handlers.ContainsKey(AllClasses);
+            var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
 
             if (!allTypes && !targetTypes)
@@ -156,7 +148,7 @@ namespace SAAS.Core.Framework
 
             if (allTypes)
             {
-                foreach (var handler in handlers[AllClasses])
+                foreach (var handler in handlers[ALL_CLASSES])
                 {
                     if (!handler.OnModifyBefore(context, before, after))
                     {
@@ -184,9 +176,9 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = before.GetInfo();
+            var info = PropertyMapper.GetInfo(before);
             var handlers = _producers[EntityEventType.ModifyAfter];
-            var allTypes = handlers.ContainsKey(AllClasses);
+            var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
 
             if (!allTypes && !targetTypes)
@@ -207,7 +199,7 @@ namespace SAAS.Core.Framework
 
             if (allTypes)
             {
-                foreach (var handler in handlers[AllClasses])
+                foreach (var handler in handlers[ALL_CLASSES])
                 {
                     if (!handler.OnModifyAfter(context, before, after))
                     {
@@ -223,9 +215,9 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = entity.GetInfo();
+            var info = PropertyMapper.GetInfo(entity);
             var handlers = _producers[EntityEventType.RemoveBefore];
-            var allTypes = handlers.ContainsKey(AllClasses);
+            var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
 
             if (!allTypes && !targetTypes)
@@ -235,7 +227,7 @@ namespace SAAS.Core.Framework
 
             if (allTypes)
             {
-                foreach (var handler in handlers[AllClasses])
+                foreach (var handler in handlers[ALL_CLASSES])
                 {
                     if (!handler.OnRemoveBefore(context, entity))
                     {
@@ -262,9 +254,9 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = entity.GetInfo();
+            var info = PropertyMapper.GetInfo(entity);
             var handlers = _producers[EntityEventType.RemoveAfter];
-            var allTypes = handlers.ContainsKey(AllClasses);
+            var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
 
             if (!allTypes && !targetTypes)
@@ -285,7 +277,7 @@ namespace SAAS.Core.Framework
 
             if (allTypes)
             {
-                foreach (var handler in handlers[AllClasses])
+                foreach (var handler in handlers[ALL_CLASSES])
                 {
                     if (!handler.OnRemoveAfter(context, entity))
                     {
@@ -301,9 +293,9 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = entity.GetInfo();
+            var info = PropertyMapper.GetInfo(entity);
             var handlers = _producers[EntityEventType.GetBefore];
-            var allTypes = handlers.ContainsKey(AllClasses);
+            var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
 
             if (!allTypes && !targetTypes)
@@ -313,7 +305,7 @@ namespace SAAS.Core.Framework
 
             if (allTypes)
             {
-                foreach (var handler in handlers[AllClasses])
+                foreach (var handler in handlers[ALL_CLASSES])
                 {
                     if (!handler.OnGetBefore(context, entity))
                     {
@@ -340,9 +332,9 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = entity.GetInfo();
+            var info = PropertyMapper.GetInfo(entity);
             var handlers = _producers[EntityEventType.GetAfter];
-            var allTypes = handlers.ContainsKey(AllClasses);
+            var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
 
             if (!allTypes && !targetTypes)
@@ -363,7 +355,7 @@ namespace SAAS.Core.Framework
 
             if (allTypes)
             {
-                foreach (var handler in handlers[AllClasses])
+                foreach (var handler in handlers[ALL_CLASSES])
                 {
                     if (!handler.OnGetAfter(context, entity))
                     {
@@ -379,9 +371,9 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = _container.GetInstance<T>().GetInfo();
+            var info = PropertyMapper.GetInfo(typeof(T));
             var handlers = _producers[EntityEventType.GetPagedBefore];
-            var allTypes = handlers.ContainsKey(AllClasses);
+            var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
 
             if (!allTypes && !targetTypes)
@@ -391,7 +383,7 @@ namespace SAAS.Core.Framework
 
             if (allTypes)
             {
-                foreach (var handler in handlers[AllClasses])
+                foreach (var handler in handlers[ALL_CLASSES])
                 {
                     if (!handler.OnGetPagedBefore<T>(context))
                     {
@@ -416,9 +408,9 @@ namespace SAAS.Core.Framework
 
         public IEnumerable<T> OnGetPagedAfter<T>(IEntityRequestContext context, IEnumerable<T> list) where T : class, IEntityIdentity
         {
-            var info = _container.GetInstance<T>().GetInfo();
+            var info = PropertyMapper.GetInfo(typeof(T));
             var handlers = _producers[EntityEventType.GetPagedAfter];
-            var allTypes = handlers.ContainsKey(AllClasses);
+            var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
 
             if (!allTypes && !targetTypes)
@@ -437,7 +429,7 @@ namespace SAAS.Core.Framework
 
             if (allTypes)
             {
-                foreach (var handler in handlers[AllClasses])
+                foreach (var handler in handlers[ALL_CLASSES])
                 {
                     list = handler.OnGetPagedAfter(context, list);
                     if (list == null) return null;

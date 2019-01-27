@@ -18,8 +18,6 @@ namespace SAAS.Core.Framework
         // ReSharper enable once InconsistentNaming
         #pragma warning restore IDE1006 // Naming Styles
 
-        IEntityInfo GetInfo();
-
         IEntityIdentity LoadByKey(IEntityRequestContext context, string key);
 
         void RemoveByKey(IEntityRequestContext context, string key);

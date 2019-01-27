@@ -8,6 +8,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
     BeginNamespace(namespaceName + ".Entities", code);
 
 #>[DataContract(Name="<#=Core.ToLowerCamel(entity.Name)#>")]
+	[Module("<#=edmxFileName.ToLower()#>")]
 	<#=codeStringGenerator.EntityClassOpening(entity)#> : IEntityIdentity
 	{
 
@@ -112,58 +113,18 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		}
 
 		[DataMember(Name = "_module")]
-		public string _module { get { return Info.Module; } }
+		public string _module { get { return edmxFileName.ToLower(); } }
     
 		[DataMember(Name = "_entity")]
-		public string _entity { get { return Info.Entity; } }
-    
+		public string _entity { get { return Core.ToLowerCamel(entity.Name); } }
+
 		[JsonIgnore]
 		public Dictionary<string,object> _extra { get; set; }
-
-		public static IEntityInfo Info = new EntityInfo
-		{
-			Module = "<#=Core.ToLowerCamel(edmxFileName)#>",
-			Entity = "<#=Core.ToLowerCamel(entity.Name)#>",
-			Name = "<#=Core.ToLowerCamel(edmxFileName)#>.<#=Core.ToLowerCamel(entity.Name)#>",
-			Properties = new Dictionary<string, IEntityPropertyInfo>
-			{
-<#
-    simpleProperties = typeMapper.GetSimpleProperties(entity);
-    if (simpleProperties.Any())
-    {
-		var keyUID = simpleProperties.Where((sprop) => sprop.Name.ToLower().EndsWith("uid") && ef.IsKey(sprop)).FirstOrDefault();
-		var matchID = simpleProperties.Where((sprop) => keyUID!=null && sprop.Name.ToLower() == keyUID.Name.ToLower().Substring(0,keyUID.Name.Length-3)+"id").FirstOrDefault();
-		
-        foreach (var edmProperty in simpleProperties)
-        {
-
-		var name = Core.ToLowerCamel(edmProperty.Name).Replace("iD","id").Replace("oID","oid").Replace("oUID","ouid").Replace("uID","uid");
-
-		if(matchID!=null && matchID.Name==edmProperty.Name) {
-			continue;
-		}
-
-		if(Core.MapUID.ContainsKey(edmProperty.Name) && Core.MapUID[edmProperty.Name].Table!=entity.Name) { 
-
-#>				{"<#=Core.MapUID[edmProperty.Name].MapTo#>", new EntityPropertyInfo { Name = "<#=Core.MapUID[edmProperty.Name].MapTo#>", Type="string" }},
-<#			continue;
-		}
-		if((keyUID!=null && matchID!=null && matchID.Name==edmProperty.Name)) {#>
-<#}
-#>				{"<#=edmProperty.Name#>", new EntityPropertyInfo { Name = "<#=name#>", Type="<#=typeMapper.GetTypeName(edmProperty.TypeUsage).Replace("System.DateTime","DateTime").Replace("Nullable<DateTime>","DateTime").Replace("Nullable<int>","int").Replace("Nullable<long>","long")#>"<#if(ef.IsNullable(edmProperty.TypeUsage)) {#>, IsNullable=true<#}#><#if(ef.IsKey(edmProperty)) {#>, IsKey=true<#}#> }},
-<#
-	    }
-	}#>        }
-		};
 
 		private readonly Container _container;
 		public <#=entity.Name#>(Container container)
 		{
 			_container = container;
-		}
-
-		public IEntityInfo GetInfo() {
-			return Info;
 		}
 
 		public IEntityIdentity LoadByKey(IEntityRequestContext context, string key) {

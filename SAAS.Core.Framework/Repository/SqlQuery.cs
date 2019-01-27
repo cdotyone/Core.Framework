@@ -178,7 +178,7 @@ namespace SAAS.Core.Framework
 
             var extra = entity._extra ?? new Dictionary<string, object>();
 
-            PropertyMapper.Map<T>(info);
+            //PropertyMapper.Map<T>(info);
 
             var propertyNames = info.Properties;
 

@@ -137,7 +137,7 @@ namespace SAAS.Core.Framework
 
                 if (parent != null)
                 {
-                    var info = item.GetInfo();
+                    var info = PropertyMapper.GetInfo(item);
                     if (string.IsNullOrEmpty(info.RelatedKeyName))
                     {
                         throw new Exception($"Missing RelatedKeyName is not configured not sure what property to set on child object {obj}");

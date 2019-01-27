@@ -11,10 +11,6 @@ namespace SAAS.Core.Framework
 
         public string Name { get; set; }
 
-        public bool UseProcedureGet { get; set; }
-
-        public bool UseProcedureGetPaged { get; set; }
-
         public string RelatedModule { get; set; }
 
         public string RelatedEntity { get; set; }
