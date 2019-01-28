@@ -134,7 +134,7 @@ namespace SAAS.Core.Framework
                     if( string.IsNullOrEmpty(lowerName) ) lowerName = name.Substring(0, 1).ToLowerInvariant() + name.Substring(1);
 
                     propertyInfo.Name = lowerName;
-                    propertyInfo.Type = name.ToLowerInvariant();
+                    propertyInfo.Type = property.PropertyType.Name.ToLowerInvariant();
                     propertyInfo.PropertyType = property.PropertyType;
                     propertyInfo.Set = setter;
                     propertyInfo.Get = getter;
