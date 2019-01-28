@@ -19,7 +19,8 @@ using SAAS.Core.Framework.Test.Interfaces;
 
 namespace SAAS.Core.Framework.Test.Entities
 {
-    [DataContract(Name="entity3")]
+    [DataContract(Name = "entity3")]
+	[Module(Name = "example")]
 	public partial class Entity3 : IEntityIdentity
 	{
 
@@ -46,66 +47,13 @@ namespace SAAS.Core.Framework.Test.Entities
 		}
 
 		[DataMember(Name = "_module")]
-		public string _module { get { return Info.Module; } }
+		public string _module { get { return "example"; } }
     
 		[DataMember(Name = "_entity")]
-		public string _entity { get { return Info.Entity; } }
-    
+		public string _entity { get { return "entity3"; } }
+
 		[JsonIgnore]
 		public Dictionary<string,object> _extra { get; set; }
-
-		public static IEntityInfo Info = new EntityInfo
-		{
-			Module = "example",
-			Entity = "entity3",
-			Name = "example.entity3",
-			Properties = new Dictionary<string, IEntityPropertyInfo>
-			{
-				{"SomeUID", new EntityPropertyInfo { Name = "someUID", Type="string", IsKey=true }},
-				{"Modified", new EntityPropertyInfo { Name = "modified", Type="DateTime" }},
-				{"OtherDate", new EntityPropertyInfo { Name = "otherDate", Type="DateTime", IsNullable=true }},
-        }
-		};
-
-		private readonly Container _container;
-		public Entity3(Container container)
-		{
-			_container = container;
-		}
-
-		public IEntityInfo GetInfo() {
-			return Info;
-		}
-
-		public IEntityIdentity LoadByKey(IEntityRequestContext context, string key) {
-			_key = key;
-			return Load(context);
-		}
-
-		public void RemoveByKey(IEntityRequestContext context, string key) {
-			_key = key;
-			Remove(context);
-		}
-
-		public IEnumerable<IEntityIdentity> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
-			var facade = _container.GetInstance<IEntity3Facade>();
-			return facade.GetPaged(context, skip, ref count, retCount, filterBy, orderBy);
-		}
-
-		public IEntityIdentity Load(IEntityRequestContext context) {
-			var facade = _container.GetInstance<IEntity3Facade>();
-			return facade.Get(context, this);
-		}
-
-		public void Save(IEntityRequestContext context) {
-			var facade = _container.GetInstance<IEntity3Facade>();
-			facade.Save(context, this);
-		}
-
-		public void Remove(IEntityRequestContext context) {
-			var facade = _container.GetInstance<IEntity3Facade>();
-			facade.Remove(context, this);
-		}
 	}
 }
 

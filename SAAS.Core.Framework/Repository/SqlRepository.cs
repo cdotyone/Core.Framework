@@ -16,8 +16,7 @@ namespace SAAS.Core.Framework
         protected SqlRepository(Container container)
         {
             _container = container;
-            var type = typeof(T);
-            _info = EntityCreateFactory.GetInfo(type.Name);
+            _info = PropertyMapper.GetInfo(typeof(T));
         }
 
         public T Get(IEntityRequestContext context, T entity)

@@ -24,11 +24,11 @@ public class ExampleFacadePackage : IPackage
     {
 		var factory = new EntityCreateFactory(container);
 
-		factory.Register<SAAS.Core.Framework.Test.Entities.Entity1>(SAAS.Core.Framework.Test.Entities.Entity1.Info);
-		factory.Register<SAAS.Core.Framework.Test.Entities.Entity2>(SAAS.Core.Framework.Test.Entities.Entity2.Info);
-		factory.Register<SAAS.Core.Framework.Test.Entities.Entity3>(SAAS.Core.Framework.Test.Entities.Entity3.Info);
-		factory.Register<SAAS.Core.Framework.Test.Entities.Environment>(SAAS.Core.Framework.Test.Entities.Environment.Info);
-		factory.Register<SAAS.Core.Framework.Test.Entities.InstallationEnvironment>(SAAS.Core.Framework.Test.Entities.InstallationEnvironment.Info);
+		factory.Register<SAAS.Core.Framework.Test.Entities.Entity1, Entity1Facade>();
+		factory.Register<SAAS.Core.Framework.Test.Entities.Entity2, Entity2Facade>();
+		factory.Register<SAAS.Core.Framework.Test.Entities.Entity3, Entity3Facade>();
+		factory.Register<SAAS.Core.Framework.Test.Entities.Environment, EnvironmentFacade>();
+		factory.Register<SAAS.Core.Framework.Test.Entities.InstallationEnvironment, InstallationEnvironmentFacade>();
 
 
     }

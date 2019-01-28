@@ -17,7 +17,7 @@ using ExampleEntity2 = SAAS.Core.Framework.Test.Entities.Entity2;
 namespace SAAS.Core.Framework.Test.Business
 {
     
-	public partial class Entity2Facade : EntityBusinessFacade<ExampleEntity2>
+	public partial class Entity2Facade : EntityBusinessFacade<ExampleEntity2>,IEntityBusinessFacade<ExampleEntity2>
 	{
         public Entity2Facade(Container container, IEntityRepository<ExampleEntity2> repository, IEntityEventHandlerFactory handlers) : base(container, repository, handlers)
         {

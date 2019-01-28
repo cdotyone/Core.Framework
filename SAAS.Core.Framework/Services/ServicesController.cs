@@ -34,7 +34,8 @@ namespace SAAS.Core.Framework
 
             var context = new EntityRequestContext { Who = User as ClaimsPrincipal };
 
-            var result = item.GetPaged(context, options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
+            var facade = _factory.CreateFacade(item);
+            var result = facade.GetPaged(context, options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
             return new QueryMetadata<object>(result, resultLimit);
         }
 
@@ -46,7 +47,8 @@ namespace SAAS.Core.Framework
 
             var context = new EntityRequestContext { Who = User as ClaimsPrincipal };
 
-            var result = new List<object> { item.LoadByKey(context, key) };
+            var facade = _factory.CreateFacade(item);
+            var result = new List<object> { facade.Get(context, key) };
             return new QueryMetadata<object>(result, 1);
         }
 
@@ -58,7 +60,8 @@ namespace SAAS.Core.Framework
 
             var context = new EntityRequestContext { Who = User as ClaimsPrincipal };
 
-            item.RemoveByKey(context, key);
+            var facade = _factory.CreateFacade(item);
+            facade.Remove(context, item);
         }
 
 
@@ -70,7 +73,9 @@ namespace SAAS.Core.Framework
 
             JsonConvert.PopulateObject(value.ToString(),item);
             var context = new EntityRequestContext { Who = User as ClaimsPrincipal };
-            item.Save(context);
+
+            var facade = _factory.CreateFacade(item);
+            facade.Save(context, item);
 
             return new QueryMetadata<IEntityIdentity>(new [] {item}, 1);
         }
@@ -84,7 +89,9 @@ namespace SAAS.Core.Framework
             item._key = key;
             JsonConvert.PopulateObject(value.ToString(), item);
             var context = new EntityRequestContext { Who = User as ClaimsPrincipal };
-            item.Save(context);
+
+            var facade = _factory.CreateFacade(item);
+            facade.Save(context, item);
         }
 
         [ActionName("DefaultPostBulk")]
@@ -163,18 +170,20 @@ namespace SAAS.Core.Framework
 
                 try
                 {
+                    var facade = _factory.CreateFacade(item);
+
                     switch (action.ToLowerInvariant())
                     {
                         case "remove":
                             JsonConvert.PopulateObject(obj.ToString(), item);
-                            item.Remove(context);
+                            facade.Remove(context, item);
 
                             result.Add(item);
                             break;
                         case "save":
 
                             JsonConvert.PopulateObject(obj.ToString(), item);
-                            item.Save(context);
+                            facade.Save(context, item);
                             if (!string.IsNullOrEmpty(identity)) identities[identity.ToLower()] = item._key;
 
                             result.Add(item);

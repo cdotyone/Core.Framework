@@ -17,7 +17,7 @@ using ExampleInstallationEnvironment = SAAS.Core.Framework.Test.Entities.Install
 namespace SAAS.Core.Framework.Test.Business
 {
     
-	public partial class InstallationEnvironmentFacade : EntityBusinessFacade<ExampleInstallationEnvironment>
+	public partial class InstallationEnvironmentFacade : EntityBusinessFacade<ExampleInstallationEnvironment>,IEntityBusinessFacade<ExampleInstallationEnvironment>
 	{
         public InstallationEnvironmentFacade(Container container, IEntityRepository<ExampleInstallationEnvironment> repository, IEntityEventHandlerFactory handlers) : base(container, repository, handlers)
         {

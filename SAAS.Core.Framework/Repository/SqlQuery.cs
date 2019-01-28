@@ -168,7 +168,7 @@ namespace SAAS.Core.Framework
 
         public static bool PopulateEntity<T>(T entity, IDataReader dataReader, bool stripLeadUnderscore) where T : class, IEntityIdentity
         {
-            var info = EntityCreateFactory.GetInfo(entity);
+            var info = PropertyMapper.GetInfo(entity);
             return PopulateEntity(entity, info, dataReader, stripLeadUnderscore);
         }
 

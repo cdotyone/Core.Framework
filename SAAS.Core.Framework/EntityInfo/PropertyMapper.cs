@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
@@ -7,8 +8,8 @@ namespace SAAS.Core.Framework
 {
     public class PropertyMapper
     {
-        private static readonly Dictionary<string,IEntityInfo> _entities = new Dictionary<string, IEntityInfo>();
-        private static readonly Dictionary<string,IEntityInfo> _entitiesFullName = new Dictionary<string, IEntityInfo>();
+        private static readonly ConcurrentDictionary<string,IEntityInfo> _entities = new ConcurrentDictionary<string, IEntityInfo>();
+        private static readonly ConcurrentDictionary<string,IEntityInfo> _entitiesFullName = new ConcurrentDictionary<string, IEntityInfo>();
 
         public static IEntityInfo GetInfo(string name)
         {
@@ -137,8 +138,7 @@ namespace SAAS.Core.Framework
 
         public static void ApplyDefaults<T>(T entity) where T : IEntityIdentity
         {
-            var info = EntityCreateFactory.GetInfo(entity);
-            //Map<T>(info);
+            var info = GetInfo(entity);
 
             var properties = info.Properties;
 

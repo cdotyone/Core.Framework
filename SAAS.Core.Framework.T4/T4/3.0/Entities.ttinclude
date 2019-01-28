@@ -113,49 +113,13 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 		}
 
 		[DataMember(Name = "_module")]
-		public string _module { get { return "<=edmxFileName.ToLower()>"; } }
+		public string _module { get { return "<#=edmxFileName.ToLower()#>"; } }
     
 		[DataMember(Name = "_entity")]
-		public string _entity { get { return "<=Core.ToLowerCamel(entity.Name)>"; } }
+		public string _entity { get { return "<#=Core.ToLowerCamel(entity.Name)#>"; } }
 
 		[JsonIgnore]
 		public Dictionary<string,object> _extra { get; set; }
-
-		private readonly Container _container;
-		public <#=entity.Name#>(Container container)
-		{
-			_container = container;
-		}
-
-		public IEntityIdentity LoadByKey(IEntityRequestContext context, string key) {
-			_key = key;
-			return Load(context);
-		}
-
-		public void RemoveByKey(IEntityRequestContext context, string key) {
-			_key = key;
-			Remove(context);
-		}
-
-		public IEnumerable<IEntityIdentity> GetPaged(IEntityRequestContext context, int skip, ref int count, bool retCount, string filterBy, string orderBy) {
-			var facade = _container.GetInstance<IEntityBusinessFacade<<#=entity.Name#>>>();
-			return facade.GetPaged(context, skip, ref count, retCount, filterBy, orderBy);
-		}
-
-		public IEntityIdentity Load(IEntityRequestContext context) {
-			var facade = _container.GetInstance<IEntityBusinessFacade<<#=entity.Name#>>>();
-			return facade.Get(context, this);
-		}
-
-		public void Save(IEntityRequestContext context) {
-			var facade = _container.GetInstance<IEntityBusinessFacade<<#=entity.Name#>>>();
-			facade.Save(context, this);
-		}
-
-		public void Remove(IEntityRequestContext context) {
-			var facade = _container.GetInstance<IEntityBusinessFacade<<#=entity.Name#>>>();
-			facade.Remove(context, this);
-		}
 	}
 <#
     EndNamespace(namespaceName + ".Entities");

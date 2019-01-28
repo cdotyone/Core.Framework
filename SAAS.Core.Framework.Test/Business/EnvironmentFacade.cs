@@ -17,7 +17,7 @@ using ExampleEnvironment = SAAS.Core.Framework.Test.Entities.Environment;
 namespace SAAS.Core.Framework.Test.Business
 {
     
-	public partial class EnvironmentFacade : EntityBusinessFacade<ExampleEnvironment>
+	public partial class EnvironmentFacade : EntityBusinessFacade<ExampleEnvironment>,IEntityBusinessFacade<ExampleEnvironment>
 	{
         public EnvironmentFacade(Container container, IEntityRepository<ExampleEnvironment> repository, IEntityEventHandlerFactory handlers) : base(container, repository, handlers)
         {
