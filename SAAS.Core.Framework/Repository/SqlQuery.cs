@@ -112,8 +112,6 @@ namespace SAAS.Core.Framework
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(SqlQuery), "GetPaged"))
             {
-                if (!AuthorizationHelper.CanView(context.Who, info)) throw new UnauthorizedAccessException();
-
                 try
                 {
                     var view = $"[{info.Module}].[VW_{info.Entity}]";

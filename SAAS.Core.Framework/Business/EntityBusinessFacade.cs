@@ -32,7 +32,7 @@ namespace SAAS.Core.Framework
         }
 
 
-        public virtual T Get(IEntityRequestContext context, T entity)
+        public virtual T Get(IEntityRequestContext context, IEntityIdentity entity)
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(EntityBusinessFacade<T>), "Get"))
             {
@@ -42,12 +42,12 @@ namespace SAAS.Core.Framework
                     if (!context.IgnoreHandlers.HasFlag(EntityEventType.GetBefore) && !_handlers.OnGetBefore(context, entity))
                         return null;
 
-                    entity = _repository.Get(context, entity);
+                    var item = _repository.Get(context, entity as T);
 
-                    if (!context.IgnoreHandlers.HasFlag(EntityEventType.GetAfter) && !_handlers.OnGetAfter(context, entity))
+                    if (!context.IgnoreHandlers.HasFlag(EntityEventType.GetAfter) && !_handlers.OnGetAfter(context, item))
                         return null;
 
-                    return entity;
+                    return item;
                 }
                 catch (Exception ex)
                 {
@@ -88,7 +88,7 @@ namespace SAAS.Core.Framework
             return null;
         }
 
-        public virtual void Save(IEntityRequestContext context, T entity)
+        public virtual void Save(IEntityRequestContext context, IEntityIdentity entity)
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(EntityBusinessFacade<T>), "Save"))
             {
@@ -96,14 +96,14 @@ namespace SAAS.Core.Framework
 
                 try
                 {
-                    var before = _repository.Get(context, entity);
+                    var before = _repository.Get(context, entity as T);
 
                     if (before == null)
                     {
                         if (!context.IgnoreHandlers.HasFlag(EntityEventType.AddBefore) && !_handlers.OnAddBefore(context, entity))
                             throw new Exception("OnAddBefore handler rejected");
 
-                        _repository.Add(context, entity);
+                        _repository.Add(context, entity as T);
 
                         if (!context.IgnoreHandlers.HasFlag(EntityEventType.AddAfter) && !_handlers.OnAddAfter(context, entity))
                             throw new Exception("OnAddAfter handler rejected");
@@ -113,7 +113,7 @@ namespace SAAS.Core.Framework
                         if (!context.IgnoreHandlers.HasFlag(EntityEventType.ModifyBefore) && !_handlers.OnModifyBefore(context, before, entity))
                             throw new Exception("OnModifyBefore handler rejected");
 
-                        _repository.Modify(context, before, entity);
+                        _repository.Modify(context, before, entity as T);
 
                         if (!context.IgnoreHandlers.HasFlag(EntityEventType.ModifyAfter) && !_handlers.OnModifyAfter(context, before, entity))
                             throw new Exception("OnModifyAfter handler rejected");
@@ -134,7 +134,7 @@ namespace SAAS.Core.Framework
             }
         }
 
-        public virtual void Remove(IEntityRequestContext context, T entity)
+        public virtual void Remove(IEntityRequestContext context, IEntityIdentity entity)
         {
             using (Logger.CreateTrace(LoggingBoundaries.ServiceBoundary, typeof(EntityBusinessFacade<T>), "Remove"))
             {
@@ -142,7 +142,7 @@ namespace SAAS.Core.Framework
 
                 try
                 {
-                    var before = _repository.Get(context, entity);
+                    var before = _repository.Get(context, entity as T);
 
                     if (!context.IgnoreHandlers.HasFlag(EntityEventType.RemoveBefore) && !_handlers.OnRemoveBefore(context, before))
                         throw new Exception("OnRemoveBefore handler rejected");
@@ -181,12 +181,12 @@ namespace SAAS.Core.Framework
             return Get(new EntityRequestContext { Who = who }, entity);
         }
 
-        public virtual T Get(ClaimsPrincipal who, T entity)
+        public virtual T Get(ClaimsPrincipal who, IEntityIdentity entity)
         {
             return Get(new EntityRequestContext {Who = who}, entity);
         }
 
-        public virtual void Save(ClaimsPrincipal who, T entity)
+        public virtual void Save(ClaimsPrincipal who, IEntityIdentity entity)
         {
             Save(new EntityRequestContext {Who = who}, entity);
         }
@@ -198,13 +198,10 @@ namespace SAAS.Core.Framework
             Remove(new EntityRequestContext { Who = who }, entity);
         }
 
-        public virtual void Remove(ClaimsPrincipal who, T entity)
+        public virtual void Remove(ClaimsPrincipal who, IEntityIdentity entity)
         {
             Remove(new EntityRequestContext {Who = who}, entity);
         }
-
-
-
 
         public virtual IEnumerable<T> GetPaged(ClaimsPrincipal who, int skip, ref int count, bool retCount, string filterBy, string orderBy, EntityEventType ignoreHandlers)
         {

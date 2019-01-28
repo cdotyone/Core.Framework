@@ -20,12 +20,14 @@ namespace SAAS.Core.Framework
 
         public IEntityBusinessFacade<TImplementation> CreateFacade<TImplementation>() where TImplementation : class, IEntityIdentity
         {
-            return _facadeProducers[typeof(TImplementation).FullName].GetInstance() as IEntityBusinessFacade<TImplementation>;
+            var instance = _facadeProducers[typeof(TImplementation).FullName].GetInstance();
+            return instance as IEntityBusinessFacade<TImplementation>;
         }
 
         public IEntityBusinessFacade<TImplementation> CreateFacade<TImplementation>(TImplementation entity) where TImplementation : class, IEntityIdentity
         {
-            return _facadeProducers[entity.GetType().FullName].GetInstance() as IEntityBusinessFacade<TImplementation>;
+            var instance = _facadeProducers[entity.GetType().FullName].GetInstance();
+            return (IEntityBusinessFacade<TImplementation>) instance ;
         }
 
         public void Register<TImplementation,TFacade>(Lifestyle lifestyle = null) where TImplementation : class, IEntityIdentity where TFacade : class,IEntityBusinessFacade<TImplementation>
@@ -34,6 +36,8 @@ namespace SAAS.Core.Framework
             var producer = (lifestyle ?? _container.Options.DefaultLifestyle).CreateProducer<IEntityIdentity, TImplementation>(_container);
 
             var facadeProducer = (Lifestyle.Singleton).CreateProducer<IEntityBusinessFacade<TImplementation>, TFacade>(_container);
+            _container.Register<IEntityBusinessFacade<TImplementation>, TFacade>(Lifestyle.Singleton);
+
 
             var info = PropertyMapper.GetInfo<TImplementation>();
 
