@@ -19,7 +19,7 @@ namespace SAAS.Core.Framework
             }
         }
 
-        public void Register<THandler>(IEntityInfo info, THandler producerInstance)
+        public void Register<THandler>(string name, THandler producerInstance)
             where THandler : class, IEntityEventHandler
         {
             var handlers = producerInstance.Handlers;
@@ -29,10 +29,10 @@ namespace SAAS.Core.Framework
                 if (handlers.HasFlag(val))
                 {
                     var dict = _producers[val];
-                    if(!dict.ContainsKey(info.Name))
-                        dict[info.Name] = new ConcurrentBag<IEntityEventHandler>();
+                    if(!dict.ContainsKey(name))
+                        dict[name] = new ConcurrentBag<IEntityEventHandler>();
 
-                    dict[info.Name].Add(producerInstance);
+                    dict[name].Add(producerInstance);
                 }
             }
         }
