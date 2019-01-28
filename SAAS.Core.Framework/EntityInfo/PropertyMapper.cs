@@ -41,7 +41,10 @@ namespace SAAS.Core.Framework
                 return _entitiesFullName[name];
             }
 
-            var info = new EntityInfo {Entity = t.Name.ToLowerInvariant()};
+            var info = new EntityInfo
+            {
+                Entity = t.Name.ToLowerInvariant(), Properties = new Dictionary<string, IEntityPropertyInfo>()
+            };
 
             var attributes = t.GetCustomAttributes(true);
             foreach (var attribute in attributes)
@@ -65,7 +68,9 @@ namespace SAAS.Core.Framework
 
             _entities[info.Name] = info;
             _entitiesFullName[name] = info;
-            
+
+            Map<T>(info);
+
             return info;
         } 
 
@@ -73,6 +78,7 @@ namespace SAAS.Core.Framework
         {
             if (info.Mapped) return;
 
+            if(info.Properties==null) info.Properties = new Dictionary<string, IEntityPropertyInfo>();
             var properties = info.Properties;
 
             foreach (var property in typeof(T).GetProperties())
@@ -119,6 +125,10 @@ namespace SAAS.Core.Framework
                             {
                                 propertyInfo.Default = defaultValueAttribute.Value.ToString();
                             }
+                        }
+                        if (attribute is PrimaryKeyAttribute)
+                        {
+                            propertyInfo.IsKey = true;
                         }
                     }
                     if( string.IsNullOrEmpty(lowerName) ) lowerName = name.Substring(0, 1).ToLowerInvariant() + name.Substring(1);

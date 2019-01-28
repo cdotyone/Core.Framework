@@ -15,7 +15,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SimpleInjector;
 using SAAS.Core.Framework;
-using SAAS.Core.Framework.Test.Interfaces;
 
 namespace SAAS.Core.Framework.Test.Entities
 {
@@ -25,9 +24,11 @@ namespace SAAS.Core.Framework.Test.Entities
 	{
 
 		[DataMember(Name="someID")]
+		[PrimaryKey]
 		public int SomeID { get; set; }
 
 		[DataMember(Name="ff")]
+		[PrimaryKey]
 		public string ff { get; set; }
 
 		[DataMember(Name="modified")]

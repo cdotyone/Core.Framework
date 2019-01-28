@@ -132,6 +132,7 @@
     <Compile Include="EntityHandlers\ReadOnlyHandler.cs" />
     <Compile Include="EntityHandlers\WriteOnlyHandler.cs" />
     <Compile Include="EntityInfo\ModuleAttribute.cs" />
+    <Compile Include="EntityInfo\PrimaryKeyAttribute.cs" />
     <Compile Include="EntityInfo\PropertyMapper.cs" />
     <Compile Include="EntityInfo\RelatedAttribute.cs" />
     <Compile Include="Repository\IEntityRepository.cs" />

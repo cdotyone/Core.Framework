@@ -36,7 +36,6 @@ namespace SAAS.Core.Framework
             var facadeProducer = (Lifestyle.Singleton).CreateProducer<IEntityBusinessFacade<TImplementation>, TFacade>(_container);
 
             var info = PropertyMapper.GetInfo<TImplementation>();
-            PropertyMapper.Map<TImplementation>(info);
 
             _facadeProducers[typeof(TImplementation).FullName] = facadeProducer;
             _producers[info.Name] = producer;

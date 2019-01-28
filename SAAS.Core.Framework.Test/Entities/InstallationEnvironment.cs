@@ -15,7 +15,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SimpleInjector;
 using SAAS.Core.Framework;
-using SAAS.Core.Framework.Test.Interfaces;
 
 namespace SAAS.Core.Framework.Test.Entities
 {
@@ -25,6 +24,7 @@ namespace SAAS.Core.Framework.Test.Entities
 	{
 
 		[DataMember(Name="environmentCode")]
+		[PrimaryKey]
 		public string EnvironmentCode { get; set; }
 
 		[DataMember(Name="name")]

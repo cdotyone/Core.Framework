@@ -48,7 +48,13 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 				if(Core.MapUID[edmProperty.Name].Schema==edmxFileName.ToLower() && Core.MapUID[edmProperty.Name].Table==entity.Name) continue;
 			}
 #>		[DataMember(Name="<#=Core.GetMapToName(edmProperty.Name)#>")]
-		<#=Core.GetMappedProperty(codeStringGenerator,edmProperty,"public ")#>
+<#
+
+		if (ef.IsKey(edmProperty)) {
+#>		[PrimaryKey]
+<#		}
+
+#>		<#=Core.GetMappedProperty(codeStringGenerator,edmProperty,"public ")#>
 
 <#
         }
