@@ -18,7 +18,7 @@ namespace SAAS.Core.Framework
 
         public bool OnAddBefore<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity
         {
-            var info = PropertyMapper.GetInfo(entity);
+            var info = EntityInfoManager.GetInfo(entity);
             if (!AuthorizationHelper.CanAdd(context.Who, info))
             {
                 AuditManager.LogAccess(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
@@ -34,7 +34,7 @@ namespace SAAS.Core.Framework
 
         public bool OnModifyBefore<T>(IEntityRequestContext context, T before, T after) where T : class, IEntityIdentity
         {
-            var info = PropertyMapper.GetInfo(before);
+            var info = EntityInfoManager.GetInfo(before);
             if (!AuthorizationHelper.CanModify(context.Who, info))
             {
                 AuditManager.LogAccess(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, before._key, null, null, before, context.TransactionUID);
@@ -50,7 +50,7 @@ namespace SAAS.Core.Framework
 
         public bool OnRemoveBefore<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity
         {
-            var info = PropertyMapper.GetInfo(entity);
+            var info = EntityInfoManager.GetInfo(entity);
             if (!AuthorizationHelper.CanRemove(context.Who, info))
             {
                 AuditManager.LogAccess(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
@@ -66,7 +66,7 @@ namespace SAAS.Core.Framework
 
         public bool OnGetBefore<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity
         {
-            var info = PropertyMapper.GetInfo(entity);
+            var info = EntityInfoManager.GetInfo(entity);
             if (!AuthorizationHelper.CanView(context.Who, info))
             {
                 AuditManager.LogChange(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, info.Entity, null, null, null, "ACC", null, null, context.TransactionUID);
@@ -82,7 +82,7 @@ namespace SAAS.Core.Framework
 
         public bool OnGetPagedBefore<T>(IEntityRequestContext context) where T : class, IEntityIdentity
         {
-            var info = PropertyMapper.GetInfo(typeof(T));
+            var info = EntityInfoManager.GetInfo(typeof(T));
             if (!AuthorizationHelper.CanView(context.Who, info))
             {
                 AuditManager.LogChange(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, info.Entity, null, null, null, "ACC", null, null, context.TransactionUID);

@@ -69,7 +69,8 @@ namespace SAAS.Core.Framework
                     foreach (var property in info.Properties)
                     {
                         idx++;
-                        if (!property.Value.IsKey) continue;
+                        var val = property.Value;
+                        if (val.IsKey.HasValue && !val.IsKey.Value) continue;
 
                         keys.Add($"{property.Key} = @val{idx}");
                         parameters.Add(database.CreateParameter($"@val{idx}", keyValues[0]));
@@ -166,7 +167,7 @@ namespace SAAS.Core.Framework
 
         public static bool PopulateEntity<T>(T entity, IDataReader dataReader, bool stripLeadUnderscore) where T : class, IEntityIdentity
         {
-            var info = PropertyMapper.GetInfo(entity);
+            var info = EntityInfoManager.GetInfo(entity);
             return PopulateEntity(entity, info, dataReader, stripLeadUnderscore);
         }
 
@@ -176,7 +177,7 @@ namespace SAAS.Core.Framework
 
             var extra = entity._extra ?? new Dictionary<string, object>();
 
-            //PropertyMapper.Map<T>(info);
+            //EntityInfoManager.Map<T>(info);
 
             var propertyNames = info.Properties;
 

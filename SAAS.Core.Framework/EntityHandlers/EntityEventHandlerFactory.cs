@@ -58,7 +58,7 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = PropertyMapper.GetInfo(entity);
+            var info = EntityInfoManager.GetInfo(entity);
             var handlers = _producers[EntityEventType.AddBefore];
             var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -97,7 +97,7 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = PropertyMapper.GetInfo(entity);
+            var info = EntityInfoManager.GetInfo(entity);
             var handlers = _producers[EntityEventType.AddAfter];
             var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -136,7 +136,7 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = PropertyMapper.GetInfo(before);
+            var info = EntityInfoManager.GetInfo(before);
             var handlers = _producers[EntityEventType.ModifyBefore];
             var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -176,7 +176,7 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = PropertyMapper.GetInfo(before);
+            var info = EntityInfoManager.GetInfo(before);
             var handlers = _producers[EntityEventType.ModifyAfter];
             var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -215,7 +215,7 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = PropertyMapper.GetInfo(entity);
+            var info = EntityInfoManager.GetInfo(entity);
             var handlers = _producers[EntityEventType.RemoveBefore];
             var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -254,7 +254,7 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = PropertyMapper.GetInfo(entity);
+            var info = EntityInfoManager.GetInfo(entity);
             var handlers = _producers[EntityEventType.RemoveAfter];
             var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -293,7 +293,7 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = PropertyMapper.GetInfo(entity);
+            var info = EntityInfoManager.GetInfo(entity);
             var handlers = _producers[EntityEventType.GetBefore];
             var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -332,7 +332,7 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = PropertyMapper.GetInfo(entity);
+            var info = EntityInfoManager.GetInfo(entity);
             var handlers = _producers[EntityEventType.GetAfter];
             var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -371,7 +371,7 @@ namespace SAAS.Core.Framework
         {
             var retValue = true;
 
-            var info = PropertyMapper.GetInfo(typeof(T));
+            var info = EntityInfoManager.GetInfo(typeof(T));
             var handlers = _producers[EntityEventType.GetPagedBefore];
             var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);
@@ -408,7 +408,7 @@ namespace SAAS.Core.Framework
 
         public IEnumerable<T> OnGetPagedAfter<T>(IEntityRequestContext context, IEnumerable<T> list) where T : class, IEntityIdentity
         {
-            var info = PropertyMapper.GetInfo(typeof(T));
+            var info = EntityInfoManager.GetInfo(typeof(T));
             var handlers = _producers[EntityEventType.GetPagedAfter];
             var allTypes = handlers.ContainsKey(ALL_CLASSES);
             var targetTypes = handlers.ContainsKey(info.Name);

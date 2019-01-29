@@ -3,24 +3,46 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using SAAS.Core.Framework.Configuration;
 
 namespace SAAS.Core.Framework
 {
-    public class PropertyMapper
+    public class EntityInfoManager
     {
-        private static readonly ConcurrentDictionary<string,IEntityInfo> _entities = new ConcurrentDictionary<string, IEntityInfo>();
         private static readonly ConcurrentDictionary<string,IEntityInfo> _entitiesFullName = new ConcurrentDictionary<string, IEntityInfo>();
 
-        public static IEntityInfo GetInfo(string name)
+        public static EntityConfig Configuration { get; private set; } = new EntityConfig();
+
+        public static IEntityInfo GetInfo(string module,string entity)
         {
-            return _entities.ContainsKey(name) ? _entities[name] : null;
+            var allEntities = Configuration.Entities;
+
+            if (!allEntities.ContainsKey(module))
+            {
+                allEntities.TryAdd(module,new ConcurrentDictionary<string, IEntityInfo>());
+                return null;
+            };
+            var entities = allEntities[module];
+            return !entities.ContainsKey(entity) ? null : entities[entity];
+        }
+
+        public static void SetInfo(IEntityInfo info)
+        {
+            var allEntities = Configuration.Entities;
+
+            var module = info.Module;
+            if (!allEntities.ContainsKey(module))
+            {
+                allEntities.TryAdd(module,new ConcurrentDictionary<string, IEntityInfo>());
+            };
+            allEntities[module][info.Entity] = info;
         }
 
         public static IEntityInfo GetInfo(Type type)
         {
             return _entitiesFullName.ContainsKey(type.FullName ?? throw new InvalidOperationException()) ? _entitiesFullName[type.FullName] : null;
         }
-
+        
         public static IEntityInfo GetInfo<T>(T entity) where T : IEntityIdentity
         {
             var info = GetInfo<T>();
@@ -29,19 +51,19 @@ namespace SAAS.Core.Framework
                 return info;
             }
 
-            return GetInfo(entity._module + entity._entity);
+            return GetInfo(entity._module,  entity._entity);
         }
 
         public static IEntityInfo GetInfo<T>()
         {
             var t = typeof(T);
             var name = t.FullName;
-            if (_entities.ContainsKey(name ?? throw new InvalidOperationException()))
+            if (_entitiesFullName.ContainsKey(name ?? throw new InvalidOperationException()))
             {
                 return _entitiesFullName[name];
             }
 
-            var info = new EntityInfo
+            IEntityInfo info = new EntityInfo
             {
                 Entity = t.Name.ToLowerInvariant(), Properties = new Dictionary<string, IEntityPropertyInfo>()
             };
@@ -66,7 +88,15 @@ namespace SAAS.Core.Framework
 
             info.Name = info.Module + "." + info.Entity;
 
-            _entities[info.Name] = info;
+            var loadedInfo = GetInfo(info.Module, info.Entity);
+            if (loadedInfo != null)
+            {
+                info = loadedInfo;
+            }
+            else
+            {
+                SetInfo(info);
+            }
             _entitiesFullName[name] = info;
 
             Map<T>(info);
@@ -135,6 +165,11 @@ namespace SAAS.Core.Framework
 
                     propertyInfo.Name = lowerName;
                     propertyInfo.Type = property.PropertyType.Name.ToLowerInvariant();
+                    if (propertyInfo.Type.StartsWith("nullable"))
+                    {
+                        propertyInfo.IsNullable = true;
+                        propertyInfo.Type = Nullable.GetUnderlyingType(property.PropertyType).Name.ToLowerInvariant();
+                    }
                     propertyInfo.PropertyType = property.PropertyType;
                     propertyInfo.Set = setter;
                     propertyInfo.Get = getter;
@@ -169,7 +204,7 @@ namespace SAAS.Core.Framework
                 if (prop.Type == "string")
                 {
                     var sval = value.ToString();
-                    if (prop.ForceUpperCase)
+                    if (prop.ForceUpperCase.HasValue && prop.ForceUpperCase.Value)
                     {
                         sval = sval.ToUpperInvariant();
                         change = true;

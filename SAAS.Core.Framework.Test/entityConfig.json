@@ -1,0 +1,71 @@
+{
+  "defaults": {
+    "forceUpperCase": false,
+    "max": 100,
+    "canView": true,
+    "canAdd": false,
+    "canModify": false,
+    "canRemove": false,
+    "useLocalTime": false
+  },
+  "entities": {
+    "example": {
+      "installationEnvironment": {
+        "module": "example",
+        "entity": "installationEnvironment",
+        "name": "example.installationEnvironment",
+        "properties": {
+          "EnvironmentCode": {"name":"environmentCode","isKey":true,"type":"string"},
+          "Name": {"name":"name","type":"string"},
+          "Description": {"name":"description","type":"string"},
+          "IsVisible": {"name":"isVisible","type":"string"},
+          "Modified": {"name":"modified","type":"datetime"}
+        }
+      },
+      "entity1": {
+        "module": "example",
+        "entity": "entity1",
+        "name": "example.entity1",
+        "properties": {
+          "Name": {"name":"name","isKey":true,"type":"string"},
+          "EnvironmentID": {"name":"environmentID","type":"int32"},
+          "Dte": {"name":"dte","type":"datetime"},
+          "Dte2": {"name":"dte2","type":"nullable`1"},
+          "Dble1": {"name":"dble1","type":"double"},
+          "Dec1": {"name":"dec1","type":"double"}
+        }
+      },
+      "entity2": {
+        "module": "example",
+        "entity": "entity2",
+        "name": "example.entity2",
+        "properties": {
+          "SomeID": {"name":"someID","isKey":true,"type":"int32"},
+          "ff": {"name":"ff","isKey":true,"type":"string"},
+          "Modified": {"name":"modified","type":"datetime"},
+          "OtherDate": {"name":"otherDate","type":"nullable`1"},
+          "OUID": {"name":"ouid","type":"string"}
+        }
+      },
+      "environment": {
+        "module": "example",
+        "entity": "environment",
+        "name": "example.environment",
+        "properties": {
+          "ID": {"name":"id","isKey":true,"type":"int32"},
+          "Name": {"name":"name","type":"string"}
+        }
+      },
+      "entity3": {
+        "module": "example",
+        "entity": "entity3",
+        "name": "example.entity3",
+        "properties": {
+          "SomeUID": {"name":"someUID","isKey":true,"type":"string"},
+          "Modified": {"name":"modified","type":"datetime"},
+          "OtherDate": {"name":"otherDate","type":"nullable`1"}
+        }
+      }
+    }
+  }
+}

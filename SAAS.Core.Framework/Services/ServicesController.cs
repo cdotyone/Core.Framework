@@ -4,10 +4,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Web.Http;
 using Civic.Core.Logging;
-using SAAS.Core.Framework.Configuration;
 using SAAS.Core.Framework.OData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SAAS.Core.Framework.Configuration;
 
 namespace SAAS.Core.Framework
 {
@@ -144,7 +144,7 @@ namespace SAAS.Core.Framework
 
                 if (parent != null)
                 {
-                    var info = PropertyMapper.GetInfo(item);
+                    var info = EntityInfoManager.GetInfo(item);
                     if (string.IsNullOrEmpty(info.RelatedKeyName))
                     {
                         throw new Exception($"Missing RelatedKeyName is not configured not sure what property to set on child object {obj}");

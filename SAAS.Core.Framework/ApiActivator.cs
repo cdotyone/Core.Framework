@@ -91,6 +91,9 @@ namespace SAAS.Core.Framework
             container.RegisterWebApiControllers(configuration, alist);
             container.Verify();
 
+            var fileName = System.Web.Hosting.HostingEnvironment.MapPath("~/entityConfig.json");
+            EntityInfoManager.Configuration.Save(fileName);
+
             configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
 
         }

@@ -17,7 +17,6 @@ using System.Security.Claims;
 using SimpleInjector;
 using Civic.Core.Data;
 using SAAS.Core.Framework;
-using SAAS.Core.Framework.Configuration;
 using SAAS.Core.Framework.Test.Interfaces;
 
 using ExampleEntity2 = SAAS.Core.Framework.Test.Entities.Entity2;

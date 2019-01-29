@@ -16,7 +16,7 @@ namespace SAAS.Core.Framework
         protected SqlRepository(Container container)
         {
             _container = container;
-            _info = PropertyMapper.GetInfo(typeof(T));
+            _info = EntityInfoManager.GetInfo(typeof(T));
         }
 
         public T Get(IEntityRequestContext context, T entity)
@@ -25,7 +25,7 @@ namespace SAAS.Core.Framework
             {
                 Debug.Assert(database != null);
 
-                return SqlQuery.Get<T>(_container, context, PropertyMapper.GetInfo(entity), entity._key, database);
+                return SqlQuery.Get<T>(_container, context, EntityInfoManager.GetInfo(entity), entity._key, database);
             }
         }
 
@@ -98,7 +98,7 @@ namespace SAAS.Core.Framework
             Debug.Assert(command != null);
 
             var properties = _info.Properties;
-            //PropertyMapper.Map<T>(_info);
+            //EntityInfoManager.Map<T>(_info);
 
             foreach (var property in properties)
             {
@@ -116,7 +116,7 @@ namespace SAAS.Core.Framework
                     value = (value as DateTime?).ToDB();
                 }
 
-                if (addRecord && prop.IsIdentity)
+                if (addRecord && prop.IsIdentity.HasValue && prop.IsIdentity.Value)
                 {
                     command.AddParameter("@"+prop.Name,ParameterDirection.InputOutput, value);
                 }
