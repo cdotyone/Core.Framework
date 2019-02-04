@@ -128,6 +128,9 @@
     <Compile Include="Business\AnonymousPrincipal.cs" />
     <Compile Include="Business\AnonymousRequestContext.cs" />
     <Compile Include="Business\EntityBusinessFacade.cs" />
+    <Compile Include="Configuration\EntityConfigWriter.cs" />
+    <Compile Include="Configuration\EntityConfigReader.cs" />
+    <Compile Include="Configuration\EntityConfigConverter.cs" />
     <Compile Include="Configuration\NoIndentFormatter.cs" />
     <Compile Include="Configuration\EntityConfig.cs" />
     <Compile Include="Configuration\T4Config.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -45,7 +46,7 @@ namespace SAAS.Core.Framework
         
         public static IEntityInfo GetInfo<T>(T entity) where T : IEntityIdentity
         {
-            var info = GetInfo<T>();
+            var info = GetInfo(entity.GetType());
             if (info!=null)
             {
                 return info;
@@ -133,6 +134,7 @@ namespace SAAS.Core.Framework
                     var prop = propertyInfo.Value;
                     prop.Set = setter;
                     prop.Get = getter;
+                    prop.PropertyType = property.PropertyType;
 
                     found = true;
                     break;
@@ -164,12 +166,27 @@ namespace SAAS.Core.Framework
                     if( string.IsNullOrEmpty(lowerName) ) lowerName = name.Substring(0, 1).ToLowerInvariant() + name.Substring(1);
 
                     propertyInfo.Name = lowerName;
-                    propertyInfo.Type = property.PropertyType.Name.ToLowerInvariant();
-                    if (propertyInfo.Type.StartsWith("nullable"))
+                    propertyInfo.Type = property.PropertyType.Name;
+                    if (propertyInfo.Type.StartsWith("Nullable`"))
                     {
                         propertyInfo.IsNullable = true;
                         propertyInfo.Type = Nullable.GetUnderlyingType(property.PropertyType).Name.ToLowerInvariant();
                     }
+                    if (propertyInfo.Type.StartsWith("IEnumerable`"))
+                    {
+                        propertyInfo.Type = "IEnumerable<"+ property.PropertyType.GetGenericArguments()[0].Name + ">";
+                    }
+                    if (propertyInfo.Type.StartsWith("List`"))
+                    {
+                        propertyInfo.Type = "List<"+ property.PropertyType.GetGenericArguments()[0].Name + ">";
+                    }
+                    if (propertyInfo.Type.StartsWith("Dictionary`"))
+                    {
+                        propertyInfo.Type = "Dictionary<"+ property.PropertyType.GetGenericArguments()[0].Name + ","+ property.PropertyType.GetGenericArguments()[1].Name + ">";
+                    }
+
+                    propertyInfo.Type = propertyInfo.Type.Replace("String", "string").Replace("Int32", "int").Replace("int32", "int").Replace("int64", "long").Replace("Int64", "long");
+
                     propertyInfo.PropertyType = property.PropertyType;
                     propertyInfo.Set = setter;
                     propertyInfo.Get = getter;

@@ -70,7 +70,7 @@ namespace SAAS.Core.Framework
                     {
                         idx++;
                         var val = property.Value;
-                        if (val.IsKey.HasValue && !val.IsKey.Value) continue;
+                        if (!val.IsKey.HasValue || (val.IsKey.HasValue && !val.IsKey.Value)) continue;
 
                         keys.Add($"{property.Key} = @val{idx}");
                         parameters.Add(database.CreateParameter($"@val{idx}", keyValues[0]));
