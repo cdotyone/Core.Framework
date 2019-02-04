@@ -133,7 +133,6 @@
     <Compile Include="Configuration\EntityConfigConverter.cs" />
     <Compile Include="Configuration\NoIndentFormatter.cs" />
     <Compile Include="Configuration\EntityConfig.cs" />
-    <Compile Include="Configuration\T4Config.cs" />
     <Compile Include="EntityHandlers\AuditLogHandler.cs" />
     <Compile Include="EntityHandlers\BasicAuthorizationHandler.cs" />
     <Compile Include="EntityHandlers\NoModifyHandler.cs" />

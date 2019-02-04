@@ -7,7 +7,6 @@ using Civic.Core.Logging;
 using SAAS.Core.Framework.OData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SAAS.Core.Framework.Configuration;
 
 namespace SAAS.Core.Framework
 {
@@ -26,16 +25,17 @@ namespace SAAS.Core.Framework
         public IQueryMetadata GetPaged(string module, string version, string entity)
         {
             var item = _factory.CreateNew(module, entity);
+            var info = EntityInfoManager.GetInfo(item);
 
             ODataV3QueryOptions options = this.GetOptions();
-            var maxrows = T4Config.GetMaxRows(module, entity);
-            var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
-            string orderby = options.ProcessOrderByOptions();
+            var max = EntityInfoManager.GetMaxRows(info);
+            var resultLimit = options.Top < max && options.Top > 0 ? options.Top : max;
+            string orderBy = options.ProcessOrderByOptions();
 
             var context = new EntityRequestContext { Who = User as ClaimsPrincipal };
 
             var facade = _factory.CreateFacade(item);
-            var result = facade.GetPaged(context, options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);
+            var result = facade.GetPaged(context, options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderBy);
             return new QueryMetadata<object>(result, resultLimit);
         }
 

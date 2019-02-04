@@ -1,5 +1,4 @@
 ﻿using System;
-using SAAS.Core.Framework.Configuration;
 
 namespace SAAS.Core.Framework
 {
@@ -7,7 +6,7 @@ namespace SAAS.Core.Framework
     {
         public static DateTime FromDB(this DateTime dte)
         {
-            if (T4Config.Current.UseLocalTime)
+            if (EntityInfoManager.Configuration.Defaults.UseLocalTime)
             {
                 return DateTime.SpecifyKind(dte,DateTimeKind.Local);
             }
@@ -17,7 +16,7 @@ namespace SAAS.Core.Framework
         public static DateTime? ToDB(this DateTime? dte)
         {
             if (!dte.HasValue) return null;
-            if (T4Config.Current.UseLocalTime)
+            if (EntityInfoManager.Configuration.Defaults.UseLocalTime)
             {
                 return dte.Value.ToLocalTime();
             }
@@ -26,7 +25,7 @@ namespace SAAS.Core.Framework
 
         public static DateTime ToDB(this DateTime dte)
         {
-            if (T4Config.Current.UseLocalTime)
+            if (EntityInfoManager.Configuration.Defaults.UseLocalTime)
             {
                 return dte.ToLocalTime();
             }

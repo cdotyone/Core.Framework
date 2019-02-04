@@ -236,5 +236,68 @@ namespace SAAS.Core.Framework
                 if(change) setter.DynamicInvoke(entity, value);
             }
         }
+
+
+
+/*        public static bool GetCanView(string schema, string name)
+        {
+            var info = GetInfo(schema, name);
+            return GetCanView(info);
+        }
+
+        public static bool GetCanAdd(string schema, string name)
+        {
+            var info = GetInfo(schema, name);
+            return GetCanAdd(info);
+        }
+
+        public static bool GetCanModify(string schema, string name)
+        {
+            var info = GetInfo(schema, name);
+            return GetCanModify(info);
+        }
+
+        public static bool GetCanRemove(string schema, string name)
+        {
+            var info = GetInfo(schema, name);
+            return GetCanRemove(info);
+        }*/
+
+        public static int GetMaxRows(IEntityInfo info)
+        {
+            if (info != null)
+            {
+                if (info.Max.HasValue) return info.Max.Value;
+            }
+            return Configuration.Defaults.Max;
+        }
+
+        public static bool GetCanView(IEntityInfo info)
+        {
+            if (info == null) return false;
+            if (info.CanView.HasValue) return info.CanView.Value;
+            return Configuration.Defaults.CanView;
+        }
+
+        public static bool GetCanAdd(IEntityInfo info)
+        {
+            if (info == null) return false;
+            if (info.CanAdd.HasValue) return info.CanAdd.Value;
+            return Configuration.Defaults.CanAdd;
+        }
+
+        public static bool GetCanModify(IEntityInfo info)
+        {
+            if (info == null) return false;
+            if (info.CanModify.HasValue) return info.CanModify.Value;
+            return Configuration.Defaults.CanModify;
+        }
+
+        public static bool GetCanRemove(IEntityInfo info)
+        {
+            if (info == null) return false;
+            if (info.CanRemove.HasValue) return info.CanRemove.Value;
+            return Configuration.Defaults.CanRemove;
+        }
     }
 }
