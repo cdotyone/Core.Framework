@@ -16,4 +16,3 @@ build:
     - 'call C:\Builds\.nuget\tag.bat %CI_COMMIT_REF_NAME% %CI_PROJECT_PATH%'
   tags:
     - msbuild
-  

@@ -8,7 +8,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 fileManager.StartNewFile(entity.Name+".cs", folderName:"Data");
 
-WriteHeader("System", "System.Collections.Generic", "System.Data", "System.Diagnostics", "System.Security.Claims", "SimpleInjector" ,"Civic.Core.Data","SAAS.Core.Framework","SAAS.Core.Framework.Configuration", namespaceName +".Interfaces");
+WriteHeader("System", "System.Collections.Generic", "System.Data", "System.Diagnostics", "System.Security.Claims", "SimpleInjector" ,"Civic.Core.Data","SAAS.Core.Framework","SAAS.Core.Framework.Configuration");
 
 #>using <#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Entities." + entity.Name#>;
 
