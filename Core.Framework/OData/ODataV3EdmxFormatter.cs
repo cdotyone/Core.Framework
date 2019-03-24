@@ -7,7 +7,7 @@ using System.Net.Http.Formatting;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SAAS.Core.Framework.OData
+namespace Core.Framework.OData
 {
     public class ODataV3EdmxFormatter : XmlMediaTypeFormatter
     {

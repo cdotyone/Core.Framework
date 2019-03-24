@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 // ReSharper disable ImplicitlyCapturedClosure
-namespace SAAS.Core.Framework.OData
+namespace Core.Framework.OData
 {
     public class ODataV3JsonFormatter : JsonMediaTypeFormatter
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     [Serializable]
     [DataContract(Name="data")]

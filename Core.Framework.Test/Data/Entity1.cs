@@ -16,12 +16,12 @@ using System.Diagnostics;
 using System.Security.Claims;
 using SimpleInjector;
 using Civic.Core.Data;
-using SAAS.Core.Framework;
-using SAAS.Core.Framework.Test.Interfaces;
+using Core.Framework;
+using Core.Framework.Test.Interfaces;
 
-using ExampleEntity1 = SAAS.Core.Framework.Test.Entities.Entity1;
+using ExampleEntity1 = Core.Framework.Test.Entities.Entity1;
 
-namespace SAAS.Core.Framework.Test.Data.SqlServer
+namespace Core.Framework.Test.Data.SqlServer
 {
     public partial class Entity1Repository : SqlRepository<ExampleEntity1>,IEntityRepository<ExampleEntity1>
 	{

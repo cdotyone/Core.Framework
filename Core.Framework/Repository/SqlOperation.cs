@@ -1,6 +1,6 @@
 ﻿using Civic.Core.Data;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     public class SqlOperation : IEntityOperation
     {

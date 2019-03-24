@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SAAS.Core.Framework.OData.Parse
+namespace Core.Framework.OData.Parse
 {
     public class ParametersExpression : CriteriaExpression {
 

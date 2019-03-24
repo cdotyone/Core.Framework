@@ -5,10 +5,10 @@ using System.Data.Common;
 using System.Linq;
 using Civic.Core.Data;
 using Civic.Core.Logging;
-using SAAS.Core.Framework.OData;
+using Core.Framework.OData;
 using SimpleInjector;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     public class SqlQuery
     {

@@ -4,9 +4,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using SAAS.Core.Framework.Configuration;
+using Core.Framework.Configuration;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     public class EntityInfoManager
     {

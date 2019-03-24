@@ -1,2 +1,2 @@
-SAAS.Core.Framework 3 -  Full Stack Generation
+Core.Framework 3 -  Full Stack Generation
 ====

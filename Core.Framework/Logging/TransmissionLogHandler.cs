@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Civic.Core.Logging;
 using Newtonsoft.Json;
 
-namespace SAAS.Core.Framework.Logging
+namespace Core.Framework.Logging
 {
     public class TransmissionLogHandler : DelegatingHandler
     {

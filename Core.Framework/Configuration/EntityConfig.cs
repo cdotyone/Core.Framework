@@ -8,7 +8,7 @@ using System.Text;
 using Civic.Core.Logging;
 using Newtonsoft.Json;
 
-namespace SAAS.Core.Framework.Configuration
+namespace Core.Framework.Configuration
 {
     [DataContract(Name = "entityConfig")]
     public class EntityConfig

@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 using SimpleInjector.Packaging;
 using SimpleInjector;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     public class WebApiPackage : IPackage
     {

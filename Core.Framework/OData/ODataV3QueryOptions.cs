@@ -1,4 +1,4 @@
-﻿namespace SAAS.Core.Framework.OData
+﻿namespace Core.Framework.OData
 {
     public class ODataV3QueryOptions
     {

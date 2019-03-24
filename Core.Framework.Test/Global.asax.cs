@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Http;
 
-namespace SAAS.Core.Framework.Test
+namespace Core.Framework.Test
 {
     public class Global : System.Web.HttpApplication
     {

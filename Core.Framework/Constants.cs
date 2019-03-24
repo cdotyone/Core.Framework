@@ -1,4 +1,4 @@
-﻿namespace SAAS.Core.Framework
+﻿namespace Core.Framework
 {
    	public static class Constants
 	{

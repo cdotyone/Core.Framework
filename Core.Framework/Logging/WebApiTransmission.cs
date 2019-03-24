@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 
-namespace SAAS.Core.Framework.Logging
+namespace Core.Framework.Logging
 {
     public class WebApiTransmission
     {

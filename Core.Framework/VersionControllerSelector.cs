@@ -4,7 +4,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     // Implement DefaultHttpControllerSelector, so we can override SelectController
     internal class VersionControllerSelector : DefaultHttpControllerSelector

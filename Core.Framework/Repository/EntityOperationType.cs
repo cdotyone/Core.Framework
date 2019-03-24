@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     public enum EntityOperationType
     {

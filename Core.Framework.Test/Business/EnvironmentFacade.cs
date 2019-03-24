@@ -10,11 +10,11 @@
 #pragma warning disable 1591 // this is to supress no xml comments in public members warnings 
 
 using SimpleInjector;
-using SAAS.Core.Framework;
+using Core.Framework;
 
-using ExampleEnvironment = SAAS.Core.Framework.Test.Entities.Environment;
+using ExampleEnvironment = Core.Framework.Test.Entities.Environment;
 
-namespace SAAS.Core.Framework.Test.Business
+namespace Core.Framework.Test.Business
 {
     
 	public partial class EnvironmentFacade : EntityBusinessFacade<ExampleEnvironment>,IEntityBusinessFacade<ExampleEnvironment>

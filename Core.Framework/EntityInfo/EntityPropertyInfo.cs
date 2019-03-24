@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using SAAS.Core.Framework.Configuration;
+using Core.Framework.Configuration;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     /// <inheritdoc />
     [DataContract(Name = "entityPropertyInfo")]

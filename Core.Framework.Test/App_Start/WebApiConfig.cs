@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 
-namespace SAAS.Core.Framework.Test
+namespace Core.Framework.Test
 {
     public static class WebApiConfig
     {

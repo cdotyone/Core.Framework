@@ -8,7 +8,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 fileManager.StartNewFile(entity.Name+".cs", folderName:"Data");
 
-WriteHeader("System", "System.Collections.Generic", "System.Data", "System.Diagnostics", "System.Security.Claims", "SimpleInjector" ,"Civic.Core.Data","SAAS.Core.Framework","SAAS.Core.Framework.Configuration");
+WriteHeader("System", "System.Collections.Generic", "System.Data", "System.Diagnostics", "System.Security.Claims", "SimpleInjector" ,"Civic.Core.Data","Core.Framework","Core.Framework.Configuration");
 
 #>using <#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Entities." + entity.Name#>;
 
@@ -45,7 +45,7 @@ EndNamespace(namespaceName);
 
 fileManager.StartNewFile("_RepositoryPackage.cs", folderName:"Data");
 
-WriteHeader("SimpleInjector.Packaging","SimpleInjector","SAAS.Core.Framework",namespaceName +".Entities");
+WriteHeader("SimpleInjector.Packaging","SimpleInjector","Core.Framework",namespaceName +".Entities");
 
 BeginNamespace(namespaceName+".Data.SqlServer", code);
 #>

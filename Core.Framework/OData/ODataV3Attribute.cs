@@ -6,7 +6,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Civic.Core.Logging;
 
-namespace SAAS.Core.Framework.OData
+namespace Core.Framework.OData
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
     public class ODataV3Attribute : ActionFilterAttribute

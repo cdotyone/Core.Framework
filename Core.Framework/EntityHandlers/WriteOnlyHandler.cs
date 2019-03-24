@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     public class WriteOnlyHandler : IEntityEventHandler
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     
     public interface IEntityRepository<T> where T : IEntityIdentity

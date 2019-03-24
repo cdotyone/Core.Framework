@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Civic.Core.Audit;
 using Civic.Core.Security;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     public class AuditLogHandler : IEntityEventHandler
     {

@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace SAAS.Core.Framework.Configuration
+namespace Core.Framework.Configuration
 {
     public class EntityConfigWriter : JsonConverter
     {

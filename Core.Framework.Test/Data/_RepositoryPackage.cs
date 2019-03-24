@@ -11,10 +11,10 @@
 
 using SimpleInjector.Packaging;
 using SimpleInjector;
-using SAAS.Core.Framework;
-using SAAS.Core.Framework.Test.Entities;
+using Core.Framework;
+using Core.Framework.Test.Entities;
 
-namespace SAAS.Core.Framework.Test.Data.SqlServer
+namespace Core.Framework.Test.Data.SqlServer
 {
     
 

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace SAAS.Core.Framework.Configuration
+namespace Core.Framework.Configuration
 {    
     [DataContract(Name = "entityDefaults")]
     public class EntityDefaults

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using Newtonsoft.Json;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     public interface IEntityInfo
     {

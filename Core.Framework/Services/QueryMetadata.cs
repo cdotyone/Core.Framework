@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using SAAS.Core.Framework.OData;
+using Core.Framework.OData;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     public class QueryMetadata<T> : IQueryMetadata, IEnumerable<T> where T : class
     {

@@ -286,7 +286,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SAAS.Core.Framework\SAAS.Core.Framework.csproj">
+    <ProjectReference Include="..\Core.Framework\Core.Framework.csproj">
       <Project>{e8f58c4a-41de-40c7-994b-9e2230c30553}</Project>
       <Name>SAAS.Core.Framework</Name>
     </ProjectReference>

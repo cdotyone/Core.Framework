@@ -14,7 +14,7 @@ using SimpleInjector;
 
 
 
-namespace SAAS.Core.Framework.Test.Business
+namespace Core.Framework.Test.Business
 {
     
 
@@ -24,11 +24,11 @@ public class ExampleFacadePackage : IPackage
     {
 		var factory = new EntityCreateFactory(container);
 
-		factory.Register<SAAS.Core.Framework.Test.Entities.Entity1, Entity1Facade>();
-		factory.Register<SAAS.Core.Framework.Test.Entities.Entity2, Entity2Facade>();
-		factory.Register<SAAS.Core.Framework.Test.Entities.Entity3, Entity3Facade>();
-		factory.Register<SAAS.Core.Framework.Test.Entities.Environment, EnvironmentFacade>();
-		factory.Register<SAAS.Core.Framework.Test.Entities.InstallationEnvironment, InstallationEnvironmentFacade>();
+		factory.Register<Core.Framework.Test.Entities.Entity1, Entity1Facade>();
+		factory.Register<Core.Framework.Test.Entities.Entity2, Entity2Facade>();
+		factory.Register<Core.Framework.Test.Entities.Entity3, Entity3Facade>();
+		factory.Register<Core.Framework.Test.Entities.Environment, EnvironmentFacade>();
+		factory.Register<Core.Framework.Test.Entities.InstallationEnvironment, InstallationEnvironmentFacade>();
 
 
     }

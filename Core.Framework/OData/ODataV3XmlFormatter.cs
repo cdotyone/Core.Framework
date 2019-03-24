@@ -10,7 +10,7 @@ using System.Web;
 
 // ReSharper disable ImplicitlyCapturedClosure
 
-namespace SAAS.Core.Framework.OData
+namespace Core.Framework.OData
 {
     public class ODataV3XmlFormatter : XmlMediaTypeFormatter
     {

@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     internal class ErrorMessages
     {

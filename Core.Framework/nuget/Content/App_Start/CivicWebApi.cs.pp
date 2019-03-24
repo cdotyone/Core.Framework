@@ -12,7 +12,7 @@ namespace $rootnamespace$.App_Start {
     {
         public static void PreStart()
         {
-            SAAS.Core.Framework.WebActivator.LoadControllers();
+            Core.Framework.WebActivator.LoadControllers();
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     public class EntityRequestContext : IEntityRequestContext
     {

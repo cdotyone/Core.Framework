@@ -9,13 +9,13 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.Routing;
 using Civic.Core.Logging;
-using SAAS.Core.Framework.Logging;
-using SAAS.Core.Framework.OData;
+using Core.Framework.Logging;
+using Core.Framework.OData;
 using SimpleInjector;
 using SimpleInjector.Integration.WebApi;
 using SimpleInjector.Lifestyles;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     public class ApiActivator
     {

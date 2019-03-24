@@ -10,11 +10,11 @@
 #pragma warning disable 1591 // this is to supress no xml comments in public members warnings 
 
 using SimpleInjector;
-using SAAS.Core.Framework;
+using Core.Framework;
 
-using ExampleEntity3 = SAAS.Core.Framework.Test.Entities.Entity3;
+using ExampleEntity3 = Core.Framework.Test.Entities.Entity3;
 
-namespace SAAS.Core.Framework.Test.Business
+namespace Core.Framework.Test.Business
 {
     
 	public partial class Entity3Facade : EntityBusinessFacade<ExampleEntity3>,IEntityBusinessFacade<ExampleEntity3>

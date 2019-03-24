@@ -37,7 +37,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 {
 	fileManager.StartNewFile(entity.Name+"Facade.cs", folderName:"Business");
 
-	WriteHeader("SimpleInjector", "SAAS.Core.Framework");
+	WriteHeader("SimpleInjector", "Core.Framework");
 	#>using <#=edmxFileName#><#=entity.Name#> = <#=namespaceName +".Entities." + entity.Name#>;
 
 <# BeginNamespace(namespaceName+".Business", code);#>

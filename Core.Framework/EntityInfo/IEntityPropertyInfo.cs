@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     public interface IEntityPropertyInfo
     {

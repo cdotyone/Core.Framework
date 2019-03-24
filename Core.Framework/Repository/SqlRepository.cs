@@ -6,7 +6,7 @@ using Civic.Core.Data;
 using Newtonsoft.Json;
 using SimpleInjector;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     public class SqlRepository<T> : IEntityRepository<T> where T : class, IEntityIdentity
     {

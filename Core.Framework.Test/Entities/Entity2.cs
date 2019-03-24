@@ -14,9 +14,9 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SimpleInjector;
-using SAAS.Core.Framework;
+using Core.Framework;
 
-namespace SAAS.Core.Framework.Test.Entities
+namespace Core.Framework.Test.Entities
 {
     [DataContract(Name = "entity2")]
 	[Module(Name = "example")]

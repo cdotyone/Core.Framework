@@ -11,11 +11,11 @@
 
 using System;
 using System.Collections.Generic;
-using SAAS.Core.Framework;
+using Core.Framework;
 using Newtonsoft.Json;
-using SAAS.Core.Framework.Test.Interfaces;
+using Core.Framework.Test.Interfaces;
 
-namespace SAAS.Core.Framework.Test.Interfaces
+namespace Core.Framework.Test.Interfaces
 {
     
 public interface IEntity2 : IEntityIdentity

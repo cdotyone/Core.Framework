@@ -4,11 +4,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Web.Http;
 using Civic.Core.Logging;
-using SAAS.Core.Framework.OData;
+using Core.Framework.OData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     //[RoutePrefix("api/services")]
     public class ServicesController : ApiController

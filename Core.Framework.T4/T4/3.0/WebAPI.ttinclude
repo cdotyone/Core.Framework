@@ -43,7 +43,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 	public QueryMetadata<<#=entity.Name#>Entity> Get()
 	{
 		ODataV3QueryOptions options = this.GetOptions();
-		var maxrows = SAAS.Core.Framework.Configuration.T4Config.GetMaxRows("<#=apiSchemaName.ToLower()#>","<#=entity.Name.ToLower()#>");
+		var maxrows = Core.Framework.Configuration.T4Config.GetMaxRows("<#=apiSchemaName.ToLower()#>","<#=entity.Name.ToLower()#>");
 		var resultLimit = options.Top < maxrows && options.Top > 0 ? options.Top : maxrows;
 		string orderby = options.ProcessOrderByOptions();
 		var result = _facade.GetPaged<#=entity.Name#>(User as ClaimsPrincipal, options.Skip, ref resultLimit, options.InlineCount, options.Filter, orderby);

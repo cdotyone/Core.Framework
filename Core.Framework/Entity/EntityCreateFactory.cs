@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using SimpleInjector;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     public class EntityCreateFactory : IEntityCreateFactory
     {

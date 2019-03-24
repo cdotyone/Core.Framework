@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     [Flags]
     public enum EntityEventType

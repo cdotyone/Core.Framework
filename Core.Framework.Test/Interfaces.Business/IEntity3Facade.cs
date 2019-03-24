@@ -9,13 +9,13 @@
 
 #pragma warning disable 1591 // this is to supress no xml comments in public members warnings 
 
-using SAAS.Core.Framework;
+using Core.Framework;
 
 
 
-using ExampleEntity3 = SAAS.Core.Framework.Test.Entities.Entity3;
+using ExampleEntity3 = Core.Framework.Test.Entities.Entity3;
 
-namespace SAAS.Core.Framework.Test.Interfaces
+namespace Core.Framework.Test.Interfaces
 {
     
 

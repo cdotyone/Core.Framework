@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace SAAS.Core.Framework.OData.Parse
+namespace Core.Framework.OData.Parse
 {
     public class FunctionExpression : CriteriaExpression
     {

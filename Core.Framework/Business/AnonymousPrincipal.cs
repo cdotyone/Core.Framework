@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using Civic.Core.Security;
 
-namespace SAAS.Core.Framework
+namespace Core.Framework
 {
     public class AnonymousPrincipal : ClaimsPrincipal
     {
