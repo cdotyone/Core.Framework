@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAAS.Core.Framework", "SAAS.Core.Framework\SAAS.Core.Framework.csproj", "{E8F58C4A-41DE-40C7-994B-9E2230C30553}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Framework", "Core.Framework\Core.Framework.csproj", "{E8F58C4A-41DE-40C7-994B-9E2230C30553}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{54D7CD44-0610-43DD-9FCE-7480335B3B4F}"
 	ProjectSection(SolutionItems) = preProject
@@ -14,15 +14,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		References\VersionInfo.cs = References\VersionInfo.cs
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAAS.Core.Framework.Test", "SAAS.Core.Framework.Test\SAAS.Core.Framework.Test.csproj", "{E5EB084E-E118-41F9-9FDB-E042752B4FC7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Framework.Test", "Core.Framework.Test\Core.Framework.Test.csproj", "{E5EB084E-E118-41F9-9FDB-E042752B4FC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAAS.Core.Framework.T4", "SAAS.Core.Framework.T4\SAAS.Core.Framework.T4.csproj", "{78D4826E-E6FC-4961-900B-9373B3C4B481}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Framework.T4", "Core.Framework.T4\Core.Framework.T4.csproj", "{78D4826E-E6FC-4961-900B-9373B3C4B481}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{E091A1FA-DA47-4490-9C6E-37E456652B04}"
 	ProjectSection(SolutionItems) = preProject
-		Nuget\SAAS.Core.Framework.nuspec = Nuget\SAAS.Core.Framework.nuspec
-		Nuget\SAAS.Core.Framework.T4.Example.nuspec = Nuget\SAAS.Core.Framework.T4.Example.nuspec
-		Nuget\SAAS.Core.Framework.T4.Model.nuspec = Nuget\SAAS.Core.Framework.T4.Model.nuspec
+		Nuget\Core.Framework.nuspec = Nuget\Core.Framework.nuspec
+		Nuget\Core.Framework.T4.Example.nuspec = Nuget\Core.Framework.T4.Example.nuspec
+		Nuget\Core.Framework.T4.Model.nuspec = Nuget\Core.Framework.T4.Model.nuspec
 	EndProjectSection
 EndProject
 Global
