@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using Civic.Core.Logging;
+using Core.Logging;
 using SimpleInjector;
 
 namespace Core.Framework

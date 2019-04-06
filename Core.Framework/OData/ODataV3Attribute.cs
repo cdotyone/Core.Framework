@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
-using Civic.Core.Logging;
+using Core.Logging;
 
 namespace Core.Framework.OData
 {

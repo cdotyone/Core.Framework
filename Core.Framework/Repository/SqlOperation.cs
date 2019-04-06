@@ -1,4 +1,4 @@
-﻿using Civic.Core.Data;
+﻿using Core.Data;
 
 namespace Core.Framework
 {

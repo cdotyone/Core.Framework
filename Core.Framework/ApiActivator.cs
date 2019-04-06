@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.Routing;
-using Civic.Core.Logging;
+using Core.Logging;
 using Core.Framework.Logging;
 using Core.Framework.OData;
 using SimpleInjector;
@@ -24,7 +24,7 @@ namespace Core.Framework
 
         public static HttpConfiguration Configuration { get; private set; }
 
-        public static void Initialize(HttpConfiguration configuration)
+        public static void Initialize(HttpConfiguration configuration, string appRoot)
         {
             if (Container == null) Container = new Container();
             var container = Container;
@@ -33,7 +33,7 @@ namespace Core.Framework
 
             try
             {
-                var fileName = System.Web.Hosting.HostingEnvironment.MapPath("~/entityConfig.json");
+                var fileName = Path.Combine(appRoot, "entityConfig.json");
                 EntityInfoManager.Configuration.Load(fileName);
             }
             catch (Exception ex)
@@ -102,7 +102,7 @@ namespace Core.Framework
             );
 
 
-            if (Civic.Core.Logging.Configuration.LoggingConfig.Current.Transmission)
+            if (Core.Logging.Configuration.LoggingConfig.Current.Transmission)
             {
                 Logger.LogTrace(LoggingBoundaries.Host, "Transmission logging on");
                 configuration.MessageHandlers.Add(new TransmissionLogHandler());
@@ -115,7 +115,7 @@ namespace Core.Framework
 
             try
             {
-                var fileName = System.Web.Hosting.HostingEnvironment.MapPath("~/entityConfig.json");
+                var fileName = Path.Combine(appRoot, "entityConfig.json");
                 EntityInfoManager.Configuration.Save(fileName);
             }
             catch (Exception ex)

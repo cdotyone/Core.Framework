@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using Civic.Core.Data;
+using Core.Data;
 using Core.Framework.OData.Parse;
 
 namespace Core.Framework.OData

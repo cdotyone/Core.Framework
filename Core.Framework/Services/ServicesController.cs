@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Web.Http;
-using Civic.Core.Logging;
+using Core.Logging;
 using Core.Framework.OData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

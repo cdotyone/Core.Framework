@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using Civic.Core.Data;
+using Core.Data;
 using Newtonsoft.Json;
 using SimpleInjector;
 

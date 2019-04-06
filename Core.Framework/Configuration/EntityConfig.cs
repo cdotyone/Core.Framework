@@ -5,7 +5,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
-using Civic.Core.Logging;
+using Core.Logging;
 using Newtonsoft.Json;
 
 namespace Core.Framework.Configuration

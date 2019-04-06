@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Civic.Core.Audit;
-using Civic.Core.Security;
+using Core.Audit;
+using Core.Security;
 
 namespace Core.Framework
 {
@@ -21,7 +21,7 @@ namespace Core.Framework
             var info = EntityInfoManager.GetInfo(entity);
             if (!AuthorizationHelper.CanAdd(context.Who, info))
             {
-                AuditManager.LogAccess(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
+                AuditManager.LogAccess(IdentityManager.GetUsername(context.Who), IdentityManager.GetClientMachine(context.Who), info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
                 throw new UnauthorizedAccessException();
             }
             return true;
@@ -37,7 +37,7 @@ namespace Core.Framework
             var info = EntityInfoManager.GetInfo(before);
             if (!AuthorizationHelper.CanModify(context.Who, info))
             {
-                AuditManager.LogAccess(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, before._key, null, null, before, context.TransactionUID);
+                AuditManager.LogAccess(IdentityManager.GetUsername(context.Who), IdentityManager.GetClientMachine(context.Who), info.Module, info.Module, before._key, null, null, before, context.TransactionUID);
                 throw new UnauthorizedAccessException();
             }
             return true;
@@ -53,7 +53,7 @@ namespace Core.Framework
             var info = EntityInfoManager.GetInfo(entity);
             if (!AuthorizationHelper.CanRemove(context.Who, info))
             {
-                AuditManager.LogAccess(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
+                AuditManager.LogAccess(IdentityManager.GetUsername(context.Who), IdentityManager.GetClientMachine(context.Who), info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
                 throw new UnauthorizedAccessException();
             }
             return true;
@@ -69,7 +69,7 @@ namespace Core.Framework
             var info = EntityInfoManager.GetInfo(entity);
             if (!AuthorizationHelper.CanView(context.Who, info))
             {
-                AuditManager.LogChange(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, info.Entity, null, null, null, "ACC", null, null, context.TransactionUID);
+                AuditManager.LogChange(IdentityManager.GetUsername(context.Who), IdentityManager.GetClientMachine(context.Who), info.Module, info.Module, info.Entity, null, null, null, "ACC", null, null, context.TransactionUID);
                 throw new UnauthorizedAccessException();
             }
             return true;
@@ -85,7 +85,7 @@ namespace Core.Framework
             var info = EntityInfoManager.GetInfo(typeof(T));
             if (!AuthorizationHelper.CanView(context.Who, info))
             {
-                AuditManager.LogChange(IdentityManager.GetUsername(context.Who), IdentityManager.ClientMachine, info.Module, info.Module, info.Entity, null, null, null, "ACC", null, null, context.TransactionUID);
+                AuditManager.LogChange(IdentityManager.GetUsername(context.Who), IdentityManager.GetClientMachine(context.Who), info.Module, info.Module, info.Entity, null, null, null, "ACC", null, null, context.TransactionUID);
                 throw new UnauthorizedAccessException();
             }
             return true;

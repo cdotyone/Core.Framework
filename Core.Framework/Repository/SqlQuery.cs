@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using Civic.Core.Data;
-using Civic.Core.Logging;
+using Core.Configuration;
+using Core.Data;
+using Core.Logging;
 using Core.Framework.OData;
 using SimpleInjector;
 

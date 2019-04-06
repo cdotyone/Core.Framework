@@ -128,9 +128,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="..\References\civic.snk">
-      <Link>civic.snk</Link>
-    </None>
     <None Include="nuget\Content\Models\Example.tt">
       <LastGenOutput>Example1.cs</LastGenOutput>
     </None>

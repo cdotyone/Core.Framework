@@ -25,9 +25,9 @@ namespace Core.Framework
                 case HttpStatusCode.ResetContent:
                     return "205 Reset Content";
                 case HttpStatusCode.PartialContent:
-                    return "206 Partial Conten";
+                    return "206 Partial Content";
                 case HttpStatusCode.Ambiguous:
-                    return "300 Ambigous or to many matches";
+                    return "300 To many matches";
                 case HttpStatusCode.Moved:
                     return "301 Moved";
                 case HttpStatusCode.Redirect:
@@ -47,7 +47,7 @@ namespace Core.Framework
                 case HttpStatusCode.Unauthorized:
                     return "401 Not Authorizes";
                 case HttpStatusCode.PaymentRequired:
-                    return "402 Payment Requred";
+                    return "402 Payment Required";
                 case HttpStatusCode.Forbidden:
                     return "403 Forbidden";
                 case HttpStatusCode.NotFound:
