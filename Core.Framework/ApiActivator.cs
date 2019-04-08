@@ -5,14 +5,21 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
-using System.Web.Http.Routing;
+//using System.Web.Http;
+//using System.Web.Http.Dispatcher;
+//using System.Web.Http.Routing;
 using Core.Logging;
 using Core.Framework.Logging;
-using Core.Framework.OData;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Internal;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
+using Microsoft.Extensions.DependencyInjection;
+//using Core.Framework.OData;
 using SimpleInjector;
-using SimpleInjector.Integration.WebApi;
+using SimpleInjector.Integration.AspNetCore.Mvc;
+//using SimpleInjector.Integration.WebApi;
 using SimpleInjector.Lifestyles;
 
 namespace Core.Framework
@@ -22,9 +29,22 @@ namespace Core.Framework
   
         public static Container Container {  get; private set; }
 
-        public static HttpConfiguration Configuration { get; private set; }
+        private void ConfigureServices(IServiceCollection services)
+        {
+            var container = Container;
 
-        public static void Initialize(HttpConfiguration configuration, string appRoot)
+            container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+
+            services.AddHttpContextAccessor();
+
+            services.AddSingleton<IControllerActivator>(new SimpleInjectorControllerActivator(container));
+            services.AddSingleton<IViewComponentActivator>(new SimpleInjectorViewComponentActivator(container));
+
+            services.EnableSimpleInjectorCrossWiring(container);
+            services.UseSimpleInjectorAspNetRequestScoping(container);
+        }
+
+        public static void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (Container == null) Container = new Container();
             var container = Container;
@@ -33,7 +53,7 @@ namespace Core.Framework
 
             try
             {
-                var fileName = Path.Combine(appRoot, "entityConfig.json");
+                var fileName = Path.Combine(env.WebRootPath, "entityConfig.json");
                 EntityInfoManager.Configuration.Load(fileName);
             }
             catch (Exception ex)
@@ -59,72 +79,77 @@ namespace Core.Framework
             }
 
 
-            var versionSelector = new VersionControllerSelector(configuration);
+            //var versionSelector = new VersionControllerSelector(configuration);
 
-            configuration.Services.Replace(typeof(IHttpControllerSelector), versionSelector);
-            configuration.EnableODataV3Support();
+            //configuration.Services.Replace(typeof(IHttpControllerSelector), versionSelector);
+            //configuration.EnableODataV3Support();
 
-            configuration.Routes.MapHttpRoute(
-                name: "DefaultGetPaged",
-                routeTemplate: "api/{module}/{version}/{entity}",
-                constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Get) },
-                defaults: new {  controller="Services", action = "DefaultGetPaged" }
-            );
-            configuration.Routes.MapHttpRoute(
-                name: "DefaultGet",
-                routeTemplate: "api/{module}/{version}/{entity}/{key}",
-                constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Get) },
-                defaults: new { controller = "Services", action = "DefaultGet" }
-            );
-            configuration.Routes.MapHttpRoute(
-                name: "DefaultDelete",
-                routeTemplate: "api/{module}/{version}/{entity}/{key}",
-                constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Delete) },
-                defaults: new { controller = "Services", action = "DefaultDelete" }
-            );
-            configuration.Routes.MapHttpRoute(
-                name: "DefaultPut",
-                routeTemplate: "api/{module}/{version}/{entity}/{key}",
-                constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Put) },
-                defaults: new { controller = "Services", action = "DefaultPut" }
-            );
-            configuration.Routes.MapHttpRoute(
-                name: "DefaultPost",
-                routeTemplate: "api/{module}/{version}/{entity}",
-                constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Post) },
-                defaults: new { controller = "Services", action = "DefaultPost" }
-            );
-            configuration.Routes.MapHttpRoute(
-                name: "DefaultPostBulk",
-                routeTemplate: "api/services",
-                constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Post) },
-                defaults: new { controller = "Services", action = "DefaultPostBulk" }
-            );
-
-
-            if (Core.Logging.Configuration.LoggingConfig.Current.Transmission)
-            {
-                Logger.LogTrace(LoggingBoundaries.Host, "Transmission logging on");
-                configuration.MessageHandlers.Add(new TransmissionLogHandler());
-            }
-            else Logger.LogTrace(LoggingBoundaries.Host, "Transmission logging off");
-
-            // This is an extension method from the integration package.
-            if(alist!=null) container.RegisterWebApiControllers(configuration, alist);
+            container.RegisterMvcControllers(app);
+            container.RegisterMvcViewComponents(app);
+            container.AutoCrossWireAspNetComponents(app);
             container.Verify();
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "DefaultGet",
+                    template: "api/{module}/{version}/{entity}/{key}",
+                    //constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Get) },
+                    defaults: new { controller = "Services", action = "DefaultGet" }
+                    );
+
+                routes.MapRoute(
+                    name: "DefaultGet",
+                    template: "api/{module}/{version}/{entity}/{key}",
+                    //constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Get) },
+                    defaults: new { controller = "Services", action = "DefaultGet" }
+                );
+                routes.MapRoute(
+                    name: "DefaultDelete",
+                    template: "api/{module}/{version}/{entity}/{key}",
+                    //constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Delete) },
+                    defaults: new { controller = "Services", action = "DefaultDelete" }
+                );
+                routes.MapRoute(
+                    name: "DefaultPut",
+                    template: "api/{module}/{version}/{entity}/{key}",
+                    //constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Put) },
+                    defaults: new { controller = "Services", action = "DefaultPut" }
+                );
+                routes.MapRoute(
+                    name: "DefaultPost",
+                    template: "api/{module}/{version}/{entity}",
+                    //constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Post) },
+                    defaults: new { controller = "Services", action = "DefaultPost" }
+                );
+                routes.MapRoute(
+                    name: "DefaultPostBulk",
+                    template: "api/services",
+                    //constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Post) },
+                    defaults: new { controller = "Services", action = "DefaultPostBulk" }
+                );
+
+            });
+
+            /*
+
+                        if (Core.Logging.Configuration.LoggingConfig.Current.Transmission)
+                        {
+                            Logger.LogTrace(LoggingBoundaries.Host, "Transmission logging on");
+                            configuration.MessageHandlers.Add(new TransmissionLogHandler());
+                        }
+                        else Logger.LogTrace(LoggingBoundaries.Host, "Transmission logging off");*/
 
             try
             {
-                var fileName = Path.Combine(appRoot, "entityConfig.json");
+                var fileName = Path.Combine(env.WebRootPath, "entityConfig.json");
                 EntityInfoManager.Configuration.Save(fileName);
             }
             catch (Exception ex)
             {
                 Logger.LogWarning(LoggingBoundaries.Host, ex);
             }
-
-            configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
-
         }
+
     }
 }
