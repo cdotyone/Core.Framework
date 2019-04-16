@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Web.Http;
 using Core.Logging;
 using Core.Framework.OData;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Core.Framework
 {
-    //[RoutePrefix("api/services")]
-    public class ServicesController : ApiController
+    [ApiController]
+    [Route("api/services")]
+    public class ServicesController : Controller
     {
         private readonly IEntityCreateFactory _factory;
 
@@ -22,12 +23,11 @@ namespace Core.Framework
 
         //[Route("{module}/{version}/{entity}")]
         [ActionName("DefaultGetPaged")]
-        public IQueryMetadata GetPaged(string module, string version, string entity)
+        public IQueryMetadata GetPaged(string module, string version, string entity, [FromQuery] ODataV3QueryOptions options)
         {
             var item = _factory.CreateNew(module, entity);
             var info = EntityInfoManager.GetInfo(item);
 
-            ODataV3QueryOptions options = this.GetOptions();
             var max = EntityInfoManager.GetMaxRows(info);
             var resultLimit = options.Top < max && options.Top > 0 ? options.Top : max;
             string orderBy = options.ProcessOrderByOptions();
@@ -63,7 +63,6 @@ namespace Core.Framework
             var facade = _factory.CreateFacade(item);
             facade.Remove(context, item);
         }
-
 
         //[Route("{module}/{version}/{entity}")]
         [ActionName("DefaultPost")]

@@ -10,9 +10,11 @@ namespace Core.Framework
     {
         private readonly IEntityRepository<T> _repository;
         private readonly IEntityEventHandlerFactory _handlers;
+        private readonly Container _container;
 
-        public EntityBusinessFacade(IEntityRepository<T> repository, IEntityEventHandlerFactory handlers)
+        public EntityBusinessFacade(Container container, IEntityRepository<T> repository, IEntityEventHandlerFactory handlers)
         {
+            _container = container;
             _repository = repository;
             _handlers = handlers;
         }

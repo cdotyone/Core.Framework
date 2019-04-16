@@ -57,7 +57,7 @@ namespace Core.Framework.Configuration
             string newHash;
             using(var stream = new MemoryStream(Encoding.UTF8.GetBytes(json)))
             {
-                newHash = GetHash<MD5Cng>(stream);
+                newHash = GetHash<MD5CryptoServiceProvider>(stream);
             }
 
             return newHash;

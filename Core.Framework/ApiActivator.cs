@@ -1,35 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
-//using System.Web.Http;
-//using System.Web.Http.Dispatcher;
-//using System.Web.Http.Routing;
 using Core.Logging;
-using Core.Framework.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.Extensions.DependencyInjection;
-//using Core.Framework.OData;
 using SimpleInjector;
 using SimpleInjector.Integration.AspNetCore.Mvc;
-//using SimpleInjector.Integration.WebApi;
 using SimpleInjector.Lifestyles;
 
 namespace Core.Framework
 {
-    public class ApiActivator
+    public static class ApiActivator
     {
   
-        public static Container Container {  get; private set; }
+        public static Container Container {  get; private set; } = new Container();
 
-        private void ConfigureServices(IServiceCollection services)
+        public static void ConfigureServices(IServiceCollection services)
         {
             var container = Container;
 
@@ -67,6 +58,8 @@ namespace Core.Framework
             try
             {
                 var path = AppDomain.CurrentDomain.DynamicDirectory;
+                if (string.IsNullOrEmpty(path)) path = AppDomain.CurrentDomain.BaseDirectory;
+
                 var assemblies = new DirectoryInfo(path).GetFiles("*.dll", SearchOption.AllDirectories)
                     .Where(file => !file.Name.Contains("System.Net.Http.Extensions"))
                     .Select(file => Assembly.Load(AssemblyName.GetAssemblyName(file.FullName)));

@@ -33,6 +33,7 @@ namespace Core.Framework.OData
         /// <param name="command">The command to add the parameters to</param>
         /// <param name="expression">The root expression</param>
         /// <param name="properties">the property name map</param>
+        /// <param name="whereList"></param>
         /// <returns>Where clause</returns>
         private static string expandExpression(IDBCommand command, IExpression expression, string[] properties, List<string> whereList)
         {
@@ -95,9 +96,7 @@ namespace Core.Framework.OData
 
             if (expression.Type == ExpressionTypes.AndCriteria)
             {
-                var andExpression = expression as AndCriteriaExpression;
-
-                if (andExpression != null)
+                if (expression is AndCriteriaExpression andExpression)
                 {
                     sb.Append("(" + expandExpression(command, andExpression.LeftExpression, properties, whereList));
                     sb.Append(" and ");
@@ -107,9 +106,7 @@ namespace Core.Framework.OData
 
             if (expression.Type == ExpressionTypes.OrCriteria)
             {
-                var andExpression = expression as OrCriteriaExpression;
-
-                if (andExpression != null)
+                if (expression is OrCriteriaExpression andExpression)
                 {
                     sb.Append("(" + expandExpression(command, andExpression.LeftExpression, properties, whereList));
                     sb.Append(" or ");

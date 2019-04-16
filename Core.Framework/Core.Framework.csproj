@@ -7,14 +7,17 @@
 
   <ItemGroup>
     <Compile Remove="nuget\**" />
-    <Compile Remove="OData\**" />
     <EmbeddedResource Remove="nuget\**" />
-    <EmbeddedResource Remove="OData\**" />
     <None Remove="nuget\**" />
-    <None Remove="OData\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="OData\ODataV3Attribute.cs" />
+    <Compile Remove="OData\ODataV3EdmxFormatter.cs" />
+    <Compile Remove="OData\ODataV3FormatterExtensions.cs" />
+    <Compile Remove="OData\ODataV3JsonFormatter.cs" />
+    <Compile Remove="OData\ODataV3QueryFilter.cs" />
+    <Compile Remove="OData\ODataV3XmlFormatter.cs" />
     <Compile Remove="VersionControllerSelector.cs" />
   </ItemGroup>
 
@@ -25,14 +28,15 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="3.1.2" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
     <PackageReference Include="SimpleInjector" Version="4.5.1" />
     <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc.Core" Version="4.5.1" />
     <PackageReference Include="SimpleInjector.Packaging" Version="4.5.1" />
     <PackageReference Include="Stack.Core.Audit" Version="2.0.1" />
     <PackageReference Include="Stack.Core.Configuration" Version="2.0.9" />
     <PackageReference Include="Stack.Core.Data" Version="2.0.4" />
-    <PackageReference Include="Stack.Core.Logging" Version="2.0.3" />
     <PackageReference Include="Stack.Core.Security" Version="2.0.8" />
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
   </ItemGroup>
 
 </Project>

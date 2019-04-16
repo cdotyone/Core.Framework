@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using System.Net.Http;
-using Core.Framework.OData;
 
 namespace Core.Framework
 {
@@ -38,21 +35,6 @@ namespace Core.Framework
 
         public Type Type { get; set; }
 
-	    public event QueryCallBack MetaDataAction;
-
-	    public bool HasMetaDataAction {
-			get
-			{
-				return MetaDataAction != null;
-			}
-	    }
-
-		public void OnMetaRequest(ODataV3JsonFormatter formatter, IQueryMetadata data, Stream writeStream, HttpContent content, TransportContext transportContext)
-		{
-			if(MetaDataAction!=null)
-				MetaDataAction(formatter, data, writeStream, content, transportContext);
-		}
-
 	    public IEnumerator<T> GetEnumerator()
         {
             return Result.GetEnumerator();
@@ -72,7 +54,6 @@ namespace Core.Framework
             list.Add(value);
             Result = list;
         }
-
 
         #region Error Results
 
