@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Core.Framework.OData
+namespace Stack.Core.Framework.OData
 {
 	public class EntityRoute
 	{

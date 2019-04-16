@@ -13,7 +13,7 @@ using SimpleInjector.Integration.AspNetCore.Mvc;
 using SimpleInjector.Lifestyles;
 using Stack.Core.Logging;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     public static class ApiActivator
     {

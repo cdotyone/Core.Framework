@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Core.Framework.OData;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Stack.Core.Framework.OData;
 using Stack.Core.Logging;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     [ApiController]
     [Route("api/services")]

@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Core.Framework.Configuration;
+using Stack.Core.Framework.Configuration;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     public class EntityInfoManager
     {

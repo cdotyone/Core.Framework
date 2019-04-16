@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace Core.Framework.OData.Parse
+namespace Stack.Core.Framework.OData.Parse
 {
     internal class TokenInfo {
 

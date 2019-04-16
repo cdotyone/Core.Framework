@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     [Serializable]
     [DataContract(Name="data")]

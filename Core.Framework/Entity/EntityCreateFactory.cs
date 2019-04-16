@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using SimpleInjector;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     public class EntityCreateFactory : IEntityCreateFactory
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
 	public class EntityConverter : JsonConverter
 	{

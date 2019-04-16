@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Core.Framework.Configuration
+namespace Stack.Core.Framework.Configuration
 {    
     [DataContract(Name = "entityDefaults")]
     public class EntityDefaults

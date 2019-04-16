@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Stack.Core.Audit;
 using Stack.Core.Security;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     public class BasicAuthorizationHandler : IEntityEventHandler
     {

@@ -5,10 +5,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Stack.Core.Logging;
 using Newtonsoft.Json;
+using Stack.Core.Logging;
 
-namespace Core.Framework.Logging
+namespace Stack.Core.Framework.Logging
 {
     public class TransmissionLogHandler : DelegatingHandler
     {

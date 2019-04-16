@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using Core.Framework.OData.Parse;
 using Stack.Core.Data;
+using Stack.Core.Framework.OData.Parse;
 
-namespace Core.Framework.OData
+namespace Stack.Core.Framework.OData
 {
     public static class OData3FilterBuilder
     {

@@ -9,11 +9,10 @@
 
 #pragma warning disable 1591 // this is to supress no xml comments in public members warnings 
 
-using System.Runtime.InteropServices;
-using SimpleInjector.Packaging;
 using SimpleInjector;
+using SimpleInjector.Packaging;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     public class WebApiPackage : IPackage
     {

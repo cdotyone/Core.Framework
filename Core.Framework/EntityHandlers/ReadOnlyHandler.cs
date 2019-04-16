@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     public class ReadOnlyHandler : IEntityEventHandler
     {

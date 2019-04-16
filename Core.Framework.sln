@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Framework", "Core.Framework\Core.Framework.csproj", "{E8F58C4A-41DE-40C7-994B-9E2230C30553}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stack.Core.Framework", "Core.Framework\Stack.Core.Framework.csproj", "{E8F58C4A-41DE-40C7-994B-9E2230C30553}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{54D7CD44-0610-43DD-9FCE-7480335B3B4F}"
 	ProjectSection(SolutionItems) = preProject
@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{E091A1FA
 		Nuget\Core.Framework.T4.Model.nuspec = Nuget\Core.Framework.T4.Model.nuspec
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Civic.Framework.Web", "Civic.Framework.Web\Civic.Framework.Web.csproj", "{BCCA780E-C831-42F5-BDAD-7A296AC93C2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stack.Civic.Framework.Web", "Civic.Framework.Web\Stack.Civic.Framework.Web.csproj", "{BCCA780E-C831-42F5-BDAD-7A296AC93C2C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stack.Core.Logging", "..\Logging\Core.Logging\Stack.Core.Logging.csproj", "{95444D7E-14B0-493A-A561-7B5F7F77CC95}"
 EndProject

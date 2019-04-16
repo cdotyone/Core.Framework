@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Core.Framework.Configuration
+namespace Stack.Core.Framework.Configuration
 {
     public class EntityConfigReader : JsonConverter
     {

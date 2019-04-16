@@ -1,4 +1,4 @@
-﻿namespace Core.Framework
+﻿namespace Stack.Core.Framework
 {
     public interface IEntityCreateFactory
     {

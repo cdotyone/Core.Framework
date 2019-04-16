@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     
     public interface IEntityRepository<T> where T : IEntityIdentity

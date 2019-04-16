@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core.Framework.OData.Parse
+namespace Stack.Core.Framework.OData.Parse
 {
 
     public class CriteriaExpression : IExpression {

@@ -8,7 +8,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Stack.Core.Logging;
 
-namespace Core.Framework.Configuration
+namespace Stack.Core.Framework.Configuration
 {
     [DataContract(Name = "entityConfig")]
     public class EntityConfig

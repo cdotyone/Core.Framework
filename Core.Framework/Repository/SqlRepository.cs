@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using SimpleInjector;
 using Stack.Core.Data;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     public class SqlRepository<T> : IEntityRepository<T> where T : class, IEntityIdentity
     {

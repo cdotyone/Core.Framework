@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using Core.Framework.OData;
-using Stack.Core.Logging;
 using SimpleInjector;
 using Stack.Core.Configuration;
 using Stack.Core.Data;
+using Stack.Core.Framework.OData;
+using Stack.Core.Logging;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     public class SqlQuery
     {

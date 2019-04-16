@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Core.Framework.OData
+namespace Stack.Core.Framework.OData
 {
     public class ODataV3QueryOptions
     {

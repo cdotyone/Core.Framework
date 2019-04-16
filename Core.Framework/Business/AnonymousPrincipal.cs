@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using Stack.Core.Security;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     public class AnonymousPrincipal : ClaimsPrincipal
     {

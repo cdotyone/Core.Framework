@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     public interface IEntityIdentity
     {

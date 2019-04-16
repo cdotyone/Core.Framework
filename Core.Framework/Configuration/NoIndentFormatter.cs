@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Core.Framework.Configuration
+namespace Stack.Core.Framework.Configuration
 {
     public class NoIndentFormatter<T> : JsonConverter
     {

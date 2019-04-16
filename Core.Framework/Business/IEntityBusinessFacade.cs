@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     public interface IEntityBusinessFacade<out T> where T : IEntityIdentity
     {

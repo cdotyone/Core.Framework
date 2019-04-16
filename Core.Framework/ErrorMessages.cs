@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     internal class ErrorMessages
     {

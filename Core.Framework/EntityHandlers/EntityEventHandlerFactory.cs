@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     public class EntityEventHandlerFactory : IEntityEventHandlerFactory
     {

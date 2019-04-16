@@ -1,6 +1,6 @@
 ﻿using Stack.Core.Data;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     public class SqlOperation : IEntityOperation
     {

@@ -1,4 +1,4 @@
-﻿namespace Core.Framework.OData.Parse
+﻿namespace Stack.Core.Framework.OData.Parse
 {
     public enum ExpressionTypes
     {

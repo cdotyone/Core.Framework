@@ -4,7 +4,7 @@ using System.Security.Claims;
 using SimpleInjector;
 using Stack.Core.Logging;
 
-namespace Core.Framework
+namespace Stack.Core.Framework
 {
     public class EntityBusinessFacade<T> : IEntityBusinessFacade<T> where T : class, IEntityIdentity
     {
