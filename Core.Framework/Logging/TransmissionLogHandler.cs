@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Logging;
+using Stack.Core.Logging;
 using Newtonsoft.Json;
 
 namespace Core.Framework.Logging

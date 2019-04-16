@@ -13,6 +13,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Logging\Core.Logging\Stack.Core.Logging.csproj" />
     <ProjectReference Include="..\Core.Framework\Core.Framework.csproj" />
   </ItemGroup>
 

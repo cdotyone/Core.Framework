@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Principal;
-using Core.Security;
+using Stack.Core.Security;
 
 namespace Core.Framework
 {

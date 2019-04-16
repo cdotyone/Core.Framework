@@ -5,8 +5,8 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
-using Core.Logging;
 using Newtonsoft.Json;
+using Stack.Core.Logging;
 
 namespace Core.Framework.Configuration
 {

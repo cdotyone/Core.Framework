@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core.Audit;
-using Core.Security;
+using Stack.Core.Audit;
+using Stack.Core.Security;
 
 namespace Core.Framework
 {

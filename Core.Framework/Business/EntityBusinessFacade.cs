@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using Core.Logging;
 using SimpleInjector;
+using Stack.Core.Logging;
 
 namespace Core.Framework
 {

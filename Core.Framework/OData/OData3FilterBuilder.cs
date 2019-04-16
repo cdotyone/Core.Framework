@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using Core.Data;
 using Core.Framework.OData.Parse;
+using Stack.Core.Data;
 
 namespace Core.Framework.OData
 {

@@ -1,4 +1,4 @@
-﻿using Core.Data;
+﻿using Stack.Core.Data;
 
 namespace Core.Framework
 {
