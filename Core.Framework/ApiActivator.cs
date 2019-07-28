@@ -54,17 +54,27 @@ namespace Stack.Core.Framework
 
 
             // Register your types, for instance using the scoped lifestyle:
-            List<Assembly> alist = null;
             try
             {
                 var path = AppDomain.CurrentDomain.DynamicDirectory;
                 if (string.IsNullOrEmpty(path)) path = AppDomain.CurrentDomain.BaseDirectory;
 
-                var assemblies = new DirectoryInfo(path).GetFiles("*.dll", SearchOption.AllDirectories)
-                    .Where(file => !file.Name.Contains("System.Net.Http.Extensions"))
-                    .Select(file => Assembly.Load(AssemblyName.GetAssemblyName(file.FullName)));
-                alist = assemblies.ToList();
-                container.RegisterPackages(alist);
+                var assemblies = new DirectoryInfo(path).GetFiles("*.dll", SearchOption.AllDirectories);
+                var valid = assemblies.Where(file => !file.Name.Contains("System.Net.Http.Extensions"));
+                var list = new List<Assembly>();
+                foreach (var file in valid)
+                {
+                    try
+                    {
+                        var assembly = Assembly.Load(AssemblyName.GetAssemblyName(file.FullName));
+                        list.Add(assembly);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.HandleException(LoggingBoundaries.Host, ex);
+                    }
+                }
+                container.RegisterPackages(list);
             }
             catch (Exception ex)
             {

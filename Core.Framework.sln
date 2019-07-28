@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{E091A1FA
 		Nuget\Core.Framework.T4.Model.nuspec = Nuget\Core.Framework.T4.Model.nuspec
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stack.Civic.Framework.Web", "Civic.Framework.Web\Stack.Civic.Framework.Web.csproj", "{BCCA780E-C831-42F5-BDAD-7A296AC93C2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stack.Framework.Web", "Civic.Framework.Web\Stack.Framework.Web.csproj", "{BCCA780E-C831-42F5-BDAD-7A296AC93C2C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stack.Core.Logging", "..\Logging\Core.Logging\Stack.Core.Logging.csproj", "{95444D7E-14B0-493A-A561-7B5F7F77CC95}"
 EndProject

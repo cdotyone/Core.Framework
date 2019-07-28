@@ -1,0 +1,13 @@
+{
+  "defaults": {
+    "forceUpperCase": false,
+    "max": 100,
+    "canView": true,
+    "canAdd": false,
+    "canModify": false,
+    "canRemove": false,
+    "useLocalTime": false
+  },
+  "hash": "7482b51fc85041f860f1dcba6617550b",
+  "entities": {}
+}
