@@ -6,20 +6,16 @@ namespace Core.Framework.OData.Parse
     public class FunctionExpression : CriteriaExpression
     {
         private readonly String _functionName;
-        private readonly ParametersExpression _parametersExpression;
 
         public FunctionExpression(String functionName, ParametersExpression parametersExpression)
         {
             _functionName = functionName;
-            _parametersExpression = parametersExpression;
+            Parameters = parametersExpression;
             //criteria = FunctionBuilder.parseCriteria(this);
             //log.debug("Add " + criteria);
         }
 
-        public ExpressionTypes Type
-        {
-            get { return ExpressionTypes.Function; }
-        }
+        public override ExpressionTypes Type => ExpressionTypes.Function;
 
         public Expression Expression
         { 
@@ -27,14 +23,11 @@ namespace Core.Framework.OData.Parse
             private set; 
         }
 
-        public String Name 
+        public override String Name 
         {
             get { return _functionName; }
         }
 
-        public ParametersExpression Parameters
-        {
-            get { return _parametersExpression; }
-        }
+        public ParametersExpression Parameters { get; }
     }
 }

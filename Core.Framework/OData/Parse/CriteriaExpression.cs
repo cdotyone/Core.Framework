@@ -14,14 +14,14 @@ namespace Core.Framework.OData.Parse
             Value = fieldOperator.Value;
         }
 
-        public ExpressionTypes Type
+        public virtual ExpressionTypes Type
         {
             get { return ExpressionTypes.Criteria; }
         }
 
         public IExpression NestedExpression { get; set; }
 
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         public FieldOperator Operator { get; set; }
 
