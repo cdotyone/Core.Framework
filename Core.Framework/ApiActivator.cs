@@ -28,8 +28,29 @@ namespace Core.Framework
 
             services.AddHttpContextAccessor();
 
-            services.AddSingleton<IControllerActivator>(new SimpleInjectorControllerActivator(container));
-            services.AddSingleton<IViewComponentActivator>(new SimpleInjectorViewComponentActivator(container));
+//#if NETFULL
+//            services.AddSingleton<IControllerActivator>(new SimpleInjectorControllerActivator(container));
+//            services.AddSingleton<IViewComponentActivator>(new SimpleInjectorViewComponentActivator(container));
+//#endif
+
+#if NETCORE
+            services.AddSimpleInjector(container, options =>
+            {
+                // AddAspNetCore() wraps web requests in a Simple Injector scope and
+                // allows request-scoped framework services to be resolved.
+                options.AddAspNetCore()
+
+                    // Ensure activation of a specific framework type to be created by
+                    // Simple Injector instead of the built-in configuration system.
+                    // All calls are optional. You can enable what you need. For instance,
+                    // ViewComponents, PageModels, and TagHelpers are not needed when you
+                    // build a Web API.
+                    .AddControllerActivation()
+                    .AddViewComponentActivation()
+                    .AddPageModelActivation()
+                    .AddTagHelperActivation();
+            });
+#endif
 
             //services.EnableSimpleInjectorCrossWiring(container);
             services.UseSimpleInjectorAspNetRequestScoping(container);
@@ -87,9 +108,13 @@ namespace Core.Framework
             //configuration.Services.Replace(typeof(IHttpControllerSelector), versionSelector);
             //configuration.EnableODataV3Support();
 
+#if NETFULL
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
-//            container.RegisterMvcViewComponents(app);
-//            container.AutoCrossWireAspNetComponents(app);
+#endif
+
+            
+            //            container.RegisterMvcViewComponents(app);
+            //            container.AutoCrossWireAspNetComponents(app);
             container.Verify();
 
             app.UseMvc(routes =>
