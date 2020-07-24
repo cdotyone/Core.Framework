@@ -1,19 +1,19 @@
 ﻿
 
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_CreateDynamicVals]'))
-DROP FUNCTION [civic].[udf_CreateDynamicVals]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[common].[udf_CreateDynamicVals]'))
+DROP FUNCTION [common].[udf_CreateDynamicVals]
 GO
 
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_Split]'))
-DROP FUNCTION [civic].[udf_Split]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[common].[udf_Split]'))
+DROP FUNCTION [common].[udf_Split]
 GO
 
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[udf_GetSysDate]'))
-DROP FUNCTION [civic].[udf_GetSysDate]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[common].[udf_GetSysDate]'))
+DROP FUNCTION [common].[udf_GetSysDate]
 GO
 
-IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[civic].[usp_ProcessFilter]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [civic].[usp_ProcessFilter]
+IF EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[common].[usp_ProcessFilter]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [common].[usp_ProcessFilter]
 GO
 
 SET ANSI_NULLS ON
@@ -22,7 +22,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE FUNCTION [civic].[udf_GetSysDate]()
+CREATE FUNCTION [common].[udf_GetSysDate]()
 RETURNS datetime
 AS
 BEGIN
@@ -31,7 +31,7 @@ END
 GO
 
 
-CREATE FUNCTION [civic].[udf_Split] (
+CREATE FUNCTION [common].[udf_Split] (
       @InputString                  VARCHAR(8000),
       @Delimiter                    VARCHAR(50)
 )
@@ -87,7 +87,7 @@ END -- End Function
 GO
 
 
-CREATE FUNCTION [civic].[udf_CreateDynamicVals] (
+CREATE FUNCTION [common].[udf_CreateDynamicVals] (
       @name VARCHAR(50),
       @count int
 ) RETURNS NVARCHAR(MAX) 
@@ -108,7 +108,7 @@ BEGIN
 END
 
 GO
-CREATE PROCEDURE [civic].[usp_ProcessFilter]
+CREATE PROCEDURE [common].[usp_ProcessFilter]
      @skip int
     ,@count int out
 	,@select nvarchar(max)
@@ -138,7 +138,7 @@ BEGIN
 	--- escape out space in a string query
 	SET @filterBy=REPLACE(@filterBy,' ','___')
 	insert into @BLOCKS
-	select [POS],[item] from [civic].[udf_Split](@filterBy,'''')
+	select [POS],[item] from [common].[udf_Split](@filterBy,'''')
 
 	UPDATE @BLOCKS SET blk=replace(blk,'___','###')
 	WHERE (POS % 2) = 0
@@ -151,7 +151,7 @@ BEGIN
 	-- parse and determine filter by
 	set @filterBy=replace(replace(replace(replace(replace(replace(replace(upper(@filterBy),' like ','|_like_|'),' eq ','|=|'),' lt ','|<|'),' gt ','|>|'),' ge ','|>=|'),' le ','|<=|'),' ne ','|<>|')
 	insert into @BLOCKS
-	select [POS],[item] from [civic].[udf_Split](@filterBy,' ')
+	select [POS],[item] from [common].[udf_Split](@filterBy,' ')
 
 	DECLARE @COMBINEVARS TABLE(pos int,varname nvarchar(512),operation nvarchar(512),varvalue nvarchar(512))
 	DECLARE @OPERATIONS TABLE(pos int,operation nvarchar(512))
@@ -170,7 +170,7 @@ BEGIN
 				,ITEM nvarchar(256)
 			)
 			INSERT INTO @TEMP
-			select POS,[item] from [civic].[udf_Split](REPLACE(@PAIR,'|_LIKE_|','| LIKE |'),'|')
+			select POS,[item] from [common].[udf_Split](REPLACE(@PAIR,'|_LIKE_|','| LIKE |'),'|')
 
 			DECLARE @VARNAME NVARCHAR(512)
 			select TOP 1 @VARNAME=[item] from @TEMP WE
@@ -248,7 +248,7 @@ BEGIN
 		SET @order=''
 		DECLARE @orderbylist table (orderby nvarchar(512),[desc] bit) 
 		INSERT INTO @orderbylist
-		SELECT [item],0 FROM [civic].[udf_Split](@orderBy,',')
+		SELECT [item],0 FROM [common].[udf_Split](@orderBy,',')
 		UPDATE @orderbylist SET ORDERBY=SUBSTRING(ORDERBY,1,LEN(ORDERBY)-5),[DESC]=1 WHERE PATINDEX('%_DESC',ORDERBY)>0
 		UPDATE @orderbylist SET ORDERBY=SUBSTRING(ORDERBY,1,LEN(ORDERBY)-4) WHERE PATINDEX('%_ASC',ORDERBY)>0
 		SELECT @order = @order + ',' + orderby + CASE WHEN [DESC]=1 THEN ' DESC' ELSE '' END FROM @orderbylist
@@ -282,7 +282,7 @@ BEGIN
 	SET @SQL = @SQLCOUNT + @order +' OFFSET @_skip ROWS FETCH NEXT @_count ROWS ONLY'
 
 	DECLARE @PARAMS NVARCHAR(MAX)
-	SET @PARAMS = N'@_skip int,@_count int,@_orderBy nvarchar(512),'+civic.udf_CreateDynamicVals('val',20)
+	SET @PARAMS = N'@_skip int,@_count int,@_orderBy nvarchar(512),'+[common].udf_CreateDynamicVals('val',20)
 	DECLARE @val1 nvarchar(512)
 			, @val2 nvarchar(512)
 			, @val3 nvarchar(512)
@@ -390,30 +390,30 @@ BEGIN
 END
 GO
 
-CREATE DEFAULT [civic].[udf_GetDate]
+CREATE DEFAULT [common].[udf_GetDate]
 AS GETUTCDATE()
 GO
 
 
-CREATE DEFAULT [civic].[udf_Unknown]
+CREATE DEFAULT [common].[udf_Unknown]
 AS 'UNK'
 GO
 
-CREATE DEFAULT [civic].[udf_Yes]
+CREATE DEFAULT [common].[udf_Yes]
 AS 1
 GO
 
-CREATE DEFAULT [civic].[udf_No]
+CREATE DEFAULT [common].[udf_No]
 AS 0
 GO
 
-CREATE DEFAULT [civic].[udf_Zero]
+CREATE DEFAULT [common].[udf_Zero]
 AS 0
 GO
 -- t4-defaults begin
-EXECUTE sp_bindefault N'civic.udf_GetDate', N'[dbo].[Entity2].[Modified]';
-EXECUTE sp_bindefault N'civic.udf_GetDate', N'[dbo].[Entity3].[Modified]';
-EXECUTE sp_bindefault N'civic.udf_GetDate', N'[dbo].[InstallationEnvironment].[Modified]';
+EXECUTE sp_bindefault N'[common].udf_GetDate', N'[dbo].[Entity2].[Modified]';
+EXECUTE sp_bindefault N'[common].udf_GetDate', N'[dbo].[Entity3].[Modified]';
+EXECUTE sp_bindefault N'[common].udf_GetDate', N'[dbo].[InstallationEnvironment].[Modified]';
 -- t4-defaults end
 GO
 
@@ -535,7 +535,7 @@ BEGIN
 
 	DECLARE @oid [int]
 	SELECT @oid = [OID]
-	FROM [civic].[OrgUnit]
+	FROM [common].[OrgUnit]
 	WHERE [OUID] = @ouid
 
 	INSERT INTO [dbo].[Entity2](
@@ -549,7 +549,7 @@ BEGIN
 
 -- t4-values begin
 		 @ff
-		,[civic].udf_getSysDate()
+		,[common].udf_getSysDate()
 		,@otherDate
 		,@oid
 -- t4-values end
@@ -573,13 +573,13 @@ BEGIN
 
 		DECLARE @oid [int]
 		SELECT @oid = [OID]
-		FROM [civic].[OrgUnit]
+		FROM [common].[OrgUnit]
 		WHERE [OUID] = @ouid
 	
 	UPDATE [e2] SET 
 		-- t4-columns begin
 		 [ff] = @ff
-		,[Modified] = [civic].udf_getSysDate()
+		,[Modified] = [common].udf_getSysDate()
 		,[OtherDate] = @otherDate
 		,[OID] = @oid
 		-- t4-columns end
@@ -628,7 +628,7 @@ AS
 	
 		-- t4-columns end
 	FROM [dbo].[Entity2] [e2]
-	LEFT JOIN [civic].[OrgUnit] as [ou] ON [e2].[OID] = [ou].[OID]
+	LEFT JOIN [common].[OrgUnit] as [ou] ON [e2].[OID] = [ou].[OID]
 GO
 
 	CREATE PROCEDURE [dbo].[usp_Entity3Add]
@@ -648,7 +648,7 @@ BEGIN
 	) VALUES (
 
 -- t4-values begin
-		 [civic].udf_getSysDate()
+		 [common].udf_getSysDate()
 		,@otherDate
 -- t4-values end
 	)
@@ -669,7 +669,7 @@ BEGIN
 
 	UPDATE [e3] SET 
 		-- t4-columns begin
-		 [Modified] = [civic].udf_getSysDate()
+		 [Modified] = [common].udf_getSysDate()
 		,[OtherDate] = @otherDate
 		-- t4-columns end
 	FROM [dbo].[Entity3] [e3]
@@ -815,7 +815,7 @@ BEGIN
 		,@name
 		,@description
 		,@isVisible
-		,[civic].udf_getSysDate()
+		,[common].udf_getSysDate()
 -- t4-values end
 	)
 
@@ -841,7 +841,7 @@ BEGIN
 		,[Name] = @name
 		,[Description] = @description
 		,[IsVisible] = @isVisible
-		,[Modified] = [civic].udf_getSysDate()
+		,[Modified] = [common].udf_getSysDate()
 		-- t4-columns end
 	FROM [dbo].[InstallationEnvironment] [ie]
 	WHERE	

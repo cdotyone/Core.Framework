@@ -4,7 +4,7 @@
 var apiVersion="1.0";
 var apiPackageName=""; 
 var apiSchemaName = "dbo";
-var apiGeneralSchemaName = "civic";
+var apiGeneralSchemaName = "common";
 var apiBundleSQLFiles = true;
 
 #>

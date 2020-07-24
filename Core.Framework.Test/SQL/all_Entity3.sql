@@ -15,7 +15,7 @@ BEGIN
 	) VALUES (
 
 -- t4-values begin
-		 [civic].udf_getSysDate()
+		 [common].udf_getSysDate()
 		,@otherDate
 -- t4-values end
 	)
@@ -36,7 +36,7 @@ BEGIN
 
 	UPDATE [e3] SET 
 		-- t4-columns begin
-		 [Modified] = [civic].udf_getSysDate()
+		 [Modified] = [common].udf_getSysDate()
 		,[OtherDate] = @otherDate
 		-- t4-columns end
 	FROM [dbo].[Entity3] [e3]

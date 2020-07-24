@@ -24,7 +24,7 @@ BEGIN
 		,@name
 		,@description
 		,@isVisible
-		,[civic].udf_getSysDate()
+		,[common].udf_getSysDate()
 -- t4-values end
 	)
 
@@ -50,7 +50,7 @@ BEGIN
 		,[Name] = @name
 		,[Description] = @description
 		,[IsVisible] = @isVisible
-		,[Modified] = [civic].udf_getSysDate()
+		,[Modified] = [common].udf_getSysDate()
 		-- t4-columns end
 	FROM [dbo].[InstallationEnvironment] [ie]
 	WHERE	

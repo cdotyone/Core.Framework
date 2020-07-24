@@ -46,7 +46,7 @@ BEGIN
 		-- t4-columns end
     FROM [dbo].[Entity3] [e3]'
 
-	EXEC [civic].[usp_ProcessFilter]
+	EXEC [common].[usp_ProcessFilter]
 		     @skip = @skip
 			,@select = @select
 			,@count = @count out

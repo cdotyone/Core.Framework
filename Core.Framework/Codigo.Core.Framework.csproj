@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Civic.Core.Logging" Version="1.27.12" />
+    <PackageReference Include="Codigo.Core.Logging" Version="2.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="SimpleInjector.Integration.AspNetCore" Version="5.1.0" />
     <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc" Version="5.0.0" />

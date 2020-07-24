@@ -8,7 +8,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 
 fileManager.StartNewFile(edmxFileName + "Data."+entity.Name+".cs", folderName:"Data");
 
-WriteHeader("System", "System.Collections.Generic", "System.Data","System.Data.Common","System.Diagnostics","Civic.Core.Data","Core.Framework","Core.Framework.Configuration", namespaceName +".Entities");
+WriteHeader("System", "System.Collections.Generic", "System.Data","System.Data.Common","System.Diagnostics","Core.Data","Core.Framework","Core.Framework.Configuration", namespaceName +".Entities");
 
 #>
 using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
@@ -242,7 +242,7 @@ EndNamespace(namespaceName);
 
 fileManager.StartNewFile(edmxFileName + "Data.cs", folderName:"Data");
 
-WriteHeader("System", "System.Collections.Generic", "System.Data","System.Data.Common","Civic.Core.Data", namespaceName +".Entities");
+WriteHeader("System", "System.Collections.Generic", "System.Data","System.Data.Common","Core.Data", namespaceName +".Entities");
 
 BeginNamespace(namespaceName + ".Data", code);
 

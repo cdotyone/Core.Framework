@@ -4,7 +4,7 @@ string servicesPath = new FileInfo(Host.TemplateFile).DirectoryName.Replace("\\M
 
 fileManager.StartNewFile(edmxFileName + ".Services.cs", folderName:"Services");
 
-WriteHeader("System", "System.ServiceModel.Activation", "System.Collections.Generic", "System.Security.Claims","System.ServiceModel","SimpleInjector", "Civic.Core.Audit","Civic.Core.Configuration", "Civic.Core.Data", "Civic.Core.Logging","Core.Framework", namespaceName + ".Entities");
+WriteHeader("System", "System.ServiceModel.Activation", "System.Collections.Generic", "System.Security.Claims","System.ServiceModel","SimpleInjector", "Core.Audit","Core.Configuration", "Core.Data", "Core.Logging","Core.Framework", namespaceName + ".Entities");
 #>
 
 <#
@@ -123,7 +123,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 {
 	fileManager.StartNewFile(edmxFileName + "."+entity.Name+".cs", folderName:"Services");
 
-	WriteHeader("System", "System.ServiceModel.Activation", "System.Collections.Generic", "Civic.Core.Security", "Civic.Core.Audit", "Civic.Core.Logging", "Core.Framework", namespaceName + ".Entities");
+	WriteHeader("System", "System.ServiceModel.Activation", "System.Collections.Generic", "Core.Security", "Core.Audit", "Core.Logging", "Core.Framework", namespaceName + ".Entities");
 	#>
 using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 
@@ -301,7 +301,7 @@ foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection)
 <#
 BeginNamespace(namespaceName+".Services", code);
 #>
-[ServiceContract(Namespace = "http://<#=edmxFileName.ToLower()#>.civic360.com/")]
+[ServiceContract(Namespace = "http://<#=edmxFileName.ToLower()#>.tencodigo.com/")]
 public interface I<#=edmxFileName#> : IEntityService,<#=string.Join(",",interfaces)#>
 {
 }
@@ -318,7 +318,7 @@ using <#=entity.Name#>Entity = <#=namespaceName +".Entities." + entity.Name#>;
 
 <# BeginNamespace(namespaceName+".Services", code); #>
 
-[ServiceContract(Namespace = "http://<#=edmxFileName.ToLower()#>.civic360.com/")]
+[ServiceContract(Namespace = "http://<#=edmxFileName.ToLower()#>.tencodigo.com/")]
 public interface I<#=edmxFileName+entity.Name#>
 {
 <#

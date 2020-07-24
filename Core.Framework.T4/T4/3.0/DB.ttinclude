@@ -255,7 +255,7 @@ BEGIN
 		SET @order=''
 		DECLARE @orderbylist table (orderby nvarchar(512),[desc] bit) 
 		INSERT INTO @orderbylist
-		SELECT [item],0 FROM [civic].[udf_Split](@orderBy,',')
+		SELECT [item],0 FROM [common].[udf_Split](@orderBy,',')
 		UPDATE @orderbylist SET ORDERBY=SUBSTRING(ORDERBY,1,LEN(ORDERBY)-5),[DESC]=1 WHERE PATINDEX('%_DESC',ORDERBY)>0
 		UPDATE @orderbylist SET ORDERBY=SUBSTRING(ORDERBY,1,LEN(ORDERBY)-4) WHERE PATINDEX('%_ASC',ORDERBY)>0
 		SELECT @order = @order + ',' + orderby + CASE WHEN [DESC]=1 THEN ' DESC' ELSE '' END FROM @orderbylist

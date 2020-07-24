@@ -82,10 +82,10 @@ namespace Core.Framework.OData
                                 sb.AppendFormat("{0} IS {1}", entityProperty, name.Replace("NOTNULL","NOT NULL"));
                                 break;
                             case FieldOperator.In:
-                                sb.AppendFormat("{0} IN (SELECT [item] from [civic].[udf_Split]({1},':'))", entityProperty, name);
+                                sb.AppendFormat("{0} IN (SELECT [item] from [common].[udf_Split]({1},':'))", entityProperty, name);
                                 break;
                             case FieldOperator.NotIn:
-                                sb.AppendFormat("{0} NOT IN (SELECT [item] from [civic].[udf_Split]({1},':'))", entityProperty, name);
+                                sb.AppendFormat("{0} NOT IN (SELECT [item] from [common].[udf_Split]({1},':'))", entityProperty, name);
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();

@@ -3,7 +3,7 @@
 foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
 {
     fileManager.StartNewFile(entity.Name + ".cs", folderName:"Entities");
-	WriteHeader("System","System.Collections.Generic","System.Runtime.Serialization","Civic.Core.Data","Core.Framework", "Newtonsoft.Json" , namespaceName+".Services");
+	WriteHeader("System","System.Collections.Generic","System.Runtime.Serialization","Core.Data","Core.Framework", "Newtonsoft.Json" , namespaceName+".Services");
 
     BeginNamespace(namespaceName + ".Entities", code);
 

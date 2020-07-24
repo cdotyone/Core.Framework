@@ -104,7 +104,7 @@ BEGIN
 
 	DECLARE @oid [int]
 	SELECT @oid = [OID]
-	FROM [civic].[OrgUnit]
+	FROM [common].[OrgUnit]
 	WHERE [OUID] = @ouid
 
 	INSERT INTO [dbo].[Entity2](
@@ -118,7 +118,7 @@ BEGIN
 
 -- t4-values begin
 		 @ff
-		,[civic].udf_getSysDate()
+		,[common].udf_getSysDate()
 		,@otherDate
 		,@oid
 -- t4-values end
@@ -142,13 +142,13 @@ BEGIN
 
 	DECLARE @oid [int]
 	SELECT @oid = [OID]
-	FROM [civic].[OrgUnit]
+	FROM [common].[OrgUnit]
 	WHERE [OUID] = @ouid
 
 	UPDATE [e2] SET 
 		-- t4-columns begin
 		 [ff] = @ff
-		,[Modified] = [civic].udf_getSysDate()
+		,[Modified] = [common].udf_getSysDate()
 		,[OtherDate] = @otherDate
 		,[OID] = @oid
 		-- t4-columns end
@@ -200,7 +200,7 @@ BEGIN
 	) VALUES (
 
 -- t4-values begin
-		 [civic].udf_getSysDate()
+		 [common].udf_getSysDate()
 		,@otherDate
 -- t4-values end
 	)
@@ -221,7 +221,7 @@ BEGIN
 
 	UPDATE [e3] SET 
 		-- t4-columns begin
-		 [Modified] = [civic].udf_getSysDate()
+		 [Modified] = [common].udf_getSysDate()
 		,[OtherDate] = @otherDate
 		-- t4-columns end
 	FROM [dbo].[Entity3] [e3]
@@ -341,7 +341,7 @@ BEGIN
 		,@name
 		,@description
 		,@isVisible
-		,[civic].udf_getSysDate()
+		,[common].udf_getSysDate()
 -- t4-values end
 	)
 
@@ -367,7 +367,7 @@ BEGIN
 		,[Name] = @name
 		,[Description] = @description
 		,[IsVisible] = @isVisible
-		,[Modified] = [civic].udf_getSysDate()
+		,[Modified] = [common].udf_getSysDate()
 		-- t4-columns end
 	FROM [dbo].[InstallationEnvironment] [ie]
 	WHERE	

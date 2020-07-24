@@ -42,7 +42,7 @@ BEGIN
 		-- t4-columns end
     FROM [dbo].[Environment] [e]'
 
-	EXEC [civic].[usp_ProcessFilter]
+	EXEC [common].[usp_ProcessFilter]
 		     @skip = @skip
 			,@select = @select
 			,@count = @count out

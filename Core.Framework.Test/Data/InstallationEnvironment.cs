@@ -15,7 +15,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Security.Claims;
 using SimpleInjector;
-using Civic.Core.Data;
+using Core.Data;
 using Core.Framework;
 using Core.Framework.Test.Interfaces;
 

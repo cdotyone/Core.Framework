@@ -1,6 +1,6 @@
 ﻿<#
 
-fileManager.StartNewFile("CivicConfig.json", folderName:"Entities");
+fileManager.StartNewFile("CoreConfig.json", folderName:"Entities");
 #>
 {
 	"<#=edmxFileName.ToLower()#>":{

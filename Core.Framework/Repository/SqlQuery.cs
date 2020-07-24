@@ -119,7 +119,7 @@ namespace Core.Framework
                     var view = $"[{info.Module}].[VW_{info.Entity}]";
                     List<T> list = new List<T>();
 
-                    using (var command = database.CreateStoredProcCommand("civic", "usp_EntityGetByFilter"))
+                    using (var command = database.CreateStoredProcCommand("common", "usp_EntityGetByFilter"))
                     {
                         string where = null;
                         if (!string.IsNullOrEmpty(filterBy))

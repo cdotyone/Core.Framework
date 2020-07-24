@@ -19,5 +19,5 @@ AS
 	
 		-- t4-columns end
 	FROM [dbo].[Entity2] [e2]
-	LEFT JOIN [civic].[OrgUnit] as [ou] ON [e2].[OID] = [ou].[OID]
+	LEFT JOIN [common].[OrgUnit] as [ou] ON [e2].[OID] = [ou].[OID]
 GO
