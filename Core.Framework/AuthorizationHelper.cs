@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace Stack.Core.Framework
+namespace Core.Framework
 {
     public static class AuthorizationHelper
     {

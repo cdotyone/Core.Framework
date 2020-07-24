@@ -6,9 +6,9 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Stack.Core.Logging;
+using Core.Logging;
 
-namespace Stack.Core.Framework.Logging
+namespace Core.Framework.Logging
 {
     public class TransmissionLogHandler : DelegatingHandler
     {

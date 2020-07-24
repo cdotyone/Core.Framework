@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Stack.Civic.Framework.Web.Pages
+namespace Core.Framework.Web.Pages
 {
-    public class IndexModel : PageModel
+    public class PrivacyModel : PageModel
     {
         public void OnGet()
         {
-
         }
     }
 }

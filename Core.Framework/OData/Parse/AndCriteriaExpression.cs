@@ -1,4 +1,4 @@
-﻿namespace Stack.Core.Framework.OData.Parse
+﻿namespace Core.Framework.OData.Parse
 {
     public class AndCriteriaExpression : IExpression
     {

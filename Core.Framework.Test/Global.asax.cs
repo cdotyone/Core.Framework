@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Http;
+using Core.Framework;
 
 namespace Core.Framework.Test
 {
@@ -8,8 +9,8 @@ namespace Core.Framework.Test
 
         protected void Application_Start(object sender, EventArgs e)
         {
-            GlobalConfiguration.Configure(WebApiConfig.Register);
-            ApiActivator.Initialize(GlobalConfiguration.Configuration);
+            //GlobalConfiguration.Configure(WebApiConfig.Register);
+            //ApiActivator.Initialize(GlobalConfiguration.Configuration);
         }
     }
 }

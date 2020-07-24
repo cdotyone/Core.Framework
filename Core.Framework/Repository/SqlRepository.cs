@@ -4,9 +4,10 @@ using System.Data;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using SimpleInjector;
-using Stack.Core.Data;
+using Core.Data;
+using IDbCommand = Core.Data.IDbCommand;
 
-namespace Stack.Core.Framework
+namespace Core.Framework
 {
     public class SqlRepository<T> : IEntityRepository<T> where T : class, IEntityIdentity
     {
@@ -93,7 +94,7 @@ namespace Stack.Core.Framework
             }
         }
 
-        public void BuildCommand(IEntityRequestContext context, T entity, IDBCommand command, bool addRecord)
+        public void BuildCommand(IEntityRequestContext context, T entity, IDbCommand command, bool addRecord)
         {
             Debug.Assert(command != null);
 

@@ -1,12 +1,14 @@
 ﻿<#@ template language="C#" debug="false" hostspecific="true"#>
 <#@ assembly name="$(DevEnvDir)Microsoft.Data.Entity.Design.DatabaseGeneration.dll"#>
+<#@ assembly name="Newtonsoft.Json.dll"#>
 <#@ include file="EF6.Utility.CS.ttinclude"#>
+<#@ import namespace="Newtonsoft.Json" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#@ import namespace="Microsoft.Data.Entity.Design.DatabaseGeneration" #>
 <#@ include file="GenerateTSQL.ttinclude"#>
-<#@ 
- output extension=".cs"#><#
+<#@ output extension=".cs"#>
+<#
 
 var fileProperties = new FileProperties()
 {
@@ -549,41 +551,6 @@ public void EndNamespace(string namespaceName)
 
 <#+
     }
-}
-
-
-public void EmbedEdmx(string templateName, TemplateFileManager fileManager) 
-{
-	var xmlFileName = Path.GetFileNameWithoutExtension(templateName)+".edmx.xml";
-	var edmxFileName = templateName.Replace(".tt",".edmx");
-	
-	var embed = new FileProperties()
-	{
-		BuildAction = BuildAction.EmbeddedResource
-	};
-
-	fileManager.StartNewFile(xmlFileName, fileProperties:embed);
-
-    using (var sr = File.OpenText(edmxFileName))
-    {
-        string line = sr.ReadToEnd().Replace("<!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->", "").Replace("<!-- C-S mapping content -->","");
-
-        XmlDocument xdoc = new XmlDocument();
-        xdoc.LoadXml(line);
-
-        XmlNamespaceManager ns = new XmlNamespaceManager(xdoc.NameTable);
-        ns.AddNamespace("edmx", "http://schemas.microsoft.com/ado/2009/11/edmx");
-
-        var mappings = xdoc.SelectSingleNode("//edmx:Mappings", ns);
-        if(mappings!=null) mappings.ParentNode.RemoveChild(mappings);
-
-        mappings = xdoc.SelectSingleNode("//edmx:Designer", ns);
-        if (mappings != null) mappings.ParentNode.RemoveChild(mappings);
-                
-        fileManager.TextTransformation.Write(xdoc.OuterXml);
-    }
-
-	fileManager.EndBlock();
 }
 
 public static void ArgumentNotNull<T>(T arg, string name) where T : class

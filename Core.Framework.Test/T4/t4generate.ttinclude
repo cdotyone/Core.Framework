@@ -10,8 +10,3 @@
 <#@ include file="$(SolutionDir)\Core.Framework.T4\T4\3.0\Business.ttinclude"#>
 <#@ include file="$(SolutionDir)\Core.Framework.T4\T4\3.0\Interfaces.ttinclude"#>
 <#@ include file="$(SolutionDir)\Core.Framework.T4\T4\3.0\Config.ttinclude"#>
-<#
-EmbedEdmx(Host.TemplateFile.ToString(), fileManager);
-fileManager.Process();
-#>
-

@@ -1,4 +1,4 @@
-﻿namespace Stack.Core.Framework
+﻿namespace Core.Framework
 {
    	public static class Constants
 	{

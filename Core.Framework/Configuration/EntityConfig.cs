@@ -6,9 +6,9 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
-using Stack.Core.Logging;
+using Core.Logging;
 
-namespace Stack.Core.Framework.Configuration
+namespace Core.Framework.Configuration
 {
     [DataContract(Name = "entityConfig")]
     public class EntityConfig

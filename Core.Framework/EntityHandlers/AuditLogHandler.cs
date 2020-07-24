@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Stack.Core.Audit;
-using Stack.Core.Security;
+using Core.Audit;
+using Core.Security;
 
-namespace Stack.Core.Framework
+namespace Core.Framework
 {
     public class AuditLogHandler : IEntityEventHandler
     {
@@ -25,7 +25,7 @@ namespace Stack.Core.Framework
         public bool OnAddAfter<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity
         {
             var info = EntityInfoManager.GetInfo(entity);
-            AuditManager.LogAdd(IdentityManager.GetUsername(context.Who), IdentityManager.GetClientMachine(context.Who), info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
+            AuditManager.LogAdd(context.Who, IdentityManager.GetClientMachine(context.Who), info.Module, entity._key, null, null, entity, context.TransactionUID);
             return true;
         }
 
@@ -37,7 +37,7 @@ namespace Stack.Core.Framework
         public bool OnModifyAfter<T>(IEntityRequestContext context, T before, T after) where T : class, IEntityIdentity
         {
             var info = EntityInfoManager.GetInfo(before);
-            AuditManager.LogModify(IdentityManager.GetUsername(context.Who), IdentityManager.GetClientMachine(context.Who), info.Module, info.Module, before._key, null, null, before, after, context.TransactionUID);
+            AuditManager.LogModify(context.Who, IdentityManager.GetClientMachine(context.Who), info.Module, before._key, null, null, before, after, context.TransactionUID);
             return true;
         }
 
@@ -49,7 +49,7 @@ namespace Stack.Core.Framework
         public bool OnRemoveAfter<T>(IEntityRequestContext context, T entity) where T : class, IEntityIdentity
         {
             var info = EntityInfoManager.GetInfo(entity);
-            AuditManager.LogRemove(IdentityManager.GetUsername(context.Who), IdentityManager.GetClientMachine(context.Who), info.Module, info.Module, entity._key, null, null, entity, context.TransactionUID);
+            AuditManager.LogRemove(context.Who, IdentityManager.GetClientMachine(context.Who), info.Module, entity._key, null, null, entity, context.TransactionUID);
             return true;
         }
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stack.Core.Framework
+namespace Core.Framework
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class RelatedAttribute : Attribute

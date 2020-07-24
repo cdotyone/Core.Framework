@@ -12,7 +12,7 @@
 using SimpleInjector;
 using SimpleInjector.Packaging;
 
-namespace Stack.Core.Framework
+namespace Core.Framework
 {
     public class WebApiPackage : IPackage
     {

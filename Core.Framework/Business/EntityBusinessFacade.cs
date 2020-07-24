@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using SimpleInjector;
-using Stack.Core.Logging;
+using Core.Logging;
 
-namespace Stack.Core.Framework
+namespace Core.Framework
 {
     public class EntityBusinessFacade<T> : IEntityBusinessFacade<T> where T : class, IEntityIdentity
     {

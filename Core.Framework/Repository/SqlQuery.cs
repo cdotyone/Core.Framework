@@ -4,12 +4,12 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using SimpleInjector;
-using Stack.Core.Configuration;
-using Stack.Core.Data;
-using Stack.Core.Framework.OData;
-using Stack.Core.Logging;
+using Core.Configuration;
+using Core.Data;
+using Core.Framework.OData;
+using Core.Logging;
 
-namespace Stack.Core.Framework
+namespace Core.Framework
 {
     public class SqlQuery
     {

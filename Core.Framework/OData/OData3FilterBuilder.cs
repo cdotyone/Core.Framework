@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using Stack.Core.Data;
-using Stack.Core.Framework.OData.Parse;
+using Core.Data;
+using Core.Framework.OData.Parse;
 
-namespace Stack.Core.Framework.OData
+namespace Core.Framework.OData
 {
     public static class OData3FilterBuilder
     {
@@ -16,7 +16,7 @@ namespace Stack.Core.Framework.OData
         /// <param name="filter">odata3 - $filter filter expression</param>
         /// <param name="properties">the property name map</param>
         /// <returns>Where clause</returns>
-        public static string ParseExpression(IDBCommand command, string filter, string[] properties)
+        public static string ParseExpression(IDbCommand command, string filter, string[] properties)
         {
             var whereList = new List<string>();
 
@@ -35,7 +35,7 @@ namespace Stack.Core.Framework.OData
         /// <param name="properties">the property name map</param>
         /// <param name="whereList"></param>
         /// <returns>Where clause</returns>
-        private static string expandExpression(IDBCommand command, IExpression expression, string[] properties, List<string> whereList)
+        private static string expandExpression(IDbCommand command, IExpression expression, string[] properties, List<string> whereList)
         {
             var sb = new StringBuilder();
 
@@ -117,7 +117,7 @@ namespace Stack.Core.Framework.OData
             return sb.ToString();
         }
 
-        private static string addParameter(string name, string value, List<string> whereList, IDBCommand command)
+        private static string addParameter(string name, string value, List<string> whereList, IDbCommand command)
         {
             name = name.ToLower();
             int pos = whereList.IndexOf(name);

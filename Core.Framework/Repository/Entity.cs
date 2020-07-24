@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace Stack.Core.Framework
+namespace Core.Framework
 {
 	[JsonConverter(typeof (EntityConverter))]
 	public class Entity

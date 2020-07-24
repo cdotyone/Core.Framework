@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
-namespace Stack.Core.Framework.Logging
+namespace Core.Framework.Logging
 {
     public class WebApiTransmission
     {

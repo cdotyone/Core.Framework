@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Stack.Civic.Framework.Web
+namespace Core.Framework.Web
 {
     public class Program
     {

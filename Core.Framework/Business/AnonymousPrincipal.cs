@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Principal;
-using Stack.Core.Security;
+using Core.Security;
 
-namespace Stack.Core.Framework
+namespace Core.Framework
 {
     public class AnonymousPrincipal : ClaimsPrincipal
     {

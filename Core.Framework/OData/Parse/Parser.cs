@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Stack.Core.Framework.OData.Parse
+namespace Core.Framework.OData.Parse
 {
     public class Parser
     {

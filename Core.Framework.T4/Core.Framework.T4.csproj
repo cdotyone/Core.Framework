@@ -44,10 +44,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\References\civic.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nuget-45|AnyCPU'">
     <OutputPath>bin\Nuget-45\</OutputPath>
@@ -138,6 +135,8 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Content Include="T4\3.0\Business.ttinclude" />
+    <None Include="T4\2.0\TemplateFilemanager.CS.ttinclude" />
+    <None Include="T4\3.0\TemplateFilemanager.CS.ttinclude" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="nuget\Content\Models\Example.SeedData.xml" />
@@ -184,14 +183,12 @@
     <None Include="T4\2.0\Entities.ttinclude" />
     <None Include="T4\2.0\GenerateTSQL.ttinclude" />
     <None Include="T4\2.0\MVC.ttinclude" />
-    <None Include="T4\2.0\TemplateFilemanager.CS.ttinclude" />
     <None Include="T4\2.0\WCF.ttinclude" />
     <None Include="T4\2.0\WebAPI.ttinclude" />
     <Content Include="T4\3.0\DBViews.ttinclude" />
     <Content Include="T4\3.0\DBProcsAll.ttinclude" />
     <Content Include="T4\3.0\Config.ttinclude" />
     <None Include="T4\3.0\GenerateTSQL.ttinclude" />
-    <None Include="T4\3.0\TemplateFilemanager.CS.ttinclude" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

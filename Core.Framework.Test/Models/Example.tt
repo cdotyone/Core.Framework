@@ -5,9 +5,9 @@ apiPackageName="example";
 apiVersion = "1.0";
 
 Core.MapUID = new Dictionary<string,Mapped>() {
-	{"OID", new Mapped { MapTo="OUID", MapToName="ouid", Schema="civic", Table="OrgUnit"} },
-	{"UserID", new Mapped { MapTo="UserUID", Schema="civic", Table="User"} },
-	{"PersonID", new Mapped { MapTo="PersonUID", Schema="civic", Table="Person"} }
+	{"OID", new Mapped { MapTo="OUID", MapToName="ouid", Schema="common", Table="OrgUnit"} },
+	{"UserID", new Mapped { MapTo="UserUID", Schema="common", Table="User"} },
+	{"PersonID", new Mapped { MapTo="PersonUID", Schema="common", Table="Person"} }
 };
 
 #>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Stack.Core.Framework.OData.Parse
+namespace Core.Framework.OData.Parse
 {
     public class Tokenizer
     {

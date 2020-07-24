@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Stack.Core.Framework;
 
-namespace Stack.Civic.Framework.Web
+namespace Core.Framework.Web
 {
     public class Startup
     {

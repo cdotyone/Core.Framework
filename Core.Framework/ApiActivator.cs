@@ -11,9 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
 using SimpleInjector.Integration.AspNetCore.Mvc;
 using SimpleInjector.Lifestyles;
-using Stack.Core.Logging;
+using Core.Logging;
 
-namespace Stack.Core.Framework
+namespace Core.Framework
 {
     public static class ApiActivator
     {
@@ -31,7 +31,7 @@ namespace Stack.Core.Framework
             services.AddSingleton<IControllerActivator>(new SimpleInjectorControllerActivator(container));
             services.AddSingleton<IViewComponentActivator>(new SimpleInjectorViewComponentActivator(container));
 
-            services.EnableSimpleInjectorCrossWiring(container);
+            //services.EnableSimpleInjectorCrossWiring(container);
             services.UseSimpleInjectorAspNetRequestScoping(container);
         }
 
@@ -87,9 +87,9 @@ namespace Stack.Core.Framework
             //configuration.Services.Replace(typeof(IHttpControllerSelector), versionSelector);
             //configuration.EnableODataV3Support();
 
-            container.RegisterMvcControllers(app);
-            container.RegisterMvcViewComponents(app);
-            container.AutoCrossWireAspNetComponents(app);
+            container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
+//            container.RegisterMvcViewComponents(app);
+//            container.AutoCrossWireAspNetComponents(app);
             container.Verify();
 
             app.UseMvc(routes =>

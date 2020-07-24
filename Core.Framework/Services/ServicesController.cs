@@ -5,10 +5,10 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Stack.Core.Framework.OData;
-using Stack.Core.Logging;
+using Core.Framework.OData;
+using Core.Logging;
 
-namespace Stack.Core.Framework
+namespace Core.Framework
 {
     [ApiController]
     [Route("api/services")]

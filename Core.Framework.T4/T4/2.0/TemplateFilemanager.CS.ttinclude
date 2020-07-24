@@ -6,9 +6,8 @@
 <#@ assembly name="System.Windows.Forms" #>
 <#@ assembly name="EnvDTE"#>
 <#@ assembly name="EnvDTE80" #>
-<#@ assembly name="Microsoft.VisualStudio.Shell.10.0"#>
-<#@ assembly name="Microsoft.VisualStudio.Shell.Interop "#>
-<#@ import namespace="Microsoft.VisualStudio.Shell.Interop"#>
+<#@ assembly name="Microsoft.VisualStudio.Shell.15.0"#>
+<#@ import namespace="Microsoft.VisualStudio.Shell"#>
 <#@ import namespace="System" #>
 <#@ import namespace="System.Data" #>
 <#@ import namespace="System.Data.Objects" #>
@@ -74,15 +73,7 @@ void WriteLineToBuildPane (string message){
 /// </summary>
 /// <param name="message">Text to output</param>
 void WriteToBuildPane (string message){
-       IVsOutputWindow outWindow = (this.Host as IServiceProvider).GetService(
-typeof( SVsOutputWindow ) ) as IVsOutputWindow;
-       Guid generalPaneGuid =
-Microsoft.VisualStudio.VSConstants.OutputWindowPaneGuid.BuildOutputPane_guid;
-		// P.S. There's also the GUID_OutWindowDebugPane available.
-       IVsOutputWindowPane generalPane;
-       outWindow.GetPane( ref generalPaneGuid , out generalPane );
-       generalPane.OutputString( message  );
-       generalPane.Activate(); // Brings this pane into view
+
 }
 
 /// <summary>
@@ -191,7 +182,9 @@ public class TemplateFileManager
         }
 
 		if(string.IsNullOrEmpty(projectName)) {
-			projectName = ((Project)((object[])dte.ActiveSolutionProjects)[0]).Name;
+			var projects = (object[])dte.ActiveSolutionProjects;
+			if(projects.Length>0)
+				projectName = ((Project)projects[0]).Name;
 		}
 
         CurrentBlock = new Block 

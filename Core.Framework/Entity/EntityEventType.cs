@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stack.Core.Framework
+namespace Core.Framework
 {
     [Flags]
     public enum EntityEventType

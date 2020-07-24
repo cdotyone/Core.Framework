@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 
-namespace Stack.Core.Framework
+namespace Core.Framework
 {
     public class QueryMetadata<T> : IQueryMetadata, IEnumerable<T> where T : class
     {
