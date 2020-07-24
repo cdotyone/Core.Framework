@@ -36,19 +36,9 @@ namespace Core.Framework
 #if NETCORE
             services.AddSimpleInjector(container, options =>
             {
-                // AddAspNetCore() wraps web requests in a Simple Injector scope and
-                // allows request-scoped framework services to be resolved.
                 options.AddAspNetCore()
-
-                    // Ensure activation of a specific framework type to be created by
-                    // Simple Injector instead of the built-in configuration system.
-                    // All calls are optional. You can enable what you need. For instance,
-                    // ViewComponents, PageModels, and TagHelpers are not needed when you
-                    // build a Web API.
                     .AddControllerActivation()
-                    .AddViewComponentActivation()
-                    .AddPageModelActivation()
-                    .AddTagHelperActivation();
+                    .AddViewComponentActivation();
             });
 #endif
 
