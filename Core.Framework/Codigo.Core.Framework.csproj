@@ -71,6 +71,7 @@
     <PackageTags>Foundation,Framework</PackageTags>
     <Title>Codigo Core Framework</Title>
     <Description>3rd Generation Codigo Generation"&gt;</Description>
+    <NuspecProperties>version=$(Version)</NuspecProperties>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\LICENSE" Pack="true" PackagePath="$(PackageLicenseFile)" />
