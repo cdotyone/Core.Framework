@@ -7,8 +7,8 @@
     <ProjectGuid>{78D4826E-E6FC-4961-900B-9373B3C4B481}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SAAS.Core.Framework.T4</RootNamespace>
-    <AssemblyName>SAAS.Core.Framework.T4</AssemblyName>
+    <RootNamespace>Core.Framework.T4</RootNamespace>
+    <AssemblyName>Core.Framework.T4</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
     </SccProjectName>
@@ -77,22 +77,6 @@
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Civic.Core.Caching, Version=1.21.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Caching.1.21.8\lib\net40\Civic.Core.Caching.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Civic.Core.Configuration, Version=1.21.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Configuration.1.21.8\lib\net40\Civic.Core.Configuration.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Civic.Core.Data, Version=1.21.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Data.1.21.8\lib\net40\Civic.Core.Data.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Civic.Core.Logging, Version=1.21.0.0, Culture=neutral, PublicKeyToken=e6957e8cb76ef982, processorArchitecture=MSIL">
-      <HintPath>..\packages\Civic.Core.Logging.1.21.8\lib\net40\Civic.Core.Logging.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>

@@ -25,37 +25,39 @@ jobs:
         rm commit.msg
     - name: "Get Next Version"
       id: semver
-      uses: mathieudutour/github-tag-action@v4.5
-      with:
-        github_token: "${{ github.token }}"
-        dry_run: true
-    - name: Set .Net Version
-      uses: cdotyone/github-set-net-version@main
-      id: cleaned
-      with:
-        version: "${{ steps.semver.outputs.new_version }}"
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-          dotnet-version: '2.2.108'
-    - name: Install Nuget Dependencies
-      run: dotnet restore Core.Framework\Codigo.Core.Framework.csproj
-    - name: Build .NET
-      run: |
-        dotnet pack Core.Framework\Codigo.Core.Framework.csproj --configuration Release --no-restore -p:PackageVersion=${{ steps.cleaned.outputs.version }} --output dist 
-        dotnet pack Core.Framework\Codigo.Core.Framework.csproj --no-build -p:NuspecProperties="version=${{ steps.cleaned.outputs.version }}" -p:NuspecFile=../References/Codigo.Core.FrameWork.Example.nuspec -p:PackageVersion=${{ steps.cleaned.outputs.version }} --output dist 
-        dotnet pack Core.Framework\Codigo.Core.Framework.csproj --no-build -p:NuspecProperties="version=${{ steps.cleaned.outputs.version }}" -p:NuspecFile=../References/Codigo.Core.FrameWork.Model.nuspec -p:PackageVersion=${{ steps.cleaned.outputs.version }} --output dist 
-    - name: Publish Nuget Package
-      run: dotnet nuget push dist\*.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_KEY }}
-    - name: Conventional Changelog Action
-      uses: TriPSs/conventional-changelog-action@v3
+      uses: cdotyone/conventional-changelog-action@v3.8.2
       with:
         github-token: ${{ github.token }}
         tag-prefix: 'v'
         release-count: '20'
-    - name: Push
-      uses: cdotyone/github-push@main
+        skip-commit: 'true'
+        skip-push: 'true'
+        skip-tag: 'true'
+        output-file: 'false'
+    - name: Set .Net Version
+      uses: cdotyone/github-set-net-version@main
+      id: cleaned
       with:
-        version: "${{ steps.cleaned.outputs.version }}"
-      env:
-        GITHUB_TOKEN: "${{ github.token }}"
+        version: "${{ steps.semver.outputs.version }}"
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: |
+          5.0.x
+          6.0.x
+          2.0.x
+    - name: Install Nuget Dependencies
+      run: dotnet restore
+    - name: Build .NET
+      run: |
+        dotnet pack Core.Framework\Codigo.Core.Framework.csproj --configuration Release --no-restore -p:PackageVersion=${{ steps.semver.outputs.version }} --output dist 
+        dotnet pack Core.Framework\Codigo.Core.Framework.csproj --no-build -p:NuspecProperties="version=${{ steps.semver.outputs.version }}" -p:NuspecFile=../References/Codigo.Core.FrameWork.Example.nuspec -p:PackageVersion=${{ steps.semver.outputs.version }} --output dist 
+        dotnet pack Core.Framework\Codigo.Core.Framework.csproj --no-build -p:NuspecProperties="version=${{ steps.semver.outputs.version }}" -p:NuspecFile=../References/Codigo.Core.FrameWork.Model.nuspec -p:PackageVersion=${{ steps.semver.outputs.version }} --output dist 
+    - name: Publish Nuget Package
+      run: dotnet nuget push dist\*.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_KEY }}
+    - name: Conventional Changelog Action
+      uses: cdotyone/conventional-changelog-action@v3.8.2
+      with:
+        github-token: ${{ github.token }}
+        tag-prefix: 'v'
+        release-count: '20'

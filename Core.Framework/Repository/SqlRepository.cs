@@ -5,7 +5,7 @@ using System.Diagnostics;
 using Newtonsoft.Json;
 using SimpleInjector;
 using Core.Data;
-using IDbCommand = Core.Data.IDbCommand;
+using IDBCommand = Core.Data.IDBCommand;
 
 namespace Core.Framework
 {
@@ -94,7 +94,7 @@ namespace Core.Framework
             }
         }
 
-        public void BuildCommand(IEntityRequestContext context, T entity, IDbCommand command, bool addRecord)
+        public void BuildCommand(IEntityRequestContext context, T entity, IDBCommand command, bool addRecord)
         {
             Debug.Assert(command != null);
 
